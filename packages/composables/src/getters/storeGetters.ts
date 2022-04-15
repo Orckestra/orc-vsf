@@ -1,4 +1,4 @@
-import { Store } from '@vue-storefront/__replace_me__-api';
+import { Store } from '@vue-storefront/orc-vsf-api';
 import { AgnosticStore, UseStoreGetters } from '@vue-storefront/core';
 import { UseStoreFilterParams } from '../types';
 

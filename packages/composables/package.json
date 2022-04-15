@@ -1,5 +1,5 @@
 {
-  "name": "@vue-storefront/__replace_me__",
+  "name": "@vue-storefront/orc-vsf",
   "version": "0.0.1",
   "private": true,
   "sideEffects": false,
@@ -16,7 +16,7 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/__replace_me__-api": "0.0.1",
+    "@vue-storefront/orc-vsf-api": "0.0.1",
     "@vue-storefront/core": "~2.5.3"
   },
   "devDependencies": {
