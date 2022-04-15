@@ -8,8 +8,9 @@ import type { Product, ProductFilter } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: Product): string {
-  return 'Name';
+  return (<any>product)?.propertyBag?.DisplayName;
 }
+
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
@@ -42,7 +43,7 @@ function getCoverImage(product: Product): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFiltered(products: Product[], filters: ProductFilter): Product[] {
-  return [
+  return products ?  products.slice(0, 1) : [
     {
       _id: 1,
       _description: 'Some description',

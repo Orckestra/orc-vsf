@@ -1,17 +1,30 @@
 import { apiClientFactory } from '@vue-storefront/core';
 import type { Setttings, Endpoints } from './types';
+import axios from 'axios';
 
-function onCreate(settings: Setttings) {
+import getProduct from './api/getProduct';
+import getCategory from './api/getCategory';
+
+function onCreate(settings) {
+  const client = axios.create({
+    baseURL: settings.api.url,
+    headers: {
+      'X-AUTH': settings.api.authToken,
+      'Content-Type': 'application/json'
+    }
+  });
+
   return {
     config: settings,
-    client: {}
+    client
   };
 }
 
 const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
   onCreate,
   api: {
-
+    getProduct,
+    getCategory
   }
 });
 

@@ -11,7 +11,11 @@ import type {
 const params: UseProductFactoryParams<Product, SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   productsSearch: async (context: Context, params) => {
-    console.log('Mocked: useProduct.productsSearch');
+    console.log(123);
+    var x = await context.$occ.api.getProduct(params);
+    
+    return x;
+    //return await context.$occ.api.getProduct(params);
 
     return {};
   }

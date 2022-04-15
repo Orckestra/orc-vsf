@@ -17,7 +17,8 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/core": "~2.5.3"
+    "@vue-storefront/core": "~2.5.3",
+    "axios": "^0.26.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.6",

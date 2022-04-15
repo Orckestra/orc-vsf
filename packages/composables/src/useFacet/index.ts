@@ -10,8 +10,12 @@ import type {
 const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<SearchParams>) => {
-    console.log('Mocked: useFacet.search');
-    return {};
+
+    const products = await context["$orc-vsf"].api.getProduct({});
+    return {
+      products,
+      total: 12,
+    };
   }
 };
 
