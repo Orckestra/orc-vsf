@@ -1,8 +1,14 @@
 module.exports = {
   integrations: {
-    __replace_me__: {
-      location: '@vue-storefront/__replace_me__-api/server',
-      configuration: {}
+    occ: {
+      location: '@vue-storefront/orc-vsf-api/server',
+      configuration: {
+        api: {
+          url: process.env.OVERTURE_URL,
+          authToken: process.env.OVERTURE_AUTH_TOKEN,
+          scope: rocess.env.OVERTURE_SCOPE_NAME
+        }
+      }
     }
   }
 };
