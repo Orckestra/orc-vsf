@@ -1,6 +1,7 @@
 import {
   Context,
   useProductFactory,
+  ProductsSearchParams,
   UseProductFactoryParams
 } from '@vue-storefront/core';
 import type { Product } from '@vue-storefront/orc-vsf-api';
@@ -10,14 +11,13 @@ import type {
 
 const params: UseProductFactoryParams<Product, SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  productsSearch: async (context: Context, params) => {
-    console.log(123);
+  productsSearch: async (context: Context, params: ProductsSearchParams): Promise<Product>  => {
+    const app = context.$occ;
+    console.log('APP');
+    console.log(app);
     var x = await context.$occ.api.getProduct(params);
     
     return x;
-    //return await context.$occ.api.getProduct(params);
-
-    return {};
   }
 };
 
