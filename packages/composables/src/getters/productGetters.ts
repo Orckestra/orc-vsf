@@ -11,10 +11,9 @@ function getName(product: Product): string {
   return product?.propertyBag?.DisplayName;
 }
 
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
-  return product?.propertyBag?.DisplayName;;
+  return product?.propertyBag?.DisplayName;
 }
 
 function getPrice(product: Product): AgnosticPrice {

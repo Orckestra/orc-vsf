@@ -9,7 +9,7 @@ export default async function getProduct(
   params,
   customQuery?: CustomQuery
 ) {
-  let { id, catId } = params;
+  const { id, catId } = params;
   let url = null;
   console.log('I am in getProduct');
   console.log(params);
@@ -26,13 +26,11 @@ export default async function getProduct(
 
     console.log(data);
 
-    return { ...data, name: "Test Name" };
+    return { ...data, name: 'Test Name' };
 
   } else if (catId) {
-    //TODO: Related
     console.log('TODO: Related');
     return [];
-
   } else {
 
     url = new URL(
@@ -44,8 +42,8 @@ export default async function getProduct(
       query: {
         distinctResults: true,
         maximumItems: 12,
-        startingIndex: 0,
-      },
+        startingIndex: 0
+      }
     });
 
     return data.documents ?? [];
