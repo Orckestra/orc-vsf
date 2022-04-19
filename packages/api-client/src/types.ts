@@ -27,11 +27,11 @@ export type PasswordResetResult = TODO;
 export type Product = {
     productId: any,
     sku: any,
-    currentPrice: any,
-    regularPrice: any,
+    currentPrice?: any,
+    regularPrice?: any,
     propertyBag: any,
-    parentCategoryIds: any
-
+    parentCategoryIds: any,
+    prices?: any
 };
 
 export type ProductFilter = TODO;

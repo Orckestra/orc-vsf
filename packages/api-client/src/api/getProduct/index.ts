@@ -10,23 +10,27 @@ export default async function getProduct(
   customQuery?: CustomQuery
 ) {
   const { id, catId } = params;
+  const { api, scope } = context.config;
   let url = null;
   console.log('I am in getProduct');
   console.log(params);
 
   if (id) {
-    console.log('Product Details');
 
     url = new URL(
-      `/api/products/v2/${context.config.scope}/${id}?CultureName=en-CA&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true`,
-      context.config.api.url
+      `/api/products/v2/${scope}/${id}?CultureName=en-CA&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true`,
+      api.url
     );
 
-    const { data } = await context.client.get(url.href);
+    const getPricesUrl = new URL(`/api/products/${scope}/prices`, api.url);
+    const { data: productData } = await context.client.get(url.href);
+    const { data: pricesData } = await context.client.post(getPricesUrl.href, {
+      ProductIds: [id],
+      IncludeVariants: true,
+      ScopeId: scope
+    });
 
-    console.log(data);
-
-    return { ...data, name: 'Test Name' };
+    return { ...productData, name: 'Test Name', prices: { ...pricesData[0] } };
 
   } else if (catId) {
     console.log('TODO: Related');

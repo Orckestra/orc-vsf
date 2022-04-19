@@ -17,10 +17,20 @@ function getSlug(product: Product): string {
 }
 
 function getPrice(product: Product): AgnosticPrice {
-  return {
-    regular: product?.regularPrice,
-    special: product?.currentPrice
-  };
+  if (!product) return;
+
+  const prices = product.prices;
+  if (prices) {
+    return {
+      regular: prices.defaultPrice,
+      special: (prices.pricing.price < prices.defaultPrice ? prices.pricing.price : undefined)
+    };
+  } else {
+    return {
+      regular: product.regularPrice,
+      special: product.currentPrice < product.regularPrice ? product.currentPrice : undefined
+    };
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
