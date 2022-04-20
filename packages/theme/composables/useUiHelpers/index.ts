@@ -25,6 +25,7 @@ const getFiltersDataFromUrl = (context, onlyFilters) => {
     .reduce(reduceFilters(query), {});
 };
 
+// eslint-disable-next-line
 const useUiHelpers = () => {
 
   const context = getContext();

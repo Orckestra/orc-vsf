@@ -28,6 +28,8 @@ export type PasswordResetResult = TODO;
 
 export type Product = {
     productId: any,
+    name: any,
+    description?: any,
     sku: any,
     currentPrice?: any,
     regularPrice?: any,
