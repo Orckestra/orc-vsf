@@ -9,8 +9,8 @@ export default async function getProduct(
   params,
   customQuery?: CustomQuery
 ) {
-  const { id, catId } = params;
-  const { api, scope } = context.config;
+  const { id, catId, categorySlug, page, itemsPerPage } = params;
+  const { api, scope, inventoryLocationIds, searchConfig } = context.config;
   let url = null;
   console.log('I am in getProduct');
   console.log(params);
@@ -35,17 +35,41 @@ export default async function getProduct(
   } else if (catId) {
     console.log('TODO: Related');
     return [];
-  } else {
+  } else if (categorySlug) {
+    console.log('CategoryPage');
+    url = new URL(
+      `/api/search/${scope}/en-CA/availableProducts/byCategory/${categorySlug}`,
+      api.url
+    );
+    const maximumItems = itemsPerPage ?? searchConfig.defaultItemsPerPage;
+    const { data } = await context.client.post(url.href, {
+      inventoryLocationIds,
+      categoryName: categorySlug,
+      query: {
+        maximumItems: maximumItems,
+        startingIndex: (page - 1) * maximumItems,
+        sortings: [
+          {
+            direction: 0,
+            propertyName: 'score'
+          }
+        ]
+      }
+    });
+
+    return { products: data.documents ?? [], total: data.totalCount};
+  }
+  else {
 
     url = new URL(
-      `/api/search/${context.config.scope}/en-CA/availableProducts`,
-      context.config.api.url
+      `/api/search/${scope}/en-CA/availableProducts`,
+      api.url
     );
 
     const { data } = await context.client.post(url.href, {
       query: {
         distinctResults: true,
-        maximumItems: 12,
+        maximumItems: searchConfig.defaultItemsPerPage,
         startingIndex: 0
       }
     });

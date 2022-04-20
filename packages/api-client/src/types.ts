@@ -14,7 +14,9 @@ export type Category = TODO;
 
 export type Coupon = TODO;
 
-export type Facet = TODO;
+export type Facet = {
+    total: any
+};
 
 export type FacetSearchCriteria = TODO;
 

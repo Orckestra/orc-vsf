@@ -11,10 +11,10 @@ const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<SearchParams>) => {
 
-    const products = await context.$occ.api.getProduct({});
+    const { products, total } = await context.$occ.api.getProduct(params.input);
     return {
       products,
-      total: 12,
+      total
     };
   }
 };

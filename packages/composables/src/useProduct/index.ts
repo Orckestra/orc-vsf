@@ -11,12 +11,11 @@ import type {
 
 const params: UseProductFactoryParams<Product, SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  productsSearch: async (context: Context, params: ProductsSearchParams): Promise<Product>  => {
+  productsSearch: async (context: Context, params: ProductsSearchParams): Promise<Product> => {
     const app = context.$occ;
-    console.log('APP');
-    console.log(app);
+
     var x = await context.$occ.api.getProduct(params);
-    
+
     return x;
   }
 };
