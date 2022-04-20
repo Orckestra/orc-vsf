@@ -71,8 +71,8 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description">
-              <div  v-html="productGetters.getDescription(product)" class="product__description">
-               </div>
+              <div v-html="productGetters.getDescription(product)" class="product__description">
+              </div>
               <SfProperty
                 v-for="(property, i) in properties"
                 :key="i"
@@ -150,15 +150,11 @@ import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
-import cacheControl from './../helpers/cacheControl';
+import { addBasePath } from '@vue-storefront/core';
 
 export default {
   name: 'Product',
   transition: 'fade',
-  middleware: cacheControl({
-    'max-age': 60,
-    'stale-when-revalidate': 5
-  }),
   setup() {
     const qty = ref(1);
     const route = useRoute();
@@ -178,9 +174,9 @@ export default {
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
-      mobile: { url: img.small },
-      desktop: { url: img.normal },
-      big: { url: img.big },
+      mobile: { url: addBasePath(img.small) },
+      desktop: { url: addBasePath(img.normal) },
+      big: { url: addBasePath(img.big) },
       alt: product?.value?._name || product?.value?.name
     })));
 
