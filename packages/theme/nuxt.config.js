@@ -86,6 +86,7 @@ export default {
   ],
 
   i18n: {
+    strategy: 'prefix',
     currency: 'USD',
     country: 'US',
     countries: [
@@ -109,12 +110,12 @@ export default {
     vueI18n: {
       fallbackLocale: 'en-CA',
       numberFormats: {
-        'en': {
+        'en-CA': {
           currency: {
             style: 'currency', currency: 'USD', currencyDisplay: 'symbol'
           }
         },
-        'fr': {
+        'fr-CA': {
           currency: {
             style: 'currency', currency: 'EUR', currencyDisplay: 'symbol'
           }
