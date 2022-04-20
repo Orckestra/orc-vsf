@@ -99,22 +99,22 @@ export default {
       { name: 'USD', label: 'Dollar' }
     ],
     locales: [
-      { code: 'en', label: 'English', file: 'en.js', iso: 'en' },
-      { code: 'de', label: 'German', file: 'de.js', iso: 'de' }
+      { code: 'en-CA', label: 'English', file: 'en.js', iso: 'en' },
+      { code: 'fr-CA', label: 'French', file: 'de.js', iso: 'fr' }
     ],
-    defaultLocale: 'en',
+    defaultLocale: 'en-CA',
     lazy: true,
     seo: true,
     langDir: 'lang/',
     vueI18n: {
-      fallbackLocale: 'en',
+      fallbackLocale: 'en-CA',
       numberFormats: {
-        en: {
+        'en': {
           currency: {
             style: 'currency', currency: 'USD', currencyDisplay: 'symbol'
           }
         },
-        de: {
+        'fr': {
           currency: {
             style: 'currency', currency: 'EUR', currencyDisplay: 'symbol'
           }
