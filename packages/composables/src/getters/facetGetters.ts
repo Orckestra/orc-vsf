@@ -47,12 +47,13 @@ function getProducts(params: FacetSearchResult<Facet>): any {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
+  const { data, input } = params;
   return {
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 1,
-    itemsPerPage: 10,
-    pageOptions: []
+    currentPage: input.page,
+    totalPages: data.total / input.itemsPerPage,
+    totalItems: data.total,
+    itemsPerPage: input.itemsPerPage,
+    pageOptions: [12, 24, 48]
   };
 }
 
