@@ -48,7 +48,7 @@ function getProducts(params: FacetSearchResult<Facet>): any {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
   const { data, input } = params;
-  if(!data) return;
+  if (!data) return;
   return {
     currentPage: input.page,
     totalPages: Math.floor(data.total / input.itemsPerPage),

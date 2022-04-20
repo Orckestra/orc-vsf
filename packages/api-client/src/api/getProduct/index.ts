@@ -14,7 +14,6 @@ export default async function getProduct(
   let url = null;
   console.log('I am in getProduct');
   console.log(params);
-  console.log(`locale ${locale}`);
 
   if (id) {
 
@@ -31,7 +30,7 @@ export default async function getProduct(
       ScopeId: scope
     });
 
-    return { ...productData, name: 'Test Name', prices: { ...pricesData[0] } };
+    return { ...productData, ...{ description: productData.description[locale] }, name: productData.displayName[locale], prices: { ...pricesData[0] } };
 
   } else if (catId) {
     console.log('TODO: Related');
@@ -58,9 +57,8 @@ export default async function getProduct(
       }
     });
 
-    return { products: data.documents ?? [], total: data.totalCount};
-  }
-  else {
+    return { products: data.documents ?? [], total: data.totalCount };
+  } else {
 
     url = new URL(
       `/api/search/${scope}/${locale}/availableProducts`,

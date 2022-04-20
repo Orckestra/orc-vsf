@@ -8,7 +8,7 @@ import type { Product, ProductFilter } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: Product): string {
-  return product?.propertyBag?.DisplayName;
+  return product.name ?? product?.propertyBag?.DisplayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,7 +55,7 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
     return [];
   }
   products = Array.isArray(products) ? products : [products];
- 
+
   return products.slice(0, 1);
 }
 
@@ -66,7 +66,7 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDescription(product: Product): string {
-  return '';
+  return product.description;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
