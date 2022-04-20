@@ -3408,41 +3408,41 @@
     "@typescript-eslint/types" "5.6.0"
     eslint-visitor-keys "^3.0.0"
 
-"@vue-storefront/core@~2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.5.3.tgz#c1449f115d6f92ea6602c1ad41719801eabcf52d"
-  integrity sha512-kUMVGf61raN7ZbxWqjFZ+xlNS2yBbeo7LGmdA3t+BOr2olbzXRBzZjYCeGypD6u6jKCwtI8bXKE8lp7MgkSl1Q==
+"@vue-storefront/core@~2.5.12":
+  version "2.5.12"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.5.12.tgz#a1b2b0eb1723825010727061a81fce798dd3fb15"
+  integrity sha512-yKJCMk0X7WGqY8AXtTczBQFrc0XgWcwX+XC10jB8DGtQ3ZEsnNJoaXIT/nS/VLy07bwa0TzkJWEliiZdcmeycw==
   dependencies:
     axios "0.21.1"
     express "^4.17.1"
-    is-https "^3.0.2"
     lodash-es "^4.17.15"
     vue "^2.6.11"
 
-"@vue-storefront/middleware@~2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/middleware/-/middleware-2.5.3.tgz#9c3fe3a3c7ff71059c50dc033d3742d24c2ff933"
-  integrity sha512-jWv3ff6RWir7LlykpYrTG7XM7N34BtViZQNwncUzqmBkGKrIwUKIrAdl8ptwEyql9KODaAYiZwF4uH/9Qxxiow==
+"@vue-storefront/middleware@~2.5.12":
+  version "2.5.12"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/middleware/-/middleware-2.5.12.tgz#9a4036d48fa0c5900cde8300ea677c27b9a0b765"
+  integrity sha512-NY2jbGmw82SNjESEfQ8ZHwKVc5qqGKmnGugYUY6Lep3GRepVglZZXt1+EDhyqkjdm+wRCxNIIWPnAzZp1ElzhA==
   dependencies:
     consola "2.15.3"
     cookie-parser "^1.4.5"
     cors "^2.8.5"
     express "^4.17.1"
+    helmet "^5.0.2"
 
-"@vue-storefront/nuxt-theme@~2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt-theme/-/nuxt-theme-2.5.3.tgz#0cbdae0b49b90face823e5ed42ef32336bb81cc5"
-  integrity sha512-YO1nCo2jB3oJBgV775d65cOwoQbw4KV7bS4OqbevVS/XvfrubpN1PwvuEX0GlNEz7fc/qh4japtq+5//c9An4g==
+"@vue-storefront/nuxt-theme@~2.5.12":
+  version "2.5.12"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt-theme/-/nuxt-theme-2.5.12.tgz#c21844c5d8a5c14a91417d17c2b0e3b051798ad1"
+  integrity sha512-641eMwf2xmx8vHFSpA+OVAv/A5VWLQbMMZy9+6sxJSemfRn3n4M28BtGzPOyNHCH0W9/hbSgc8wAh7AsLRkEJg==
   dependencies:
     ejs "^3.0.2"
     lodash.debounce "^4.0.8"
     lodash.merge "^4.6.2"
     vue-lazy-hydration "^2.0.0-beta.4"
 
-"@vue-storefront/nuxt@~2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt/-/nuxt-2.5.3.tgz#d9315e2008e2491704564d4339cba2f8869548e2"
-  integrity sha512-rXWrkEdEenDMnSl0Emef/D09V9FSHU2rJ0NcTSnZVnosWYzT5Wi7ps6+ABQV+fTGnDbIbKjK+9eeC2tx6XVaCg==
+"@vue-storefront/nuxt@~2.5.12":
+  version "2.5.12"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt/-/nuxt-2.5.12.tgz#1a174443109471b13ebab16442ccc7dc5be30c62"
+  integrity sha512-0kW37phc1Vdi/LyjiivL2gPtIjDpwUX6NwByuCWqQv4D5iZ1hAJTNpdOzhPmOlx77KoF6X3ELztHwUOQ3jukMw==
   dependencies:
     "@nuxt/typescript-build" "^2.0.0"
     "@nuxtjs/composition-api" "^0.29.3"
@@ -8283,6 +8283,11 @@ he@1.2.0, he@^1.1.0, he@^1.2.0:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
+helmet@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/helmet/-/helmet-5.0.2.tgz#3264ec6bab96c82deaf65e3403c369424cb2366c"
+  integrity sha512-QWlwUZZ8BtlvwYVTSDTBChGf8EOcQ2LkGMnQJxSzD1mUu8CCjXJZq/BXP8eWw4kikRnzlhtYo3lCk0ucmYA3Vg==
+
 hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
@@ -8979,11 +8984,6 @@ is-glob@^4.0.0, is-glob@^4.0.1, is-glob@^4.0.3, is-glob@~4.0.1:
   integrity sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==
   dependencies:
     is-extglob "^2.1.1"
-
-is-https@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/is-https/-/is-https-3.0.2.tgz#4d24e002e47edd3f1b07f14bc722433354ccba49"
-  integrity sha512-jFgAKhbNF7J+lTMJxbq5z9bf1V9f8rXn9mP5RSY2GUEW5M0nOiVhVC9dNra96hQDjGpNzskIzusUnXwngqmhAA==
 
 is-https@^4.0.0:
   version "4.0.0"
