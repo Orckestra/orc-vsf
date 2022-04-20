@@ -42,7 +42,7 @@ function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProducts(params: FacetSearchResult<Facet>): any {
 
-  return (<any>params).data.products;
+  return (<any>params).data?.products;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,7 +50,7 @@ function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
   const { data, input } = params;
   return {
     currentPage: input.page,
-    totalPages: data.total / input.itemsPerPage,
+    totalPages: Math.floor(data.total / input.itemsPerPage),
     totalItems: data.total,
     itemsPerPage: input.itemsPerPage,
     pageOptions: [12, 24, 48]

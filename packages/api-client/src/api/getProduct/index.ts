@@ -9,16 +9,17 @@ export default async function getProduct(
   params,
   customQuery?: CustomQuery
 ) {
-  const { id, catId, categorySlug, page, itemsPerPage } = params;
+  const { id, catId, categorySlug, page, itemsPerPage, locale } = params;
   const { api, scope, inventoryLocationIds, searchConfig } = context.config;
   let url = null;
   console.log('I am in getProduct');
   console.log(params);
+  console.log(`locale ${locale}`);
 
   if (id) {
 
     url = new URL(
-      `/api/products/v2/${scope}/${id}?CultureName=en-CA&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true`,
+      `/api/products/v2/${scope}/${id}?CultureName=${locale}&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true`,
       api.url
     );
 
@@ -38,7 +39,7 @@ export default async function getProduct(
   } else if (categorySlug) {
     console.log('CategoryPage');
     url = new URL(
-      `/api/search/${scope}/en-CA/availableProducts/byCategory/${categorySlug}`,
+      `/api/search/${scope}/${locale}/availableProducts/byCategory/${categorySlug}`,
       api.url
     );
     const maximumItems = itemsPerPage ?? searchConfig.defaultItemsPerPage;
@@ -62,7 +63,7 @@ export default async function getProduct(
   else {
 
     url = new URL(
-      `/api/search/${scope}/en-CA/availableProducts`,
+      `/api/search/${scope}/${locale}/availableProducts`,
       api.url
     );
 
