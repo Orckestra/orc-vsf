@@ -8,7 +8,7 @@ import type { Product, ProductFilter } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: Product): string {
-  return product.name ?? product?.propertyBag?.DisplayName;
+  return product?.name ?? product?.propertyBag?.DisplayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

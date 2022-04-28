@@ -8,32 +8,13 @@ import type {
   UseCategorySearchParams as SearchParams
 } from '../types';
 
-const params: UseCategoryFactoryParams<Category, SearchParams> = {
+const params: UseCategoryFactoryParams<Category[], SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   categorySearch: async (context: Context, { customQuery, ...params }) => {
-    console.log('Mocked: useCategory.categorySearch');
-
-    return [
-      {
-        id: 1,
-        name: 'Women',
-        slug: 'women',
-        items: []
-      },
-      {
-        id: 2,
-        name: 'Men',
-        slug: 'men',
-        items: []
-      },
-      {
-        id: 3,
-        name: 'Kids',
-        slug: 'kids',
-        items: []
-      }
-    ];
+    const app: any = context.$occ.config.app;
+    const locale: any = app.i18n.locale;
+    return await context.$occ.api.getCategory({ ...params, locale }, customQuery);
   }
 };
 
-export const useCategory = useCategoryFactory<Category, SearchParams>(params);
+export const useCategory = useCategoryFactory<Category[], SearchParams>(params);

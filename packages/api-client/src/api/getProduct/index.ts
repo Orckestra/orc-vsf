@@ -12,8 +12,6 @@ export default async function getProduct(
   const { id, catId, categorySlug, page, itemsPerPage, locale } = params;
   const { api, scope, inventoryLocationIds, searchConfig } = context.config;
   let url = null;
-  console.log('I am in getProduct');
-  console.log(params);
 
   if (id) {
 
@@ -30,13 +28,17 @@ export default async function getProduct(
       ScopeId: scope
     });
 
-    return { ...productData, ...{ description: productData.description[locale] }, name: productData.displayName[locale], prices: { ...pricesData[0] } };
+    return {
+      ...productData,
+      ...{ description: productData.description[locale] },
+      name: productData.displayName[locale],
+      prices: { ...pricesData[0] }
+    };
 
   } else if (catId) {
     console.log('TODO: Related');
     return [];
   } else if (categorySlug) {
-    console.log('CategoryPage');
     url = new URL(
       `/api/search/${scope}/${locale}/availableProducts/byCategory/${categorySlug}`,
       api.url

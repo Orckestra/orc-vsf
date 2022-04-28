@@ -1,134 +1,128 @@
 <template>
-  <div id="product">
-    <SfBreadcrumbs
-      class="breadcrumbs desktop-only"
-      :breadcrumbs="breadcrumbs"
-    />
-    <div class="product">
-      <LazyHydrate when-idle>
-        <SfGallery :images="productGallery" class="product__gallery" />
-      </LazyHydrate>
+  <SfLoader
+    :class="{ 'loading': productLoading }"
+    :loading="productLoading">
+    <div id="product">
+      <SfBreadcrumbs
+        class="breadcrumbs desktop-only"
+        :breadcrumbs="breadcrumbs"
+      />
+      <div class="product">
+        <LazyHydrate when-idle>
+          <SfGallery :images="productGallery" class="product__gallery" />
+        </LazyHydrate>
 
-      <div class="product__info">
-        <div class="product__header">
-          <SfHeading
-            :title="productGetters.getName(product)"
-            :level="3"
-            class="sf-heading--no-underline sf-heading--left"
-          />
-          <SfIcon
-            icon="drag"
-            size="xxl"
-            color="var(--c-text-disabled)"
-            class="product__drag-icon smartphone-only"
-          />
-        </div>
-        <div class="product__price-and-rating">
-          <SfPrice
-            :regular="$n(productGetters.getPrice(product).regular, 'currency')"
-            :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-          />
-        </div>
-        <div>
-          <SfSelect
-            v-e2e="'size-select'"
-            v-if="options.size"
-            :value="configuration.size"
-            @input="size => updateFilter({ size })"
-            label="Size"
-            class="sf-select--underlined product__select-size"
-            :required="true"
-          >
-            <SfSelectOption
-              v-for="size in options.size"
-              :key="size.value"
-              :value="size.value"
-            >
-              {{size.label}}
-            </SfSelectOption>
-          </SfSelect>
-          <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
-            <p class="product__color-label">{{ $t('Color') }}:</p>
-            <SfColor
-              v-for="(color, i) in options.color"
-              :key="i"
-              :color="color.value"
-              class="product__color"
-              @click="updateFilter({ color: color.value })"
+        <div class="product__info">
+          <div class="product__header">
+            <SfHeading
+              :title="productGetters.getName(product)"
+              :level="3"
+              class="sf-heading--no-underline sf-heading--left"
+            />
+            <SfIcon
+              icon="drag"
+              size="xxl"
+              color="var(--c-text-disabled)"
+              class="product__drag-icon smartphone-only"
             />
           </div>
-          <SfAddToCart
-            v-e2e="'product_add-to-cart'"
-            :stock="stock"
-            v-model="qty"
-            :disabled="loading"
-            :canAddToCart="stock > 0"
-            class="product__add-to-cart"
-            @click="addItem({ product, quantity: parseInt(qty) })"
-          />
-        </div>
-
-        <LazyHydrate when-idle>
-          <SfTabs :open-tab="1" class="product__tabs">
-            <SfTab title="Description">
-              <div v-html="productGetters.getDescription(product)" class="product__description">
-              </div>
-              <SfProperty
-                v-for="(property, i) in properties"
-                :key="i"
-                :name="property.name"
-                :value="property.value"
-                class="product__property"
-              >
-                <template v-if="property.name === 'Category'" #value>
-                  <SfButton class="product__property__button sf-button--text">
-                    {{ property.value }}
-                  </SfButton>
-                </template>
-              </SfProperty>
-            </SfTab>
-            <SfTab
-              title="Additional Information"
-              class="product__additional-info"
+          <div class="product__price-and-rating">
+            <SfPrice
+              :regular="$n(productGetters.getPrice(product).regular, 'currency')"
+              :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
+            />
+          </div>
+          <div>
+            <SfSelect
+              v-e2e="'size-select'"
+              v-if="options.size"
+              :value="configuration.size"
+              @input="size => updateFilter({ size })"
+              label="Size"
+              class="sf-select--underlined product__select-size"
+              :required="true"
             >
-            <div class="product__additional-info">
-              <p class="product__additional-info__title">{{ $t('Brand') }}</p>
-              <p>{{ brand }}</p>
-              <p class="product__additional-info__title">{{ $t('Instruction1') }}</p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction2') }}
-              </p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction3') }}
-              </p>
-              <p>{{ careInstructions }}</p>
+              <SfSelectOption
+                v-for="size in options.size"
+                :key="size.value"
+                :value="size.value"
+              >
+                {{size.label}}
+              </SfSelectOption>
+            </SfSelect>
+            <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
+              <p class="product__color-label">{{ $t('Color') }}:</p>
+              <SfColor
+                v-for="(color, i) in options.color"
+                :key="i"
+                :color="color.value"
+                class="product__color"
+                @click="updateFilter({ color: color.value })"
+              />
             </div>
-            </SfTab>
-          </SfTabs>
-        </LazyHydrate>
+            <SfAddToCart
+              v-e2e="'product_add-to-cart'"
+              :stock="stock"
+              v-model="qty"
+              :disabled="loading"
+              :canAddToCart="stock > 0"
+              class="product__add-to-cart"
+              @click="addItem({ product, quantity: parseInt(qty) })"
+            />
+          </div>
+
+          <LazyHydrate when-idle>
+            <SfTabs :open-tab="1" class="product__tabs">
+              <SfTab title="Description">
+                <div v-html="productGetters.getDescription(product)" class="product__description">
+                </div>
+                <SfProperty
+                  name="Category"
+                  :value="breadcrumbs[breadcrumbs.length - 1].text"
+                  class="product__property"
+                />
+              </SfTab>
+              <SfTab
+                title="Additional Information"
+                class="product__additional-info"
+              >
+              <div class="product__additional-info">
+                <p class="product__additional-info__title">{{ $t('Brand') }}</p>
+                <p>{{ brand }}</p>
+                <p class="product__additional-info__title">{{ $t('Instruction1') }}</p>
+                <p class="product__additional-info__paragraph">
+                  {{ $t('Instruction2') }}
+                </p>
+                <p class="product__additional-info__paragraph">
+                  {{ $t('Instruction3') }}
+                </p>
+                <p>{{ careInstructions }}</p>
+              </div>
+              </SfTab>
+            </SfTabs>
+          </LazyHydrate>
+        </div>
       </div>
+
+      <LazyHydrate when-visible>
+        <RelatedProducts
+          :products="relatedProducts"
+          :loading="relatedLoading"
+          title="Match it with"
+        />
+      </LazyHydrate>
+
+      <LazyHydrate when-visible>
+        <InstagramFeed />
+      </LazyHydrate>
     </div>
-
-    <LazyHydrate when-visible>
-      <RelatedProducts
-        :products="relatedProducts"
-        :loading="relatedLoading"
-        title="Match it with"
-      />
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <InstagramFeed />
-    </LazyHydrate>
-
-  </div>
+  </SfLoader>
 </template>
 <script>
 import {
   SfProperty,
   SfHeading,
   SfPrice,
-  SfRating,
   SfSelect,
   SfAddToCart,
   SfTabs,
@@ -138,16 +132,16 @@ import {
   SfBanner,
   SfAlert,
   SfSticky,
-  SfReview,
   SfBreadcrumbs,
   SfButton,
-  SfColor
+  SfColor,
+  SfLoader
 } from '@storefront-ui/vue';
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/orc-vsf';
+import { useProduct, useCart, useCategory, productGetters, categoryGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
@@ -159,20 +153,17 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
-    const { products, search } = useProduct('products');
+    const { categories } = useCategory('categories');
+    const { products, search, loading: productLoading } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-    const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
 
     const id = computed(() => route.value.params.id);
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
     const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
-    const categories = computed(() => productGetters.getCategoryIds(product.value));
-    const reviews = computed(() => reviewGetters.getItems(productReviews.value));
-
-    // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
+    const productCategories = computed(() => productGetters.getCategoryIds(product.value));
+    const breadcrumbs = computed(() => categoryGetters.getBreadcrumbs(categories.value, productCategories.value[0]));
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
@@ -182,8 +173,7 @@ export default {
 
     onSSR(async () => {
       await search({ id: id.value });
-      await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: id.value });
+      await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
     });
 
     const updateFilter = (filter) => {
@@ -197,19 +187,17 @@ export default {
     };
 
     return {
+      breadcrumbs,
       updateFilter,
       configuration,
       product,
-      reviews,
-      reviewGetters,
-      averageRating: computed(() => productGetters.getAverageRating(product.value)),
-      totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
       options,
       qty,
       addItem,
       loading,
+      productLoading,
       productGetters,
       productGallery
     };
@@ -220,7 +208,6 @@ export default {
     SfProperty,
     SfHeading,
     SfPrice,
-    SfRating,
     SfSelect,
     SfAddToCart,
     SfTabs,
@@ -229,12 +216,12 @@ export default {
     SfImage,
     SfBanner,
     SfSticky,
-    SfReview,
     SfBreadcrumbs,
     SfButton,
     InstagramFeed,
     RelatedProducts,
-    LazyHydrate
+    LazyHydrate,
+    SfLoader
   },
   data() {
     return {
@@ -261,27 +248,7 @@ export default {
       detailsIsActive: false,
       brand:
           'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
-      careInstructions: 'Do not wash!',
-      breadcrumbs: [
-        {
-          text: 'Home',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Category',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Pants',
-          route: {
-            link: '#'
-          }
-        }
-      ]
+      careInstructions: 'Do not wash!'
     };
   }
 };
