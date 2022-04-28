@@ -10,7 +10,17 @@ export type Cart = TODO;
 
 export type CartItem = TODO;
 
-export type Category = TODO;
+export type Category = {
+    id: string,
+    name: string,
+    primaryParentCategoryId: string,
+    definitionName: string,
+    sequenceNumber: number,
+    catalogId: string,
+    displayName: any,
+    includeInSearch: boolean,
+    productCount: number
+};
 
 export type Coupon = TODO;
 
