@@ -13,8 +13,7 @@ function getTree(categories: Category[]): AgnosticCategoryTree {
 function getCategoryTree(
   categories: Category[],
   currentCategory = '',
-  level: -1,
-  withProducts = false
+  level: -1
 ): AgnosticCategoryTree | null {
   return categories
     ? buildCategoryTree(categories, 'Root', currentCategory, level)
@@ -22,14 +21,14 @@ function getCategoryTree(
 }
 
 function getBreadcrumbs(categories: Category[], currentCategory?: string): AgnosticBreadcrumb[] {
-  let breadcrumbs = [];
+  const breadcrumbs = [];
 
   if (!categories || !currentCategory) {
     return [];
   }
 
-  let findCategory = (id: string) => {
-    let category = categories.find(c => c.id === id);
+  const findCategory = (id: string) => {
+    const category = categories.find(c => c.id === id);
     if (category) {
       breadcrumbs.push({
         text: category.name,
@@ -39,7 +38,7 @@ function getBreadcrumbs(categories: Category[], currentCategory?: string): Agnos
         findCategory(category.primaryParentCategoryId);
       }
     }
-  }
+  };
 
   findCategory(currentCategory);
 

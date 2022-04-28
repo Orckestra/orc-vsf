@@ -123,7 +123,6 @@ import {
   SfProperty,
   SfHeading,
   SfPrice,
-  SfRating,
   SfSelect,
   SfAddToCart,
   SfTabs,
@@ -133,7 +132,6 @@ import {
   SfBanner,
   SfAlert,
   SfSticky,
-  SfReview,
   SfBreadcrumbs,
   SfButton,
   SfColor,
@@ -143,7 +141,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, useCategory, categoriesGetters, productGetters, useReview, reviewGetters, categoryGetters } from '@vue-storefront/orc-vsf';
+import { useProduct, useCart, useCategory, productGetters, categoryGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
@@ -155,7 +153,7 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
-    const { search: searchCategories, categories } = useCategory('categories');
+    const { categories } = useCategory('categories');
     const { products, search, loading: productLoading } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
@@ -165,8 +163,6 @@ export default {
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
     const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
     const productCategories = computed(() => productGetters.getCategoryIds(product.value));
-    const reviews = computed(() => reviewGetters.getItems(productReviews.value));
-
     const breadcrumbs = computed(() => categoryGetters.getBreadcrumbs(categories.value, productCategories.value[0]));
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
@@ -212,7 +208,6 @@ export default {
     SfProperty,
     SfHeading,
     SfPrice,
-    SfRating,
     SfSelect,
     SfAddToCart,
     SfTabs,
