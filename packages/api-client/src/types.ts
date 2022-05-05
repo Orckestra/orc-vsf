@@ -17,15 +17,19 @@ export type Category = {
     definitionName: string,
     sequenceNumber: number,
     catalogId: string,
-    displayName: any,
+    displayName: object,
     includeInSearch: boolean,
-    productCount: number
+    productsCount: number
 };
 
 export type Coupon = TODO;
 
 export type Facet = {
-    total: any
+    total: any,
+    products: any,
+    facets: any,
+    categories?: Category[],
+    categoryCounts?: any
 };
 
 export type FacetSearchCriteria = TODO;
@@ -37,16 +41,21 @@ export type OrderItem = TODO;
 export type PasswordResetResult = TODO;
 
 export type Product = {
-    productId: any,
+    productId: string,
     name: any,
     description?: any,
-    sku: any,
+    sku: string,
     currentPrice?: any,
     regularPrice?: any,
     propertyBag: any,
     parentCategoryIds: any,
     prices?: any
 };
+
+export const enum ProductsQueryType {
+    List = 'LIST',
+    Detail = 'DETAIL'
+}
 
 export type ProductFilter = TODO;
 

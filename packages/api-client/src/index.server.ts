@@ -3,6 +3,7 @@ import type { Setttings, Endpoints } from './types';
 import axios from 'axios';
 
 import getProduct from './api/getProduct';
+import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
 
 function onCreate(settings) {
@@ -24,6 +25,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
   onCreate,
   api: {
     getProduct,
+    getProducts,
     getCategory
   }
 });

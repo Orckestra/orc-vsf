@@ -20,28 +20,27 @@ function getCategoryTree(
     : null;
 }
 
-function getBreadcrumbs(categories: Category[], currentCategory?: string): AgnosticBreadcrumb[] {
+function getBreadcrumbs(categories: Category[], currentCategory?: string, includeHome = true): AgnosticBreadcrumb[] {
   const breadcrumbs = [];
 
   if (!categories || !currentCategory) {
     return [];
   }
+  let category = categories.find(c => c.id === currentCategory);
+  while (category && category.id !== 'Root') {
+    breadcrumbs.push({
+      text: category.name,
+      link: `/c/${category.id}`
+    } as AgnosticBreadcrumb);
+    category = categories.find(c => c.id === category.primaryParentCategoryId);
+  }
 
-  const findCategory = (id: string) => {
-    const category = categories.find(c => c.id === id);
-    if (category) {
-      breadcrumbs.push({
-        text: category.name,
-        link: `/c/${category.id}`
-      } as AgnosticBreadcrumb);
-      if (category.primaryParentCategoryId !== 'Root') {
-        findCategory(category.primaryParentCategoryId);
-      }
-    }
-  };
-
-  findCategory(currentCategory);
-
+  if (includeHome) {
+    return [
+      { text: 'Home', link: '/' },
+      ...breadcrumbs.reverse()
+    ];
+  }
   return breadcrumbs.reverse();
 }
 
