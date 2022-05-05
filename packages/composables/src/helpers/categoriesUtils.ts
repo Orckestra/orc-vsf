@@ -13,7 +13,7 @@ export const getCategoryLevel = (categories: Category[], currentCatId: string): 
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const fillProductCounts = (categories: Category[], counts: any): void => {
+export const setProductCounts = (categories: Category[], counts: any): void => {
   if (!categories || !counts || !Array.isArray(counts)) return;
 
   const allCountValues = counts.flatMap(c => c.values);

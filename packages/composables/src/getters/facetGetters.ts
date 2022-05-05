@@ -10,7 +10,7 @@ import {
 } from '@vue-storefront/core';
 import type { Facet, FacetSearchCriteria } from '@vue-storefront/orc-vsf-api';
 import { buildCategoryTree } from '../helpers/buildCategoryTree';
-import { fillProductCounts } from '../helpers/categoriesUtils';
+import { setProductCounts } from '../helpers/categoriesUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticFacet[] {
@@ -37,7 +37,7 @@ function getCategoryTree(params: FacetSearchResult<Facet>, root = 'Root', level 
   const { categorySlug, withCategoryCounts } = params.input;
   const categories = params.data?.categories;
   if (withCategoryCounts) {
-    fillProductCounts(categories, categoryCounts);
+    setProductCounts(categories, categoryCounts);
   }
 
   return buildCategoryTree(categories, root, categorySlug, level);
