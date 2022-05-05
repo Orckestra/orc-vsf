@@ -1,5 +1,6 @@
 
 import { getCurrentInstance } from '@nuxtjs/composition-api';
+import { AgnosticCategoryTree } from '@vue-storefront/core';
 
 const getContext = () => {
   const vm = getCurrentInstance();
@@ -37,16 +38,14 @@ const useUiHelpers = () => {
     return {
       categorySlug,
       page: parseInt(query.page as string, 10) || 1,
+      sort: query.sort || 'latest',
+      term: query.term,
+      filters: getFiltersDataFromUrl(context, true),
       itemsPerPage: parseInt(query.itemsPerPage as string, 10) || 12
     } as any;
   };
 
-  // eslint-disable-next-line
-  const getCatLink = (category): string => {
-    console.warn('[VSF] please implement useUiHelpers.getCatLink.');
-
-    return '/';
-  };
+  const getCatLink = (category: AgnosticCategoryTree): string => `/c/${category.slug}`;
 
   // eslint-disable-next-line
   const changeSorting = (sort) => {

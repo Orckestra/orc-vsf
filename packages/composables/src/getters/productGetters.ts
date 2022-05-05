@@ -66,7 +66,7 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDescription(product: Product): string {
-  return product.description;
+  return product?.description;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

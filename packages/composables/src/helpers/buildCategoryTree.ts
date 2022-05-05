@@ -1,7 +1,7 @@
 import type { Category } from '@vue-storefront/orc-vsf-api';
 import { AgnosticCategoryTree } from '@vue-storefront/core';
 
-export const buildCategoryTree = (categories: Category[], rootCategory: string, currentCategory: string, level = -1): AgnosticCategoryTree => {
+export const buildCategoryTree = (categories: Category[], rootCategory: string, currentCategory: string, level = -1, withProducts = false): AgnosticCategoryTree => {
   const root: Category = categories.find(c => c.id === rootCategory);
   if (!root) return null;
   const nextLevel = level > 0 ? (level - 1) : level;
@@ -19,12 +19,12 @@ export const buildCategoryTree = (categories: Category[], rootCategory: string, 
 
   const childProductCount = hasChildren
     ? children
-      .reduce((acc, curr) => acc + curr.productCount, 0)
+      .reduce((acc, curr) => acc + curr.productsCount, 0)
     : 0;
 
   const items = hasChildren && level !== 0
     ? children
-    //  .filter((c) => (withProducts ? c.productCount > 0 : true))
+      .filter((c) => (withProducts ? c.productsCount > 0 : true))
       .map((c) => buildCategoryTree(categories, c.id, currentCategory, nextLevel))
     : [];
 
@@ -33,7 +33,7 @@ export const buildCategoryTree = (categories: Category[], rootCategory: string, 
     slug,
     uid: [root.id, ...childrenUid],
     items: items,
-    count: childProductCount || root.productCount,
+    count: childProductCount || root.productsCount,
     isCurrent
   };
 };

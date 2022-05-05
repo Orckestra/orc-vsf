@@ -6,7 +6,17 @@
       <SfBreadcrumbs
         class="breadcrumbs desktop-only"
         :breadcrumbs="breadcrumbs"
-      />
+      >
+      <template #link="{ breadcrumb }">
+        <nuxt-link
+          :data-testid="breadcrumb.text"
+          :to="breadcrumb.link ? localePath(breadcrumb.link) : ''"
+          class="sf-link disable-active-link sf-breadcrumbs__breadcrumb"
+        >
+          {{ breadcrumb.text }}
+        </nuxt-link>
+      </template>
+    </SfBreadcrumbs>
       <div class="product">
         <LazyHydrate when-idle>
           <SfGallery :images="productGallery" class="product__gallery" />
@@ -77,6 +87,7 @@
                 <div v-html="productGetters.getDescription(product)" class="product__description">
                 </div>
                 <SfProperty
+                  v-if="breadcrumbs.length"
                   name="Category"
                   :value="breadcrumbs[breadcrumbs.length - 1].text"
                   class="product__property"
@@ -153,13 +164,13 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
+    const id = computed(() => route.value.params.id);
     const { categories } = useCategory('categories');
-    const { products, search, loading: productLoading } = useProduct('products');
+    const { products, search: searchProduct, loading: productLoading } = useProduct(`product-${id}`);
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
 
-    const id = computed(() => route.value.params.id);
-    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
+    const product = products;
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
     const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
     const productCategories = computed(() => productGetters.getCategoryIds(product.value));
@@ -172,7 +183,7 @@ export default {
     })));
 
     onSSR(async () => {
-      await search({ id: id.value });
+      await searchProduct({ queryType: 'DETAIL', id: id.value });
       await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
     });
 

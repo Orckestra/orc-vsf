@@ -9,6 +9,8 @@ import {
   AgnosticFacet
 } from '@vue-storefront/core';
 import type { Facet, FacetSearchCriteria } from '@vue-storefront/orc-vsf-api';
+import { buildCategoryTree } from '../helpers/buildCategoryTree';
+import { fillProductCounts } from '../helpers/categoriesUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticFacet[] {
@@ -28,21 +30,22 @@ function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree {
-  return {
-    label: '',
-    slug: '',
-    items: null,
-    isCurrent: false,
-    count: 0
-  };
+function getCategoryTree(params: FacetSearchResult<Facet>, root = 'Root', level = 3): AgnosticCategoryTree {
+  if (!params.data) return;
+
+  const { categoryCounts } = params.data;
+  const { categorySlug, withCategoryCounts } = params.input;
+  const categories = params.data?.categories;
+  if (withCategoryCounts) {
+    fillProductCounts(categories, categoryCounts);
+  }
+
+  return buildCategoryTree(categories, root, categorySlug, level);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProducts(params: FacetSearchResult<Facet>): any {
-
-  return (<any>params).data?.products;
+  return params.data?.products;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,8 +62,30 @@ function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getBreadcrumbs(params: FacetSearchResult<Facet>): AgnosticBreadcrumb[] {
-  return [];
+function getBreadcrumbs(params: FacetSearchResult<Facet>, includeHome = true): AgnosticBreadcrumb[] {
+  const breadcrumbs = [];
+  if (!params.data) {
+    return breadcrumbs;
+  }
+  const { categorySlug } = params.input;
+  const categories = params.data?.categories;
+  let category = categories.find(c => c.id === categorySlug);
+  while (category && category.id !== 'Root') {
+    breadcrumbs.push({
+      text: category.name,
+      link: `/c/${category.id}`
+    } as AgnosticBreadcrumb);
+    category = categories.find(c => c.id === category.primaryParentCategoryId);
+  }
+
+  if (includeHome) {
+    return [
+      { text: 'Home', link: '/' },
+      ...breadcrumbs.reverse()
+    ];
+  }
+
+  return breadcrumbs.reverse();
 }
 
 export const facetGetters: FacetsGetters<Facet, FacetSearchCriteria> = {
