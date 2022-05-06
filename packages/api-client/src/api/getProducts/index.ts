@@ -5,8 +5,21 @@ export default async function getProducts(
   params
 ) {
   const { catId, categorySlug, withCategoryCounts, facetPredicates, page, itemsPerPage, locale } = params;
-  const { api, scope, inventoryLocationIds, searchConfig } = context.config;
+  const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
   let url = null;
+
+  const setCoverImages = (products: any) => {
+    const { serverUrl, imageFolderName } = cdnDamProviderConfig;
+    products.forEach((pr: any) => {
+      const imageUrl = pr.propertyBag?.ImageUrl;
+      if (imageUrl) {
+        pr.coverImage = imageUrl;
+      } else {
+        const variantId = pr.propertBag?.VarialtId;
+        pr.coverImage = `${serverUrl}/${imageFolderName}/${pr.productId}_${variantId ? `${variantId}_` : ''}0_M.jpg`;
+      }
+    });
+  };
 
   if (catId) {
     console.log('TODO: Related');
@@ -48,7 +61,9 @@ export default async function getProducts(
       categoryCounts = categoryCountsData.facets;
     }
 
-    return { products: data.documents ?? [], total: data.totalCount, facets: data.facets, categoryCounts };
+    const products = data.documents ?? [];
+    setCoverImages(products);
+    return { products, total: data.totalCount, facets: data.facets, categoryCounts };
   } else {
 
     url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
