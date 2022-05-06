@@ -44,9 +44,8 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   ];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoverImage(product: Product): string {
-  return 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';
+  return product?.coverImage;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,7 +74,11 @@ function getCategoryIds(product: Product): string[] {
 }
 
 function getId(product: Product): string {
-  return product.productId;
+  return product?.productId;
+}
+
+function geVariantId(product: Product): string {
+  return product?.propertyBag?.VariantId;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -104,6 +107,7 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getDescription,
   getCategoryIds,
   getId,
+  geVariantId,
   getFormattedPrice,
   getTotalReviews,
   getAverageRating

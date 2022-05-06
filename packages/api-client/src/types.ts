@@ -49,7 +49,8 @@ export type Product = {
     regularPrice?: any,
     propertyBag: any,
     parentCategoryIds: any,
-    prices?: any
+    prices?: any,
+    coverImage?: any
 };
 
 export const enum ProductsQueryType {

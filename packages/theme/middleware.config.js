@@ -13,6 +13,11 @@ module.exports = {
           defaultItemsPerPage: 12,
           availableFacets: ['CategoryLevel1_Facet','CategoryLevel2_Facet','Brand'],
           categoryCountFacets: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']
+        },
+        cdnDamProviderConfig: {
+          serverUrl: 'https://refapp.azureedge.net',
+          imageFolderName: 'images',
+          fallbackImage: 'image_not_found.jpg'
         }
       },
     },
