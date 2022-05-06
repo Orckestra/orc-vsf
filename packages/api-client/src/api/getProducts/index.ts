@@ -15,11 +15,11 @@ export default async function getProducts(
       if (imageUrl) {
         pr.coverImage = imageUrl;
       } else {
-        let variantId = pr.propertBag?.VarialtId;
+        const variantId = pr.propertBag?.VarialtId;
         pr.coverImage = `${serverUrl}/${imageFolderName}/${pr.productId}_${variantId ? `${variantId}_` : ''}0_M.jpg`;
       }
     });
-  }
+  };
 
   if (catId) {
     console.log('TODO: Related');
@@ -61,7 +61,7 @@ export default async function getProducts(
       categoryCounts = categoryCountsData.facets;
     }
 
-    let products = data.documents ?? [];
+    const products = data.documents ?? [];
     setCoverImages(products);
     return { products, total: data.totalCount, facets: data.facets, categoryCounts };
   } else {
