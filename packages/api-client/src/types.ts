@@ -24,12 +24,27 @@ export type Category = {
 
 export type Coupon = TODO;
 
-export type Facet = {
+export type SearchResults = {
     total: any,
     products: any,
-    facets: any,
+    facets: Facet[],
     categories?: Category[],
     categoryCounts?: any
+};
+
+export type Facet = {
+    facetType: any,
+    title: string,
+    fieldName: string,
+    values: FacetValue[]
+};
+
+export type FacetValue = {
+    minimumValue?: any,
+    maximumValue?: any,
+    value: string,
+    displayName: string,
+    count: number
 };
 
 export type FacetSearchCriteria = TODO;

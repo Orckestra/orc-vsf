@@ -6,19 +6,34 @@
 ## API
 ```typescript
 interface UseFacet<any> {
-  result: ComputedProperty<FacetSearchResult<Facet>>;
+  result: ComputedProperty<FacetSearchResult<SearchResults>>;
   loading: ComputedProperty<boolean>;
   search: (params?: AgnosticFacetSearchParams) => Promise<void>;
   error: ComputedProperty<UseFacetErrors>;
 }
 
-export interface Facet {
+export interface SearchResults {
     total: any,
     products: any,
-    facets: any,
+    facets: Facet[],
     categories?: Category[],
     categoryCounts: any
 }
+
+export declare type Facet = {
+    facetType: any;
+    title: string;
+    fieldName: string;
+    values: FacetValue[];
+};
+
+export declare type FacetValue = {
+    minimumValue?: any;
+    maximumValue?: any;
+    value: string;
+    displayName: string;
+    count: number;
+};
 
 export interface Category {
   id: string
@@ -44,13 +59,12 @@ Reactive object containing the error message, if search failed for any reason.
 ## Getters
 ````typescript
 interface FacetsGetters<Facet> {
-  getAll: (data: FacetSearchResult<Facet>, criteria?: CRITERIA) => AgnosticFacet[];
-  getGrouped: (data: FacetSearchResult<Facet>, criteria?: CRITERIA) => AgnosticGroupedFacet[];
-  getCategoryTree: (data: FacetSearchResult<Facet>, root?: string = 'Root', level = 3) => AgnosticCategoryTree;
-  getSortOptions: (data: FacetSearchResult<Facet>) => AgnosticSort;
-  getProducts: (data: FacetSearchResult<Facet>) => RESULTS;
-  getPagination: (data: FacetSearchResult<Facet>) => AgnosticPagination;
-  getBreadcrumbs: (data: FacetSearchResult<Facet>) => AgnosticBreadcrumb[];
+  getGrouped: (data: FacetSearchResult<SearchResults>, criteria?: string[]) => AgnosticGroupedFacet[];
+  getCategoryTree: (data: FacetSearchResult<SearchResults>, root?: string = 'Root', level = 3) => AgnosticCategoryTree;
+  getSortOptions: (data: FacetSearchResult<SearchResults>) => AgnosticSort;
+  getProducts: (data: FacetSearchResult<SearchResults>) => RESULTS;
+  getPagination: (data: FacetSearchResult<SearchResults>) => AgnosticPagination;
+  getBreadcrumbs: (data: FacetSearchResult<SearchResults>) => AgnosticBreadcrumb[];
 }
 ````
 ## Example
@@ -66,6 +80,7 @@ export default {
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
+    const facets = computed(() => facetGetters.getGrouped(result.value, ['Brand','SeasonWear']));
 
     onSSR(async () => {
        await search({...th.getFacetsFromURL(), withCategoryCounts: true});
@@ -76,6 +91,7 @@ export default {
       categoryTree,
       breadcrumbs,
       pagination,
+      facets,
       loading
     }
   }

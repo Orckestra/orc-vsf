@@ -1,7 +1,7 @@
 import type { Category } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const buildFacetPredicates = (categories: any, rootCategory: string): any => {
+export const buildFacetPredicates = (categories: any, rootCategory: string, filters?: any): any => {
   if (!Array.isArray(categories)) return [];
   const root: Category = categories.find(c => c.id === rootCategory);
   if (!root) return [];
@@ -24,6 +24,21 @@ export const buildFacetPredicates = (categories: any, rootCategory: string): any
     operatorType: 0,
     excludeFilterForFacetsCount: true
   }));
+
+  if (filters) {
+    Object.keys(filters).map(filterKey => {
+      const options = filters[filterKey];
+      if (options && options.length) {
+        facetPredicates.push({
+          facetType: 1,
+          fieldName: filterKey,
+          values: filters[filterKey],
+          operatorType: 0,
+          excludeFilterForFacetsCount: true
+        })
+      }
+    })
+  };
 
   return facetPredicates;
 };

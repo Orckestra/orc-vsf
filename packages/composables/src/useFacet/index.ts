@@ -14,8 +14,8 @@ const factoryParams = {
     const { categories } = useCategory('categories');
     const { ...searchParams } = params.input;
     searchParams.locale = app.i18n.locale;
-    const { categorySlug } = searchParams;
-    searchParams.facetPredicates = buildFacetPredicates(categories.value, categorySlug);
+    const { categorySlug, filters } = searchParams;
+    searchParams.facetPredicates = buildFacetPredicates(categories.value, categorySlug, filters);
     const { products, total, facets, categoryCounts } = await context.$occ.api.getProducts(searchParams);
     return {
       products,

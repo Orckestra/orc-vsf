@@ -13,7 +13,11 @@ function getName(product: Product): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
-  return product?.propertyBag?.DisplayName;
+  return product?.sku;
+}
+
+function getBrand(product: Product): string {
+  return product?.propertyBag?.Brand;
 }
 
 function getPrice(product: Product): AgnosticPrice {
@@ -97,6 +101,7 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getName,
   getSlug,
   getPrice,
+  getBrand,
   getGallery,
   getCoverImage,
   getFiltered,

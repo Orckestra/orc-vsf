@@ -1,6 +1,7 @@
 
 import { getCurrentInstance } from '@nuxtjs/composition-api';
 import { AgnosticCategoryTree } from '@vue-storefront/core';
+import { useRoute, useRouter } from '@nuxtjs/composition-api';
 
 const getContext = () => {
   const vm = getCurrentInstance();
@@ -28,7 +29,7 @@ const getFiltersDataFromUrl = (context, onlyFilters) => {
 
 // eslint-disable-next-line
 const useUiHelpers = () => {
-
+  const router = useRouter();
   const context = getContext();
 
   const getFacetsFromURL = () => {
@@ -56,7 +57,12 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeFilters = (filters) => {
-    console.warn('[VSF] please implement useUiHelpers.changeFilters.');
+    router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false),
+        ...filters,
+      },
+    });
   };
 
   // eslint-disable-next-line
