@@ -23,8 +23,8 @@ export default async function getProducts(
 
   const sortOptions = sort.split('-');
   const sortObj = {
-    direction: sortOptions.length === 2 && sortOptions[1] === 'desc' ? '1' : '0',
-    propertyName: sortOptions[0]
+    direction: (sortOptions && sortOptions.length === 2 && sortOptions[1] === 'desc') || !sortOptions ? '1' : '0',
+    propertyName: sortOptions && sortOptions.length > 0 ? sortOptions[0] : 'score'
   };
   
   if (catId) {
