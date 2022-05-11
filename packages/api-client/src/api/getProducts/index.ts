@@ -21,11 +21,11 @@ export default async function getProducts(
     });
   };
 
-  const sortOptions = sort.split('-');    
+  const sortOptions = sort.split('-');
   const sortObj = {
     direction: sortOptions.length == 2 && sortOptions[1] === 'asc' ? '1' : '0',
     propertyName: sortOptions.length == 2 ? sortOptions[0] : 'score'
-  }
+  };
   if (catId) {
     console.log('TODO: Related');
     return [];
@@ -67,7 +67,7 @@ export default async function getProducts(
   } else {
 
     url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-    
+
     const { data } = await context.client.post(url.href, {
       query: {
         distinctResults: true,

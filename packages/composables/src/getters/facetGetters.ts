@@ -26,10 +26,10 @@ function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCrit
 function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
   return {
     options: [{ type: '', id: 'CurrentPrice-desc', value: 'Price from low to high' },
-     { type: '', id: 'CurrentPrice-asc', value: 'Price from high to low' },
-     { type: '', id: 'DisplayName_Sort-desc', value: 'Name A-Z' },
-     { type: '', id: 'DisplayName_Sort-asc', value: 'Name Z-A' },
-     { type: '', id: 'score', value: 'Latest' }],
+      { type: '', id: 'CurrentPrice-asc', value: 'Price from high to low' },
+      { type: '', id: 'DisplayName_Sort-desc', value: 'Name A-Z' },
+      { type: '', id: 'DisplayName_Sort-asc', value: 'Name Z-A' },
+      { type: '', id: 'score', value: 'Latest' }],
     selected: params.input.sort
   };
 }
