@@ -23,10 +23,10 @@ export default async function getProducts(
 
   const sortOptions = sort.split('-');
   const sortObj = {
-    direction: sortOptions.length === 2 && sortOptions[1] === 'asc' ? '0' : '1',
-    propertyName: sortOptions.length === 2 ? sortOptions[0] : 'score'
+    direction: sortOptions.length === 2 && sortOptions[1] === 'desc' ? '1' : '0',
+    propertyName: sortOptions[0]
   };
-  console.log(sortObj);
+  
   if (catId) {
     console.log('TODO: Related');
     return [];
