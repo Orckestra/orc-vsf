@@ -26,7 +26,7 @@ export default async function getProducts(
     direction: (sortOptions && sortOptions.length === 2 && sortOptions[1] === 'desc') || !sortOptions ? '1' : '0',
     propertyName: sortOptions && sortOptions.length > 0 ? sortOptions[0] : 'score'
   };
-  
+
   if (catId) {
     console.log('TODO: Related');
     return [];
