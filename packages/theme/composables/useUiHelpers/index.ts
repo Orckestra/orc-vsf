@@ -38,7 +38,7 @@ const useUiHelpers = () => {
     return {
       categorySlug,
       page: parseInt(query.page as string, 10) || 1,
-      sort: query.sort || 'latest',
+      sort: query.sort || 'score-desc',
       term: query.term,
       filters: getFiltersDataFromUrl(context, true),
       itemsPerPage: parseInt(query.itemsPerPage as string, 10) || 12
@@ -49,9 +49,13 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeSorting = (sort) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSorting.');
-
-    return 'latest';
+    context.$router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false),
+        sort
+      }
+    });
+    return sort;
   };
 
   // eslint-disable-next-line

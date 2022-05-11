@@ -25,8 +25,12 @@ function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCrit
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
   return {
-    options: [],
-    selected: ''
+    options: [{ type: 'sort', id: 'score-desc', value: 'Relevance' },
+      { type: 'sort', id: 'CurrentPrice-asc', value: 'Price from low to high' },
+      { type: 'sort', id: 'CurrentPrice-desc', value: 'Price from high to low' },
+      { type: 'sort', id: 'DisplayName_Sort-asc', value: 'Name A-Z' },
+      { type: 'sort', id: 'DisplayName_Sort-desc', value: 'Name Z-A' }],
+    selected: params.input.sort
   };
 }
 

@@ -4,7 +4,7 @@ export default async function getProducts(
   context,
   params
 ) {
-  const { catId, categorySlug, withCategoryCounts, facetPredicates, page, itemsPerPage, locale } = params;
+  const { catId, categorySlug, withCategoryCounts, facetPredicates, page, itemsPerPage, locale, sort } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
   let url = null;
 
@@ -19,6 +19,12 @@ export default async function getProducts(
         pr.coverImage = `${serverUrl}/${imageFolderName}/${pr.productId}_${variantId ? `${variantId}_` : ''}0_M.jpg`;
       }
     });
+  };
+
+  const sortOptions = sort.split('-');
+  const sortObj = {
+    direction: sortOptions && sortOptions.length === 2 && sortOptions[1] === 'desc' ? '1' : '0',
+    propertyName: sortOptions && sortOptions.length > 0 ? sortOptions[0] : 'score'
   };
 
   if (catId) {
@@ -37,12 +43,7 @@ export default async function getProducts(
       query: {
         maximumItems: maximumItems,
         startingIndex: (page - 1) * maximumItems,
-        sortings: [
-          {
-            direction: 0,
-            propertyName: 'score'
-          }
-        ]
+        sortings: [sortObj]
       }
     });
 
@@ -72,7 +73,8 @@ export default async function getProducts(
       query: {
         distinctResults: true,
         maximumItems: searchConfig.defaultItemsPerPage,
-        startingIndex: 0
+        startingIndex: 0,
+        sortings: [sortObj]
       }
     });
 
