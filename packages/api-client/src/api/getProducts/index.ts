@@ -4,7 +4,7 @@ export default async function getProducts(
   context,
   params
 ) {
-  const { catId, categorySlug, withCategoryCounts, facetPredicates, page, itemsPerPage, locale } = params;
+  const { catId, categorySlug, withCategoryCounts, facetPredicates, page, itemsPerPage, locale, sort } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
   let url = null;
 
@@ -21,6 +21,11 @@ export default async function getProducts(
     });
   };
 
+  const sortOptions =  sort.split('-');    
+  let sortObj = {
+    direction: sortOptions.length == 2 && sortOptions[1] === 'asc' ? '1'  : '0' ,
+    propertyName: sortOptions.length == 2 ? sortOptions[0] : 'score'
+  }
   if (catId) {
     console.log('TODO: Related');
     return [];
@@ -37,12 +42,7 @@ export default async function getProducts(
       query: {
         maximumItems: maximumItems,
         startingIndex: (page - 1) * maximumItems,
-        sortings: [
-          {
-            direction: 0,
-            propertyName: 'score'
-          }
-        ]
+        sortings: [sortObj]
       }
     });
 
@@ -67,12 +67,13 @@ export default async function getProducts(
   } else {
 
     url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-
+    
     const { data } = await context.client.post(url.href, {
       query: {
         distinctResults: true,
         maximumItems: searchConfig.defaultItemsPerPage,
-        startingIndex: 0
+        startingIndex: 0,
+        sortings: [sortObj]
       }
     });
 

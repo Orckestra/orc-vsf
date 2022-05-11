@@ -49,9 +49,13 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeSorting = (sort) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSorting.');
-
-    return 'latest';
+    context.$router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false),
+        sort
+      }
+    });
+    return sort;
   };
 
   // eslint-disable-next-line
