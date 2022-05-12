@@ -25,6 +25,9 @@ export declare type Facet = {
     title: string;
     fieldName: string;
     values: FacetValue[];
+    gapSize?: string;
+    startValue?: string;
+    endValue?: string;
 };
 
 export declare type FacetValue = {
@@ -59,7 +62,7 @@ Reactive object containing the error message, if search failed for any reason.
 ## Getters
 ````typescript
 interface FacetsGetters<Facet> {
-  getGrouped: (data: FacetSearchResult<SearchResults>, criteria?: string[]) => AgnosticGroupedFacet[];
+  getGrouped: (data: FacetSearchResult<SearchResults>, criteria?: string[]) => (AgnosticGroupedFacet & {type: string});
   getCategoryTree: (data: FacetSearchResult<SearchResults>, root?: string = 'Root', level = 3) => AgnosticCategoryTree;
   getSortOptions: (data: FacetSearchResult<SearchResults>) => AgnosticSort;
   getProducts: (data: FacetSearchResult<SearchResults>) => RESULTS;
