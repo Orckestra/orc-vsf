@@ -87,6 +87,11 @@ const useUiHelpers = () => {
     return false;
   };
 
+  const isFacetRange = (facet): boolean => {
+    const type = facet.type;
+    return type === 'Range' || type === '2';
+  };
+
   // eslint-disable-next-line
   const isFacetCheckbox = (facet): boolean => {
     console.warn('[VSF] please implement useUiHelpers.isFacetCheckbox.');
@@ -106,6 +111,7 @@ const useUiHelpers = () => {
     changeItemsPerPage,
     setTermForUrl,
     isFacetColor,
+    isFacetRange,
     isFacetCheckbox,
     getSearchTermFromUrl
   };

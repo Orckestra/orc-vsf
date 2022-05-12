@@ -15,17 +15,15 @@
             :key="`filter-title-${facet.id}`"
           />
           <div
-            v-if="isFacetColor(facet)"
-            class="filters__colors"
-            :key="`${facet.id}-colors`"
+            v-if="isFacetRange(facet)"
+            class="filters__range"
+            :key="`${facet.id}-range`"
           >
-            <SfColor
-              v-for="option in facet.options"
-              :key="`${facet.id}-${option.value}`"
-              :color="option.value"
-              :selected="isFilterSelected(facet, option)"
-              class="filters__color"
-              @click="() => selectFilter(facet, option)"
+            <SfRange
+                :value="getRangeConfig(facet).start"
+                :disabled="false"
+                :config="getRangeConfig(facet)"
+                @change="(value) => selectFilter(facet, value)"
             />
           </div>
           <div v-else>
@@ -43,6 +41,7 @@
       <SfAccordion class="filters smartphone-only">
         <div v-for="(facet, i) in facets" :key="i">
           <SfAccordionItem
+            v-if="!isFacetRange(facet)"
             :key="`filter-title-${facet.id}`"
             :header="facet.label"
             class="filters__accordion-item"
@@ -87,7 +86,8 @@ import {
   SfHeading,
   SfFilter,
   SfAccordion,
-  SfColor
+  SfColor,
+  SfRange
 } from '@storefront-ui/vue';
 
 import { ref, computed, onMounted } from '@nuxtjs/composition-api';
@@ -103,14 +103,15 @@ export default {
     SfFilter,
     SfAccordion,
     SfColor,
+    SfRange,
     SfHeading
   },
   setup(props, context) {
-    const { changeFilters, isFacetColor } = useUiHelpers();
+    const { changeFilters, isFacetColor, isFacetRange } = useUiHelpers();
     const { toggleFilterSidebar, isFilterSidebarOpen } = useUiState();
     const { result } = useFacet();
 
-    const facets = computed(() => facetGetters.getGrouped(result.value, ['Brand','SeasonWear','ShirtType','ShoeType','HeelsHeight']));
+    const facets = computed(() => facetGetters.getGrouped(result.value, ['Brand','SeasonWear','ShirtType','ShoeType','HeelsHeight','CurrentPrice']));
     const selectedFilters = ref({});
 
     const setSelectedFilters = () => {
@@ -130,6 +131,11 @@ export default {
         Vue.set(selectedFilters.value, facet.id, []);
       }
 
+      if(isFacetRange(facet)) {
+        selectedFilters.value[facet.id]  = [option.join('_')];
+        return;
+      }
+
       if (selectedFilters.value[facet.id].find(f => f === option.id)) {
         selectedFilters.value[facet.id] = selectedFilters.value[facet.id].filter(f => f !== option.id);
         return;
@@ -137,6 +143,26 @@ export default {
 
       selectedFilters.value[facet.id].push(option.id);
     };
+
+    const getRangeConfig = facet => {
+      if(!facet.options || !facet.options.length) return {};
+      var filters = result.value.input?.filters;
+      var selectedList = filters && filters[facet.id] ? filters[facet.id] : [];
+
+      const { metadata } = facet.options[0];
+      const {startValue, endValue, gapSize} = metadata;
+      const start = selectedList.length ? selectedList[0].split('_').map(i => parseFloat(i)) : [parseFloat(startValue), parseFloat(endValue)];
+      return {"start": start,
+      "range":{"min":parseFloat(startValue),"max":parseFloat(endValue)},
+      "step":parseFloat(gapSize),
+      "connect":true,
+      "direction":"ltr",
+      "orientation":"horizontal",
+      "behaviour":
+      "tap-drag",
+      "tooltips":true,
+      "keyboardSupport":true};
+    }
 
     const clearFilters = () => {
       toggleFilterSidebar();
@@ -157,7 +183,9 @@ export default {
     return {
       facets,
       isFacetColor,
+      isFacetRange,
       selectFilter,
+      getRangeConfig,
       isFilterSelected,
       isFilterSidebarOpen,
       toggleFilterSidebar,
@@ -236,6 +264,10 @@ export default {
     --button-background: var(--c-light);
     --button-color: var(--c-dark-variant);
     margin: var(--spacer-xs) 0 0 0;
+  }
+  .filters__range {
+    margin-left: -30px;
+    margin-right: 30px;
   }
 }
 </style>

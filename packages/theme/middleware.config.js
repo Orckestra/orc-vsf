@@ -11,7 +11,13 @@ module.exports = {
         inventoryLocationIds: process.env.OVERTURE_INVENTORY_LOCATION_IDS,
         searchConfig: {
           defaultItemsPerPage: 12,
-          availableFacets: ['Brand','SeasonWear','ShirtType','ShoeType','HeelsHeight'],
+          availableFacets: [
+            { name: 'Brand', type: 1 },
+            { name: 'SeasonWear', type: 1 },
+            { name: 'ShirtType', type: 1 },
+            { name: 'ShoeType', type: 1 },
+            { name: 'HeelsHeight', type: 1 },
+            { name: 'CurrentPrice', type: 2 }],
           categoryCountFacets: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']
         },
         cdnDamProviderConfig: {

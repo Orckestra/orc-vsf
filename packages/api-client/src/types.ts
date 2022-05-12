@@ -36,7 +36,10 @@ export type Facet = {
     facetType: any,
     title: string,
     fieldName: string,
-    values: FacetValue[]
+    values: FacetValue[],
+    gapSize?: string,
+    startValue?: string,
+    endValue?: string
 };
 
 export type FacetValue = {
@@ -46,6 +49,13 @@ export type FacetValue = {
     displayName: string,
     count: number
 };
+
+export const enum FacetType
+{
+    SingleSelect = 0,
+    MultiSelect = 1,
+    Range = 2
+}
 
 export type FacetSearchCriteria = TODO;
 

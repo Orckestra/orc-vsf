@@ -8,7 +8,7 @@ import {
   AgnosticBreadcrumb,
   AgnosticFacet
 } from '@vue-storefront/core';
-import type { SearchResults, FacetSearchCriteria } from '@vue-storefront/orc-vsf-api';
+import type { SearchResults, FacetSearchCriteria, Facet } from '@vue-storefront/orc-vsf-api';
 import { buildCategoryTree } from '../helpers/buildCategoryTree';
 import { setProductCounts } from '../helpers/categoriesUtils';
 
@@ -17,10 +17,18 @@ function getAll(params: FacetSearchResult<SearchResults>, criteria?: FacetSearch
   return [];
 }
 
-function getGrouped(params: FacetSearchResult<SearchResults>, criteria?: string[]): AgnosticGroupedFacet[] {
+function getGrouped(params: FacetSearchResult<SearchResults>, criteria?: string[]): (AgnosticGroupedFacet & {type: string})[] {
   var facets = params.data?.facets;
   var filters = params.input?.filters;
   if (!facets) return;
+
+  const getMetadata = (facet: Facet) => {
+    return {
+      startValue: facet.startValue,
+      endValue: facet.endValue,
+      gapSize: facet.gapSize
+    }
+  }
 
   if (criteria) {
     facets = facets.filter(f => criteria.includes(f.fieldName));
@@ -31,13 +39,15 @@ function getGrouped(params: FacetSearchResult<SearchResults>, criteria?: string[
     return {
       id: facet.fieldName,
       label: facet.title,
+      type: facet.facetType,
       options: facet.values.map((v, index) =>
         ({
           id: v.value,
           value: v.value,
           type: facet.facetType,
           count: v.count,
-          selected: selectedList.includes(v.value)
+          selected: selectedList.includes(v.value),
+          metadata: getMetadata(facet)
         }))
     };
   }).filter(i => i && i.options && i.options.length);

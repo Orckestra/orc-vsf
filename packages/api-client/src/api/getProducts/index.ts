@@ -1,11 +1,15 @@
+
+import { buildFacetPredicates } from '../../helpers/buildFacetPredicates';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default async function getProducts(
   context,
   params
 ) {
-  const { catId, categorySlug, withCategoryCounts, facetPredicates, page, itemsPerPage, locale } = params;
+  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
+  const facetPredicates = buildFacetPredicates(categories, categorySlug, filters, searchConfig);
+
   let url = null;
 
   const setCoverImages = (products: any) => {
@@ -33,7 +37,7 @@ export default async function getProducts(
       categoryName: categorySlug,
       includeFacets: true,
       facetPredicates,
-      facets: searchConfig.availableFacets,
+      facets: searchConfig.availableFacets.map(f => f.name),
       query: {
         maximumItems: maximumItems,
         startingIndex: (page - 1) * maximumItems,
