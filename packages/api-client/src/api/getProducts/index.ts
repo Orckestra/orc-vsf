@@ -1,4 +1,3 @@
-
 import { buildFacetPredicates } from '../../helpers/buildFacetPredicates';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -6,7 +5,7 @@ export default async function getProducts(
   context,
   params
 ) {
-  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale } = params;
+  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale, sort } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
   const facetPredicates = buildFacetPredicates(categories, categorySlug, filters, searchConfig);
 
@@ -25,6 +24,12 @@ export default async function getProducts(
     });
   };
 
+  const sortOptions = sort.split('-');
+  const sortObj = {
+    direction: sortOptions && sortOptions.length === 2 && sortOptions[1] === 'desc' ? '1' : '0',
+    propertyName: sortOptions && sortOptions.length > 0 ? sortOptions[0] : 'score'
+  };
+
   if (catId) {
     console.log('TODO: Related');
     return [];
@@ -41,12 +46,7 @@ export default async function getProducts(
       query: {
         maximumItems: maximumItems,
         startingIndex: (page - 1) * maximumItems,
-        sortings: [
-          {
-            direction: 0,
-            propertyName: 'score'
-          }
-        ]
+        sortings: [sortObj]
       }
     });
 
@@ -76,7 +76,8 @@ export default async function getProducts(
       query: {
         distinctResults: true,
         maximumItems: searchConfig.defaultItemsPerPage,
-        startingIndex: 0
+        startingIndex: 0,
+        sortings: [sortObj]
       }
     });
 
