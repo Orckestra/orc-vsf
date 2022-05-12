@@ -10,7 +10,7 @@ const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<AgnosticFacetSearchParams>) => {
     const app: any = context.$occ.config.app;
-  
+
     const { categories } = useCategory('categories');
     const { ...searchParams } = params.input;
     searchParams.locale = app.i18n.locale;

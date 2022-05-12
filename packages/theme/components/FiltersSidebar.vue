@@ -111,7 +111,7 @@ export default {
     const { toggleFilterSidebar, isFilterSidebarOpen } = useUiState();
     const { result } = useFacet();
 
-    const facets = computed(() => facetGetters.getGrouped(result.value, ['Brand','SeasonWear','ShirtType','ShoeType','HeelsHeight','CurrentPrice']));
+    const facets = computed(() => facetGetters.getGrouped(result.value, ['Brand', 'SeasonWear', 'ShirtType', 'ShoeType', 'HeelsHeight', 'CurrentPrice']));
     const selectedFilters = ref({});
 
     const setSelectedFilters = () => {
@@ -131,8 +131,8 @@ export default {
         Vue.set(selectedFilters.value, facet.id, []);
       }
 
-      if(isFacetRange(facet)) {
-        selectedFilters.value[facet.id]  = [option.join('_')];
+      if (isFacetRange(facet)) {
+        selectedFilters.value[facet.id] = [option.join('_')];
         return;
       }
 
@@ -145,24 +145,24 @@ export default {
     };
 
     const getRangeConfig = facet => {
-      if(!facet.options || !facet.options.length) return {};
-      var filters = result.value.input?.filters;
-      var selectedList = filters && filters[facet.id] ? filters[facet.id] : [];
+      if (!facet.options || !facet.options.length) return {};
+      const filters = result.value.input?.filters;
+      const selectedList = filters && filters[facet.id] ? filters[facet.id] : [];
 
       const { metadata } = facet.options[0];
       const {startValue, endValue, gapSize} = metadata;
       const start = selectedList.length ? selectedList[0].split('_').map(i => parseFloat(i)) : [parseFloat(startValue), parseFloat(endValue)];
-      return {"start": start,
-      "range":{"min":parseFloat(startValue),"max":parseFloat(endValue)},
-      "step":parseFloat(gapSize),
-      "connect":true,
-      "direction":"ltr",
-      "orientation":"horizontal",
-      "behaviour":
-      "tap-drag",
-      "tooltips":true,
-      "keyboardSupport":true};
-    }
+      return {start: start,
+        range: {min: parseFloat(startValue), max: parseFloat(endValue)},
+        step: parseFloat(gapSize),
+        connect: true,
+        direction: 'ltr',
+        orientation: 'horizontal',
+        behaviour:
+      'tap-drag',
+        tooltips: true,
+        keyboardSupport: true};
+    };
 
     const clearFilters = () => {
       toggleFilterSidebar();

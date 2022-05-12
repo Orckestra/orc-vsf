@@ -1,7 +1,7 @@
 
 import { getCurrentInstance } from '@nuxtjs/composition-api';
 import { AgnosticCategoryTree } from '@vue-storefront/core';
-import { useRoute, useRouter } from '@nuxtjs/composition-api';
+import { useRouter } from '@nuxtjs/composition-api';
 
 const getContext = () => {
   const vm = getCurrentInstance();
@@ -60,8 +60,8 @@ const useUiHelpers = () => {
     router.push({
       query: {
         ...getFiltersDataFromUrl(context, false),
-        ...filters,
-      },
+        ...filters
+      }
     });
   };
 

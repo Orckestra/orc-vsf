@@ -24,12 +24,12 @@ export type Category = {
 
 export type Coupon = TODO;
 
-export type SearchResults = {
-    total: any,
-    products: any,
-    facets: Facet[],
-    categories?: Category[],
-    categoryCounts?: any
+export type FacetValue = {
+    minimumValue?: any,
+    maximumValue?: any,
+    value: string,
+    displayName: string,
+    count: number
 };
 
 export type Facet = {
@@ -42,12 +42,12 @@ export type Facet = {
     endValue?: string
 };
 
-export type FacetValue = {
-    minimumValue?: any,
-    maximumValue?: any,
-    value: string,
-    displayName: string,
-    count: number
+export type SearchResults = {
+    total: any,
+    products: any,
+    facets: Facet[],
+    categories?: Category[],
+    categoryCounts?: any
 };
 
 export const enum FacetType

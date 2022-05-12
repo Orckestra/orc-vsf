@@ -29,9 +29,9 @@ export const buildFacetPredicates = (categories: any, rootCategory: string, filt
     Object.keys(filters).forEach(filterKey => {
       const options = filters[filterKey];
       const facetConfig = config.availableFacets.find(f => f.name === filterKey);
-      if(!facetConfig) return;
+      if (!facetConfig) return;
       if (options && options.length) {
-        let predicate: any = {
+        const predicate: any = {
           facetType: facetConfig.type,
           fieldName: filterKey,
           values: filters[filterKey],
@@ -39,9 +39,9 @@ export const buildFacetPredicates = (categories: any, rootCategory: string, filt
           excludeFilterForFacetsCount: true
         };
 
-        //Range
+        // Range
         if (facetConfig.type === 2) {
-          let values = options[0].split('_');
+          const values = options[0].split('_');
           predicate.values = null,
           predicate.minimumValue = parseFloat(values[0]);
           predicate.maximumValue = parseFloat(values[1]);
@@ -49,8 +49,8 @@ export const buildFacetPredicates = (categories: any, rootCategory: string, filt
 
         facetPredicates.push(predicate);
       }
-    })
-  };
+    });
+  }
 
   return facetPredicates;
 };
