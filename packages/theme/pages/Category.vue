@@ -243,7 +243,7 @@ export default {
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const activeCategory = computed(() => {
-      const items = categoryTree.value.items;
+    const items = categoryTree.value?.items;
 
       if (!items || !items.length) {
         return '';
