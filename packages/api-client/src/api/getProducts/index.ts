@@ -7,7 +7,7 @@ export default async function getProducts(
 ) {
   const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale, sort } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
-   let url = null;
+  let url = null;
 
   const setCoverImages = (products: any) => {
     const { serverUrl, imageFolderName } = cdnDamProviderConfig;
@@ -29,9 +29,8 @@ export default async function getProducts(
       direction: sortOptions && sortOptions.length === 2 && sortOptions[1] === 'desc' ? '1' : '0',
       propertyName: sortOptions && sortOptions.length > 0 ? sortOptions[0] : 'score'
     };
-  }
+  };
 
-  
   if (catId) {
     console.log('TODO: Related');
     return [];
