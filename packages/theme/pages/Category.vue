@@ -144,11 +144,10 @@
               <template #configuration>
                 <SfProperty
                   class="desktop-only"
-                  name="Size"
-                  value="XS"
+                  name="Brand"
+                  :value="productGetters.getBrand(product)"
                   style="margin: 0 0 1rem 0;"
                 />
-                <SfProperty class="desktop-only" name="Color" value="white" />
               </template>
               <template #actions>
                 <SfButton
@@ -244,7 +243,7 @@ export default {
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const activeCategory = computed(() => {
-      const items = categoryTree.value.items;
+      const items = categoryTree.value?.items;
 
       if (!items || !items.length) {
         return '';

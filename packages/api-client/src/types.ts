@@ -24,13 +24,38 @@ export type Category = {
 
 export type Coupon = TODO;
 
+export type FacetValue = {
+    minimumValue?: any,
+    maximumValue?: any,
+    value: string,
+    displayName: string,
+    count: number
+};
+
 export type Facet = {
+    facetType: any,
+    title: string,
+    fieldName: string,
+    values: FacetValue[],
+    gapSize?: string,
+    startValue?: string,
+    endValue?: string
+};
+
+export type SearchResults = {
     total: any,
     products: any,
-    facets: any,
+    facets: Facet[],
     categories?: Category[],
     categoryCounts?: any
 };
+
+export const enum FacetType
+{
+    SingleSelect = 0,
+    MultiSelect = 1,
+    Range = 2
+}
 
 export type FacetSearchCriteria = TODO;
 
