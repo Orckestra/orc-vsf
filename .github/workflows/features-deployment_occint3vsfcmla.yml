@@ -23,7 +23,7 @@ jobs:
 
       - name: yarn install, build, and test
         run: |
-          yarn install
+          yarn install --production --network-timeout=30000
           yarn run build
           yarn run test
 
