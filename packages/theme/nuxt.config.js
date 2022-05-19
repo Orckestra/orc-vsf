@@ -87,8 +87,8 @@ export default {
 
   i18n: {
     strategy: 'prefix',
-    currency: 'USD',
-    country: 'US',
+    currency: 'CAD',
+    country: 'CA',
     countries: [
       { name: 'US', label: 'United States', states: ['California', 'Nevada'] },
       { name: 'AT', label: 'Austria' },
@@ -96,12 +96,13 @@ export default {
       { name: 'NL', label: 'Netherlands' }
     ],
     currencies: [
+      { name: 'CAD', label: 'Canadian dollar' },
       { name: 'EUR', label: 'Euro' },
       { name: 'USD', label: 'Dollar' }
     ],
     locales: [
       { code: 'en-CA', label: 'English', file: 'en.js', iso: 'en' },
-      { code: 'fr-CA', label: 'French', file: 'de.js', iso: 'fr' }
+      { code: 'fr-CA', label: 'French', file: 'fr.js', iso: 'fr' }
     ],
     defaultLocale: 'en-CA',
     lazy: true,
@@ -112,12 +113,12 @@ export default {
       numberFormats: {
         'en-CA': {
           currency: {
-            style: 'currency', currency: 'USD', currencyDisplay: 'symbol'
+            style: 'currency', currency: 'CAD', currencyDisplay: 'symbol'
           }
         },
         'fr-CA': {
           currency: {
-            style: 'currency', currency: 'EUR', currencyDisplay: 'symbol'
+            style: 'currency', currency: 'CAD', currencyDisplay: 'symbol'
           }
         }
       }

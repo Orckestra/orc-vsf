@@ -30,7 +30,7 @@
 
 <script>
 import { SfMenuItem, SfModal } from '@storefront-ui/vue';
-import { useUiState } from '~/composables';
+import { useUiState, useUiHelpers } from '~/composables';
 import { useCategory, categoryGetters } from '@vue-storefront/orc-vsf';
 import { computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
@@ -50,12 +50,13 @@ export default {
   setup() {
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
     const { search: searchCategories, categories, loading } = useCategory('categories');
+    const th = useUiHelpers();
 
     onSSR(async () => {
       await searchCategories({});
     });
 
-    const menus = computed(() => categoryGetters.getCategoryTree(categories.value, '', 1)?.items.slice(0, 5));
+    const menus = computed(() => categoryGetters.getCategoryTree(categories.value, th.getFacetsFromURL()?.categorySlug, 1)?.items.slice(0, 5));
 
     return {
       menus,

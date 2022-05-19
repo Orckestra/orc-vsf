@@ -374,6 +374,9 @@ export default {
     .nuxt-link-exact-active {
       text-decoration: underline;
     }
+    .nuxt-link-active {
+      font-weight: bold;
+    }
   }
 }
 .products {
