@@ -3,6 +3,7 @@ import {
   useUserFactory,
   UseUserFactoryParams
 } from '@vue-storefront/core';
+import { createGuid } from '../helpers/generalUtils';
 import type { User } from '@vue-storefront/orc-vsf-api';
 import type {
   UseUserUpdateParams as UpdateParams,
@@ -12,7 +13,21 @@ import type {
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    console.log('Mocked: useUser.load');
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    const isAuthenticated = app.$cookies.get(appKey + '_isAuthenticated');
+
+    if ((userToken === undefined || userToken === '')) {
+      // Initiate Guest
+      app.$cookies.set(appKey + '_token', createGuid());
+      app.$cookies.set(appKey + '_isAuthenticated', false);
+    }
+
+    if (isAuthenticated) {
+      console.log('TODO load user with token');
+    }
+
     return {};
   },
 

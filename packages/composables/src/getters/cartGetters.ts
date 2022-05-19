@@ -10,52 +10,56 @@ import type { Cart, CartItem } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
-  return [
-    {}
-  ];
+  const shipment = cart?.shipments[0];
+  return shipment?.lineItems;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemName(item: CartItem): string {
-  return 'Name';
+  return item?.productSummary.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemImage(item: CartItem): string {
-  return 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';
+  return item?.coverImage;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemPrice(item: CartItem): AgnosticPrice {
   return {
-    regular: 12,
-    special: 10
+    regular: item?.regularPrice,
+    special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : undefined
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemQty(item: CartItem): number {
-  return 1;
+  return item?.quantity;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(item: CartItem, filterByAttributeName?: Array<string>): Record<string, AgnosticAttribute | string> {
   return {
-    color: 'red'
+    ...item?.kvaValues
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemSku(item: CartItem): string {
-  return '';
+  return item?.sku;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getItemStatus(item: CartItem): string {
+  return item?.status;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(cart: Cart): AgnosticTotals {
   return {
-    total: 12,
-    subtotal: 12,
-    special: 10
+    total: cart?.total,
+    subtotal: cart?.subTotal,
+    special: cart?.subTotal
   };
 }
 
@@ -66,7 +70,7 @@ function getShippingPrice(cart: Cart): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
-  return 1;
+  return cart?.itemCount;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -94,6 +98,7 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getItemQty,
   getItemAttributes,
   getItemSku,
+  getItemStatus,
   getFormattedPrice,
   getTotalItems,
   getCoupons,

@@ -132,8 +132,6 @@
               :image="addBasePath(productGetters.getCoverImage(product))"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-              :max-rating="5"
-              :score-rating="3"
               :qty="1"
               :is-in-wishlist="isInWishlist({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
@@ -261,9 +259,8 @@ export default {
     };
 
     const addToCart = ({ product, quantity }) => {
-      const { id, sku } = product;
       addItemToCart({
-        product: { id, sku },
+        product,
         quantity
       });
     };
