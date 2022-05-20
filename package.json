@@ -24,7 +24,7 @@
     "prepare": "",
     "publish:api-client": "node ./scripts/publishApi.js",
     "publish:composables": "node ./scripts/publishComposable.js",
-    "start": "node_modules/nuxt/bin/nuxt.js start",
+    "start": "node node_modules/nuxt/bin/nuxt.js start",
     "test": "yarn test:api-client && yarn test:composables && yarn test:theme",
     "test:api-client": "cd packages/api-client && yarn test --passWithNoTests",
     "test:composables": "cd packages/composables && yarn test --passWithNoTests",
