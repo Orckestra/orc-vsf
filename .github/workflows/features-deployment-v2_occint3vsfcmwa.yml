@@ -20,9 +20,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
-      - name : prerequirements rifmap
+      - name : prerequirements, rimraf
         run: |
-          npm install rifmap -g
+          npm install rimraf -g
 
       - name: npm install, build, and test
         run: |
