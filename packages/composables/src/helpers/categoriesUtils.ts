@@ -19,7 +19,7 @@ export const setProductCounts = (categories: Category[], counts: any): void => {
   const allCountValues = counts.flatMap(c => c.values);
 
   categories.forEach(cat => {
-    const count = allCountValues.find(c => c.value === cat.id);
+    const count = allCountValues.find(c => c.value.toLowerCase() === cat.id.toLowerCase());
     cat.productsCount = count ? count.count : 0;
   });
 };
