@@ -8,43 +8,80 @@ import type {
   CartItem,
   Product
 } from '@vue-storefront/orc-vsf-api';
+import { getVariantId } from '../helpers/productUtils';
+import { isGuidEmpty } from '../helpers/generalUtils';
 
 const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
-    console.log('Mocked: useCart.load');
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const locale: any = app.i18n.locale;
+    const userToken = app.$cookies.get(appKey + '_token');
+    if (userToken) {
+      let cart = await context.$occ.api.getCart({ ...params, locale, customerId: userToken });
+
+      const shipment = cart.shipments && cart.shipments.length ? cart.shipments[0] : {};
+      if (!shipment.fulfillmentLocationId ||
+        isGuidEmpty(shipment.fulfillmentLocationId)) {
+        // Need to setup fulfilment location for the cart for the items inventory status
+        const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
+        const location = locations && locations.length ? locations[0] : undefined;
+
+        if (location) {
+          const { id, fulfillmentScheduleMode, fulfillmentScheduledTimeBeginDate, fulfillmentScheduledTimeEndDate, propertyBag, pickUpLocationId } = shipment;
+          const updateShipmentRequest = {
+            id,
+            pickUpLocationId,
+            fulfillmentLocationId: location.id,
+            fulfillmentMethodName: shipment.fulfillmentMethod?.name,
+            shippingAddress: shipment.address,
+            fulfillmentScheduleMode,
+            fulfillmentScheduledTimeBeginDate,
+            fulfillmentScheduledTimeEndDate,
+            shippingProviderId: shipment.FulfillmentMethod?.ShippingProviderId,
+            propertyBag,
+            CultureName: locale
+          };
+
+          cart = await context.$occ.api.updateCartShipment({ customerId: cart.customerId, cartName: cart.name, updateShipmentRequest });
+        }
+      }
+
+      return cart;
+    }
+
     return {};
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    console.log('Mocked: useCart.addItem');
-    return {};
+    // TODO: implement variantId when we have variants implemented
+    const variantId = getVariantId(product);
+    return await context.$occ.api.addCartItem({ ...params, customerId: currentCart.customerId, productId: product.productId ?? product.id, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    console.log('Mocked: useCart.removeItem');
-    return {};
+    return await context.$occ.api.removeCartItem({ ...params, customerId: currentCart.customerId, id: product.id });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    console.log('Mocked: useCart.updateItemQty');
-    return {};
+    return await context.$occ.api.updateCartItem({ ...params, customerId: currentCart.customerId, id: product.id, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentCart }) => {
     console.log('Mocked: useCart.clear');
-    return {};
+    return null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   applyCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
     console.log('Mocked: useCart.applyCoupon');
     return {
-      updatedCart: {},
+      updatedCart: null,
       updatedCoupon: {}
     };
   },
@@ -53,14 +90,27 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   removeCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
     console.log('Mocked: useCart.removeCoupon');
     return {
-      updatedCart: {}
+      updatedCart: null
     };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInCart: (context: Context, { currentCart, product }) => {
-    console.log('Mocked: useCart.isInCart');
-    return false;
+    const getLineItemByProduct = ({ currentCart, product }) => {
+      if (product) {
+        const productId = product.productId ?? product.id;
+        // TODO: const withVariants = product.variants && product.variants.length;
+        // TODO: const variantId = withVariants ? product.variants[0].id : undefined;
+
+        const shipment = currentCart.shipments[0];
+
+        return shipment?.lineItems?.find?.((item) => item.productId === productId);
+
+      }
+      return false;
+    };
+
+    return Boolean(currentCart && getLineItemByProduct({ currentCart, product }));
   }
 };
 

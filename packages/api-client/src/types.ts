@@ -6,9 +6,65 @@ export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
 
-export type Cart = TODO;
+export type CartItemSummary = {
+    propertyBag: any,
+    displayName: string,
+    unitOfMeasure: string,
+    itemFormat: any,
+    brand: string,
+    productWeightUOM: string,
+    productWeight: number,
+    primaryParentCategoryId: string,
+    isProductWithoutPrice: boolean,
+    allowSelectionWithoutScan: boolean
+}
 
-export type CartItem = TODO;
+export type CartItem = {
+    id: string,
+    productSummary: CartItemSummary,
+    quantity: number,
+    listPrice: number,
+    currentPrice: number,
+    defaultListPrice: number,
+    regularPrice: number,
+    defaultPrice: number,
+    placedPrice: number,
+    total: number,
+    status: string,
+    sku: string,
+    kvaValues: any,
+    totalWithoutDiscount: number,
+    productDefinitionName: string,
+    productId: string,
+    variantId: string,
+    recurringOrderProgramName: string,
+    recurringOrderFrequencyName: string,
+    coverImage?:string
+}
+
+export type Shipment = {
+    lineItems: CartItem [],
+    fulfillmentLocationId: string
+}
+
+export type Cart = {
+    messages?: any,
+    customerId: any,
+    name: string,
+    cartType?: string,
+    coupons?: string,
+    shipments: Shipment[],
+    subTotal: number,
+    taxTotal: number,
+    merchandiseTotal: number,
+    total: number,
+    scopeId: string,
+    status: string,
+    lineItemsTotalWithoutDiscount: number,
+    lineItemLevelDiscount: number,
+    lineItemsTotal: number,
+    itemCount: number
+};
 
 export type Category = {
     id: string,
@@ -65,8 +121,16 @@ export type OrderItem = TODO;
 
 export type PasswordResetResult = TODO;
 
+export type ProductVariant = {
+    active?: boolean,
+    id: string,
+    sku: string,
+    propertyBag: any
+}
+
 export type Product = {
-    productId: string,
+    id?:string,
+    productId?: string,
     name: any,
     description?: any,
     sku: string,
@@ -75,7 +139,8 @@ export type Product = {
     propertyBag: any,
     parentCategoryIds: any,
     prices?: any,
-    coverImage?: any
+    coverImage?: any,
+    variants?: ProductVariant[]
 };
 
 export const enum ProductsQueryType {
