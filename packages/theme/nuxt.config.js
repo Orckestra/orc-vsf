@@ -1,7 +1,7 @@
-import webpack from 'webpack';
-import theme from './themeConfig';
+const webpack = require('webpack');
+const theme = require('./themeConfig');
 
-export default {
+module.exports = {
   server: {
     port: process.env.PORT || 3000,
     host: '0.0.0.0'
@@ -161,5 +161,6 @@ export default {
     meta: {
       theme_color: '#5ECE7B'
     }
-  }
+  },
+  telemetry: false
 };
