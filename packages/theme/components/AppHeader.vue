@@ -108,7 +108,6 @@ import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } 
 import { useUiState } from '~/composables';
 import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch } from '@vue-storefront/orc-vsf';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
-import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
 import HeaderNavigation from './HeaderNavigation';
@@ -141,7 +140,7 @@ export default {
     const { cart } = useCart();
     const term = ref(null);
     const isSearchOpen = ref(false);
-    const searchBarRef = ref(null);    
+    const searchBarRef = ref(null);
     const isMobile = ref(mapMobileObserver().isMobile.get());
     const { result, search } = useSearch('productSuggestions');
     const { search: categorySearch, result: facetResult } = useSearch('categorySuggestions');
