@@ -72,3 +72,6 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_19DF8C32D3B34DECA5D935A85BE47AE7 }}
           package: .
+      - name : yarn install production
+        run: |
+          yarn install --production --network-timeout=30000
