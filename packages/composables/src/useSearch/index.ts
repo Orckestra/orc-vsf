@@ -1,7 +1,7 @@
 import {
   Context,
   useSearchFactory,
-  ProductsSearchParams 
+  ProductsSearchParams
 } from '@vue-storefront/core';
 import type { SearchResults } from '@vue-storefront/orc-vsf-api';
 
@@ -11,7 +11,7 @@ const factoryParams = {
     const app: any = context.$occ.config.app;
     const { ...searchParams } = params;
     searchParams.locale = app.i18n.locale;
-    
+
     const { products, total, facets, categoryCounts } = await context.$occ.api.getProducts(searchParams);
     return {
       products,

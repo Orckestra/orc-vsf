@@ -28,12 +28,11 @@ export default async function getProducts(
     const { data } = await context.client.post(url.href, {
       facetHierarchyId: autoSuggest,
       includeFacets: true,
-      searchTerms: "*"
+      searchTerms: '*'
     });
 
     return { categoryCounts: data.facets };
-  } else {
-  if (catId) {
+  } else if (catId) {
     console.log('TODO: Related');
     return [];
   } else if (categorySlug) {
@@ -54,42 +53,41 @@ export default async function getProducts(
       },
       searchTerms: term
     });
-  
-      if (withCategoryCounts) {
-        url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-        const { data: categoryCountsData } = await context.client.post(url.href, {
-          inventoryLocationIds,
-          includeFacets: true,
-          facets: searchConfig.categoryCountFacets,
-          query: {
-            maximumItems: 0,
-            startingIndex: 0
-          },
-          searchTerms: term
-        });
 
-        categoryCounts = categoryCountsData.facets;
-      }
+    if (withCategoryCounts) {
+      url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
+      const { data: categoryCountsData } = await context.client.post(url.href, {
+        inventoryLocationIds,
+        includeFacets: true,
+        facets: searchConfig.categoryCountFacets,
+        query: {
+          maximumItems: 0,
+          startingIndex: 0
+        },
+        searchTerms: term
+      });
+
+      categoryCounts = categoryCountsData.facets;
+    }
 
     const products = data.documents ?? [];
     setProductsCoverImages(products, cdnDamProviderConfig);
     return { products, total: data.totalCount, facets: data.facets, categoryCounts };
   } else {
 
-      url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
+    url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
 
-      const { data } = await context.client.post(url.href, {
-        query: {
-          distinctResults: true,
-          maximumItems: searchConfig.defaultItemsPerPage,
-          startingIndex: 0,
-          sortings: [getSort(sort)],
-        },
-        searchTerms: term
-      });
-      const products = data.documents ?? [];
-      setProductsCoverImages(products, cdnDamProviderConfig);
-      return { products, total: data.totalCount, facets: data.facets };
-    }
+    const { data } = await context.client.post(url.href, {
+      query: {
+        distinctResults: true,
+        maximumItems: searchConfig.defaultItemsPerPage,
+        startingIndex: 0,
+        sortings: [getSort(sort)]
+      },
+      searchTerms: term
+    });
+    const products = data.documents ?? [];
+    setProductsCoverImages(products, cdnDamProviderConfig);
+    return { products, total: data.totalCount, facets: data.facets };
   }
 }
