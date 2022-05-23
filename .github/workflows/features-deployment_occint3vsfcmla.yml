@@ -55,7 +55,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'occint3vsfcmla'
+          app-name: 'orc-vsf'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_958921DCF4424AC28D4642AEDA4F6943 }}
           package: .
