@@ -14,39 +14,39 @@ function getCategoryTree(result: SearchResults): AgnosticCategoryTree {
   return buildCategoryTree(categories, 'Root', '', 3, true);
 }
 
-function getPagination(result: SearchResults): AgnosticPagination {
+function getPagination(): AgnosticPagination {
   throw new Error('Function not implemented.');
 }
 
-function getItemPrice(item: any): AgnosticPrice {
+function getItemPrice(): AgnosticPrice {
   throw new Error('Function not implemented.');
 }
 
-function getSortOptions(result: SearchResults): AgnosticSort {
+function getSortOptions(): AgnosticSort {
   throw new Error('Function not implemented.');
 }
 
-function getBreadcrumbs(result: SearchResults): AgnosticBreadcrumb[] {
+function getBreadcrumbs(): AgnosticBreadcrumb[] {
   throw new Error('Function not implemented.');
 }
 
-function getItemImages(item: any): AgnosticMediaGalleryItem[] {
+function getItemImages(): AgnosticMediaGalleryItem[] {
   throw new Error('Function not implemented.');
 }
 
-function getFilters(result: SearchResults): AgnosticFilter[] {
+function getFilters(): AgnosticFilter[] {
   throw new Error('Function not implemented.');
 }
 
-function getItemName(item: any): string {
+function getItemName(): string {
   throw new Error('Function not implemented.');
 }
 
-function getItemId(item: any): string {
+function getItemId(): string {
   throw new Error('Function not implemented.');
 }
 
-function getItemSlug(item: any): string {
+function getItemSlug(): string {
   throw new Error('Function not implemented.');
 }
 

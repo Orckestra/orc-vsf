@@ -107,11 +107,6 @@ const useUiHelpers = () => {
     console.warn('[VSF] please implement useUiHelpers.getSearchTermFromUrl.');
   };
 
-  const filterCategoryTree = (categoryTree: AgnosticCategoryTree, term: string): AgnosticCategoryTree[] => {
-    const res = getCategories(categoryTree, term?.toLowerCase());
-    return res;
-  };
-
   const getCategories = (node: AgnosticCategoryTree, term: string): AgnosticCategoryTree[] => {
     const nodes: AgnosticCategoryTree[] = [];
 
@@ -128,6 +123,11 @@ const useUiHelpers = () => {
     return nodes;
   };
 
+  const filterCategoryTree = (categoryTree: AgnosticCategoryTree, term: string): AgnosticCategoryTree[] => {
+    const res = getCategories(categoryTree, term?.toLowerCase());
+    return res;
+  };
+
   return {
     getFacetsFromURL,
     getCatLink,
@@ -138,6 +138,7 @@ const useUiHelpers = () => {
     isFacetColor,
     isFacetRange,
     isFacetCheckbox,
+    getSearchTermFromUrl,
     filterCategoryTree
   };
 };

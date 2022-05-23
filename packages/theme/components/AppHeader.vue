@@ -106,7 +106,7 @@
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useUser, cartGetters, useFacet, searchGetters, useSearch, useCategory } from '@vue-storefront/orc-vsf';
+import { useCart, useUser, cartGetters, searchGetters, useSearch, useCategory } from '@vue-storefront/orc-vsf';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
@@ -118,7 +118,6 @@ import {
   unMapMobileObserver
 } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 import debounce from 'lodash.debounce';
-import mockedSearchProducts from '../mockedSearchProducts.json';
 import { addBasePath, onSSR } from '@vue-storefront/core';
 
 export default {
@@ -138,7 +137,7 @@ export default {
   setup(props, { root }) {
     const router = useRouter();
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
-    const { setTermForUrl, getFacetsFromURL, filterCategoryTree } = useUiHelpers();
+    const { filterCategoryTree } = useUiHelpers();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
     const term = ref(null);
@@ -146,7 +145,7 @@ export default {
     const searchBarRef = ref(null);
     const { categories } = useCategory('categories');
     const isMobile = ref(mapMobileObserver().isMobile.get());
-    const { result, search, loading, error } = useSearch('productSuggestions');
+    const { result, search } = useSearch('productSuggestions');
     const { search: categorySearch, result: categoryCounts } = useSearch('categorySuggestions');
         
     const cartTotalItems = computed(() => {
@@ -233,7 +232,6 @@ export default {
       handleAccountClick,
       toggleCartSidebar,
       toggleWishlistSidebar,
-      setTermForUrl,
       term,
       isSearchOpen,
       closeSearch,
