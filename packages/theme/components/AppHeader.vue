@@ -147,14 +147,13 @@ export default {
     const isMobile = ref(mapMobileObserver().isMobile.get());
     const { result, search } = useSearch('productSuggestions');
     const { search: categorySearch, result: categoryCounts } = useSearch('categorySuggestions');
-        
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
       return count ? count.toString() : null;
     });
 
     const searchResults = computed(() =>{
-      const filteredCategories = filterCategoryTree(searchGetters.getCategoryTree(categoryCounts.value), term.value );
+      const filteredCategories = filterCategoryTree(searchGetters.getCategoryTree(categoryCounts.value), term.value);
       return !term.value
       ? { products: [] }
       : {
@@ -191,7 +190,7 @@ export default {
         term.value = paramValue.target.value;
       }
       
-      if(categoryCounts.value.length === 0){
+      if(categoryCounts.value.length === 0) {
       await categorySearch({autoSuggest: 'CategoryAutoSuggest',  categories: categories.value});
       }
       
@@ -221,7 +220,7 @@ export default {
     onBeforeUnmount(() => {
       unMapMobileObserver();
     });
-    
+
     onSSR(async () => {
       await search({term: ''});     
     });
