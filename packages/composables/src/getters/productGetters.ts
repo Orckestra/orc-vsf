@@ -69,8 +69,8 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSelectedKvas(product: Product, variantId?: string): Record<string, AgnosticAttribute | string> {
-  if(variantId && product.variants) {
-    return product.variants.find(v=>v.id === variantId)?.propertyBag;
+  if (variantId && product.variants) {
+    return product.variants.find(v => v.id === variantId)?.propertyBag;
   }
   return {};
 }
@@ -101,29 +101,43 @@ function getLink(product: Product): string {
 }
 
 
-function getKvaItems(product: Product, metadata: Metadata): KeyVariantAttributeItem[] {
+function getKvaItems(product: Product, metadata: Metadata, selectedVariantId?: string): KeyVariantAttributeItem[] {
   if(!product?.variants) return;
   const definition = metadata.definitions.find(d=> d.name === product.definitionName);
   if(!definition?.variantProperties) return;
+  const selectedVariant = product.variants.find(v => v.id === selectedVariantId);
+  const selectedKvas = selectedVariant ? selectedVariant.propertyBag : {};
 
   const keyVariantProperties = definition.variantProperties.filter(v=> v.isKeyVariant);
   var activeVariants = product.variants.filter(v=> v.active && v.propertyBag);
+  
 
   let result = keyVariantProperties.map(pr => {
+    let selectedPrValue = selectedKvas[pr.propertyName];
     let prValues: KeyVariantAttributeItemValue[] = [];
-    let relatedVariantIds = [];
     activeVariants.forEach(v => {
       let prValue = v.propertyBag[pr.propertyName];
-      if (prValue) {
-        relatedVariantIds.push(v.id);
-      }
+
       if (prValue && !prValues.find(pr => pr.value === prValue)) {
+        let relatedVariants = activeVariants.filter(v => v.propertyBag[pr.propertyName] === prValue);
+        let otherProps = keyVariantProperties.filter(p => p.propertyName != pr.propertyName);
+        let disabled = false;
+        otherProps.forEach(otherP => {
+          let selectedOtherPrValue = selectedKvas[otherP.propertyName];
+          if (selectedOtherPrValue) {
+            let findRelatedWithSelected = relatedVariants.find(v => v.propertyBag[otherP.propertyName] === selectedOtherPrValue);
+            if (!findRelatedWithSelected) {
+              disabled = true
+            }
+          }
+        });
+        
         prValues.push({
           value: prValue,
-          selected: false,
-          disabled: false,
+          selected: selectedPrValue === prValue,
+          disabled,
           title: prValue,
-          relatedVariantIds
+          relatedVariantIds: relatedVariants.map(v => v.id)
         });
       }
     });

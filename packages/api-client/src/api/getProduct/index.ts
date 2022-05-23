@@ -18,10 +18,17 @@ export default async function getProduct(
     ScopeId: scope
   });
 
+  if (productData.variants && productData.variants.length) {
+    productData.variants.forEach(v => {
+      v.displayName = v.displayName ? v.displayName[locale] : productData.displayName[locale];
+    });
+  }
+
   return {
     ...productData,
     ...{ description: productData.description[locale] },
     name: productData.displayName[locale],
+    displayName: productData.displayName[locale],
     prices: { ...pricesData[0] }
   };
 }

@@ -5,5 +5,5 @@ export const withVariants = (product: Product): boolean => {
 };
 
 export const getVariantId = (product: Product): string => {
-  return product.variants && product.variants.length ? product.variants[0].id : product.propertyBag?.VariantId;
+  return product.variants && product.variants.length ? product.currentVariantId : product.propertyBag?.VariantId;
 };

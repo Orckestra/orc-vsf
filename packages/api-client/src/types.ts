@@ -125,6 +125,7 @@ export type ProductVariant = {
     active?: boolean,
     id: string,
     sku: string,
+    displayName: any
     propertyBag: any
 }
 
@@ -147,6 +148,7 @@ export type Product = {
     id?:string,
     productId?: string,
     name: any,
+    displayName: any,
     description?: any,
     sku: string,
     currentPrice?: any,
@@ -156,7 +158,8 @@ export type Product = {
     prices?: any,
     coverImage?: any,
     definitionName: string,
-    variants?: ProductVariant[]
+    variants?: ProductVariant[],
+    currentVariantId: string
 };
 
 export const enum ProductsQueryType {

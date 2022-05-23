@@ -43,27 +43,42 @@
             />
           </div>
           <div>
-            
             <div v-for="kva in kvas" :key="kva.propertyName">
-           
+              <SfComponentSelect
+                v-if="kva.propertyName === 'Colour'"
+                label="Color"
+                :selected="configuration[kva.propertyName]"
+                :size="5"
+                :required="false"
+                :disabled="false"
+                :persistent="false"
+                @change="changedValue => updateFilter({ Colour: changedValue })"
+              >
+                <SfComponentSelectOption :class="color.disabled ? 'disabled': ''" v-for="(color, i) in kva.values" :value="color.value" :key="i">
+                  <SfProductOption :class="color.value" :label="color.disabled ? `${color.value} - unavailable`: color.value" :color="color.value" />
+                </SfComponentSelectOption>
+                
+              </SfComponentSelect>
+
               <SfSelect
               v-if="kva.propertyName === 'RetailSize'"
               label="Size"
               class="sf-select--underlined product__select-size"
               :required="true"
               :value="configuration[kva.propertyName]"
-              @input="size => updateFilter({ RetailSize: size })"
+              @input="size => size.diabled ? null : updateFilter({ RetailSize: size })"
               >
                 <SfSelectOption
                   v-for="size in kva.values"
                   :key="size.value"
                   :value="size.value"
-                >
-                  {{size.title}}
+                  :class="size.disabled ? 'disabled': ''"
+                 >
+                  {{size.title}} {{size.disabled ? '- unavailable': ''}}
                 </SfSelectOption>
               </SfSelect>
 
-              <div v-if="kva.propertyName === 'Colour' && kva.values.length > 0" class="product__colors desktop-only">
+              <!--div v-if="kva.propertyName === 'Colour' && kva.values.length > 0" class="product__colors desktop-only">
                 <p class="product__color-label">{{ $t('Color') }}:</p>
                 <SfColor
                   v-for="(color, i) in kva.values"
@@ -73,7 +88,7 @@
                   :class="`product__color ${color.value}`"
                   @click="updateFilter({ Colour: color.value })"
                 />
-              </div>
+              </div-->
             </div>
             <SfAddToCart
               v-e2e="'product_add-to-cart'"
@@ -133,6 +148,8 @@ import {
   SfHeading,
   SfPrice,
   SfSelect,
+  SfComponentSelect,
+  SfProductOption,
   SfAddToCart,
   SfTabs,
   SfGallery,
@@ -170,13 +187,13 @@ export default {
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { response: metadata } = useMetadata();
-    const product = products;
+    let product = products;
     const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, 'en-CA')); 
     const options = computed(() => productGetters.getAttributes(product.value, []));
     const configuration = computed(() => productGetters.getSelectedKvas(product.value, variantId?.value));
     const productCategories = computed(() => productGetters.getCategoryIds(product.value));
     const breadcrumbs = computed(() => categoryGetters.getBreadcrumbs(categories.value, productCategories.value[0]));
-    const kvas = computed(() => productGetters.getKvaItems(products.value, metadata?.value));
+    const kvas = computed(() => productGetters.getKvaItems(product.value, metadata?.value, variantId.value));
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
@@ -207,10 +224,19 @@ export default {
       router.push({
         path: route.value.path,
         query: {
-          variant: variant.sku
+          variant: variant.id
         }
       });
     };
+
+    if(variantId?.value && product.value?.variants) {
+      //merge variant data to product data
+      let v = product.value.variants.find(v=> v.id === variantId.value);
+      if(v) {
+        product.value.name = v.displayName;
+        product.value.currentVariantId = v.id;
+      }
+    }
 
     return {
       breadcrumbs,
@@ -237,6 +263,8 @@ export default {
     SfHeading,
     SfPrice,
     SfSelect,
+    SfComponentSelect,
+    SfProductOption,
     SfAddToCart,
     SfTabs,
     SfGallery,
@@ -449,64 +477,85 @@ export default {
     transform: translate3d(0, 0, 0);
   }
 }
+
+.disabled  {
+  color: #ccc;
+}
+
+.british_khaki > div {
+  background:#c3b091 !important;
+}
+
 .chic_cream {
   background: #fffdd0;
 }
 
-[class*=_black] {
+[class*=_black] .sf-product-option__color {
  background: #000;
 }
 
-[class*=_navy] {
+[class*=_navy] .sf-product-option__color {
  background: navy;
 }
 
-[class*=_white] {
+[class*=_white] .sf-product-option__color {
  background: #fff;
 }
 
-[class*=_yellow] {
+[class*=_yellow] .sf-product-option__color {
  background: yellow;
 }
 
-[class*=_red] {
+[class*=_red] .sf-product-option__color {
  background: red;
 }
 
-[class*=_blue],
-[class*=blue_] {
+[class*=_blue] .sf-product-option__color,
+[class*=blue_] .sf-product-option__color {
  background: blue;
 }
 
-[class*=_pink] {
+[class*=_pink] .sf-product-option__color {
  background: pink;
 }
 
-[class*=_grey] {
+[class*=_grey] .sf-product-option__color {
  background: grey;
 }
 
-[class*=sun_] {
+[class*=sun_] .sf-product-option__color {
  background: #FCE570;
 }
 
-.ink {
+.ink .sf-product-option__color {
    background:pink;
 }
 
-.midnight  {
+.midnight .sf-product-option__color  {
   background:#152744;
 }
 
-.peyote {
+.peyote .sf-product-option__color {
   background:#C2B191;
 }
 
-.olive_forest {
+.olive_forest .sf-product-option__color {
    background:#578F29;
 }
 
-.andover_heather {
+.cloud .sf-product-option__color {
+  background: #396b89;
+}
+
+.bungee_cord .sf-product-option__color {
+  background: #696156;
+}
+
+.british_khaki > div {
+  background:#c3b091;
+}
+
+.andover_heather .sf-product-option__color {
   background: #bbb9cd;
 }
 </style>
