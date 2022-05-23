@@ -118,7 +118,7 @@ import {
   unMapMobileObserver
 } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 import debounce from 'lodash.debounce';
-import { addBasePath, onSSR } from '@vue-storefront/core';
+import { addBasePath } from '@vue-storefront/core';
 
 export default {
   components: {
@@ -190,7 +190,7 @@ export default {
         term.value = paramValue.target.value;
       }
       if (categoryCounts.value.length === 0) {
-        await categorySearch({autoSuggest: 'CategoryAutoSuggest',  categories: categories.value});
+        await categorySearch({autoSuggest: 'CategoryAutoSuggest', categories: categories.value});
       }
       await search({ term: term.value, categories: categories.value });
     }, 1000);
@@ -217,10 +217,6 @@ export default {
 
     onBeforeUnmount(() => {
       unMapMobileObserver();
-    });
-
-    onSSR(async () => {
-      await search({term: ''});     
     });
 
     return {
