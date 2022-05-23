@@ -30,7 +30,7 @@ const getCategories = (node: AgnosticCategoryTree, term: string): AgnosticCatego
   return nodes;
 };
 
-function getCategorySuggestions(result: SearchResults, categories: Category[],  term: string): AgnosticCategoryTree[] {
+function getCategorySuggestions(result: SearchResults, categories: Category[], term: string): AgnosticCategoryTree[] {
   result.categories = categories;
   const categoryTree = getCategoryTree(result);
   const res = getCategories(categoryTree, term?.toLowerCase());

@@ -137,7 +137,6 @@ export default {
   setup(props, { root }) {
     const router = useRouter();
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
-    const { filterCategoryTree } = useUiHelpers();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
     const term = ref(null);
@@ -153,7 +152,7 @@ export default {
     });
 
     const searchResults = computed(() =>{
-      if(categories.value){
+      if (categories.value) {
         const filteredCategories = searchGetters.getCategorySuggestions(facetResult.value, categories.value, term.value);
         return !term.value
           ? { products: [] }
@@ -192,7 +191,7 @@ export default {
         term.value = paramValue.target.value;
       }
       if (facetResult.value.length === 0) {
-        await categorySearch({facetCounts:  ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
+        await categorySearch({facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
       }
       await search({ term: term.value });
     }, 1000);

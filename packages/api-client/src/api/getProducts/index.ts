@@ -30,7 +30,7 @@ export default async function getProducts(
         startingIndex: 0
       }
     });
-    return { facetCounts: facetCountsData.facets };    
+    return { facetCounts: facetCountsData.facets };
   } else if (catId) {
     console.log('TODO: Related');
     return [];
