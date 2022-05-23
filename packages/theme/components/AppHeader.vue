@@ -106,7 +106,7 @@
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useUser, cartGetters, searchGetters, useSearch, useCategory } from '@vue-storefront/orc-vsf';
+import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch } from '@vue-storefront/orc-vsf';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
@@ -142,24 +142,26 @@ export default {
     const { cart } = useCart();
     const term = ref(null);
     const isSearchOpen = ref(false);
-    const searchBarRef = ref(null);
-    const { categories } = useCategory('categories');
+    const searchBarRef = ref(null);    
     const isMobile = ref(mapMobileObserver().isMobile.get());
     const { result, search } = useSearch('productSuggestions');
-    const { search: categorySearch, result: categoryCounts } = useSearch('categorySuggestions');
+    const { search: categorySearch, result: facetResult } = useSearch('categorySuggestions');
+    const { categories } = useCategory('categories');
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
       return count ? count.toString() : null;
     });
 
     const searchResults = computed(() =>{
-      const filteredCategories = filterCategoryTree(searchGetters.getCategoryTree(categoryCounts.value), term.value);
-      return !term.value
-        ? { products: [] }
-        : {
-          products: searchGetters.getItems(result.value),
-          categories: filteredCategories
-        };
+      if(categories.value){
+        const filteredCategories = searchGetters.getCategorySuggestions(facetResult.value, categories.value, term.value);
+        return !term.value
+          ? { products: [] }
+          : {
+            products: searchGetters.getItems(result.value),
+            categories: filteredCategories
+          };
+      }
     });
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
@@ -189,10 +191,10 @@ export default {
       } else {
         term.value = paramValue.target.value;
       }
-      if (categoryCounts.value.length === 0) {
-        await categorySearch({autoSuggest: 'CategoryAutoSuggest', categories: categories.value});
+      if (facetResult.value.length === 0) {
+        await categorySearch({facetCounts:  ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
       }
-      await search({ term: term.value, categories: categories.value });
+      await search({ term: term.value });
     }, 1000);
 
     const closeOrFocusSearchBar = () => {

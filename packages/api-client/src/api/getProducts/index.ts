@@ -6,7 +6,7 @@ export default async function getProducts(
   context,
   params
 ) {
-  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale, sort, term, autoSuggest } = params;
+  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale, sort, term, facetCounts } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
   let url = null;
 
@@ -19,19 +19,18 @@ export default async function getProducts(
     };
   };
 
-  if (autoSuggest) {
-    url = new URL(
-      `/api/search/${scope}/${locale}/advanced/Products`,
-      api.url
-    );
-
-    const { data } = await context.client.post(url.href, {
-      facetHierarchyId: autoSuggest,
+  if (facetCounts) {
+    url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
+    const { data: facetCountsData } = await context.client.post(url.href, {
+      inventoryLocationIds,
       includeFacets: true,
-      searchTerms: '*'
+      facets: facetCounts,
+      query: {
+        maximumItems: 0,
+        startingIndex: 0
+      }
     });
-
-    return { categoryCounts: data.facets };
+    return { facetCounts: facetCountsData.facets };    
   } else if (catId) {
     console.log('TODO: Related');
     return [];
@@ -72,7 +71,7 @@ export default async function getProducts(
 
     const products = data.documents ?? [];
     setProductsCoverImages(products, cdnDamProviderConfig);
-    return { products, total: data.totalCount, facets: data.facets, categoryCounts };
+    return { products, total: data.totalCount, facets: data.facets, facetCounts: categoryCounts };
   } else {
 
     url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);

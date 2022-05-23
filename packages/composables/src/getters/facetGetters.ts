@@ -68,11 +68,11 @@ function getSortOptions(params: FacetSearchResult<SearchResults>): AgnosticSort 
 function getCategoryTree(params: FacetSearchResult<SearchResults>, root = 'Root', level = 3): AgnosticCategoryTree {
   if (!params.data) return;
 
-  const { categoryCounts } = params.data;
+  const { facetCounts } = params.data;
   const { categorySlug, withCategoryCounts } = params.input;
   const categories = params.data?.categories;
   if (withCategoryCounts) {
-    setProductCounts(categories, categoryCounts);
+    setProductCounts(categories, facetCounts);
   }
 
   return buildCategoryTree(categories, root, categorySlug, level);

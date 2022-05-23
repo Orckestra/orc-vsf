@@ -107,27 +107,6 @@ const useUiHelpers = () => {
     console.warn('[VSF] please implement useUiHelpers.getSearchTermFromUrl.');
   };
 
-  const getCategories = (node: AgnosticCategoryTree, term: string): AgnosticCategoryTree[] => {
-    const nodes: AgnosticCategoryTree[] = [];
-
-    if (node?.label?.toLowerCase().indexOf(term) > -1) {
-      nodes.push(node);
-    }
-
-    if (node?.items?.length > 0) {
-      for (const child of node.items) {
-        nodes.push(...getCategories(child, term));
-      }
-    }
-
-    return nodes;
-  };
-
-  const filterCategoryTree = (categoryTree: AgnosticCategoryTree, term: string): AgnosticCategoryTree[] => {
-    const res = getCategories(categoryTree, term?.toLowerCase());
-    return res;
-  };
-
   return {
     getFacetsFromURL,
     getCatLink,
@@ -138,8 +117,7 @@ const useUiHelpers = () => {
     isFacetColor,
     isFacetRange,
     isFacetCheckbox,
-    getSearchTermFromUrl,
-    filterCategoryTree
+    getSearchTermFromUrl
   };
 };
 

@@ -1,7 +1,8 @@
 # useSearch
 
 ## Features
-`useSearch` composable is responsible for fetching a data of products by search term. 
+`useSearch` composable is responsible for fetching a data of products by search term or counts for requested facet names.
+Facet Counts can be used to build category or other facet suggestions in search box.
 
 ## API
 ```typescript
@@ -17,7 +18,7 @@ export interface SearchResults {
     products: any,
     facets: Facet[],
     categories?: Category[],
-    categoryCounts: any
+    facetCounts: any
 }
 
 export declare type Facet = {
@@ -64,6 +65,7 @@ Reactive object containing the error message, if search failed for any reason.
 interface SearchGetters<SearchResults, any> {
   getItems(result: SearchResults): any;
   getCategoryTree(result: SearchResults): AgnosticCategoryTree;
+  getCategorySuggestions(result: SearchResults, term: string): AgnosticCategoryTree[];
   getPagination(result: SearchResults): AgnosticPagination;
   getItemPrice(item: any): AgnosticPrice;
   getSortOptions(result: SearchResults): AgnosticSort;
@@ -85,6 +87,7 @@ import { useSearch, searchGetters } from '@vue-storefront/orc-vsf';
 export default {
   setup () {
     const { result, search, loading, error } = useSearch();
+    const { search: categorySearch, result: facetCounts } = useSearch('categorySuggestions');
     const searchQuery = ref("");
     // Take note of this line the result should be pass through 
     // searchGetters.getItems() to extract only array of Product
@@ -92,7 +95,9 @@ export default {
 
     watch(searchQuery, () => {
       if (searchQuery.length > 1) {
-        search({ term: searchQuery.value });
+        await search({ term: searchQuery.value });
+        await categorySearch({facetCounts:  ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
+    
       }
     })
 
@@ -102,7 +107,9 @@ export default {
 
     return {
       productsFound,
-      searchQuery
+      searchQuery,
+      categorySearch,
+      facetCounts
     }
   }
 }
