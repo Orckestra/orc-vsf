@@ -40,6 +40,7 @@ export declare type CartItem = {
 };
 export declare type Shipment = {
     lineItems: CartItem[];
+    fulfillmentLocationId: string;
 };
 export declare type Cart = {
     messages?: any;

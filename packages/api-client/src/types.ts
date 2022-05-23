@@ -128,6 +128,21 @@ export type ProductVariant = {
     propertyBag: any
 }
 
+export type KeyVariantAttributeItemValue = {
+    title: string,
+    value: string,
+    selected: boolean,
+    disabled: boolean,
+    relatedVariantIds?: any
+}
+
+export type KeyVariantAttributeItem = {
+    values: KeyVariantAttributeItemValue[],
+    title: string,
+    propertyName?: string,
+    propertyDataType?: string
+}
+
 export type Product = {
     id?:string,
     productId?: string,
@@ -140,6 +155,7 @@ export type Product = {
     parentCategoryIds: any,
     prices?: any,
     coverImage?: any,
+    definitionName: string,
     variants?: ProductVariant[]
 };
 
@@ -179,3 +195,67 @@ export type Store = TODO;
 export type Wishlist = TODO;
 
 export type WishlistItem = TODO;
+
+export type LookupValue = {
+    id: string,
+    value: string,
+    lookupId: string,
+    displayName: any,
+    sortOrder: number,
+    isActive: boolean,
+    isSystem: boolean
+}
+
+export type Lookup = {
+    lookupName: string,
+    values: LookupValue[],
+    displayName: any,
+    description: string,
+    isActive: boolean,
+    isSystem: boolean
+}
+
+
+export type DefinitionProperty = {
+    propertyName: string,
+    displayName: any
+    isRequired: boolean,
+    displayOrder: number,
+    localizable: boolean,
+    dataType: string,
+    minimumValue: any,
+    maximumValue: any,
+    isSystem: true,
+    includeInAllProductDefinition: true,
+    includeInAllCategoryDefinition: true,
+    includeInAllVariantDefinition: false,
+    groupName: string,
+    isHiddenInOrchestrator: boolean,
+    isVariant: boolean,
+    isVariantGroup: boolean,
+    isKeyVariant: boolean,
+    isFacettableAdmin: boolean,
+    isFacettableWeb: boolean,
+    maxMultiplicity: string
+}
+
+export type DefinitionPropertyGroup = {
+    properties: DefinitionProperty[]
+}
+
+export type Definition = {
+    name: string,
+    displayName: any,
+    productType: string,
+    sequenceNumber: number,
+    properties: DefinitionProperty[],
+    propertyGroups: DefinitionPropertyGroup[],
+    variantProperties: DefinitionProperty[]
+}
+
+export type Metadata = {
+    lookups: Lookup[],
+    definitions: Definition[]
+}
+
+

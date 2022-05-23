@@ -43,32 +43,37 @@
             />
           </div>
           <div>
-            <SfSelect
-              v-e2e="'size-select'"
-              v-if="options.size"
-              :value="configuration.size"
-              @input="size => updateFilter({ size })"
+            
+            <div v-for="kva in kvas" :key="kva.propertyName">
+           
+              <SfSelect
+              v-if="kva.propertyName === 'RetailSize'"
               label="Size"
               class="sf-select--underlined product__select-size"
               :required="true"
-            >
-              <SfSelectOption
-                v-for="size in options.size"
-                :key="size.value"
-                :value="size.value"
+              :value="configuration[kva.propertyName]"
+              @input="size => updateFilter({ RetailSize: size })"
               >
-                {{size.label}}
-              </SfSelectOption>
-            </SfSelect>
-            <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
-              <p class="product__color-label">{{ $t('Color') }}:</p>
-              <SfColor
-                v-for="(color, i) in options.color"
-                :key="i"
-                :color="color.value"
-                class="product__color"
-                @click="updateFilter({ color: color.value })"
-              />
+                <SfSelectOption
+                  v-for="size in kva.values"
+                  :key="size.value"
+                  :value="size.value"
+                >
+                  {{size.title}}
+                </SfSelectOption>
+              </SfSelect>
+
+              <div v-if="kva.propertyName === 'Colour' && kva.values.length > 0" class="product__colors desktop-only">
+                <p class="product__color-label">{{ $t('Color') }}:</p>
+                <SfColor
+                  v-for="(color, i) in kva.values"
+                  :key="i"
+                  :color="color.value"
+                  :selected="configuration[kva.propertyName] === color.value"
+                  :class="`product__color ${color.value}`"
+                  @click="updateFilter({ Colour: color.value })"
+                />
+              </div>
             </div>
             <SfAddToCart
               v-e2e="'product_add-to-cart'"
@@ -80,35 +85,28 @@
               @click="addItem({ product, quantity: parseInt(qty) })"
             />
           </div>
-
           <LazyHydrate when-idle>
             <SfTabs :open-tab="1" class="product__tabs">
               <SfTab title="Description">
                 <div v-html="productGetters.getDescription(product)" class="product__description">
                 </div>
-                <SfProperty
-                  v-if="breadcrumbs.length"
-                  name="Category"
-                  :value="breadcrumbs[breadcrumbs.length - 1].text"
-                  class="product__property"
-                />
+                
               </SfTab>
               <SfTab
                 title="Additional Information"
                 class="product__additional-info"
               >
-              <div class="product__additional-info">
-                <p class="product__additional-info__title">{{ $t('Brand') }}</p>
-                <p>{{ brand }}</p>
-                <p class="product__additional-info__title">{{ $t('Instruction1') }}</p>
-                <p class="product__additional-info__paragraph">
-                  {{ $t('Instruction2') }}
-                </p>
-                <p class="product__additional-info__paragraph">
-                  {{ $t('Instruction3') }}
-                </p>
-                <p>{{ careInstructions }}</p>
-              </div>
+              <SfProperty
+                  name="Brand"
+                  :value="productBrand"
+                  class="product__property"
+                />
+              <SfProperty
+                  v-if="breadcrumbs.length"
+                  name="Category"
+                  :value="breadcrumbs[breadcrumbs.length - 1].text"
+                  class="product__property"
+                />
               </SfTab>
             </SfTabs>
           </LazyHydrate>
@@ -152,7 +150,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, useCategory, productGetters, categoryGetters } from '@vue-storefront/orc-vsf';
+import { useProduct, useCart, useCategory, productGetters, categoryGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
@@ -164,17 +162,21 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
+
     const id = computed(() => route.value.params.id);
+    const variantId = computed(() => route.value.query?.variant);; 
     const { categories } = useCategory('categories');
-    const { products, search: searchProduct, loading: productLoading } = useProduct(`product-${id}`);
+    const { products, search: searchProduct, loading: productLoading } = useProduct(`product-${id.value}`);
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-
+    const { response: metadata } = useMetadata();
     const product = products;
-    const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
-    const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
+    const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, 'en-CA')); 
+    const options = computed(() => productGetters.getAttributes(product.value, []));
+    const configuration = computed(() => productGetters.getSelectedKvas(product.value, variantId?.value));
     const productCategories = computed(() => productGetters.getCategoryIds(product.value));
     const breadcrumbs = computed(() => categoryGetters.getBreadcrumbs(categories.value, productCategories.value[0]));
+    const kvas = computed(() => productGetters.getKvaItems(products.value, metadata?.value));
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
@@ -183,16 +185,29 @@ export default {
     })));
 
     onSSR(async () => {
-      await searchProduct({ queryType: 'DETAIL', id: id.value });
-      await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
+      if(!product.value || !product.value.id || product.value.id !== id.value) {
+        await searchProduct({ queryType: 'DETAIL', id: id.value });
+        await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
+      }
     });
 
     const updateFilter = (filter) => {
+      if(!product?.value?.variants) return;
+      var keys = Object.keys(configuration.value);
+      var merged = { ...configuration.value, ...filter};
+      
+      const compareProperties = (pr) => {
+        return keys.reduce((result, current) => result && (pr[current] && pr[current] === merged[current]), true)
+      }
+
+      var currentSKU = route.value.params.slug;
+      var variant = product.value.variants.find(v => compareProperties(v.propertyBag));
+      if(!variant) return;
+
       router.push({
         path: route.value.path,
         query: {
-          ...configuration.value,
-          ...filter
+          variant: variant.sku
         }
       });
     };
@@ -210,7 +225,9 @@ export default {
       loading,
       productLoading,
       productGetters,
-      productGallery
+      productGallery,
+      productBrand,
+      kvas
     };
   },
   components: {
@@ -431,5 +448,65 @@ export default {
   100% {
     transform: translate3d(0, 0, 0);
   }
+}
+.chic_cream {
+  background: #fffdd0;
+}
+
+[class*=_black] {
+ background: #000;
+}
+
+[class*=_navy] {
+ background: navy;
+}
+
+[class*=_white] {
+ background: #fff;
+}
+
+[class*=_yellow] {
+ background: yellow;
+}
+
+[class*=_red] {
+ background: red;
+}
+
+[class*=_blue],
+[class*=blue_] {
+ background: blue;
+}
+
+[class*=_pink] {
+ background: pink;
+}
+
+[class*=_grey] {
+ background: grey;
+}
+
+[class*=sun_] {
+ background: #FCE570;
+}
+
+.ink {
+   background:pink;
+}
+
+.midnight  {
+  background:#152744;
+}
+
+.peyote {
+  background:#C2B191;
+}
+
+.olive_forest {
+   background:#578F29;
+}
+
+.andover_heather {
+  background: #bbb9cd;
 }
 </style>

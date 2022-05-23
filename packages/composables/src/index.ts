@@ -16,6 +16,7 @@ export { useUserBilling } from './useUserBilling';
 export { useUserOrder } from './useUserOrder';
 export { useUserShipping } from './useUserShipping';
 export { useWishlist } from './useWishlist';
+export { useMetadata } from './useMetadata';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
@@ -30,6 +31,7 @@ export { userBillingGetters } from './getters/userBillingGetters';
 export { userGetters } from './getters/userGetters';
 export { userShippingGetters } from './getters/userShippingGetters';
 export { wishlistGetters } from './getters/wishlistGetters';
+export { metadataGetters } from './getters/metadataGetters';
 
 // Types
 export * from './types';
