@@ -5,12 +5,27 @@ on:
     branches:
       - develop
   workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug 
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      - run: |
+          echo "Log level: $LEVEL"
+        env:
+          LEVEL: ${{ github.event.inputs.logLevel }}
+          
       - uses: actions/checkout@v2
 
       - name: Set up Node.js version
