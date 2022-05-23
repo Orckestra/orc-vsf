@@ -155,11 +155,11 @@ export default {
     const searchResults = computed(() =>{
       const filteredCategories = filterCategoryTree(searchGetters.getCategoryTree(categoryCounts.value), term.value);
       return !term.value
-      ? { products: [] }
-      : {
+        ? { products: [] }
+        : {
           products: searchGetters.getItems(result.value),
           categories: filteredCategories
-        }
+        };
     });
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
@@ -189,11 +189,9 @@ export default {
       } else {
         term.value = paramValue.target.value;
       }
-      
-      if(categoryCounts.value.length === 0) {
-      await categorySearch({autoSuggest: 'CategoryAutoSuggest',  categories: categories.value});
+      if (categoryCounts.value.length === 0) {
+        await categorySearch({autoSuggest: 'CategoryAutoSuggest',  categories: categories.value});
       }
-      
       await search({ term: term.value, categories: categories.value });
     }, 1000);
 
