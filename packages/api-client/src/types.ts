@@ -144,6 +144,34 @@ export type KeyVariantAttributeItem = {
     propertyDataType?: string
 }
 
+export type ResizedMediaLink = {
+    // the Url of the media.
+    url: string,
+    // the name of the size of the media. Examples could be: "S", "M", "L", etc.
+    size: string,
+    propertyBag?: any,
+}
+
+export type ProductMedia = {
+    id: string,
+    url: string,
+    propertyBag?: any,
+    mediaType: string,
+    position?: number,
+    tag?: string,
+    title?: string,
+    isCover: boolean,
+    description?: any,
+    isInherited?: boolean,
+    isRemoved?: boolean,
+    resizedInstances?: ResizedMediaLink[]
+}
+
+export type VariantMediaSet = {
+    attributesToMatch: any,
+    media?: ProductMedia[]
+}
+
 export type Product = {
     id?:string,
     productId?: string,
@@ -159,7 +187,13 @@ export type Product = {
     coverImage?: any,
     definitionName: string,
     variants?: ProductVariant[],
-    currentVariantId: string
+    currentVariantId: string,
+    // new Media 
+    mediaSet?: ProductMedia[],
+    variantMediaSet: VariantMediaSet,
+    // old CDN Media
+    media?: any,
+    variantsMedia: any
 };
 
 export const enum ProductsQueryType {

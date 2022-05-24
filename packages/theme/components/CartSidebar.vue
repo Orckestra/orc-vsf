@@ -34,10 +34,10 @@
                 <template #configuration>
                   <div class="collected-product__properties">
                     <SfProperty
-                      v-for="(attribute, key) in cartGetters.getItemAttributes(product, ['color', 'size'])"
+                      v-for="(attribute, key) in cartGetters.getItemAttributes(product, ['Colour', 'RetailSize'])"
                       :key="key"
                       :name="key"
-                      :value="attribute"
+                      :value="metadataGetters.getLookupValueDisplayName(metadata, key, attribute, locale)"
                     />
                     <SfProperty
                       key="Status"
@@ -127,8 +127,8 @@ import {
   SfImage,
   SfQuantitySelector
 } from '@storefront-ui/vue';
-import { computed } from '@nuxtjs/composition-api';
-import { useCart, cartGetters } from '@vue-storefront/orc-vsf';
+import { computed, useRouter} from '@nuxtjs/composition-api';
+import { useCart, cartGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
 import debounce from 'lodash.debounce';
 import { addBasePath } from '@vue-storefront/core';
@@ -147,8 +147,11 @@ export default {
     SfQuantitySelector
   },
   setup() {
+    const router = useRouter();
+    const { locale } = router.app.$i18n;
     const { isCartSidebarOpen, toggleCartSidebar } = useUiState();
     const { cart, removeItem, updateItemQty, loading } = useCart();
+    const { response: metadata } = useMetadata();
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -167,7 +170,10 @@ export default {
       toggleCartSidebar,
       totals,
       totalItems,
-      cartGetters
+      cartGetters,
+      metadata,
+      metadataGetters,
+      locale
     };
   }
 };

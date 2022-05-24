@@ -39,13 +39,17 @@ function getPrice(product: Product): AgnosticPrice {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
-  return [
-    {
-      small: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg',
-      normal: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg',
-      big: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg'
-    }
-  ];
+  if (product?.mediaSet) {
+    return product.mediaSet.map(set => {
+      return {
+        small: set.resizedInstances?.find(i => i.size === 'M')?.url ?? set.url,
+        normal: set.resizedInstances?.find(i => i.size === 'L')?.url ?? set.url,
+        big: set.resizedInstances?.find(i => i.size === 'XL')?.url ?? set.url
+      };
+    })
+  }
+
+  return product?.media ?? [];
 }
 
 function getCoverImage(product: Product): string {
@@ -64,7 +68,7 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAttributes(products: Product[] | Product, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> {
-   return {};
+  return {};
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -96,47 +100,41 @@ function getVariantId(product: Product): string {
 function getLink(product: Product): string {
   if (!product) return;
   const variantId = product.propertyBag?.VariantId;
-  
+
   return `/p/${product.productId}/${product.propertyBag?.ProductDisplayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
 
-function getKvaItems(product: Product, metadata: Metadata, selectedVariantId?: string): KeyVariantAttributeItem[] {
-  if(!product?.variants) return;
-  const definition = metadata.definitions.find(d=> d.name === product.definitionName);
-  if(!definition?.variantProperties) return;
+function getKvaItems(product: Product, metadata: Metadata, locale: string, selectedVariantId?: string): KeyVariantAttributeItem[] {
+  if (!product?.variants) return;
+
+  const definition = metadata.definitions.find(d => d.name === product.definitionName);
+
+  if (!definition?.variantProperties) return;
+  const keyVariantProperties = definition.variantProperties.filter(v => v.isKeyVariant);
+  if (!keyVariantProperties || !keyVariantProperties.length) return;
+
   const selectedVariant = product.variants.find(v => v.id === selectedVariantId);
   const selectedKvas = selectedVariant ? selectedVariant.propertyBag : {};
-
-  const keyVariantProperties = definition.variantProperties.filter(v=> v.isKeyVariant);
-  var activeVariants = product.variants.filter(v=> v.active && v.propertyBag);
-  
+  var activeVariants = product.variants.filter(v => v.active && v.propertyBag);
 
   let result = keyVariantProperties.map(pr => {
     let selectedPrValue = selectedKvas[pr.propertyName];
     let prValues: KeyVariantAttributeItemValue[] = [];
+    let prLookup = pr.dataType === 'Lookup' ? metadata.lookups.find(l => l.lookupName === pr.propertyName) : undefined;
+
     activeVariants.forEach(v => {
       let prValue = v.propertyBag[pr.propertyName];
+      let lookupValue = prLookup?.values?.find(v => v.value === prValue);
 
       if (prValue && !prValues.find(pr => pr.value === prValue)) {
         let relatedVariants = activeVariants.filter(v => v.propertyBag[pr.propertyName] === prValue);
-        let otherProps = keyVariantProperties.filter(p => p.propertyName != pr.propertyName);
-        let disabled = false;
-        otherProps.forEach(otherP => {
-          let selectedOtherPrValue = selectedKvas[otherP.propertyName];
-          if (selectedOtherPrValue) {
-            let findRelatedWithSelected = relatedVariants.find(v => v.propertyBag[otherP.propertyName] === selectedOtherPrValue);
-            if (!findRelatedWithSelected) {
-              disabled = true
-            }
-          }
-        });
-        
+
         prValues.push({
           value: prValue,
           selected: selectedPrValue === prValue,
-          disabled,
-          title: prValue,
+          disabled: isDisabled(pr, relatedVariants),
+          title: lookupValue?.displayName?.[locale] ?? prValue,
           relatedVariantIds: relatedVariants.map(v => v.id)
         });
       }
@@ -151,6 +149,22 @@ function getKvaItems(product: Product, metadata: Metadata, selectedVariantId?: s
   });
 
   return result
+
+  function isDisabled(pr, relatedVariants) {
+    let otherKeyProps = keyVariantProperties.filter(p => p.propertyName != pr.propertyName);
+    let disabled = false;
+    otherKeyProps.forEach(otherP => {
+      let selectedOtherPrValue = selectedKvas[otherP.propertyName];
+      if (selectedOtherPrValue) {
+        let findRelatedWithSelected = relatedVariants.find(v => v.propertyBag[otherP.propertyName] === selectedOtherPrValue);
+        if (!findRelatedWithSelected) {
+          disabled = true;
+        }
+      }
+    });
+
+    return disabled;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

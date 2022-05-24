@@ -89,7 +89,7 @@ function getPagination(params: FacetSearchResult<SearchResults>): AgnosticPagina
 
   return {
     currentPage: input?.page,
-    totalPages: data ? Math.floor(data.total / input.itemsPerPage) : 0,
+    totalPages: data ? Math.ceil(data.total / input.itemsPerPage) : 0,
     totalItems: data?.total,
     itemsPerPage: input?.itemsPerPage,
     pageOptions: [12, 24, 48]

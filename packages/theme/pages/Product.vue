@@ -55,7 +55,7 @@
                 @change="changedValue => updateFilter({ Colour: changedValue })"
               >
                 <SfComponentSelectOption :class="color.disabled ? 'disabled': ''" v-for="(color, i) in kva.values" :value="color.value" :key="i">
-                  <SfProductOption :class="color.value" :label="color.disabled ? `${color.value} - unavailable`: color.value" :color="color.value" />
+                  <SfProductOption :class="color.value" :label="color.disabled ? `${color.title} - unavailable`: color.title" :color="color.value" />
                 </SfComponentSelectOption>
                 
               </SfComponentSelect>
@@ -175,11 +175,11 @@ import { addBasePath } from '@vue-storefront/core';
 export default {
   name: 'Product',
   transition: 'fade',
-  setup() {
+  setup(props, context) {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
-
+    const { locale } = router.app.$i18n;
     const id = computed(() => route.value.params.id);
     const variantId = computed(() => route.value.query?.variant);; 
     const { categories } = useCategory('categories');
@@ -188,12 +188,12 @@ export default {
     const { addItem, loading } = useCart();
     const { response: metadata } = useMetadata();
     let product = products;
-    const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, 'en-CA')); 
+    const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, locale)); 
     const options = computed(() => productGetters.getAttributes(product.value, []));
     const configuration = computed(() => productGetters.getSelectedKvas(product.value, variantId?.value));
     const productCategories = computed(() => productGetters.getCategoryIds(product.value));
     const breadcrumbs = computed(() => categoryGetters.getBreadcrumbs(categories.value, productCategories.value[0]));
-    const kvas = computed(() => productGetters.getKvaItems(product.value, metadata?.value, variantId.value));
+    const kvas = computed(() => productGetters.getKvaItems(product.value, metadata?.value, locale, variantId.value));
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
@@ -235,6 +235,7 @@ export default {
       if(v) {
         product.value.name = v.displayName;
         product.value.currentVariantId = v.id;
+        product.value.media = v.media;
       }
     }
 

@@ -1,3 +1,4 @@
+import { setProductImage } from '../../helpers/mediaUtils';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default async function getProduct(
@@ -5,7 +6,7 @@ export default async function getProduct(
   params
 ) {
   const { id, locale } = params;
-  const { api, scope } = context.config;
+  const { api, scope, cdnDamProviderConfig } = context.config;
   const url = new URL(
     `/api/products/v2/${scope}/${id}?CultureName=${locale}&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true`,
     api.url
@@ -15,6 +16,7 @@ export default async function getProduct(
   const { data: pricesData } = await context.client.post(getPricesUrl.href, {
     ProductIds: [id],
     IncludeVariants: true,
+    IncludeMedia: true,
     ScopeId: scope
   });
 
@@ -24,9 +26,11 @@ export default async function getProduct(
     });
   }
 
+  setProductImage(productData, cdnDamProviderConfig);
+
   return {
     ...productData,
-    ...{ description: productData.description[locale] },
+    ...{ description: productData.description?.[locale] },
     name: productData.displayName[locale],
     displayName: productData.displayName[locale],
     prices: { ...pricesData[0] }

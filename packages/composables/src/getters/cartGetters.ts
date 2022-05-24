@@ -39,9 +39,19 @@ function getItemQty(item: CartItem): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(item: CartItem, filterByAttributeName?: Array<string>): Record<string, AgnosticAttribute | string> {
-  return {
+  let result = {
     ...item?.kvaValues
-  };
+  }
+
+  if (filterByAttributeName) {
+    Object.keys(result).forEach(key => {
+      if (!filterByAttributeName.includes(key)) {
+        delete result[key]
+      }
+    })
+  }
+
+  return result;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

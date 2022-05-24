@@ -27,3 +27,30 @@ export const setCartItemsCoverImages = (items: any, cdnDamProviderConfig: any): 
   });
 };
 
+export const setProductImage = (product: any, cdnDamProviderConfig: any): void => {
+  if (!product) return;
+  // In this case the new Media is present, so we can skip set up cdn medias
+  if(product.mediaSet) return; 
+
+  const { serverUrl, imageFolderName, maxThumbnailImages } = cdnDamProviderConfig;
+  const id = product.productId ?? product.id;
+  product.media = [];
+  for (let index = 0; index < maxThumbnailImages; index++) {
+    product.media.push({
+      small: `${serverUrl}/${imageFolderName}/${id}_${index}_M.jpg`,
+      normal: `${serverUrl}/${imageFolderName}/${id}_${index}_L.jpg`,
+      big: `${serverUrl}/${imageFolderName}/${id}_${index}_XL.jpg`
+    })
+  }
+
+  product.variants?.forEach(variant => {
+    variant.media = [];
+    for (let index = 0; index < maxThumbnailImages; index++) {
+      variant.media.push({
+        small: `${serverUrl}/${imageFolderName}/${id}_${variant.id}_${index}_M.jpg`,
+        normal: `${serverUrl}/${imageFolderName}/${id}_${variant.id}_${index}_L.jpg`,
+        big: `${serverUrl}/${imageFolderName}/${id}_${variant.id}_${index}_XL.jpg`,
+      })
+    }
+  });
+};
