@@ -14,27 +14,26 @@ function getCategoryTree(result: SearchResults): AgnosticCategoryTree {
   return buildCategoryTree(categories, 'Root', '', 3, true);
 }
 
-const getCategories = (node: AgnosticCategoryTree, term: string): AgnosticCategoryTree[] => {
-  const nodes: AgnosticCategoryTree[] = [];
-
-  if (node?.label?.toLowerCase().indexOf(term) > -1) {
-    nodes.push(node);
-  }
-
-  if (node?.items?.length > 0) {
-    for (const child of node.items) {
-      nodes.push(...getCategories(child, term));
-    }
-  }
-
-  return nodes;
-};
-
 function getCategorySuggestions(result: SearchResults, categories: Category[], term: string): AgnosticCategoryTree[] {
   result.categories = categories;
   const categoryTree = getCategoryTree(result);
-  const res = getCategories(categoryTree, term?.toLowerCase());
-  return res;
+  const suggestions: AgnosticCategoryTree[] = [];
+
+  const getSuggestedNode = (node: AgnosticCategoryTree) => {
+    if (!node) return;
+    if (node.label?.toLowerCase().indexOf(term?.toLowerCase()) > -1) {
+      suggestions.push(node);
+    }
+    if (node.items?.length) {
+      for (const child of node.items) {
+        getSuggestedNode(child);
+      }
+    }
+  };
+
+  getSuggestedNode(categoryTree);
+
+  return suggestions;
 }
 
 function getPagination(): AgnosticPagination {

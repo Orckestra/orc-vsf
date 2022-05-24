@@ -143,7 +143,7 @@ export default {
     const searchBarRef = ref(null);
     const isMobile = ref(mapMobileObserver().isMobile.get());
     const { result, search } = useSearch('productSuggestions');
-    const { search: categorySearch, result: facetResult } = useSearch('categorySuggestions');
+    const { search: categoryCountsSearch, result: categoryCounts } = useSearch('categoryCounts');
     const { categories } = useCategory('categories');
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -152,7 +152,7 @@ export default {
 
     const searchResults = computed(() =>{
       if (categories.value) {
-        const filteredCategories = searchGetters.getCategorySuggestions(facetResult.value, categories.value, term.value);
+        const filteredCategories = searchGetters.getCategorySuggestions(categoryCounts.value, categories.value, term.value);
         return !term.value
           ? { products: [] }
           : {
@@ -189,8 +189,8 @@ export default {
       } else {
         term.value = paramValue.target.value;
       }
-      if (facetResult.value.length === 0) {
-        await categorySearch({facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
+      if (categoryCounts.value.length === 0) {
+        await categoryCountsSearch({facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
       }
       await search({ term: term.value });
     }, 1000);
