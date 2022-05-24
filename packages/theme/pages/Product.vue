@@ -54,8 +54,8 @@
                 :persistent="false"
                 @change="changedValue => updateFilter({ Colour: changedValue })"
               >
-                <SfComponentSelectOption :class="color.disabled ? 'disabled': ''" v-for="(color, i) in kva.values" :value="color.value" :key="i">
-                  <SfProductOption :class="color.value" :label="color.disabled ? `${color.title} - unavailable`: color.title" :color="color.value" />
+                <SfComponentSelectOption :class="color.disabled ? 'disabled': color.value" v-for="(color, i) in kva.values" :value="color.value" :key="i">
+                  <SfProductOption :label="color.disabled ? `${color.title} - unavailable`: color.title" :color="colorsMap[color.value] ? colorsMap[color.value]: color.value" />
                 </SfComponentSelectOption>
 
               </SfComponentSelect>
@@ -282,6 +282,24 @@ export default {
   data() {
     return {
       stock: 5,
+      colorsMap: {
+      'chic_cream': '#fffdd0',
+      'british_khaki': '#c3b091',
+      'polo_black': 'black',
+      'newport_navy': 'navy',
+      'wicket_yellow': 'yellow',
+      'rl2000_red': 'red',
+      'andover_heather': '#bbb9cd',
+      'chatham_blue': 'blue',
+      'carmel_pink': 'pink',
+       'ink': 'pink',
+       'midnight': '#152744',
+       'olive_forest': '#578F29',
+       'peyote': '#C2B191',
+       'cloud': '#396b89',
+       'bungee_cord': '#696156',
+       'sun': '#FCE570'
+    },
       properties: [
         {
           name: 'Product Code',
@@ -300,12 +318,7 @@ export default {
           value: 'Germany'
         }
       ],
-      description: 'Find stunning women cocktail and party dresses. Stand out in lace and metallic cocktail dresses and party dresses from all your favorite brands.',
-      detailsIsActive: false,
-      brand:
-          'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
-      careInstructions: 'Do not wash!'
-    };
+      detailsIsActive: false    };
   }
 };
 </script>
@@ -480,82 +493,5 @@ export default {
 
 .disabled  {
   color: #ccc;
-}
-
-.british_khaki > div {
-  background:#c3b091 !important;
-}
-
-.chic_cream {
-  background: #fffdd0;
-}
-
-[class*=_black] .sf-product-option__color {
- background: #000;
-}
-
-[class*=_navy] .sf-product-option__color {
- background: navy;
-}
-
-[class*=_white] .sf-product-option__color {
- background: #fff;
-}
-
-[class*=_yellow] .sf-product-option__color {
- background: yellow;
-}
-
-[class*=_red] .sf-product-option__color {
- background: red;
-}
-
-[class*=_blue] .sf-product-option__color,
-[class*=blue_] .sf-product-option__color {
- background: blue;
-}
-
-[class*=_pink] .sf-product-option__color {
- background: pink;
-}
-
-[class*=_grey] .sf-product-option__color {
- background: grey;
-}
-
-[class*=sun_] .sf-product-option__color {
- background: #FCE570;
-}
-
-.ink .sf-product-option__color {
-   background:pink;
-}
-
-.midnight .sf-product-option__color  {
-  background:#152744;
-}
-
-.peyote .sf-product-option__color {
-  background:#C2B191;
-}
-
-.olive_forest .sf-product-option__color {
-   background:#578F29;
-}
-
-.cloud .sf-product-option__color {
-  background: #396b89;
-}
-
-.bungee_cord .sf-product-option__color {
-  background: #696156;
-}
-
-.british_khaki > div {
-  background:#c3b091;
-}
-
-.andover_heather .sf-product-option__color {
-  background: #bbb9cd;
 }
 </style>
