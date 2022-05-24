@@ -15,13 +15,13 @@ const factoryParams = {
     const { ...searchParams } = params.input;
     searchParams.locale = app.i18n.locale;
     searchParams.categories = categories.value;
-    const { products, total, facets, categoryCounts } = await context.$occ.api.getProducts(searchParams);
+    const { products, total, facets, facetCounts } = await context.$occ.api.getProducts(searchParams);
     return {
       products,
       total,
       facets,
       categories: categories.value,
-      categoryCounts
+      facetCounts
     };
   }
 };

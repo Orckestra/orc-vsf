@@ -103,7 +103,7 @@ export type SearchResults = {
     products: any,
     facets: Facet[],
     categories?: Category[],
-    categoryCounts?: any
+    facetCounts?: any
 };
 
 export const enum FacetType
