@@ -176,7 +176,7 @@ export type Product = {
     id?:string,
     productId?: string,
     name: any,
-    displayName: any,
+    displayName?: any,
     description?: any,
     sku: string,
     currentPrice?: any,
@@ -188,12 +188,12 @@ export type Product = {
     definitionName: string,
     variants?: ProductVariant[],
     currentVariantId: string,
-    // new Media 
+    // new Media
     mediaSet?: ProductMedia[],
-    variantMediaSet: VariantMediaSet,
+    variantMediaSet?: VariantMediaSet,
     // old CDN Media
     media?: any,
-    variantsMedia: any
+    variantsMedia?: any
 };
 
 export const enum ProductsQueryType {
@@ -252,7 +252,6 @@ export type Lookup = {
     isSystem: boolean
 }
 
-
 export type DefinitionProperty = {
     propertyName: string,
     displayName: any
@@ -294,5 +293,4 @@ export type Metadata = {
     lookups: Lookup[],
     definitions: Definition[]
 }
-
 

@@ -27,10 +27,11 @@ export const setCartItemsCoverImages = (items: any, cdnDamProviderConfig: any): 
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const setProductImage = (product: any, cdnDamProviderConfig: any): void => {
   if (!product) return;
   // In this case the new Media is present, so we can skip set up cdn medias
-  if(product.mediaSet) return; 
+  if (product.mediaSet) return;
 
   const { serverUrl, imageFolderName, maxThumbnailImages } = cdnDamProviderConfig;
   const id = product.productId ?? product.id;
@@ -40,7 +41,7 @@ export const setProductImage = (product: any, cdnDamProviderConfig: any): void =
       small: `${serverUrl}/${imageFolderName}/${id}_${index}_M.jpg`,
       normal: `${serverUrl}/${imageFolderName}/${id}_${index}_L.jpg`,
       big: `${serverUrl}/${imageFolderName}/${id}_${index}_XL.jpg`
-    })
+    });
   }
 
   product.variants?.forEach(variant => {
@@ -49,8 +50,8 @@ export const setProductImage = (product: any, cdnDamProviderConfig: any): void =
       variant.media.push({
         small: `${serverUrl}/${imageFolderName}/${id}_${variant.id}_${index}_M.jpg`,
         normal: `${serverUrl}/${imageFolderName}/${id}_${variant.id}_${index}_L.jpg`,
-        big: `${serverUrl}/${imageFolderName}/${id}_${variant.id}_${index}_XL.jpg`,
-      })
+        big: `${serverUrl}/${imageFolderName}/${id}_${variant.id}_${index}_XL.jpg`
+      });
     }
   });
 };

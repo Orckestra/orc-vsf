@@ -46,7 +46,7 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
         normal: set.resizedInstances?.find(i => i.size === 'L')?.url ?? set.url,
         big: set.resizedInstances?.find(i => i.size === 'XL')?.url ?? set.url
       };
-    })
+    });
   }
 
   return product?.media ?? [];
@@ -104,7 +104,6 @@ function getLink(product: Product): string {
   return `/p/${product.productId}/${product.propertyBag?.ProductDisplayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
-
 function getKvaItems(product: Product, metadata: Metadata, locale: string, selectedVariantId?: string): KeyVariantAttributeItem[] {
   if (!product?.variants) return;
 
@@ -116,19 +115,19 @@ function getKvaItems(product: Product, metadata: Metadata, locale: string, selec
 
   const selectedVariant = product.variants.find(v => v.id === selectedVariantId);
   const selectedKvas = selectedVariant ? selectedVariant.propertyBag : {};
-  var activeVariants = product.variants.filter(v => v.active && v.propertyBag);
+  const activeVariants = product.variants.filter(v => v.active && v.propertyBag);
 
-  let result = keyVariantProperties.map(pr => {
-    let selectedPrValue = selectedKvas[pr.propertyName];
-    let prValues: KeyVariantAttributeItemValue[] = [];
-    let prLookup = pr.dataType === 'Lookup' ? metadata.lookups.find(l => l.lookupName === pr.propertyName) : undefined;
+  const result = keyVariantProperties.map(pr => {
+    const selectedPrValue = selectedKvas[pr.propertyName];
+    const prValues: KeyVariantAttributeItemValue[] = [];
+    const prLookup = pr.dataType === 'Lookup' ? metadata.lookups.find(l => l.lookupName === pr.propertyName) : undefined;
 
     activeVariants.forEach(v => {
-      let prValue = v.propertyBag[pr.propertyName];
-      let lookupValue = prLookup?.values?.find(v => v.value === prValue);
+      const prValue = v.propertyBag[pr.propertyName];
+      const lookupValue = prLookup?.values?.find(v => v.value === prValue);
 
       if (prValue && !prValues.find(pr => pr.value === prValue)) {
-        let relatedVariants = activeVariants.filter(v => v.propertyBag[pr.propertyName] === prValue);
+        const relatedVariants = activeVariants.filter(v => v.propertyBag[pr.propertyName] === prValue);
 
         prValues.push({
           value: prValue,
@@ -145,18 +144,18 @@ function getKvaItems(product: Product, metadata: Metadata, locale: string, selec
       title: pr.displayName,
       propertyName: pr.propertyName,
       propertyDataType: pr.dataType
-    }
+    };
   });
 
-  return result
+  return result;
 
   function isDisabled(pr, relatedVariants) {
-    let otherKeyProps = keyVariantProperties.filter(p => p.propertyName != pr.propertyName);
+    const otherKeyProps = keyVariantProperties.filter(p => p.propertyName !== pr.propertyName);
     let disabled = false;
     otherKeyProps.forEach(otherP => {
-      let selectedOtherPrValue = selectedKvas[otherP.propertyName];
+      const selectedOtherPrValue = selectedKvas[otherP.propertyName];
       if (selectedOtherPrValue) {
-        let findRelatedWithSelected = relatedVariants.find(v => v.propertyBag[otherP.propertyName] === selectedOtherPrValue);
+        const findRelatedWithSelected = relatedVariants.find(v => v.propertyBag[otherP.propertyName] === selectedOtherPrValue);
         if (!findRelatedWithSelected) {
           disabled = true;
         }

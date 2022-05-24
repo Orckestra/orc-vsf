@@ -9,6 +9,6 @@ export const useMetadata = useMetadataFactory<Metadata>({
     return {
       lookups,
       definitions
-    }
+    };
   }
 });

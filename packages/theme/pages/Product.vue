@@ -57,7 +57,7 @@
                 <SfComponentSelectOption :class="color.disabled ? 'disabled': ''" v-for="(color, i) in kva.values" :value="color.value" :key="i">
                   <SfProductOption :class="color.value" :label="color.disabled ? `${color.title} - unavailable`: color.title" :color="color.value" />
                 </SfComponentSelectOption>
-                
+
               </SfComponentSelect>
 
               <SfSelect
@@ -105,7 +105,7 @@
               <SfTab title="Description">
                 <div v-html="productGetters.getDescription(product)" class="product__description">
                 </div>
-                
+
               </SfTab>
               <SfTab
                 title="Additional Information"
@@ -175,20 +175,20 @@ import { addBasePath } from '@vue-storefront/core';
 export default {
   name: 'Product',
   transition: 'fade',
-  setup(props, context) {
+  setup() {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
     const { locale } = router.app.$i18n;
     const id = computed(() => route.value.params.id);
-    const variantId = computed(() => route.value.query?.variant);; 
+    const variantId = computed(() => route.value.query?.variant);
     const { categories } = useCategory('categories');
     const { products, search: searchProduct, loading: productLoading } = useProduct(`product-${id.value}`);
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { response: metadata } = useMetadata();
-    let product = products;
-    const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, locale)); 
+    const product = products;
+    const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, locale));
     const options = computed(() => productGetters.getAttributes(product.value, []));
     const configuration = computed(() => productGetters.getSelectedKvas(product.value, variantId?.value));
     const productCategories = computed(() => productGetters.getCategoryIds(product.value));
@@ -202,24 +202,23 @@ export default {
     })));
 
     onSSR(async () => {
-      if(!product.value || !product.value.id || product.value.id !== id.value) {
+      if (!product.value || !product.value.id || product.value.id !== id.value) {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
         await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
       }
     });
 
     const updateFilter = (filter) => {
-      if(!product?.value?.variants) return;
-      var keys = Object.keys(configuration.value);
-      var merged = { ...configuration.value, ...filter};
-      
-      const compareProperties = (pr) => {
-        return keys.reduce((result, current) => result && (pr[current] && pr[current] === merged[current]), true)
-      }
+      if (!product?.value?.variants) return;
+      const keys = Object.keys(configuration.value);
+      const merged = { ...configuration.value, ...filter};
 
-      var currentSKU = route.value.params.slug;
-      var variant = product.value.variants.find(v => compareProperties(v.propertyBag));
-      if(!variant) return;
+      const compareProperties = (pr) => {
+        return keys.reduce((result, current) => result && (pr[current] && pr[current] === merged[current]), true);
+      };
+
+      const variant = product.value.variants.find(v => compareProperties(v.propertyBag));
+      if (!variant) return;
 
       router.push({
         path: route.value.path,
@@ -229,10 +228,10 @@ export default {
       });
     };
 
-    if(variantId?.value && product.value?.variants) {
-      //merge variant data to product data
-      let v = product.value.variants.find(v=> v.id === variantId.value);
-      if(v) {
+    if (variantId?.value && product.value?.variants) {
+      // merge variant data to product data
+      const v = product.value.variants.find(v=> v.id === variantId.value);
+      if (v) {
         product.value.name = v.displayName;
         product.value.currentVariantId = v.id;
         product.value.media = v.media;

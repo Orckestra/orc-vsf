@@ -39,16 +39,16 @@ function getItemQty(item: CartItem): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(item: CartItem, filterByAttributeName?: Array<string>): Record<string, AgnosticAttribute | string> {
-  let result = {
+  const result = {
     ...item?.kvaValues
-  }
+  };
 
   if (filterByAttributeName) {
     Object.keys(result).forEach(key => {
       if (!filterByAttributeName.includes(key)) {
-        delete result[key]
+        delete result[key];
       }
-    })
+    });
   }
 
   return result;
