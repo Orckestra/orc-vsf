@@ -9,5 +9,5 @@ export default (context) => {
     context.app.router.push('/');
     context.redirect('/en-CA');
   }
- // Logger.error('Please implement vendor-specific is-authenticated.js middleware in the \'middleware\' directory to block guests from accessing user profile routes');
+  // Logger.error('Please implement vendor-specific is-authenticated.js middleware in the \'middleware\' directory to block guests from accessing user profile routes');
 };
