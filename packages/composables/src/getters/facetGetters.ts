@@ -68,11 +68,11 @@ function getSortOptions(params: FacetSearchResult<SearchResults>): AgnosticSort 
 function getCategoryTree(params: FacetSearchResult<SearchResults>, root = 'Root', level = 3): AgnosticCategoryTree {
   if (!params.data) return;
 
-  const { categoryCounts } = params.data;
+  const { facetCounts } = params.data;
   const { categorySlug, withCategoryCounts } = params.input;
   const categories = params.data?.categories;
   if (withCategoryCounts) {
-    setProductCounts(categories, categoryCounts);
+    setProductCounts(categories, facetCounts);
   }
 
   return buildCategoryTree(categories, root, categorySlug, level);
@@ -89,7 +89,7 @@ function getPagination(params: FacetSearchResult<SearchResults>): AgnosticPagina
 
   return {
     currentPage: input?.page,
-    totalPages: data ? Math.floor(data.total / input.itemsPerPage) : 0,
+    totalPages: data ? Math.ceil(data.total / input.itemsPerPage) : 0,
     totalItems: data?.total,
     itemsPerPage: input?.itemsPerPage,
     pageOptions: [12, 24, 48]

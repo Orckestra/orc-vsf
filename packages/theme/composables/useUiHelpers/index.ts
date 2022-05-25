@@ -19,11 +19,11 @@ const reduceFilters = (query) => (prev, curr) => {
   };
 };
 
-const getFiltersDataFromUrl = (context, onlyFilters) => {
+const getFiltersDataFromUrl = (context, onlyFilters, restorePage = false) => {
   const { query } = context.$router.history.current;
 
   return Object.keys(query)
-    .filter(f => onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f))
+    .filter(f => (onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f)) && (restorePage ? f !== 'page' : true))
     .reduce(reduceFilters(query), {});
 };
 
@@ -52,7 +52,7 @@ const useUiHelpers = () => {
   const changeSorting = (sort) => {
     context.$router.push({
       query: {
-        ...getFiltersDataFromUrl(context, false),
+        ...getFiltersDataFromUrl(context, true),
         sort
       }
     });
@@ -63,7 +63,7 @@ const useUiHelpers = () => {
   const changeFilters = (filters) => {
     router.push({
       query: {
-        ...getFiltersDataFromUrl(context, false),
+        ...getFiltersDataFromUrl(context, false, true),
         ...filters
       }
     });
