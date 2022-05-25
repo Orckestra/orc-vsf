@@ -125,8 +125,9 @@ export type ProductVariant = {
     active?: boolean,
     id: string,
     sku: string,
-    displayName: any
-    propertyBag: any
+    displayName?: any,
+    propertyBag?: any,
+    media?: any,
 }
 
 export type KeyVariantAttributeItemValue = {
