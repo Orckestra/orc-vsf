@@ -3,13 +3,14 @@
   "private": true,
   "license": "MIT",
   "engines": {
-     "node": ">=10.x"
+    "node": "16.x"
   },
   "scripts": {
     "build": "yarn build:api-client && yarn build:composables && yarn build:theme",
     "build:api-client": "cd packages/api-client && yarn build",
     "build:composables": "cd packages/composables && yarn build",
     "build:theme": "cd packages/theme && yarn build",
+    "generate:theme": "cd packages/theme && yarn generate",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "dev": "concurrently \"yarn:dev:*\"",
