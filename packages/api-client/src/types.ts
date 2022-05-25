@@ -172,6 +172,37 @@ export type VariantMediaSet = {
     media?: ProductMedia[]
 }
 
+export type ProductPriceEntry = {
+
+    /* Indicates whether the price is inherited from parent scope. */
+    isInherited: boolean
+    price: number,
+    priceListCategory: string,
+
+    /* the unique identifier of the PriceList associated to the Product */
+    priceListId: string
+    priceListType: string,
+    sequenceNumber: number
+    startDate: any,
+    endDate: any,
+}
+
+export type VariantPrice = {
+    variantId?: string,
+    defaultPrice?: number,
+    inheritedFromProduct?: boolean,
+    pricing?: ProductPriceEntry,
+    regularPricing?: ProductPriceEntry
+}
+
+export type ProductPrice = {
+    productId?: string,
+    defaultPrice?: number,
+    pricing?: ProductPriceEntry,
+    regularPricing?: ProductPriceEntry,
+    variantPrices?: VariantPrice[]
+}
+
 export type Product = {
     id?:string,
     productId?: string,
@@ -183,7 +214,7 @@ export type Product = {
     regularPrice?: any,
     propertyBag: any,
     parentCategoryIds: any,
-    prices?: any,
+    prices?: ProductPrice,
     coverImage?: any,
     definitionName: string,
     variants?: ProductVariant[],

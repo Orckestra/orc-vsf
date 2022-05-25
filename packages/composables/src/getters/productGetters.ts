@@ -4,7 +4,25 @@ import {
   AgnosticPrice,
   ProductGetters
 } from '@vue-storefront/core';
-import type { Product, ProductFilter, Metadata, KeyVariantAttributeItem, KeyVariantAttributeItemValue } from '@vue-storefront/orc-vsf-api';
+import type { Product, ProductPrice, ProductFilter, Metadata, KeyVariantAttributeItem, KeyVariantAttributeItemValue } from '@vue-storefront/orc-vsf-api';
+
+function getProductWithVariant(product: Product, variantId: string): Product {
+  if (variantId) {
+    const variant = product.variants?.find(v => v.id === variantId);
+    if (variant) {
+      const variantPrices: any = product.prices?.variantPrices?.find(p => p.variantId === variantId);
+      return {
+        ...product,
+        currentVariantId: variantId,
+        ...{ media: variant.media },
+        ...{ name: variant.displayName },
+        ...{ prices: variantPrices }
+      };
+    }
+  }
+
+  return product;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: Product): string {
@@ -23,7 +41,7 @@ function getBrand(product: Product): string {
 function getPrice(product: Product): AgnosticPrice {
   if (!product) return;
 
-  const prices = product.prices;
+  const prices: ProductPrice = product.prices;
   if (prices) {
     return {
       regular: prices.defaultPrice,
@@ -182,6 +200,7 @@ function getAverageRating(product: Product): number {
 }
 
 export const productGetters: ProductGetters<Product, ProductFilter> = {
+  getProductWithVariant,
   getName,
   getSlug,
   getPrice,

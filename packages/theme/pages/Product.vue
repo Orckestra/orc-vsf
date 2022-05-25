@@ -187,7 +187,7 @@ export default {
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { response: metadata } = useMetadata();
-    const product = products;
+    const product = computed(() => productGetters.getProductWithVariant(products.value, variantId.value));
     const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, locale));
     const options = computed(() => productGetters.getAttributes(product.value, []));
     const configuration = computed(() => productGetters.getSelectedKvas(product.value, variantId?.value));
@@ -227,16 +227,6 @@ export default {
         }
       });
     };
-
-    if (variantId?.value && product.value?.variants) {
-      // merge variant data to product data
-      const v = product.value.variants.find(v=> v.id === variantId.value);
-      if (v) {
-        product.value.name = v.displayName;
-        product.value.currentVariantId = v.id;
-        product.value.media = v.media;
-      }
-    }
 
     return {
       breadcrumbs,
@@ -279,27 +269,58 @@ export default {
     LazyHydrate,
     SfLoader
   },
+  /* eslint-disable camelcase */
   data() {
     return {
       stock: 5,
       colorsMap: {
-      'chic_cream': '#fffdd0',
-      'british_khaki': '#c3b091',
-      'polo_black': 'black',
-      'newport_navy': 'navy',
-      'wicket_yellow': 'yellow',
-      'rl2000_red': 'red',
-      'andover_heather': '#bbb9cd',
-      'chatham_blue': 'blue',
-      'carmel_pink': 'pink',
-       'ink': 'pink',
-       'midnight': '#152744',
-       'olive_forest': '#578F29',
-       'peyote': '#C2B191',
-       'cloud': '#396b89',
-       'bungee_cord': '#696156',
-       'sun': '#FCE570'
-    },
+        chic_cream: '#fffdd0',
+        british_khaki: '#c3b091',
+        polo_black: 'black',
+        newport_navy: 'navy',
+        wicket_yellow: 'yellow',
+        rl2000_red: 'red',
+        andover_heather: '#bbb9cd',
+        chatham_blue: 'blue',
+        carmel_pink: 'pink',
+        ink: 'pink',
+        midnight: '#152744',
+        olive_forest: '#578F29',
+        peyote: '#C2B191',
+        cloud: '#396b89',
+        bungee_cord: '#696156',
+        sun: '#FCE570',
+        bluebrown: 'blue',
+        faded_rose: 'rose',
+        silvery_grey: 'grey',
+        black_snake: 'black',
+        light_grey_heather: 'grey',
+        mallet: '',
+        tuscany_tan: '',
+        copper: '',
+        multi_combo: '',
+        storm: '',
+        light_purple: 'purple',
+        della_robia: '',
+        grey_mix: 'grey',
+        neptune: 'navy',
+        hudson_tan: '',
+        evergreen: 'green',
+        black_ivory: 'black',
+        hawaiian_ocean: 'blue',
+        abstract_seas: '',
+        black_pony: 'black',
+        light_french_blue: 'blue',
+        taupe: '',
+        rust: '',
+        burlap: '',
+        blue_paisley: 'blue',
+        mountain: '',
+        paprika: '',
+        american_dream: '',
+        khaki_w_brown_lthr: 'brown'
+
+      },
       properties: [
         {
           name: 'Product Code',
@@ -318,7 +339,7 @@ export default {
           value: 'Germany'
         }
       ],
-      detailsIsActive: false    };
+      detailsIsActive: false };
   }
 };
 </script>
