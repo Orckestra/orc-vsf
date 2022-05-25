@@ -125,22 +125,107 @@ export type ProductVariant = {
     active?: boolean,
     id: string,
     sku: string,
-    propertyBag: any
+    displayName?: any,
+    propertyBag?: any,
+    media?: any,
+}
+
+export type KeyVariantAttributeItemValue = {
+    title: string,
+    value: string,
+    selected: boolean,
+    disabled: boolean,
+    relatedVariantIds?: any
+}
+
+export type KeyVariantAttributeItem = {
+    values: KeyVariantAttributeItemValue[],
+    title: string,
+    propertyName?: string,
+    propertyDataType?: string
+}
+
+export type ResizedMediaLink = {
+    // the Url of the media.
+    url: string,
+    // the name of the size of the media. Examples could be: "S", "M", "L", etc.
+    size: string,
+    propertyBag?: any,
+}
+
+export type ProductMedia = {
+    id: string,
+    url: string,
+    propertyBag?: any,
+    mediaType: string,
+    position?: number,
+    tag?: string,
+    title?: string,
+    isCover: boolean,
+    description?: any,
+    isInherited?: boolean,
+    isRemoved?: boolean,
+    resizedInstances?: ResizedMediaLink[]
+}
+
+export type VariantMediaSet = {
+    attributesToMatch: any,
+    media?: ProductMedia[]
+}
+
+export type ProductPriceEntry = {
+
+    /* Indicates whether the price is inherited from parent scope. */
+    isInherited: boolean
+    price: number,
+    priceListCategory: string,
+
+    /* the unique identifier of the PriceList associated to the Product */
+    priceListId: string
+    priceListType: string,
+    sequenceNumber: number
+    startDate: any,
+    endDate: any,
+}
+
+export type VariantPrice = {
+    variantId?: string,
+    defaultPrice?: number,
+    inheritedFromProduct?: boolean,
+    pricing?: ProductPriceEntry,
+    regularPricing?: ProductPriceEntry
+}
+
+export type ProductPrice = {
+    productId?: string,
+    defaultPrice?: number,
+    pricing?: ProductPriceEntry,
+    regularPricing?: ProductPriceEntry,
+    variantPrices?: VariantPrice[]
 }
 
 export type Product = {
     id?:string,
     productId?: string,
     name: any,
+    displayName?: any,
     description?: any,
     sku: string,
     currentPrice?: any,
     regularPrice?: any,
     propertyBag: any,
     parentCategoryIds: any,
-    prices?: any,
+    prices?: ProductPrice,
     coverImage?: any,
-    variants?: ProductVariant[]
+    definitionName: string,
+    variants?: ProductVariant[],
+    currentVariantId: string,
+    // new Media
+    mediaSet?: ProductMedia[],
+    variantMediaSet?: VariantMediaSet,
+    // old CDN Media
+    media?: any,
+    variantsMedia?: any
 };
 
 export const enum ProductsQueryType {
@@ -179,3 +264,65 @@ export type Store = TODO;
 export type Wishlist = TODO;
 
 export type WishlistItem = TODO;
+
+export type LookupValue = {
+    id: string,
+    value: string,
+    lookupId: string,
+    displayName: any,
+    sortOrder: number,
+    isActive: boolean,
+    isSystem: boolean
+}
+
+export type Lookup = {
+    lookupName: string,
+    values: LookupValue[],
+    displayName: any,
+    description: string,
+    isActive: boolean,
+    isSystem: boolean
+}
+
+export type DefinitionProperty = {
+    propertyName: string,
+    displayName: any
+    isRequired: boolean,
+    displayOrder: number,
+    localizable: boolean,
+    dataType: string,
+    minimumValue: any,
+    maximumValue: any,
+    isSystem: true,
+    includeInAllProductDefinition: true,
+    includeInAllCategoryDefinition: true,
+    includeInAllVariantDefinition: false,
+    groupName: string,
+    isHiddenInOrchestrator: boolean,
+    isVariant: boolean,
+    isVariantGroup: boolean,
+    isKeyVariant: boolean,
+    isFacettableAdmin: boolean,
+    isFacettableWeb: boolean,
+    maxMultiplicity: string
+}
+
+export type DefinitionPropertyGroup = {
+    properties: DefinitionProperty[]
+}
+
+export type Definition = {
+    name: string,
+    displayName: any,
+    productType: string,
+    sequenceNumber: number,
+    properties: DefinitionProperty[],
+    propertyGroups: DefinitionPropertyGroup[],
+    variantProperties: DefinitionProperty[]
+}
+
+export type Metadata = {
+    lookups: Lookup[],
+    definitions: Definition[]
+}
+
