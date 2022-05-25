@@ -21,7 +21,7 @@
           :label="menu.label"
           class="sf-header-navigation-item__menu-item"
           :link="localePath(`/c/${menu.slug}`)"
-          @click="toggleMobileMenu"
+          @click.native="toggleMobileMenu"
         />
       </template>
     </SfHeaderNavigationItem>
