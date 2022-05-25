@@ -26,7 +26,7 @@ function getProductWithVariant(product: Product, variantId: string): Product {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: Product): string {
-  return product?.name ?? product?.propertyBag?.DisplayName;
+  return "!test!" + product?.name ?? product?.propertyBag?.DisplayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
