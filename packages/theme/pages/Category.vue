@@ -13,6 +13,9 @@
           {{ breadcrumb.text }}
         </nuxt-link>
       </template>
+      <template #current="{ breadcrumb }">
+        {{ breadcrumb.text }}
+        </template>
     </SfBreadcrumbs>
     <div class="navbar section">
       <div class="navbar__aside desktop-only">

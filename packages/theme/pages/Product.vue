@@ -16,6 +16,15 @@
           {{ breadcrumb.text }}
         </nuxt-link>
       </template>
+      <template #current="{ breadcrumb }">
+        <nuxt-link
+          :data-testid="breadcrumb.text"
+          :to="breadcrumb.link ? localePath(breadcrumb.link) : ''"
+          class="sf-link disable-active-link sf-breadcrumbs__breadcrumb"
+        >
+          {{ breadcrumb.text }}
+        </nuxt-link>
+      </template>
     </SfBreadcrumbs>
       <div class="product">
         <LazyHydrate when-idle>
