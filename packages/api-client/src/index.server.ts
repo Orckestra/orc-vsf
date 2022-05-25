@@ -5,6 +5,14 @@ import axios from 'axios';
 import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
+import getCart from './api/carts/getCart';
+import addCartItem from './api/carts/addCartItem';
+import removeCartItem from './api/carts/removeCartItem';
+import updateCartItem from './api/carts/updateCartItem';
+import updateCartShipment from './api/carts/updateCartShipment';
+import getFulfillmentLocations from './api/getFulfillmentLocations';
+import getProductLookups from './api/metadata/getProductLookups';
+import getProductDefinitions from './api/metadata/getProductDefinitions';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -26,7 +34,15 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
   api: {
     getProduct,
     getProducts,
-    getCategory
+    getCategory,
+    getCart,
+    addCartItem,
+    removeCartItem,
+    updateCartItem,
+    getFulfillmentLocations,
+    updateCartShipment,
+    getProductLookups,
+    getProductDefinitions
   }
 });
 

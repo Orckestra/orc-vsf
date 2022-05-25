@@ -23,7 +23,8 @@ module.exports = {
         cdnDamProviderConfig: {
           serverUrl: 'https://refapp.azureedge.net',
           imageFolderName: 'images',
-          fallbackImage: 'image_not_found.jpg'
+          fallbackImage: 'image_not_found.jpg',
+          maxThumbnailImages: 1
         }
       },
     },

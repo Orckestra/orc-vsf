@@ -155,7 +155,9 @@ module.exports = {
     middleware: ['checkout']
   },
   publicRuntimeConfig: {
-    theme
+    theme,
+    appKey: 'vsf2occ',
+    appVersion: Date.now()
   },
   pwa: {
     meta: {

@@ -5,17 +5,103 @@
 
 ## API
 ```typescript
-export interface Product {
-  productId: string
-  name: string;
-  description?: any,
-  sku: string,
-  currentPrice?: any,
-  regularPrice?: any,
-  propertyBag: any,
-  parentCategoryIds: any,
-  prices?: any
-}
+
+export declare type Product = {
+    id?: string;
+    productId?: string;
+    name: any;
+    displayName?: any;
+    description?: any;
+    sku: string;
+    currentPrice?: any;
+    regularPrice?: any;
+    propertyBag: any;
+    parentCategoryIds: any;
+    prices?: ProductPrice;
+    coverImage?: any;
+    definitionName: string;
+    variants?: ProductVariant[];
+    currentVariantId: string;
+    mediaSet?: ProductMedia[];
+    variantMediaSet?: VariantMediaSet;
+    media?: any;
+    variantsMedia?: any;
+};
+
+export declare type ProductVariant = {
+    active?: boolean;
+    id: string;
+    sku: string;
+    displayName: any;
+    propertyBag: any;
+};
+
+export declare type KeyVariantAttributeItemValue = {
+    title: string;
+    value: string;
+    selected: boolean;
+    disabled: boolean;
+    relatedVariantIds?: any;
+};
+export declare type KeyVariantAttributeItem = {
+    values: KeyVariantAttributeItemValue[];
+    title: string;
+    propertyName?: string;
+    propertyDataType?: string;
+};
+
+export declare type ResizedMediaLink = {
+    url: string;
+    size: string;
+    propertyBag?: any;
+};
+
+export declare type ProductMedia = {
+    id: string;
+    url: string;
+    propertyBag?: any;
+    mediaType: string;
+    position?: number;
+    tag?: string;
+    title?: string;
+    isCover: boolean;
+    description?: any;
+    isInherited?: boolean;
+    isRemoved?: boolean;
+    resizedInstances?: ResizedMediaLink[];
+};
+
+export declare type VariantMediaSet = {
+    attributesToMatch: any;
+    media?: ProductMedia[];
+};
+
+export declare type ProductPriceEntry = {
+    isInherited: boolean;
+    price: number;
+    priceListCategory: string;
+    priceListId: string;
+    priceListType: string;
+    sequenceNumber: number;
+    startDate: any;
+    endDate: any;
+};
+
+export declare type VariantPrice = {
+    variantId: string;
+    defaultPrice: number;
+    inheritedFromProduct: boolean;
+    pricing?: ProductPriceEntry;
+    regularPricing?: ProductPriceEntry;
+};
+
+export declare type ProductPrice = {
+    productId: string;
+    defaultPrice?: number;
+    pricing?: ProductPriceEntry;
+    regularPricing?: ProductPriceEntry;
+    variantPrices?: VariantPrice[];
+};
 ```
 
 ### `search`
@@ -33,15 +119,38 @@ Reactive object containing the error message, if search failed for any reason.
 ## Getters
 ````typescript
 interface ProductGetters<Product> {
+  getProductWithVariant(product: Product, variantId: string) => Product; // merge Product object with Variant data if it exists
   getPrice: (product: Product) => AgnosticPrice;
   getName: (product: Product) => string;
+  getSlug: (product: Product) => string;
   getDescription: (product: Product) => string; 
+  getGallery(product: Product) => AgnosticMediaGalleryItem[];
+  getSelectedKvas(product: Product, variantId?: string) => Record<string, AgnosticAttribute | string>
+  getKvaItems(product: Product, metadata: Metadata, locale: string, selectedVariantId?: string) =>  KeyVariantAttributeItem[];
 }
 
 export interface AgnosticPrice {
     regular: number | null;
     special?: number | null;
 }
+export interface AgnosticMediaGalleryItem {
+    small: string;
+    normal: string;
+    big: string;
+}
+export declare type KeyVariantAttributeItem = {
+    values: KeyVariantAttributeItemValue[];
+    title: string;
+    propertyName?: string;
+    propertyDataType?: string;
+};
+export declare type KeyVariantAttributeItemValue = {
+    title: string;
+    value: string;
+    selected: boolean;
+    disabled: boolean;
+    relatedVariantIds?: any;
+};
 ````
 ## Example
 
@@ -52,15 +161,18 @@ import { useProduct, productGetters } from '@vue-storefront/orc-vsf';
 export default {
   setup () {
     const id = computed(() => route.value.params.id);
-    const { products: product, search: searchProduct, loading } = useProduct(`product-${id}`);
-  
+    const variantId = computed(() => route.value.query?.variant);
+    const { products, search: searchProduct, loading } = useProduct(`product-${id}`);
+    const product = computed(() => productGetters.getProductWithVariant(products.value, variantId.value));
+
     onSSR(async () => {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
     });
 
     return {
       product,
-      loading
+      loading,
+      productGetters
     }
   }
 }

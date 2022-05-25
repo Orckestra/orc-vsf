@@ -17,7 +17,7 @@ export interface SearchResults {
     products: any,
     facets: Facet[],
     categories?: Category[],
-    categoryCounts: any
+    facetCounts: any
 }
 
 export declare type Facet = {

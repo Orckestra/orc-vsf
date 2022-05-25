@@ -2,7 +2,7 @@ import type { Category } from '@vue-storefront/orc-vsf-api';
 import { AgnosticCategoryTree } from '@vue-storefront/core';
 
 export const buildCategoryTree = (categories: Category[], rootCategory: string, currentCategory: string, level = -1, withProducts = false): AgnosticCategoryTree => {
-  const root: Category = categories.find(c => c.id === rootCategory);
+  const root: Category = categories?.find(c => c.id === rootCategory);
   if (!root) return null;
   const nextLevel = level > 0 ? (level - 1) : level;
 
