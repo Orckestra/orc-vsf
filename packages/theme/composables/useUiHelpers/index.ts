@@ -52,7 +52,7 @@ const useUiHelpers = () => {
   const changeSorting = (sort) => {
     context.$router.push({
       query: {
-        ...getFiltersDataFromUrl(context, false),
+        ...getFiltersDataFromUrl(context, true),
         sort
       }
     });
