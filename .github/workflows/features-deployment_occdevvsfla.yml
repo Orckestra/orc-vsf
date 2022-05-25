@@ -6,6 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - occdevvsfla
 on:
   push:
     branches:
+      - develop
       - features/deployment
   workflow_dispatch:
 
