@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - features/deployment-int3
   workflow_dispatch:
 
 jobs:
