@@ -18,6 +18,7 @@ export { useUserShipping } from './useUserShipping';
 export { useWishlist } from './useWishlist';
 export { useMetadata } from './useMetadata';
 export { useSearch } from './useSearch';
+export { useInventory } from './useInventory';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
@@ -34,6 +35,7 @@ export { userShippingGetters } from './getters/userShippingGetters';
 export { wishlistGetters } from './getters/wishlistGetters';
 export { metadataGetters } from './getters/metadataGetters';
 export { searchGetters } from './getters/searchGetters';
+export { inventoryGetters } from './getters/inventoryGetters';
 
 // Types
 export * from './types';

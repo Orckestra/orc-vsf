@@ -14,6 +14,7 @@ function getProductWithVariant(product: Product, variantId: string): Product {
       return {
         ...product,
         currentVariantId: variantId,
+        ...{ sku: variant.sku },
         ...{ media: variant.media },
         ...{ name: variant.displayName },
         ...{ prices: variantPrices }
