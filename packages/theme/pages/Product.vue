@@ -215,7 +215,7 @@ export default {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
       }
       if (product.value && relatedProducts.value?.length === 0) {
-        await searchRelatedProducts({ merchandiseTypes: ['CrossSell','UpSell'], product: product.value, limit: 8 });
+        await searchRelatedProducts({ merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
       }
     });
 
