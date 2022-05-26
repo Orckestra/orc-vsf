@@ -4,15 +4,17 @@ export default async function findInventoryItemStatus(
   context,
   params
 ) {
-  const { skus, inventoryLocationId, date = Date.now } = params;
-  const { api, scope } = context.config;
+  const { skus, inventoryLocationId, date } = params;
+  const { api, scope, inventoryLocationIds } = context.config;
+
   const url = new URL(
-    `/api/inventoryItems/${scope}/byLocation/${inventoryLocationId}/bySkus/status`,
+    `/api/inventoryItems/${scope}/byLocation/${inventoryLocationId ? inventoryLocationId : inventoryLocationIds.split(',')?.[0]}/bySkus/status`,
     api.url
   );
 
+  const dateNow = new Date();
   const { data } = await context.client.post(url.href, {
-    date,
+    date: date ? date : dateNow.toISOString(),
     skus
   });
 

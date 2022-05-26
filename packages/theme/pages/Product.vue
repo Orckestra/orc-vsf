@@ -225,7 +225,7 @@ export default {
         await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
       }
       if (product.value && product.value.sku) {
-        await findInventory({skus: [product.value.sku], inventoryLocationId: 'BRC-Warehouse-5000', date: '2022-05-25T13:29:35.063Z'});
+        await findInventory({skus: [product.value.sku]});
       }
     });
 
