@@ -11,11 +11,9 @@
             :image="addBasePath(productGetters.getCoverImage(product))"
             :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
             :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-            :max-rating="5"
-            :score-rating="productGetters.getAverageRating(product)"
             :show-add-to-cart-button="true"
             :is-added-to-cart="isInCart({ product })"
-            :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+            :link="localePath(productGetters.getLink(product))"
             class="product-card"
             @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
           />

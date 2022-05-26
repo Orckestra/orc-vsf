@@ -213,11 +213,9 @@ export default {
     onSSR(async () => {
       if (!product.value || !product.value.id || product.value.id !== id.value) {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
-        if (products?.value?.relationships?.length > 0) {
-          await searchRelatedProducts({ catId: productCategories.value[0], limit: 8, relatedProductIds: products?.value?.relationships?.map(item => item?.entityId) });
-        } else {
-          await searchRelatedProducts({ catId: productCategories.value[0], limit: 8, productId: id.value });
-        }
+      }
+      if (product.value && relatedProducts.value?.length === 0) {
+        await searchRelatedProducts({ merchandiseTypes: ['CrossSell','UpSell'], product: product.value, limit: 8 });
       }
     });
 
@@ -246,7 +244,7 @@ export default {
       updateFilter,
       configuration,
       product,
-      relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })[0]),
+      relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
       options,
       qty,
