@@ -32,7 +32,7 @@ import {
   SfSection,
   SfLoader
 } from '@storefront-ui/vue';
-import { productGetters, useWishlist, useCart } from '@vue-storefront/orc-vsf';
+import { productGetters, useCart } from '@vue-storefront/orc-vsf';
 import { addBasePath } from '@vue-storefront/core';
 
 export default {
@@ -52,14 +52,14 @@ export default {
     const { addItem: addItemToCart, isInCart } = useCart();
     // const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
     // const removeProductFromWishlist = (productItem) => {
-      // const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      // const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
-      // removeItemFromWishlist({ product });
+    // const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
+    // const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+    // removeItemFromWishlist({ product });
     // };
     return {
       productGetters,
       // addItemToWishlist,
-      //isInWishlist,
+      // isInWishlist,
       // removeProductFromWishlist,
       addItemToCart,
       isInCart,
