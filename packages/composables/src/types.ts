@@ -30,7 +30,7 @@ export type UseUserRegisterParams = TODO;
 export type useUserOrderSearchParams = TODO;
 
 /*
-INVENTORY 
+INVENTORY
 */
 export interface UseInventoryErrors {
   load: Error | null;
@@ -68,6 +68,11 @@ export const enum InventoryStatus {
 /*
 METADATDA
 */
+export interface UseMetadataErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
 export interface UseMetadataFactoryParams<METADATA> extends FactoryParams {
   load(context: Context): Promise<METADATA>
 }
@@ -87,9 +92,3 @@ export interface UseMetadataGetters<METADATA, LOOKUP> {
   getLookup(metadata: METADATA, lookupName: string): LOOKUP;
   getLookupValueDisplayName(metadata: METADATA, lookupName: string, lookupValue, locale: string): string;
 }
-
-export interface UseMetadataErrors {
-  load: Error | null;
-  change: Error | null;
-}
-

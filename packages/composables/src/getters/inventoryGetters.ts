@@ -4,9 +4,9 @@ import { UseInventoryGetters } from '../types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductSkusAvailableToSell(items: InventoryItemAvailability[], availableInventoryStatuses: string[]): string[] {
   if (!items) return;
-  let result = [];
+  const result = [];
   items.forEach(item => {
-    let status = item.statuses?.[0];
+    const status = item.statuses?.[0];
     if (availableInventoryStatuses.includes(status.status)) {
       result.push(item.identifier.sku);
     }
@@ -27,7 +27,6 @@ function getSkuStatus(items: InventoryItemAvailability[], sku: string): string {
   const status = item?.statuses?.[0];
   return status?.status;
 }
-
 
 export const inventoryGetters: UseInventoryGetters<InventoryItemAvailability> = {
   getProductSkusAvailableToSell,
