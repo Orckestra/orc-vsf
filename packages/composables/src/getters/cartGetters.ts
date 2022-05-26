@@ -28,7 +28,7 @@ function getItemImage(item: CartItem): string {
 function getItemPrice(item: CartItem): AgnosticPrice {
   return {
     regular: item?.regularPrice,
-    special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : undefined
+    special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : null
   };
 }
 
