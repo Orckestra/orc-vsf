@@ -25,7 +25,7 @@
                 :key="`${cartGetters.getItemSku(product)}_${index}`"
                 :image="addBasePath(cartGetters.getItemImage(product))"
                 :title="cartGetters.getItemName(product)"
-                :regular-price="$n(cartGetters.getItemPrice(product).regular, 'currency')"
+                :regular-price="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
                 :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
                 :stock="99"
                 @click:remove="removeItem({ product: { id: product.id } })"
