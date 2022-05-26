@@ -14,11 +14,9 @@
             :max-rating="5"
             :score-rating="productGetters.getAverageRating(product)"
             :show-add-to-cart-button="true"
-            :is-in-wishlist="isInWishlist({ product })"
             :is-added-to-cart="isInCart({ product })"
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="product-card"
-            @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
             @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
           />
         </SfCarouselItem>
@@ -52,11 +50,17 @@ export default {
   },
   setup() {
     const { addItem: addItemToCart, isInCart } = useCart();
-    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
+    // const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
+    // const removeProductFromWishlist = (productItem) => {
+      // const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
+      // const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+      // removeItemFromWishlist({ product });
+    // };
     return {
       productGetters,
-      addItemToWishlist,
-      isInWishlist,
+      // addItemToWishlist,
+      //isInWishlist,
+      // removeProductFromWishlist,
       addItemToCart,
       isInCart,
       addBasePath
