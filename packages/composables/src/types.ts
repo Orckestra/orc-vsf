@@ -29,11 +29,45 @@ export type UseUserRegisterParams = TODO;
 
 export type useUserOrderSearchParams = TODO;
 
-export interface UseStoreErrors {
+/*
+INVENTORY 
+*/
+export interface UseInventoryErrors {
   load: Error | null;
   change: Error | null;
 }
 
+export interface UseInventoryFactoryParams<INVENTORYITEM> extends FactoryParams {
+  find(context: Context, skus: string[]): Promise<INVENTORYITEM>
+}
+
+export interface UseInventoryInterface<INVENTORYITEM> {
+  find(skus: string[]): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  result: ComputedProperty<INVENTORYITEM>;
+  error: ComputedProperty<UseInventoryErrors>;
+}
+
+export interface UseInventory<INVENTORYITEM> {
+  (): UseInventoryInterface<INVENTORYITEM>;
+}
+
+export interface UseInventoryGetters<INVENTORYITEM> {
+  getProductSkusAvailableToSell(items: INVENTORYITEM[], availableInventoryStatuses: string[]): string[];
+  getSkuAvailableQuantity(items: INVENTORYITEM[], sku: string): number;
+  getSkuStatus(items: INVENTORYITEM[], sku: string): string;
+}
+
+export const enum InventoryStatus {
+  InStock = 0,
+  OutOfStock = 1,
+  PreOrder = 2,
+  BackOrder = 3
+}
+
+/*
+METADATDA
+*/
 export interface UseMetadataFactoryParams<METADATA> extends FactoryParams {
   load(context: Context): Promise<METADATA>
 }
@@ -42,7 +76,7 @@ export interface UseMetadataInterface<METADATA> {
   load(): Promise<void>;
   loading: ComputedProperty<boolean>;
   response: ComputedProperty<METADATA>;
-  error: ComputedProperty<UseStoreErrors>;
+  error: ComputedProperty<UseMetadataErrors>;
 }
 
 export interface UseMetadata<METADATA> {

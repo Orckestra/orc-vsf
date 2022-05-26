@@ -9,6 +9,7 @@ module.exports = {
         },
         scope: process.env.OVERTURE_SCOPE_NAME,
         inventoryLocationIds: process.env.OVERTURE_INVENTORY_LOCATION_IDS,
+        availableStatusForSell: ['InStock'],
         searchConfig: {
           defaultItemsPerPage: 12,
           availableFacets: [

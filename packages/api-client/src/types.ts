@@ -326,3 +326,20 @@ export type Metadata = {
     definitions: Definition[]
 }
 
+export type InventoryItemIdentifier = {
+    inventoryLocationId: string,
+    sku: string
+}
+
+export type InventoryItemStatus = {
+    quantity: number,
+    // InStock, OutOfStock, PreOrder, BackOrder
+    status:	string
+}
+
+export type InventoryItemAvailability = {
+    date: string,
+    identifier: InventoryItemIdentifier,
+    statuses: InventoryItemStatus[]
+}
+
