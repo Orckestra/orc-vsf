@@ -34,7 +34,7 @@ export default async function getProducts(
     return { facetCounts: facetCountsData.facets };
   } else if (merchandiseTypes) {
     url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-    const query = getRelatedProductsQuery(merchandiseTypes, product, catId, limit, getSort(sort));
+    const query = getRelatedProductsQuery(merchandiseTypes, product, limit, getSort(sort));
     const { data } = await context.client.post(url.href, { query });
     const products = data.documents ?? [];
     setProductsCoverImages(products, cdnDamProviderConfig);
