@@ -14,7 +14,7 @@ import getFulfillmentLocations from './api/getFulfillmentLocations';
 import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
-import registerUser from './api/metadata/registerUser';
+import registerUser from './api/membership/registerUser';
 
 function onCreate(settings) {
   const client = axios.create({
