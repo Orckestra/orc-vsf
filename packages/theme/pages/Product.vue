@@ -45,14 +45,8 @@
               class="product__drag-icon smartphone-only"
             />
           </div>
-          <div class="product__price-and-rating">
-            <SfPrice
-              :regular="$n(productGetters.getPrice(product).regular, 'currency')"
-              :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-            />
-          </div>
           <div>
-            <div v-for="kva in kvas" :key="kva.propertyName">
+            <div class="product__kvas" v-for="kva in kvas" :key="kva.propertyName">
               <SfComponentSelect
                 v-if="kva.propertyName === 'Colour'"
                 label="Color"
@@ -99,15 +93,28 @@
                 />
               </div-->
             </div>
-            <SfAddToCart
-              v-e2e="'product_add-to-cart'"
-              :stock="stock"
-              v-model="qty"
-              :disabled="loading"
-              :canAddToCart="stock > 0"
-              class="product__add-to-cart"
-              @click="addItem({ product, quantity: parseInt(qty) })"
+            <div class="product__price-and-rating">
+            <SfPrice
+              :regular="$n(productGetters.getPrice(product).regular, 'currency')"
+              :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
             />
+          </div>
+            <SfLoader
+              :class="{ 'loading': loadingInventory }"
+              :loading="loadingInventory">
+              <div>
+              <SfAddToCart
+                  v-e2e="'product_add-to-cart'"
+                  :stock="availableQty"
+                  v-model="qty"
+                  :disabled="loading || availableQty === 0"
+                  :canAddToCart="availableQty > 0"
+                  class="product__add-to-cart"
+                  @click="addItem({ product, quantity: parseInt(qty) })"
+              />
+             <span class="product__available-qty">({{availableQty}} available)</span>
+             </div>
+            </SfLoader>
           </div>
           <LazyHydrate when-idle>
             <SfTabs :open-tab="1" class="product__tabs">
@@ -176,7 +183,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, useCategory, productGetters, categoryGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
+import { useProduct, useCart, useCategory, productGetters, categoryGetters, useMetadata, metadataGetters, useInventory, inventoryGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
@@ -192,8 +199,9 @@ export default {
     const id = computed(() => route.value.params.id);
     const variantId = computed(() => route.value.query?.variant);
     const { categories } = useCategory('categories');
+    const { find: findInventory, result: inventoryResult, loading: loadingInventory } = useInventory('productInventory');
     const { products, search: searchProduct, loading: productLoading } = useProduct(`product-${id.value}`);
-    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
+    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct(`relatedPproducts-${id.value}`);
     const { addItem, loading } = useCart();
     const { response: metadata } = useMetadata();
     const product = computed(() => productGetters.getProductWithVariant(products.value, variantId.value));
@@ -209,11 +217,17 @@ export default {
       big: { url: addBasePath(img.big) },
       alt: product?.value?._name || product?.value?.name
     })));
+    const availableQty = computed(() => inventoryGetters.getSkuAvailableQuantity(inventoryResult.value, product.value?.sku));
 
     onSSR(async () => {
       if (!product.value || !product.value.id || product.value.id !== id.value) {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
-        await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
+      }
+      if (product.value && relatedProducts.value?.length === 0) {
+        await searchRelatedProducts({ merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
+      }
+      if (product.value && product.value.sku) {
+        await findInventory({skus: [product.value.sku]});
       }
     });
 
@@ -252,7 +266,9 @@ export default {
       productGetters,
       productGallery,
       productBrand,
-      kvas
+      kvas,
+      availableQty,
+      loadingInventory
     };
   },
   components: {
@@ -387,14 +403,21 @@ export default {
   &__drag-icon {
     animation: moveicon 1s ease-in-out infinite;
   }
+  &__kvas {
+    margin: var(--spacer-sm) 0 var(--spacer-base);
+  }
   &__price-and-rating {
     margin: 0 var(--spacer-sm) var(--spacer-base);
+    --price-special-font-size: var(--h3-font-size);
     align-items: center;
     @include for-desktop {
       display: flex;
       justify-content: space-between;
-      margin: var(--spacer-sm) 0 var(--spacer-lg) 0;
+      margin: var(--spacer-sm) 0 var(--spacer-sm) 0;
     }
+  }
+  &__available-qty {
+    color: #ccc;
   }
   &__rating {
     display: flex;
@@ -448,7 +471,7 @@ export default {
     margin: 0 var(--spacer-2xs);
   }
   &__add-to-cart {
-    margin: var(--spacer-base) var(--spacer-sm) 0;
+    margin: 0 var(--spacer-base) var(--spacer-sm) 0;
     @include for-desktop {
       margin-top: var(--spacer-2xl);
     }

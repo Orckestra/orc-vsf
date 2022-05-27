@@ -13,6 +13,7 @@ import updateCartShipment from './api/carts/updateCartShipment';
 import getFulfillmentLocations from './api/getFulfillmentLocations';
 import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
+import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
 import registerUser from './api/users/registerUser';
 
 
@@ -45,7 +46,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updateCartShipment,
     getProductLookups,
     getProductDefinitions,
-    registerUser
+    registerUser,
+    findInventoryItemStatus
   }
 });
 

@@ -225,7 +225,8 @@ export type Product = {
     variantMediaSet?: VariantMediaSet,
     // old CDN Media
     media?: any,
-    variantsMedia?: any
+    variantsMedia?: any,
+    relationships?: any
 };
 
 export const enum ProductsQueryType {
@@ -324,5 +325,22 @@ export type Definition = {
 export type Metadata = {
     lookups: Lookup[],
     definitions: Definition[]
+}
+
+export type InventoryItemIdentifier = {
+    inventoryLocationId: string,
+    sku: string
+}
+
+export type InventoryItemStatus = {
+    quantity: number,
+    // InStock, OutOfStock, PreOrder, BackOrder
+    status:	string
+}
+
+export type InventoryItemAvailability = {
+    date: string,
+    identifier: InventoryItemIdentifier,
+    statuses: InventoryItemStatus[]
 }
 

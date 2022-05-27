@@ -1,55 +1,70 @@
-# Boilerplate for Vue Storefront 2 eCommerce integration
-
-This is a template, to use it you must rename the project changing the `{YOUR INTEGRATION NAME}` to the name of the integration you are developing. The name must be in lowercase and without any special characters.
-
-```sh
-grep -rl 'orc-vsf' ./ | xargs sed -i '' 's/orc-vsf/{YOUR INTEGRATION NAME}/g'
-```
-
-------
-
 <div align="center">
   <img src="https://user-images.githubusercontent.com/1626923/137092657-fb398d20-b592-4661-a1f9-4135db0b61d5.png" alt="Vue Storefront" height="80px" />
 </div>
 
-## Vue Storefront 2 integration with orc-vsf
-
-To learn how to build your integration, see our [Integration guide](https://docs.vuestorefront.io/v2/integrate/integration-guide.html).
+# Vue Storefront 2 integration for Orckestra Commerce Platform
 
 ------
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-## How to start if you want to try out the integration
+## Requirements
 
+- Node 16+
+- Yarn
+
+## Getting Started
+
+1. Clone this repository
+```sh
+git clone https://github.com/Orckestra/orc-vsf
 ```
-yarn global add @vue-storefront/cli
+
+2. Install all required dependencies
+
+```sh
+yarn install
 ```
+
+3. Create `.env `file and set up variables (find `.env.example` and specify your values)
+```sh
+OVERTURE_URL=
+OVERTURE_AUTH_TOKEN=
+OVERTURE_SCOPE_NAME=
+OVERTURE_INVENTORY_LOCATION_IDS=
 ```
-vsf init <project_name> && cd <project_name> && yarn && yarn dev
+
+4. Build:
+
+```sh
+yarn build
 ```
 
-## How to start if you want to contribute?
+5. If everything built properly, you can start working on your new frontend with:
 
-Want to contribute? Ping us on `orc-vsf` channel on [our Discord](https://discord.vuestorefront.io)!
+```sh
+yarn dev
+```
 
-### Requirements:
-- NodeJS v14 or later
+Changing some parts of the code (notably the `api-client`) will trigger a re-build but the change will not be hot-reloaded. To ensure that the app sees you changes, re-run either `yarn build` or `yarn dev`.
 
-### Steps
-1. Fork the repo
-2. Clone your fork of the repo
-    ```
-    example:
-    git clone https://github.com/vuestorefront/orc-vsf.git
-    cd orc-vsf
-    ```
-3. Run `yarn` to install dependencies
-4. Build dependencies `yarn build:api-client && yarn build:composables`
-5. Run `yarn dev:theme` to run theme. You can find other commands in `package.json`
 
-- If you need HMR on Api Client/Composables run `yarn dev:api-client` or `yarn dev:composables` on a separate terminal window.
+## Feature support
+
+| Feature | Status | Notes |
+| --- | --- | --- |
+| Sign in | TODO | |
+| Sign up | TODO | |
+| Account | TODO | |
+| Product catalog with facets | Available | 
+| Product details page with variants | Available | |
+| Product details page - Related Products | Available | |
+| Cart | Available | |
+| Checkout | TODO | |
+| Checkout - Shipping methods | TODO | |
+| Checkout - Payment methods | TODO | |
+| Wishlists | TODO | Available only for logged in users.|
+
+------
 
 ## Resources
 
@@ -59,7 +74,7 @@ Want to contribute? Ping us on `orc-vsf` channel on [our Discord](https://discor
 
 ## Support
 
-If you have any questions about this integration we will be happy to answer them on `orc-vsf` channel on [our Discord](discord.vuestorefront.io).
+If you have any questions about this integration we will be happy to answer them on `orc-vsf` channel.
 
 ## Contributors ✨
 

@@ -1,12 +1,13 @@
 import { buildFacetPredicates } from '../../helpers/buildFacetPredicates';
 import { setProductsCoverImages } from '../../helpers/mediaUtils';
+import { getRelatedProductsQuery } from '../../helpers/requestQueryUtils';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default async function getProducts(
   context,
   params
 ) {
-  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale, sort, term, facetCounts } = params;
+  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale, sort, term, facetCounts, limit, merchandiseTypes, product } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
   let url = null;
 
@@ -31,9 +32,13 @@ export default async function getProducts(
       }
     });
     return { facetCounts: facetCountsData.facets };
-  } else if (catId) {
-    console.log('TODO: Related');
-    return [];
+  } else if (merchandiseTypes) {
+    url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
+    const query = getRelatedProductsQuery(merchandiseTypes, product, limit, getSort(sort));
+    const { data } = await context.client.post(url.href, { query });
+    const products = data.documents ?? [];
+    setProductsCoverImages(products, cdnDamProviderConfig);
+    return products;
   } else if (categorySlug) {
     const facetPredicates = buildFacetPredicates(categories, categorySlug, filters, searchConfig);
     let categoryCounts = [];
