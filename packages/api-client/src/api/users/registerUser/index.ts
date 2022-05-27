@@ -4,12 +4,11 @@ export default async function registerUser(context, params) {
   const { email, firstName, lastName, password } = params;
   const { api, scope } = context.config;
   const url = new URL(`/api/membership/${scope}`, api.url);
-  const { data } = await context.client.post(url.href,{    
+  const { data } = await context.client.post(url.href, {
         email,
         firstName,
         lastName,
-        password      
+        password
   });
-
   return data;
 }
