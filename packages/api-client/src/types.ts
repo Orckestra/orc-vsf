@@ -225,7 +225,8 @@ export type Product = {
     variantMediaSet?: VariantMediaSet,
     // old CDN Media
     media?: any,
-    variantsMedia?: any
+    variantsMedia?: any,
+    relationships?: any
 };
 
 export const enum ProductsQueryType {

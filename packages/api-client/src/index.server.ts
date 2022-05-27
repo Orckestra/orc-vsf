@@ -17,6 +17,7 @@ import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatu
 import getUser from './api/users/getUser';
 import initializeGuest from './api/users/initializeGuest';
 import login from './api/membership/login';
+import registerUser from './api/membership/registerUser';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -50,7 +51,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     findInventoryItemStatus,
     getUser,
     initializeGuest,
-    login
+    login,
+    registerUser
   }
 });
 

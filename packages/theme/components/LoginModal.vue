@@ -295,10 +295,10 @@ export default {
 
     const handleRegister = async () => handleForm(register)();
 
-    const handleLogin = async () =>  { 
+    const handleLogin = async () => {
       await handleForm(login)();
       clearCart();
-     
+
     };
 
     const handleForgotten = async () => {

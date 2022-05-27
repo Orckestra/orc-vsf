@@ -201,7 +201,7 @@ export default {
     const { categories } = useCategory('categories');
     const { find: findInventory, result: inventoryResult, loading: loadingInventory } = useInventory('productInventory');
     const { products, search: searchProduct, loading: productLoading } = useProduct(`product-${id.value}`);
-    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
+    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct(`relatedPproducts-${id.value}`);
     const { addItem, loading } = useCart();
     const { response: metadata } = useMetadata();
     const product = computed(() => productGetters.getProductWithVariant(products.value, variantId.value));
@@ -222,7 +222,9 @@ export default {
     onSSR(async () => {
       if (!product.value || !product.value.id || product.value.id !== id.value) {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
-        await searchRelatedProducts({ catId: [productCategories.value[0]], limit: 8 });
+      }
+      if (product.value && relatedProducts.value?.length === 0) {
+        await searchRelatedProducts({ merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
       }
       if (product.value && product.value.sku) {
         await findInventory({skus: [product.value.sku]});

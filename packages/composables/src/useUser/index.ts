@@ -3,7 +3,6 @@ import {
   useUserFactory,
   UseUserFactoryParams
 } from '@vue-storefront/core';
-import { createGuid } from '../helpers/generalUtils';
 import type { User } from '@vue-storefront/orc-vsf-api';
 import type {
   UseUserUpdateParams as UpdateParams,
@@ -29,10 +28,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       if (user && user.id) return user;
       const resetUserToken = await context.$occ.api.initializeGuest();
       app.$cookies.set(appKey + '_token', resetUserToken);
-      //app.$cookies.set(appKey + '_isAuthenticated', false);
+      // app.$cookies.set(appKey + '_isAuthenticated', false);
     }
 
-    return;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,8 +39,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const appKey = app.$config.appKey;
     const guestUserToken = await context.$occ.api.initializeGuest();
     app.$cookies.set(appKey + '_token', guestUserToken);
-    return;
-    //app.$cookies.set(appKey + '_isAuthenticated', false);
+
+    // app.$cookies.set(appKey + '_isAuthenticated', false);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,16 +51,17 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-    console.log('Mocked: useUser.register');
-    return null;
+    const app: any = context.$occ.config.app;
+    const language: any = app.i18n.locale;
+    return await context.$occ.api.registerUser({ email, password, firstName, lastName, language });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    let login = await context.$occ.api.login({ username, password });
+    const login = await context.$occ.api.login({ username, password });
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
-    if (Boolean(login.success)) {
+    if (login.success) {
       const user = await context.$occ.api.getUser({ username });
       app.$cookies.set(appKey + '_token', user.userToken);
       return params.load(context);

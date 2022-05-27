@@ -82,7 +82,7 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
   }
   products = Array.isArray(products) ? products : [products];
 
-  return products.slice(0, 1);
+  return products;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

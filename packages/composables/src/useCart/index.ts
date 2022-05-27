@@ -73,7 +73,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentCart }) => {
-    return params.load(context, {});;
+    return params.load(context, {});
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

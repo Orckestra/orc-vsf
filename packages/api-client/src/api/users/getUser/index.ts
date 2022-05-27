@@ -16,8 +16,8 @@ export default async function getUser(context, params) {
   }
 
   if (userToken) {
-    var bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-    var customerId = bytes.toString(CryptoJS.enc.Utf8);
+    const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
+    const customerId = bytes.toString(CryptoJS.enc.Utf8);
     const url = new URL(
       `/api/customers/${scope}/${customerId}`,
       api.url
@@ -27,5 +27,5 @@ export default async function getUser(context, params) {
     return data;
   }
 
-  return {}
+  return {};
 }

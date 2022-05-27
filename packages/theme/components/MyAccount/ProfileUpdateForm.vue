@@ -74,7 +74,7 @@
           {{ $t('Update personal data') }}
         </SfButton>
       </SfModal>
-      <div 
+      <div
         v-if="requirePassword"
         class="smartphone-only"
       >
@@ -111,13 +111,13 @@ import { useUser, userGetters } from '@vue-storefront/orc-vsf';
 import {
   SfInput,
   SfButton,
-  SfModal,
+  SfModal
 } from '@storefront-ui/vue';
 import { useUiNotification } from '~/composables';
 
 extend('email', {
   ...email,
-  message: 'The email field must be a valid email',
+  message: 'The email field must be a valid email'
 });
 
 export default defineComponent({
@@ -127,14 +127,14 @@ export default defineComponent({
     SfButton,
     SfModal,
     ValidationProvider,
-    ValidationObserver,
+    ValidationObserver
   },
   props: {
     loading: {
       type: Boolean,
       required: false,
-      default: false,
-    },
+      default: false
+    }
   },
   emits: ['submit'],
   setup(props, { emit }) {
@@ -144,10 +144,10 @@ export default defineComponent({
     const resetForm = () => ({
       firstname: userGetters.getFirstName(user.value),
       lastname: userGetters.getLastName(user.value),
-      email: userGetters.getEmailAddress(user.value),
+      email: userGetters.getEmailAddress(user.value)
     });
     const {
-      send: sendNotification,
+      send: sendNotification
     } = useUiNotification();
 
     const form = ref(resetForm());
@@ -163,7 +163,7 @@ export default defineComponent({
           type: 'success',
           icon: 'check',
           persist: false,
-          title: 'User Account',
+          title: 'User Account'
         });
         resetValidationFn();
       };
@@ -175,8 +175,8 @@ export default defineComponent({
       };
 
       if (
-        userGetters.getEmailAddress(user.value) !== form.value.email
-        && !requirePassword.value
+        userGetters.getEmailAddress(user.value) !== form.value.email &&
+        !requirePassword.value
       ) {
         requirePassword.value = true;
       } else {
@@ -192,9 +192,9 @@ export default defineComponent({
       requirePassword,
       currentPassword,
       form,
-      submitForm,
+      submitForm
     };
-  },
+  }
 });
 </script>
 <style lang='scss' scoped>

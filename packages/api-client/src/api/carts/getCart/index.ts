@@ -6,8 +6,8 @@ export default async function getCart(context, params) {
 
   const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
   const { userToken, cartName = 'Default' } = params;
-  var bytes  = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-  var customerId = bytes.toString(CryptoJS.enc.Utf8);
+  const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
+  const customerId = bytes.toString(CryptoJS.enc.Utf8);
   const url = new URL(
     `/api/carts/${scope}/${customerId}/${cartName}`,
     api.url
