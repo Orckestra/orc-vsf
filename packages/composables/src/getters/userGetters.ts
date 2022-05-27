@@ -3,22 +3,22 @@ import type { User } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFirstName(user: User): string {
-  return '';
+  return user?.firstName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getLastName(user: User): string {
-  return '';
+  return user?.lastName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFullName(user: User): string {
-  return '';
+  return `${user?.firstName} ${user?.lastName}`;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getEmailAddress(user: User): string {
-  return '';
+  return user?.email;;
 }
 
 export const userGetters: UserGetters<User> = {

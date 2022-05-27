@@ -25,6 +25,9 @@ module.exports = {
           imageFolderName: 'images',
           fallbackImage: 'image_not_found.jpg',
           maxThumbnailImages: 1
+        },
+        myAccount: {
+          secretPassphrase: process.env.SECRET_PASSPHRASE
         }
       },
     },

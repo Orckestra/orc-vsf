@@ -14,6 +14,9 @@ import getFulfillmentLocations from './api/getFulfillmentLocations';
 import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
+import getUser from './api/users/getUser';
+import initializeGuest from './api/users/initializeGuest';
+import login from './api/membership/login';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -44,7 +47,10 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updateCartShipment,
     getProductLookups,
     getProductDefinitions,
-    findInventoryItemStatus
+    findInventoryItemStatus,
+    getUser,
+    initializeGuest,
+    login
   }
 });
 

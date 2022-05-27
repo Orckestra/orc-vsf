@@ -19,7 +19,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
     const locale: any = app.i18n.locale;
     const userToken = app.$cookies.get(appKey + '_token');
     if (userToken) {
-      let cart = await context.$occ.api.getCart({ ...params, locale, customerId: userToken });
+      let cart = await context.$occ.api.getCart({ ...params, locale, userToken });
 
       const shipment = cart.shipments && cart.shipments.length ? cart.shipments[0] : {};
       if (!shipment.fulfillmentLocationId ||
@@ -73,8 +73,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentCart }) => {
-    console.log('Mocked: useCart.clear');
-    return null;
+    return params.load(context, {});;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
