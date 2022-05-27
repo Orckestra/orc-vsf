@@ -1,6 +1,6 @@
 import type { Product } from '@vue-storefront/orc-vsf-api';
 
-export const getRelatedProductsQuery = (merchandiseTypes: string[], product: Product, categoryId: string, limit: number, sort: object): any => {
+export const getRelatedProductsQuery = (merchandiseTypes: string[], product: Product, limit: number, sort: object): any => {
   const relatedProductIds = product?.relationships?.filter(el => merchandiseTypes.indexOf(el.merchandiseType) > -1).map(item => item?.entityId);
   const filters = relatedProductIds
     ? [{

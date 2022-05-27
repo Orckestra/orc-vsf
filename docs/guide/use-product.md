@@ -163,16 +163,23 @@ export default {
     const id = computed(() => route.value.params.id);
     const variantId = computed(() => route.value.query?.variant);
     const { products, search: searchProduct, loading } = useProduct(`product-${id}`);
+    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct(`relatedPproducts-${id.value}`);
+    
     const product = computed(() => productGetters.getProductWithVariant(products.value, variantId.value));
 
     onSSR(async () => {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
+        if (product.value && relatedProducts.value?.length === 0) {
+        await searchRelatedProducts({ merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
+      }
     });
 
     return {
       product,
       loading,
-      productGetters
+      productGetters,
+      relatedProducts,
+      relatedLoading
     }
   }
 }
