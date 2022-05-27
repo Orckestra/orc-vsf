@@ -5,10 +5,10 @@ export default async function registerUser(context, params) {
   const { api, scope } = context.config;
   const url = new URL(`/api/membership/${scope}`, api.url);
   const { data } = await context.client.post(url.href, {
-        email,
-        firstName,
-        lastName,
-        password
+    email,
+    firstName,
+    lastName,
+    password
   });
   return data;
 }

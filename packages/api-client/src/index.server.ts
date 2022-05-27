@@ -16,7 +16,6 @@ import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
 import registerUser from './api/users/registerUser';
 
-
 function onCreate(settings) {
   const client = axios.create({
     baseURL: settings.api.url,
