@@ -44,8 +44,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-    console.log('Mocked: useUser.register');
-    return {};
+    const app: any = context.$occ.config.app;
+    const language: any = app.i18n.locale;
+    return await context.$occ.api.registerUser({ email, password, firstName, lastName, language });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
