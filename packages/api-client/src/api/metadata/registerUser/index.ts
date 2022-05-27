@@ -12,7 +12,7 @@ export default async function registerUser(context, params) {
     username,
     passwordAnswer,
     passwordQuestion,
-    language,
+    language
   });
   return data;
 }
