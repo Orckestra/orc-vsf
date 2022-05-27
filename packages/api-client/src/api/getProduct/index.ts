@@ -8,7 +8,7 @@ export default async function getProduct(
   const { id, locale } = params;
   const { api, scope, cdnDamProviderConfig } = context.config;
   const url = new URL(
-    `/api/products/v2/${scope}/${id}?CultureName=${locale}&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true`,
+    `/api/products/v2/${scope}/${id}?CultureName=${locale}&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true&IncludeRelationships=true`,
     api.url
   );
   const getPricesUrl = new URL(`/api/products/${scope}/${id}/price`, api.url);
