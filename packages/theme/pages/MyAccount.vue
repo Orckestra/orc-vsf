@@ -72,7 +72,7 @@ export default {
     const router = useRouter();
 
     const { logout } = useUser();
-    const { clear: clearCart } = useCart();
+    const { clear: clearCart, load: reloadCart } = useCart();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
     const activePage = computed(() => {
       const { pageName } = route.value.params;
@@ -90,6 +90,7 @@ export default {
       if (title === 'Log out') {
         await logout();
         await clearCart();
+        await reloadCart();
 
         router.push(context.root.localePath({ name: 'home' }));
         return;

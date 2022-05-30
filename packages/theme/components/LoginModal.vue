@@ -47,9 +47,6 @@
               label="Remember me"
               class="form__element checkbox"
             />
-            <div v-if="error.login">
-              {{ error.login }}
-            </div>
             <SfButton v-e2e="'login-modal-submit'"
               type="submit"
               class="sf-button--full-width form__button"
@@ -169,9 +166,6 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <div v-if="error.register">
-              {{ error.register }}
-            </div>
             <SfButton
               type="submit"
               class="sf-button--full-width form__button"
@@ -200,6 +194,7 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 import { useUser, useCart, useForgotPassword } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
+  import { useUiNotification } from '~/composables';
 
 extend('email', {
   ...email,
@@ -236,9 +231,11 @@ export default {
     const createAccount = ref(false);
     const rememberMe = ref(false);
     const { register, login, loading, error: userError } = useUser();
-    const { clear: clearCart } = useCart();
+    const { load: reloadCart, clear: clearCart } = useCart();
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
     const currentScreen = ref(SCREEN_REGISTER);
+    const { send: sendNotification } = useUiNotification();
+  
 
     const error = reactive({
       login: null,
@@ -273,7 +270,7 @@ export default {
       currentScreen.value = screenName;
     };
 
-    const handleForm = (fn) => async () => {
+    const handleForm = (fn, isRegister = false) => async () => {
       resetErrorValues();
       await fn({ user: form.value });
 
@@ -282,7 +279,38 @@ export default {
       if (hasUserErrors) {
         error.login = userError.value.login?.message;
         error.register = userError.value.register?.message;
+        if(error.register) {
+          sendNotification({
+            id: Symbol('user_registration'),
+            message: 'The specified email already exists in the system.',
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Registration'
+          });
+        }
+        if(error.login) {
+           sendNotification({
+            id: Symbol('user_login'),
+            message: 'An error occured while logging in. Please check your username or password.',
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Login'
+          });
+        }
         return;
+      } else {
+        if(isRegister) {
+          sendNotification({
+            id: Symbol('user_created'),
+            message: 'The user account was successfully registered!',
+            type: 'success',
+            icon: 'check',
+            persist: false,
+            title: 'User Registration'
+          });
+        }
       }
       toggleLoginModal();
     };
@@ -293,12 +321,16 @@ export default {
       toggleLoginModal();
     };
 
-    const handleRegister = async () => handleForm(register)();
+    const handleRegister = async () => { 
+      await handleForm(register, true)();
+      await clearCart();
+      reloadCart();
+    };
 
     const handleLogin = async () => {
       await handleForm(login)();
-      clearCart();
-
+      await clearCart();
+      reloadCart();
     };
 
     const handleForgotten = async () => {
