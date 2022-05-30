@@ -121,7 +121,7 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
+            <ValidationProvider rules="required|min:2|max:36" v-slot="{ errors }">
               <SfInput
                 v-e2e="'login-modal-firstName'"
                 v-model="form.firstName"
@@ -132,7 +132,7 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
+            <ValidationProvider rules="required|min:2|max:36" v-slot="{ errors }">
               <SfInput
                 v-e2e="'login-modal-lastName'"
                 v-model="form.lastName"
@@ -191,7 +191,7 @@
 import { ref, watch, reactive, computed } from '@nuxtjs/composition-api';
 import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert, SfBar } from '@storefront-ui/vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, email } from 'vee-validate/dist/rules';
+import { required, email, min, max } from 'vee-validate/dist/rules';
 import { useUser, useCart, useForgotPassword } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
 import { useUiNotification } from '~/composables';
@@ -204,6 +204,15 @@ extend('email', {
 extend('required', {
   ...required,
   message: 'This field is required'
+});
+
+extend('min', {
+  ...min,
+  message: 'The field should have at least {length} characters'
+});
+extend('max', {
+  ...max,
+  message: 'The field should have not more then {length} characters'
 });
 
 export default {
