@@ -7,20 +7,30 @@ export default async function getCart(context, params) {
   const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
   const { userToken, cartName = 'Default', customerId } = params;
   let customerIdentfier = customerId;
+
   if (userToken && !customerId) {
-    const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-    const { id } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    customerIdentfier = id;
-  }
-  const url = new URL(
-    `/api/carts/${scope}/${customerIdentfier}/${cartName}`,
-    api.url
-  );
 
-  const { data } = await context.client.get(url.href);
-  if (data && data.shipments && data.shipments.length) {
-    setCartItemsCoverImages(data.shipments[0].lineItems, cdnDamProviderConfig);
+    try {
+      const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
+      const { id } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      customerIdentfier = id;
+    } catch {
+      console.log('userToken parse error');
+      return null;
+    }
   }
 
-  return data;
+  if (customerIdentfier) {
+    const url = new URL(
+      `/api/carts/${scope}/${customerIdentfier}/${cartName}`,
+      api.url
+    );
+
+    const { data } = await context.client.get(url.href);
+    if (data && data.shipments && data.shipments.length) {
+      setCartItemsCoverImages(data.shipments[0].lineItems, cdnDamProviderConfig);
+    }
+    return data;
+  }
+
 }

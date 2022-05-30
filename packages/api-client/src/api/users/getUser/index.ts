@@ -11,17 +11,20 @@ export default async function getUser(context, params) {
       api.url
     );
     const { data } = await context.client.get(url.href);
-    const token = JSON.stringify({ id: data.id, isGuest: false });
-    data.userToken = CryptoJS.AES.encrypt(token, myAccount.secretPassphrase).toString();
     return data;
   }
 
   let customerId = params.customerId;
   if (userToken && !customerId) {
     const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-    const { id, isGuest } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    customerId = id;
-    if (isGuest) return null;
+    try {
+      const { id, isGuest } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      customerId = id;
+      if (isGuest) return null;
+    } catch {
+      console.log('getUser token parse error');
+      return null;
+    }
   }
 
   if (customerId) {
