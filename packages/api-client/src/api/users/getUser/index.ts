@@ -4,18 +4,9 @@ import CryptoJS from 'crypto-js';
 export default async function getUser(context, params) {
 
   const { api, scope, myAccount } = context.config;
-  const { userToken, username, includeAddresses } = params;
-  if (username) {
-    const url = new URL(
-      `/api/customers/${scope}/byUsername/${username}?IncludeAddresses=${includeAddresses ?? false}`,
-      api.url
-    );
-    const { data } = await context.client.get(url.href);
-    return data;
-  }
-
-  let customerId = params.customerId;
-  if (userToken && !customerId) {
+  const { userToken } = params;
+  let customerId;
+  if (userToken) {
     const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
     try {
       const { id, isGuest } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
