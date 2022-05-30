@@ -9,7 +9,8 @@ export default async function getCart(context, params) {
   let customerIdentfier = customerId;
   if (userToken && !customerId) {
     const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-    customerIdentfier = bytes.toString(CryptoJS.enc.Utf8);
+    const { id } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    customerIdentfier = id;
   }
   const url = new URL(
     `/api/carts/${scope}/${customerIdentfier}/${cartName}`,

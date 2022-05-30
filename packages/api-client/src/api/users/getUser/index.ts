@@ -11,14 +11,17 @@ export default async function getUser(context, params) {
       api.url
     );
     const { data } = await context.client.get(url.href);
-    data.userToken = CryptoJS.AES.encrypt(data.id, myAccount.secretPassphrase).toString();
+    const token = JSON.stringify({ id: data.id, isGuest: false });
+    data.userToken = CryptoJS.AES.encrypt(token, myAccount.secretPassphrase).toString();
     return data;
   }
 
   let customerId = params.customerId;
   if (userToken && !customerId) {
     const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-    customerId = bytes.toString(CryptoJS.enc.Utf8);
+    const { id, isGuest } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    customerId = id;
+    if (isGuest) return null;
   }
 
   if (customerId) {
@@ -31,5 +34,5 @@ export default async function getUser(context, params) {
     return data;
   }
 
-  return {};
+  return null;
 }

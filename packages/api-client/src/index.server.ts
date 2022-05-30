@@ -15,7 +15,7 @@ import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
 import getUser from './api/users/getUser';
-import initializeGuest from './api/users/initializeGuest';
+import initializeGuestToken from './api/users/initializeGuestToken';
 import login from './api/membership/login';
 import registerUser from './api/membership/registerUser';
 
@@ -50,7 +50,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getProductDefinitions,
     findInventoryItemStatus,
     getUser,
-    initializeGuest,
+    initializeGuestToken,
     login,
     registerUser
   }

@@ -18,17 +18,14 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     if ((userToken === undefined || userToken === '')) {
       // Initiate Guest
-      const guestUserToken = await context.$occ.api.initializeGuest();
+      const guestUserToken = await context.$occ.api.initializeGuestToken();
       app.$cookies.set(appKey + '_token', guestUserToken);
       return;
     }
 
     if (userToken) {
       const user = await context.$occ.api.getUser({ userToken });
-      if (user && user.id) return user;
-      const resetUserToken = await context.$occ.api.initializeGuest();
-      app.$cookies.set(appKey + '_token', resetUserToken);
-      // app.$cookies.set(appKey + '_isAuthenticated', false);
+      return user;
     }
 
   },
@@ -37,10 +34,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   logOut: async (context: Context) => {
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
-    const guestUserToken = await context.$occ.api.initializeGuest();
+    const guestUserToken = await context.$occ.api.initializeGuestToken();
     app.$cookies.set(appKey + '_token', guestUserToken);
-
-    // app.$cookies.set(appKey + '_isAuthenticated', false);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
