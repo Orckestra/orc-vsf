@@ -15,6 +15,7 @@ import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
 import registerUser from './api/membership/registerUser';
+import resetPassword from './api/membership/resetPassword';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -46,7 +47,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getProductLookups,
     getProductDefinitions,
     registerUser,
-    findInventoryItemStatus
+    findInventoryItemStatus,
+    resetPassword
   }
 });
 
