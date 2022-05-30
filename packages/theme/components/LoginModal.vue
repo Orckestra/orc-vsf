@@ -305,7 +305,7 @@ export default {
       } else if (isRegister) {
         sendNotification({
           id: Symbol('user_created'),
-          message: 'The user account was successfully registered!',
+          message: 'The user account was successfully registered and logged in.',
           type: 'success',
           icon: 'check',
           persist: false,
