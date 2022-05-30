@@ -194,7 +194,7 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 import { useUser, useCart, useForgotPassword } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
-  import { useUiNotification } from '~/composables';
+import { useUiNotification } from '~/composables';
 
 extend('email', {
   ...email,
@@ -235,7 +235,6 @@ export default {
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
     const currentScreen = ref(SCREEN_REGISTER);
     const { send: sendNotification } = useUiNotification();
-  
 
     const error = reactive({
       login: null,
@@ -279,7 +278,8 @@ export default {
       if (hasUserErrors) {
         error.login = userError.value.login?.message;
         error.register = userError.value.register?.message;
-        if(error.register) {
+
+        if (error.register) {
           sendNotification({
             id: Symbol('user_registration'),
             message: 'The specified email already exists in the system.',
@@ -289,8 +289,9 @@ export default {
             title: 'User Registration'
           });
         }
-        if(error.login) {
-           sendNotification({
+
+        if (error.login) {
+          sendNotification({
             id: Symbol('user_login'),
             message: 'An error occured while logging in. Please check your username or password.',
             type: 'danger',
@@ -299,19 +300,19 @@ export default {
             title: 'User Login'
           });
         }
+
         return;
-      } else {
-        if(isRegister) {
-          sendNotification({
-            id: Symbol('user_created'),
-            message: 'The user account was successfully registered!',
-            type: 'success',
-            icon: 'check',
-            persist: false,
-            title: 'User Registration'
-          });
-        }
+      } else if (isRegister) {
+        sendNotification({
+          id: Symbol('user_created'),
+          message: 'The user account was successfully registered!',
+          type: 'success',
+          icon: 'check',
+          persist: false,
+          title: 'User Registration'
+        });
       }
+
       toggleLoginModal();
     };
 
@@ -321,16 +322,22 @@ export default {
       toggleLoginModal();
     };
 
-    const handleRegister = async () => { 
+    const handleRegister = async () => {
       await handleForm(register, true)();
-      await clearCart();
-      reloadCart();
+      const hasUserErrors = userError.value.register || userError.value.login;
+      if (!hasUserErrors) {
+        await clearCart();
+        reloadCart();
+      }
     };
 
     const handleLogin = async () => {
       await handleForm(login)();
-      await clearCart();
-      reloadCart();
+      const hasUserErrors = userError.value.register || userError.value.login;
+      if (!hasUserErrors) {
+        await clearCart();
+        reloadCart();
+      }
     };
 
     const handleForgotten = async () => {

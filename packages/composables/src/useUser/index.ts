@@ -53,7 +53,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   register: async (context: Context, { email, password, firstName, lastName }) => {
     const app: any = context.$occ.config.app;
     const language: any = app.i18n.locale;
-    return await context.$occ.api.registerUser({ email, password, firstName, lastName, language });
+    await context.$occ.api.registerUser({ email, password, firstName, lastName, language });
+    return params.logIn(context, {username: email, password});
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
