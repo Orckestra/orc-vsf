@@ -143,7 +143,7 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
+            <ValidationProvider rules="required|password" v-slot="{ errors }">
               <SfInput
                 v-e2e="'login-modal-password'"
                 v-model="form.password"
@@ -191,7 +191,7 @@
 import { ref, watch, reactive, computed } from '@nuxtjs/composition-api';
 import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert, SfBar } from '@storefront-ui/vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, email, min, max } from 'vee-validate/dist/rules';
+import { required, email, min, max, password } from 'vee-validate/dist/rules';
 import { useUser, useCart, useForgotPassword } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
 import { useUiNotification } from '~/composables';
@@ -210,9 +210,18 @@ extend('min', {
   ...min,
   message: 'The field should have at least {length} characters'
 });
+
 extend('max', {
   ...max,
   message: 'The field should have not more then {length} characters'
+});
+
+extend('password', {
+  ...min,
+  validate(value){
+    return new RegExp("^(?=.*?[#?!@$%^&*-]).{6,}$").test(value);
+  },
+  message: 'Your password must have a minimum 6 characters including at least 1 special character'
 });
 
 export default {
