@@ -7,6 +7,7 @@ export default async function login(context, params) {
   const { password, username } = params;
   if (myAccount.secretPassphrase === undefined || myAccount.secretPassphrase === '') {
     console.error('Secret Passphrase is not configured. For security purpose it is important to configure Secret Passphrase.');
+    return {errorMessage: 'Secret passphrase is not configured.'};
   }
 
   const url = new URL(
