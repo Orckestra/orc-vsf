@@ -55,7 +55,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
             CultureName: locale
           };
 
-          cart = await context.$occ.api.updateCartShipment({ customerId: cart.customerId, cartName: cart.name, updateShipmentRequest });
+          cart = await context.$occ.api.updateCartShipment({ userToken, cartName: cart.name, updateShipmentRequest });
         }
       }
       Logger.debug('[Result]:', { cart });
@@ -67,19 +67,27 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    // TODO: implement variantId when we have variants implemented
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
     const variantId = getVariantId(product);
-    return await context.$occ.api.addCartItem({ ...params, customerId: currentCart.customerId, productId: product.productId ?? product.id, variantId, quantity });
+    return await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    return await context.$occ.api.removeCartItem({ ...params, customerId: currentCart.customerId, id: product.id });
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    return await context.$occ.api.removeCartItem({ ...params, userToken, id: product.id });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    return await context.$occ.api.updateCartItem({ ...params, customerId: currentCart.customerId, id: product.id, quantity });
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    return await context.$occ.api.updateCartItem({ ...params, userToken, id: product.id, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

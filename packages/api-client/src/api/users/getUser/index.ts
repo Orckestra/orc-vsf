@@ -1,26 +1,15 @@
-import CryptoJS from 'crypto-js';
+import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getUser(context, params) {
 
   const { api, scope, myAccount } = context.config;
   const { userToken } = params;
-  let customerId;
-  if (userToken) {
-    const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-    try {
-      const { id, isGuest } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      customerId = id;
-      if (isGuest) return null;
-    } catch {
-      console.log('getUser token parse error');
-      return null;
-    }
-  }
+  const { id, isGuest } = parseUserToken(userToken, myAccount.secretPassphrase);
 
-  if (customerId) {
+  if (id && !isGuest) {
     const url = new URL(
-      `/api/customers/${scope}/${customerId}`,
+      `/api/customers/${scope}/${id}`,
       api.url
     );
 
