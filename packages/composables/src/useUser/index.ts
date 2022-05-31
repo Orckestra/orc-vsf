@@ -50,7 +50,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    const { userToken }  = await context.$occ.api.login({ username, password });
+    const { userToken } = await context.$occ.api.login({ username, password });
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
     if (userToken) {
