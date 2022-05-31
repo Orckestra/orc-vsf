@@ -1,7 +1,8 @@
 import {
   Context,
   useCartFactory,
-  UseCartFactoryParams
+  UseCartFactoryParams,
+  Logger
 } from '@vue-storefront/core';
 import type {
   Cart,
@@ -17,13 +18,23 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
     const locale: any = app.i18n.locale;
-    const userToken = app.$cookies.get(appKey + '_token');
+    Logger.debug('[OCC Storefront]: Loading Cart');
+    let userToken = app.$cookies.get(appKey + '_token');
+    if ((userToken === undefined || userToken === '')) {
+      // Initiate Guest
+      Logger.debug('[OCC Storefront]: Initialize Guest User to be used for Cart');
+      userToken = await context.$occ.api.initializeGuestToken();
+      app.$cookies.set(appKey + '_token', userToken);
+    }
+
     if (userToken) {
-      let cart = await context.$occ.api.getCart({ ...params, locale, customerId: userToken });
+
+      let cart = await context.$occ.api.getCart({ ...params, locale, userToken });
 
       const shipment = cart.shipments && cart.shipments.length ? cart.shipments[0] : {};
-      if (!shipment.fulfillmentLocationId ||
-        isGuidEmpty(shipment.fulfillmentLocationId)) {
+
+      if (cart && (!shipment.fulfillmentLocationId ||
+        isGuidEmpty(shipment.fulfillmentLocationId))) {
         // Need to setup fulfilment location for the cart for the items inventory status
         const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
         const location = locations && locations.length ? locations[0] : undefined;
@@ -44,36 +55,43 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
             CultureName: locale
           };
 
-          cart = await context.$occ.api.updateCartShipment({ customerId: cart.customerId, cartName: cart.name, updateShipmentRequest });
+          cart = await context.$occ.api.updateCartShipment({ userToken, cartName: cart.name, updateShipmentRequest });
         }
       }
-
+      Logger.debug('[Result]:', { cart });
       return cart;
     }
 
-    return {};
+    return null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    // TODO: implement variantId when we have variants implemented
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
     const variantId = getVariantId(product);
-    return await context.$occ.api.addCartItem({ ...params, customerId: currentCart.customerId, productId: product.productId ?? product.id, variantId, quantity });
+    return await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    return await context.$occ.api.removeCartItem({ ...params, customerId: currentCart.customerId, id: product.id });
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    return await context.$occ.api.removeCartItem({ ...params, userToken, id: product.id });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    return await context.$occ.api.updateCartItem({ ...params, customerId: currentCart.customerId, id: product.id, quantity });
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    return await context.$occ.api.updateCartItem({ ...params, userToken, id: product.id, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentCart }) => {
-    console.log('Mocked: useCart.clear');
     return null;
   },
 
@@ -102,7 +120,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
         // TODO: const withVariants = product.variants && product.variants.length;
         // TODO: const variantId = withVariants ? product.variants[0].id : undefined;
 
-        const shipment = currentCart.shipments[0];
+        const shipment = currentCart?.shipments?.[0];
 
         return shipment?.lineItems?.find?.((item) => item.productId === productId);
 

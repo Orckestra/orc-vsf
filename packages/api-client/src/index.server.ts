@@ -14,6 +14,9 @@ import getFulfillmentLocations from './api/getFulfillmentLocations';
 import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
+import getUser from './api/users/getUser';
+import initializeGuestToken from './api/users/initializeGuestToken';
+import login from './api/membership/login';
 import registerUser from './api/membership/registerUser';
 
 function onCreate(settings) {
@@ -45,8 +48,11 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updateCartShipment,
     getProductLookups,
     getProductDefinitions,
-    registerUser,
-    findInventoryItemStatus
+    findInventoryItemStatus,
+    getUser,
+    initializeGuestToken,
+    login,
+    registerUser
   }
 });
 

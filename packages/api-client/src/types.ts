@@ -240,7 +240,11 @@ export type Review = TODO;
 
 export type ReviewItem = TODO;
 
-export type User = TODO;
+export type User = {
+    email?: string,
+    firstName?: string,
+    lastName?: string,
+};
 
 export type UserBillingAddress = TODO;
 
