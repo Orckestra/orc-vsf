@@ -6,7 +6,8 @@ export const isGuidEmpty = (guid: string): boolean => {
     guid === '00000000000000000000000000000000');
 };
 
-export const parseUserToken = (token, passPhrase) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const parseUserToken = (token: string, passPhrase: string): any => {
   if (token) {
     try {
       const bytes = CryptoJS.AES.decrypt(token, passPhrase);
