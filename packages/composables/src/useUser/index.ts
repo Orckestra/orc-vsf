@@ -15,12 +15,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
     const userToken = app.$cookies.get(appKey + '_token');
-
     if ((userToken === undefined || userToken === '')) {
-      // Initiate Guest
-      const guestUserToken = await context.$occ.api.initializeGuestToken();
-      app.$cookies.set(appKey + '_token', guestUserToken);
-      return;
+      return null;
     }
 
     if (userToken) {
@@ -54,12 +50,11 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    const login = await context.$occ.api.login({ username, password });
+    const userToken = await context.$occ.api.login({ username, password });
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
-    if (login.success) {
-      const user = await context.$occ.api.getUser({ username });
-      app.$cookies.set(appKey + '_token', user.userToken);
+    if (userToken) {
+      app.$cookies.set(appKey + '_token', userToken);
       return params.load(context);
     } else {
       throw new Error('Customer sign-in error');
