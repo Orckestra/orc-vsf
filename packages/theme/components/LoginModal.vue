@@ -252,7 +252,7 @@ export default {
       validate(value) {
         const minRequiredPasswordLength = configurationGetters.getMinRequiredPasswordLength(configuration.value);
         const minRequiredNonAlphanumericCharacters = configurationGetters.getMinRequiredNonAlphanumericCharacters(configuration.value);
-        return new RegExp(`^(?=.*?[~!@#$%^&*()--+={}\[\]|\\:;"'<>,.?]{${minRequiredNonAlphanumericCharacters}}).{${minRequiredPasswordLength},}$`).test(value);
+        return new RegExp(`^(?=.*?[~!@#$%^&*()--+={}[]|\\:;"'<>,.?]{${minRequiredNonAlphanumericCharacters}}).{${minRequiredPasswordLength},}$`).test(value);
       },
       message: 'Your password must have a minimum 6 characters including at least 1 special character'
     });
