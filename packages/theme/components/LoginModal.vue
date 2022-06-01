@@ -250,7 +250,6 @@ export default {
     extend('password', {
       ...password,
       validate(value) {
-        console.log()
         const minRequiredPasswordLength = configurationGetters.getMinRequiredPasswordLength(configuration.value);
         const minRequiredNonAlphanumericCharacters = configurationGetters.getMinRequiredNonAlphanumericCharacters(configuration.value);
         return new RegExp(`^(?=.*?[~!@#$%^&*()--+={}\[\]|\\:;"'<>,.?]{${minRequiredNonAlphanumericCharacters}}).{${minRequiredPasswordLength},}$`).test(value);
