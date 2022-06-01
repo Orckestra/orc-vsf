@@ -216,7 +216,6 @@ extend('max', {
   message: 'The field should have not more then {length} characters'
 });
 
-
 export default {
   name: 'LoginModal',
   components: {
@@ -249,7 +248,8 @@ export default {
     const { response: configuration } = useConfiguration();
 
     extend('password', {
-      validate(value){
+      ...password,
+      validate(value) {
         const minRequiredPasswordLength = configurationGetters.getMinRequiredPasswordLength(configuration.value);
         const minRequiredNonAlphanumericCharacters = configurationGetters.getMinRequiredNonAlphanumericCharacters(configuration.value);
         return new RegExp(`^(?=.*?[#?!@$%^&*+-_)()]{${minRequiredNonAlphanumericCharacters}}).{${minRequiredPasswordLength},}$`).test(value);

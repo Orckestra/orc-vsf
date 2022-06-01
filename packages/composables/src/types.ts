@@ -101,6 +101,11 @@ export interface UseConfigurationFactoryParams<CONFIGURATION> extends FactoryPar
   load(context: Context): Promise<CONFIGURATION>
 }
 
+export interface UseConfigurationErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
 export interface useConfigurationInterface<CONFIGURATION> {
   load(): Promise<void>;
   loading: ComputedProperty<boolean>;
@@ -110,11 +115,6 @@ export interface useConfigurationInterface<CONFIGURATION> {
 
 export interface useConfiguration<CONFIGURATION> {
   (): useConfigurationInterface<CONFIGURATION>;
-}
-
-export interface UseConfigurationErrors {
-  load: Error | null;
-  change: Error | null;
 }
 
 export interface UseConfigurationGetters<CONFIGURATION> {
