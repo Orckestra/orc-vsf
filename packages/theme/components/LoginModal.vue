@@ -121,7 +121,7 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
+            <ValidationProvider rules="required|min:2|max:36" v-slot="{ errors }">
               <SfInput
                 v-e2e="'login-modal-firstName'"
                 v-model="form.firstName"
@@ -132,7 +132,7 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
+            <ValidationProvider rules="required|min:2|max:36" v-slot="{ errors }">
               <SfInput
                 v-e2e="'login-modal-lastName'"
                 v-model="form.lastName"
@@ -143,7 +143,7 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
+            <ValidationProvider rules="required|password" v-slot="{ errors }">
               <SfInput
                 v-e2e="'login-modal-password'"
                 v-model="form.password"
@@ -191,8 +191,8 @@
 import { ref, watch, reactive, computed } from '@nuxtjs/composition-api';
 import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert, SfBar } from '@storefront-ui/vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, email } from 'vee-validate/dist/rules';
-import { useUser, useCart, useForgotPassword } from '@vue-storefront/orc-vsf';
+import { required, email, min, max, password } from 'vee-validate/dist/rules';
+import { useUser, useCart, useForgotPassword, useConfiguration, configurationGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
 import { useUiNotification } from '~/composables';
 
@@ -204,6 +204,16 @@ extend('email', {
 extend('required', {
   ...required,
   message: 'This field is required'
+});
+
+extend('min', {
+  ...min,
+  message: 'The field should have at least {length} characters'
+});
+
+extend('max', {
+  ...max,
+  message: 'The field should have not more then {length} characters'
 });
 
 export default {
@@ -235,6 +245,17 @@ export default {
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
     const currentScreen = ref(SCREEN_REGISTER);
     const { send: sendNotification } = useUiNotification();
+    const { response: configuration } = useConfiguration();
+
+    extend('password', {
+      ...password,
+      validate(value) {
+        const minRequiredPasswordLength = configurationGetters.getMinRequiredPasswordLength(configuration.value);
+        const minRequiredNonAlphanumericCharacters = configurationGetters.getMinRequiredNonAlphanumericCharacters(configuration.value);
+        return new RegExp(`^(?=.*?[~!@#$%^&*()--+={}[]|\\:;"'<>,.?]{${minRequiredNonAlphanumericCharacters}}).{${minRequiredPasswordLength},}$`).test(value);
+      },
+      message: 'Your password must have a minimum 6 characters including at least 1 special character'
+    });
 
     const error = reactive({
       login: null,
