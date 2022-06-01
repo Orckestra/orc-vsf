@@ -37,7 +37,7 @@ export interface UseUserLoginParams {
 Function that register new user. 
 
 ### `login`
-Function that login user.
+Function for authenticating user with email and password and retrieve token.
 
 ### `load`
 Function that set some user info.
@@ -46,7 +46,7 @@ Function that set some user info.
 Function that change user password.
 
 ### `logout`
-Function that logout user from system.
+Function that logout user from system by removing the user's token.
 
 ### `setUser`
 Function that set user.

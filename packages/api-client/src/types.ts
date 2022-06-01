@@ -240,7 +240,11 @@ export type Review = TODO;
 
 export type ReviewItem = TODO;
 
-export type User = TODO;
+export type User = {
+    email?: string,
+    firstName?: string,
+    lastName?: string,
+};
 
 export type UserBillingAddress = TODO;
 
@@ -342,5 +346,25 @@ export type InventoryItemAvailability = {
     date: string,
     identifier: InventoryItemIdentifier,
     statuses: InventoryItemStatus[]
+}
+
+export type MembershipConfiguration = {
+    minRequiredPasswordLength: number,
+    minRequiredNonAlphanumericCharacters: number,
+    accountLockDownMinutes: number,
+    enablePasswordReset: boolean,
+    enablePasswordRetrieval: boolean,
+    maxInvalidPasswordAttempts: number,
+    passwordAttemptWindow: number,
+    passwordFailedAttemptDelaySeconds: number,
+    passwordStrategy: string,
+    passwordStrengthRegularExpression: string,
+    requiresQuestionAndAnswer: boolean,
+    requiresUniqueEmail: boolean,
+    tokenExpirationMinutes: number
+}
+
+export type Configuration = {
+    membership: MembershipConfiguration
 }
 
