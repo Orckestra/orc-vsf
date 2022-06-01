@@ -7,10 +7,10 @@ function getMinRequiredPasswordLength(result: Configuration): number {
 }
 
 function getMinRequiredNonAlphanumericCharacters(result: Configuration): number {
-    return result.membership.minRequiredNonAlphanumericCharacters;
+  return result.membership.minRequiredNonAlphanumericCharacters;
 }
 
 export const configurationGetters: UseConfigurationGetters<Configuration> = {
-    getMinRequiredPasswordLength,
-    getMinRequiredNonAlphanumericCharacters
+  getMinRequiredPasswordLength,
+  getMinRequiredNonAlphanumericCharacters
 };

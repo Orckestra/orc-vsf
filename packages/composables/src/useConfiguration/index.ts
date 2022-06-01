@@ -6,7 +6,7 @@ export const useConfiguration = useConfigurationFactory<Configuration>({
   load: async (context: Context) => {
     const consfiguration = await context.$occ.api.getConfiguration({});
     return {
-        membership: consfiguration
+      membership: consfiguration
     };
   }
 });
