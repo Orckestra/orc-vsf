@@ -192,7 +192,7 @@ import { ref, watch, reactive, computed } from '@nuxtjs/composition-api';
 import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert, SfBar } from '@storefront-ui/vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email, min, max, password } from 'vee-validate/dist/rules';
-import { useUser, useCart, useForgotPassword } from '@vue-storefront/orc-vsf';
+import { useUser, useCart, useForgotPassword, useConfiguration, configurationGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
 import { useUiNotification } from '~/composables';
 
@@ -216,13 +216,6 @@ extend('max', {
   message: 'The field should have not more then {length} characters'
 });
 
-extend('password', {
-  ...min,
-  validate(value){
-    return new RegExp("^(?=.*?[#?!@$%^&*-]).{6,}$").test(value);
-  },
-  message: 'Your password must have a minimum 6 characters including at least 1 special character'
-});
 
 export default {
   name: 'LoginModal',
@@ -253,6 +246,16 @@ export default {
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
     const currentScreen = ref(SCREEN_REGISTER);
     const { send: sendNotification } = useUiNotification();
+    const { response: configuration } = useConfiguration();
+
+    extend('password', {
+      validate(value){
+        const minRequiredPasswordLength = configurationGetters.getMinRequiredPasswordLength(configuration.value);
+        const minRequiredNonAlphanumericCharacters = configurationGetters.getMinRequiredNonAlphanumericCharacters(configuration.value);
+        return new RegExp(`^(?=.*?[#?!@$%^&*+-_)()]{${minRequiredNonAlphanumericCharacters}}).{${minRequiredPasswordLength},}$`).test(value);
+      },
+      message: 'Your password must have a minimum 6 characters including at least 1 special character'
+    });
 
     const error = reactive({
       login: null,

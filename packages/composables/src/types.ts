@@ -92,3 +92,32 @@ export interface UseMetadataGetters<METADATA, LOOKUP> {
   getLookup(metadata: METADATA, lookupName: string): LOOKUP;
   getLookupValueDisplayName(metadata: METADATA, lookupName: string, lookupValue, locale: string): string;
 }
+
+/*
+CONFIGURATION
+*/
+
+export interface UseConfigurationFactoryParams<CONFIGURATION> extends FactoryParams {
+  load(context: Context): Promise<CONFIGURATION>
+}
+
+export interface useConfigurationInterface<CONFIGURATION> {
+  load(): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  response: ComputedProperty<CONFIGURATION>;
+  error: ComputedProperty<UseConfigurationErrors>;
+}
+
+export interface useConfiguration<CONFIGURATION> {
+  (): useConfigurationInterface<CONFIGURATION>;
+}
+
+export interface UseConfigurationErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface UseConfigurationGetters<CONFIGURATION> {
+  getMinRequiredPasswordLength(result: CONFIGURATION): number;
+  getMinRequiredNonAlphanumericCharacters(result: CONFIGURATION): number;
+}

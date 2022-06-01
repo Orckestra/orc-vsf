@@ -348,3 +348,10 @@ export type InventoryItemAvailability = {
     statuses: InventoryItemStatus[]
 }
 
+export type Configuration = {
+    membership: {
+        minRequiredPasswordLength: number,
+        minRequiredNonAlphanumericCharacters: number
+    }
+}
+
