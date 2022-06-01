@@ -117,7 +117,8 @@ export interface useConfiguration<CONFIGURATION> {
   (): useConfigurationInterface<CONFIGURATION>;
 }
 
-export interface UseConfigurationGetters<CONFIGURATION> {
-  getMinRequiredPasswordLength(result: CONFIGURATION): number;
-  getMinRequiredNonAlphanumericCharacters(result: CONFIGURATION): number;
+export interface UseConfigurationGetters<CONFIGURATION, MEMBERSHIPCONFIGURATION> {
+  getMinRequiredPasswordLength(config: CONFIGURATION): number;
+  getMinRequiredNonAlphanumericCharacters(config: CONFIGURATION): number;
+  getMembershipConfiguration(config: CONFIGURATION) : MEMBERSHIPCONFIGURATION;
 }

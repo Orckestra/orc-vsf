@@ -4,9 +4,9 @@ import { useConfigurationFactory } from '../factories/useConfigurationFactory';
 
 export const useConfiguration = useConfigurationFactory<Configuration>({
   load: async (context: Context) => {
-    const consfiguration = await context.$occ.api.getConfiguration({});
+    const membership = await context.$occ.api.getMembershipConfiguration();
     return {
-      membership: consfiguration
+      membership
     };
   }
 });

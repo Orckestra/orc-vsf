@@ -348,10 +348,23 @@ export type InventoryItemAvailability = {
     statuses: InventoryItemStatus[]
 }
 
+export type MembershipConfiguration = {
+    minRequiredPasswordLength: number,
+    minRequiredNonAlphanumericCharacters: number,
+    accountLockDownMinutes: number,
+    enablePasswordReset: boolean,
+    enablePasswordRetrieval: boolean,
+    maxInvalidPasswordAttempts: number,
+    passwordAttemptWindow: number,
+    passwordFailedAttemptDelaySeconds: number,
+    passwordStrategy: string,
+    passwordStrengthRegularExpression: string,
+    requiresQuestionAndAnswer: boolean,
+    requiresUniqueEmail: boolean,
+    tokenExpirationMinutes: number
+}
+
 export type Configuration = {
-    membership: {
-        minRequiredPasswordLength: number,
-        minRequiredNonAlphanumericCharacters: number
-    }
+    membership: MembershipConfiguration
 }
 

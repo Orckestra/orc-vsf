@@ -6,23 +6,44 @@
 ## API
 
 ```typescript
+
+export type MembershipConfiguration = {
+    minRequiredPasswordLength: number,
+    minRequiredNonAlphanumericCharacters: number,
+    accountLockDownMinutes: number,
+    enablePasswordReset: boolean,
+    enablePasswordRetrieval: boolean,
+    maxInvalidPasswordAttempts: number,
+    passwordAttemptWindow: number,
+    passwordFailedAttemptDelaySeconds: number,
+    passwordStrategy: string,
+    passwordStrengthRegularExpression: string,
+    requiresQuestionAndAnswer: boolean,
+    requiresUniqueEmail: boolean,
+    tokenExpirationMinutes: number
+}
+
+export type Configuration = {
+    membership: MembershipConfiguration
+}
+
 interface UseConfiguration = useConfigurationFactory<Configuration>  {
   load: async (context: Context) => Promise<void>;
 }
 
-export interface UseConfigurationFactoryParams<CONFIGURATION> extends FactoryParams {
-  load(context: Context): Promise<CONFIGURATION>
+export interface UseConfigurationFactoryParams<Configuration> extends FactoryParams {
+  load(context: Context): Promise<Configuration>
 }
 
-export interface useConfigurationInterface<CONFIGURATION> {
+export interface useConfigurationInterface<Configuration> {
   load(): Promise<void>;
   loading: ComputedProperty<boolean>;
-  response: ComputedProperty<CONFIGURATION>;
+  response: ComputedProperty<Configuration>;
   error: ComputedProperty<UseConfigurationErrors>;
 }
 
-export interface useConfiguration<CONFIGURATION> {
-  (): useConfigurationInterface<CONFIGURATION>;
+export interface useConfiguration<Configuration> {
+  (): useConfigurationInterface<Configuration>;
 }
 
 export interface UseConfigurationErrors {
@@ -30,9 +51,10 @@ export interface UseConfigurationErrors {
   change: Error | null;
 }
 
-export interface UseConfigurationGetters<CONFIGURATION> {
-  getMinRequiredPasswordLength(result: CONFIGURATION): number;
-  getMinRequiredNonAlphanumericCharacters(result: CONFIGURATION): number;
+export interface UseConfigurationGetters<Configuration, MembershipConfiguration> {
+  getMinRequiredPasswordLength(config: Configuration): number;
+  getMinRequiredNonAlphanumericCharacters(config: Configuration): number;
+  getMembershipConfiguration(config: Configuration) : MembershipConfiguration;
 }
 
 ```
@@ -42,8 +64,9 @@ Function that load configuration info.
 ## Getters
 ````typescript
 interface ConfigurationGetters<Configuration> {
-  getMinRequiredPasswordLength(result: Configuration): number;
-  getMinRequiredNonAlphanumericCharacters(result: Configuration): number
+  getMinRequiredPasswordLength(config: Configuration): number;
+  getMinRequiredNonAlphanumericCharacters(config: Configuration): number;
+  getMembershipConfiguration(config: Configuration) : MembershipConfiguration;
 }
 ````
 

@@ -1,16 +1,21 @@
-import type { Configuration } from '@vue-storefront/orc-vsf-api';
+import type { Configuration, MembershipConfiguration } from '@vue-storefront/orc-vsf-api';
 import { UseConfigurationGetters } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getMinRequiredPasswordLength(result: Configuration): number {
-  return result.membership.minRequiredPasswordLength;
+function getMinRequiredPasswordLength(config: Configuration): number {
+  return config?.membership?.minRequiredPasswordLength;
 }
 
-function getMinRequiredNonAlphanumericCharacters(result: Configuration): number {
-  return result.membership.minRequiredNonAlphanumericCharacters;
+function getMinRequiredNonAlphanumericCharacters(config: Configuration): number {
+  return config?.membership?.minRequiredNonAlphanumericCharacters;
 }
 
-export const configurationGetters: UseConfigurationGetters<Configuration> = {
+function getMembershipConfiguration(config: Configuration) : MembershipConfiguration {
+  return config?.membership;
+}
+
+export const configurationGetters: UseConfigurationGetters<Configuration, MembershipConfiguration> = {
   getMinRequiredPasswordLength,
-  getMinRequiredNonAlphanumericCharacters
+  getMinRequiredNonAlphanumericCharacters,
+  getMembershipConfiguration
 };
