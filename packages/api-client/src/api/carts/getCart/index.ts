@@ -10,7 +10,7 @@ export default async function getCart(context, params) {
   if (!customerId) return null;
 
   const url = new URL(
-    `/api/carts/${scope}/${customerIdentfier}/${cartName}`,
+    `/api/carts/${scope}/${customerId}/${cartName}`,
     api.url
   );
 
