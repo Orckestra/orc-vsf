@@ -1,17 +1,14 @@
 import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
-import CryptoJS from 'crypto-js';
+import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getCart(context, params) {
 
   const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
-  const { userToken, cartName = 'Default', customerId } = params;
-  let customerIdentfier = customerId;
-  if (userToken && !customerId) {
-    const bytes = CryptoJS.AES.decrypt(userToken, myAccount.secretPassphrase);
-    const { id } = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    customerIdentfier = id;
-  }
+  const { userToken, cartName = 'Default' } = params;
+  const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
+  if (!customerId) return null;
+
   const url = new URL(
     `/api/carts/${scope}/${customerIdentfier}/${cartName}`,
     api.url

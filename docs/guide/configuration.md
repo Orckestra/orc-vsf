@@ -28,6 +28,9 @@ module.exports = {
           serverUrl: 'https://refapp.azureedge.net',
           imageFolderName: 'images',
           maxThumbnailImages: 1
+        },
+        myAccount: {
+          secretPassphrase: process.env.SECRET_PASSPHRASE
         }
       },
     },
