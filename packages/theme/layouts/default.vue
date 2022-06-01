@@ -33,7 +33,7 @@ import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
 import { onSSR } from '@vue-storefront/core';
 import { useRoute } from '@nuxtjs/composition-api';
-import { useCart, useStore, useUser, useWishlist, useMetadata } from '@vue-storefront/orc-vsf';
+import { useCart, useStore, useUser, useWishlist, useMetadata, useConfiguration } from '@vue-storefront/orc-vsf';
 
 export default {
   name: 'DefaultLayout',
@@ -57,6 +57,7 @@ export default {
     const { load: loadCart } = useCart();
     const { load: loadWishlist } = useWishlist();
     const { load: loadMetadata} = useMetadata();
+    const { load: loadConfiguration} = useConfiguration();
 
     onSSR(async () => {
       await Promise.all([
@@ -64,7 +65,8 @@ export default {
         loadUser(),
         loadCart(),
         loadWishlist(),
-        loadMetadata()
+        loadMetadata(),
+        loadConfiguration()
       ]);
     });
 
