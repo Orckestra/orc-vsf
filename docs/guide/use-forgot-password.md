@@ -5,7 +5,7 @@
 
 ## API
 ```typescript
-interface UseForgotPasswordFactoryParams<RESULT> extends FactoryParams {
+interface UseForgotPasswordFactoryParams<any> extends FactoryParams {
     resetPassword: (context: Context, params: ResetPasswordParams & {
         currentResult: RESULT;
         customQuery?: CustomQuery;
