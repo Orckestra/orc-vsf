@@ -84,8 +84,7 @@ import {
 import {
   ref,
   computed,
-  defineComponent,
-  useContext
+  defineComponent
 } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, password } from 'vee-validate/dist/rules';
@@ -117,7 +116,7 @@ export default defineComponent({
     const form = ref({});
     const { response: configuration } = useConfiguration();
     const isPasswordChanged = computed(() => forgotPasswordGetters.isPasswordChanged(forgotPasswordResult.value));
-    const { ticket } = context.root.$route.query;    
+    const { ticket } = context.root.$route.query;
     extend('password', {
       ...password,
       validate(value) {
