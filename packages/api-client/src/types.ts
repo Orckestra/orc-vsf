@@ -119,7 +119,9 @@ export type Order = TODO;
 
 export type OrderItem = TODO;
 
-export type PasswordResetResult = TODO;
+export type PasswordResetResult = {
+    success: boolean;
+};
 
 export type ProductVariant = {
     active?: boolean,

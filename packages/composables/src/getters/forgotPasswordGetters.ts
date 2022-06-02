@@ -8,7 +8,7 @@ function getResetPasswordToken(result: PasswordResetResult): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function isPasswordChanged(result: PasswordResetResult): boolean {
-  return true;
+  return result.success === true;
 }
 
 export const forgotPasswordGetters: ForgotPasswordGetters<PasswordResetResult> = {
