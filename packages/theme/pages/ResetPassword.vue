@@ -79,21 +79,21 @@ import {
   SfButton,
   SfLoader,
   SfInput,
-  SfHeading,
+  SfHeading
 } from '@storefront-ui/vue';
 import {
   ref,
   computed,
   defineComponent,
-  useContext,
+  useContext
 } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, password } from 'vee-validate/dist/rules';
-import { useUser, useCart, useConfiguration, configurationGetters, forgotPasswordGetters, useForgotPassword } from '@vue-storefront/orc-vsf';
+import { useConfiguration, configurationGetters, forgotPasswordGetters, useForgotPassword } from '@vue-storefront/orc-vsf';
 
 extend('required', {
   ...required,
-  message: 'This field is required',
+  message: 'This field is required'
 });
 
 export default defineComponent({
@@ -104,7 +104,7 @@ export default defineComponent({
     SfLoader,
     SfInput,
     ValidationProvider,
-    ValidationObserver,
+    ValidationObserver
   },
   middleware({ redirect, route }) {
     if (!route.query.ticket) {
@@ -117,8 +117,7 @@ export default defineComponent({
     const form = ref({});
     const { response: configuration } = useConfiguration();
     const isPasswordChanged = computed(() => forgotPasswordGetters.isPasswordChanged(forgotPasswordResult.value));
-    const { ticket } = context.root.$route.query;
-    
+    const { ticket } = context.root.$route.query;    
     extend('password', {
       ...password,
       validate(value) {
@@ -129,16 +128,16 @@ export default defineComponent({
       message: 'Your password must have a minimum 6 characters including at least 1 special character'
     });
 
-    const setNewPassword = async (isReset = false) => {
+    const setNewPassword = async () => {
       passwordMatchError.value = false;
       if (form.value.password !== form.value.repeatPassword) {
         passwordMatchError.value = 'Passwords do not match';
         return;
       }
       await setNew({
-          tokenValue: ticket,
-          newPassword: form.value.password
-        });
+        tokenValue: ticket,
+        newPassword: form.value.password
+      });
     };
 
     return {
@@ -150,7 +149,7 @@ export default defineComponent({
       forgotPasswordResult,
       isPasswordChanged
     };
-  },
+  }
 });
 </script>
 
