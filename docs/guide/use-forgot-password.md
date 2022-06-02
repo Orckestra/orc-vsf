@@ -27,7 +27,7 @@ interface ResetPasswordParams {
 ```
 
 ### `resetPassword`
-Function that reset password. 
+Fuction that send link with reset password token to the provided email
 
 ### `setNewPassword`
 Function that set new users password.
@@ -41,15 +41,23 @@ import { useUser } from '@vue-storefront/orc-vsf';
 
 export default {
   setup () {
-   const { resetPassword } = useForgotPassword();
+   const { resetPassword, setNew, result } = useForgotPassword();
     const email = ref("");
+    const password = ref("");
+    const ticket = ref("");
 
     onSSR(async () => {
       await useForgotPassword({ email });
+
+      await setNew({
+        tokenValue: ticket,
+        newPassword: password
+      });
     });
 
     return {
-      email
+      email,
+      result
     }
   }
 }
