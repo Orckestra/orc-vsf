@@ -44,9 +44,6 @@
               class="form__element"
             />
           </ValidationProvider>
-          <div v-if="passwordMatchError || forgotPasswordError.setNew">
-            {{ passwordMatchError || forgotPasswordError.setNew.message }}
-          </div>
           <SfButton
             v-e2e="'reset-password-modal-submit'"
             type="submit"
@@ -89,6 +86,7 @@ import {
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, password } from 'vee-validate/dist/rules';
 import { useConfiguration, configurationGetters, forgotPasswordGetters, useForgotPassword } from '@vue-storefront/orc-vsf';
+import { useUiNotification } from '~/composables';
 
 extend('required', {
   ...required,
@@ -117,6 +115,7 @@ export default defineComponent({
     const { response: configuration } = useConfiguration();
     const isPasswordChanged = computed(() => forgotPasswordGetters.isPasswordChanged(forgotPasswordResult.value));
     const { ticket } = context.root.$route.query;
+    const { send: sendNotification } = useUiNotification();
     extend('password', {
       ...password,
       validate(value) {
@@ -130,21 +129,36 @@ export default defineComponent({
     const setNewPassword = async () => {
       passwordMatchError.value = false;
       if (form.value.password !== form.value.repeatPassword) {
-        passwordMatchError.value = 'Passwords do not match';
-        return;
+        sendNotification({
+          id: Symbol('user_reset_password'),
+          message: 'Passwords do not match',
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'Reset Password'
+        });
+      } else {
+        await setNew({
+          tokenValue: ticket,
+          newPassword: form.value.password
+        });
+        if (forgotPasswordError.value.setNew) {
+          sendNotification({
+            id: Symbol('user_reset_password'),
+            message: 'Unable to process your request. Please request a new forgot password link and try again',
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'Reset Password'
+          });
+        }
       }
-      await setNew({
-        tokenValue: ticket,
-        newPassword: form.value.password
-      });
     };
 
     return {
       form,
       setNewPassword,
       forgotPasswordLoading,
-      forgotPasswordError,
-      passwordMatchError,
       forgotPasswordResult,
       isPasswordChanged
     };
