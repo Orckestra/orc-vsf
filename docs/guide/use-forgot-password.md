@@ -1,7 +1,7 @@
-# useUser
+# useForgotPassword
 
 ## Features
-`useUser` composable is responsible for sending link to login by email.
+`useForgotPassword` composable is responsible for sending reset password.
 
 ## API
 ```typescript
@@ -30,7 +30,7 @@ interface ResetPasswordParams {
 Function that reset password. 
 
 ### `setNewPassword`
-Function that set new user password.
+Function that set new users password.
 
 ## Example
 
