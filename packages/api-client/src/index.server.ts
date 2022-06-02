@@ -19,6 +19,8 @@ import initializeGuestToken from './api/users/initializeGuestToken';
 import login from './api/membership/login';
 import registerUser from './api/membership/registerUser';
 import getMembershipConfiguration from './api/membership/getConfiguration';
+import resetPassword from './api/membership/resetPassword';
+import getByTicket from './api/users/getByTicket';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -54,7 +56,9 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     initializeGuestToken,
     login,
     registerUser,
-    getMembershipConfiguration
+    getMembershipConfiguration,
+    resetPassword,
+    getByTicket
   }
 });
 
