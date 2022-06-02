@@ -1,7 +1,7 @@
 # useForgotPassword
 
 ## Features
-`useForgotPassword` composable is responsible for sending reset password.
+`useForgotPassword` composable is responsible for sending reset password token to the email and setting new password with this token.
 
 ## API
 ```typescript
