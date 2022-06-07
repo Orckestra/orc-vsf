@@ -5,6 +5,23 @@ import {
   ComputedProperty
 } from '@vue-storefront/core';
 
+export interface UserUpdateParams{
+  cellNumber: string;
+  customerType: string;
+  email: string;
+  faxExtension: string;
+  faxNumber: string;
+  firstname: string;
+  language: string;
+  lastname: string;
+  passwordQuestion: string;
+  phoneExtension: string;
+  phoneExtensionWork: string;
+  phoneNumber: string;
+  phoneNumberWork: string;
+  username: string;
+}
+
 export type TODO = any;
 
 export type UseBillingAddParams = TODO;
@@ -32,23 +49,6 @@ export type useUserOrderSearchParams = TODO;
 /*
 INVENTORY
 */
-export interface UserUpdateParams{
-  cellNumber: string;
-  customerType: string;
-  email: string;
-  faxExtension: string;
-  faxNumber: string;
-  firstname: string;
-  language: string;
-  lastname: string;
-  passwordQuestion: string;
-  phoneExtension: string;
-  phoneExtensionWork: string;
-  phoneNumber: string;
-  phoneNumberWork: string;
-  username: string;
-}
-
 export interface UseInventoryErrors {
   load: Error | null;
   change: Error | null;

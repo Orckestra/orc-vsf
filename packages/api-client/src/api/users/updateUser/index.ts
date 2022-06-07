@@ -1,5 +1,4 @@
 import { parseUserToken } from '../../../helpers/generalUtils';
-import axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function updateUser(context, params) {
