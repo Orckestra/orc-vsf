@@ -43,7 +43,7 @@ export default async function updateUser(context, params) {
     username
   };
   const { data } = await context.client.put(url.href, body, {
-    validateStatus: function (status) {
+    validateStatus: (status) => {
       return status >= 200 && status < 500;
     }
   });
