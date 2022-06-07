@@ -36,8 +36,22 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
-    console.log('Mocked: useUser.updateUser');
-    return currentUser;
+    if (!updatedUserData) return;
+    const { email, firstname, lastname } = updatedUserData;
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+    const language: any = app.i18n.locale;
+
+    const response = await context.$occ.api.updateUser({ email, firstname, lastname, language, userToken });
+    if (response.responseStatus.errorCode === 'EmailAlreadyExists') {
+      throw new Error(response.responseStatus.message);
+    } else {
+      return response;
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
