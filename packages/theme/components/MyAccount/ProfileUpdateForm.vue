@@ -59,7 +59,7 @@
 <script>
 import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { email } from 'vee-validate/dist/rules';
+import { email, min, max } from 'vee-validate/dist/rules';
 import { useUser, userGetters } from '@vue-storefront/orc-vsf';
 import {
   SfInput,
@@ -101,7 +101,7 @@ export default defineComponent({
   },
   emits: ['submit'],
   setup(props, { emit }) {
-    const { user, loading, error: userError } = useUser();
+    const { user, error: userError } = useUser();
     const currentPassword = ref('');
     const requirePassword = ref(false);
     const resetForm = () => ({
@@ -113,7 +113,6 @@ export default defineComponent({
     const form = ref(resetForm());
 
     const submitForm = (resetValidationFn) => async () => {
-      
       const onComplete = async () => {
         form.value = resetForm();
         requirePassword.value = false;
