@@ -52,6 +52,6 @@ export default async function updateUser(context, params) {
       return status >= 200 && status <= 500;
     }
   };
-  const response = await axios.put(url.href, body, config);
-  return response.data;
+  const { data } = await axios.put(url.href, body, config);
+  return data;
 }
