@@ -47,7 +47,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const language: any = app.i18n.locale;
 
     const response = await context.$occ.api.updateUser({ email, firstname, lastname, language, userToken });
-    if (response.responseStatus.errorCode === 'EmailAlreadyExists') {
+    if (response?.responseStatus?.errorCode === 'EmailAlreadyExists') {
       throw new Error(response.responseStatus.message);
     } else {
       return response;
