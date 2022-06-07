@@ -7,7 +7,7 @@
       <div class="form__horizontal">
         <ValidationProvider
           v-slot="{ errors }"
-          rules="required|min:2"
+          rules="required|min:2|max:36"
           class="form__element"
         >
           <SfInput
@@ -21,7 +21,7 @@
         </ValidationProvider>
         <ValidationProvider
           v-slot="{ errors }"
-          rules="required|min:2"
+          rules="required|min:2|max:36"
           class="form__element"
         >
           <SfInput
@@ -71,6 +71,16 @@ import { useUiNotification } from '~/composables';
 extend('email', {
   ...email,
   message: 'The email field must be a valid email'
+});
+
+extend('min', {
+  ...min,
+  message: 'The field should have at least {length} characters'
+});
+
+extend('max', {
+  ...max,
+  message: 'The field should have not more then {length} characters'
 });
 
 export default defineComponent({
