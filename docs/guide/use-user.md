@@ -31,6 +31,23 @@ export interface UseUserLoginParams {
   password:	string;
 }
 
+export interface UserUpdateParams{
+  cellNumber: string;
+  customerType: string;
+  email: string;
+  faxExtension: string;
+  faxNumber: string;
+  firstname: string;
+  language: string;
+  lastname: string;
+  passwordQuestion: string;
+  phoneExtension: string;
+  phoneExtensionWork: string;
+  phoneNumber: string;
+  phoneNumberWork: string;
+  username: string;
+}
+
 ```
 
 ### `register`

@@ -23,7 +23,7 @@ export type UseShippingAddParams = TODO;
 
 export type UseStoreFilterParams = TODO;
 
-export type UseUserUpdateParams = TODO;
+export type UseUserUpdateParams = UserUpdateParams;
 
 export type UseUserRegisterParams = TODO;
 
@@ -32,6 +32,23 @@ export type useUserOrderSearchParams = TODO;
 /*
 INVENTORY
 */
+export interface UserUpdateParams{
+  cellNumber: string;
+  customerType: string;
+  email: string;
+  faxExtension: string;
+  faxNumber: string;
+  firstname: string;
+  language: string;
+  lastname: string;
+  passwordQuestion: string;
+  phoneExtension: string;
+  phoneExtensionWork: string;
+  phoneNumber: string;
+  phoneNumberWork: string;
+  username: string;
+}
+
 export interface UseInventoryErrors {
   load: Error | null;
   change: Error | null;

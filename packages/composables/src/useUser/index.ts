@@ -37,7 +37,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
     if (!updatedUserData) return;
-    const { email, firstname, lastname } = updatedUserData;
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
     const userToken = app.$cookies.get(appKey + '_token');
@@ -46,9 +45,11 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     }
     const language: any = app.i18n.locale;
 
-    const response = await context.$occ.api.updateUser({ email, firstname, lastname, language, userToken });
-    if (response?.responseStatus?.errorCode === 'EmailAlreadyExists') {
-      throw new Error(response.responseStatus.message);
+    const response = await context.$occ.api.updateUser({...updatedUserData, language, userToken });
+    if (response?.responseStatus?.errorCode) {
+      const error = new Error(response.responseStatus.message);
+      error.name = response.responseStatus.errorCode;
+      throw error;
     } else {
       return response;
     }

@@ -43,15 +43,10 @@ export default async function updateUser(context, params) {
     phoneNumberWork,
     username
   };
-  const config = {
-    headers: {
-      'X-AUTH': api.authToken,
-      'Content-Type': 'application/json'
-    },
-    validateStatus: (status) => {
-      return status >= 200 && status <= 500;
+  const { data } = await context.client.put(url.href, body, {
+    validateStatus: function (status) {
+      return status >= 200 && status < 500;
     }
-  };
-  const { data } = await axios.put(url.href, body, config);
+  });
   return data;
 }
