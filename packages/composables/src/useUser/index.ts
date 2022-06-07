@@ -5,8 +5,8 @@ import {
 } from '@vue-storefront/core';
 import type { User } from '@vue-storefront/orc-vsf-api';
 import type {
-  UseUserUpdateParams as UpdateParams,
-  UseUserRegisterParams as RegisterParams
+  UserUpdateParams as UpdateParams,
+  UserRegisterParams as RegisterParams
 } from '../types';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {

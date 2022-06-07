@@ -19,7 +19,7 @@ interface UseUser<USER, UPDATE_USER_PARAMS, API extends PlatformApi = any> exten
   isAuthenticated: Ref<boolean>;
 }
 
-export interface UseUserRegisterParams {
+export interface UserRegisterParams {
   email:	string;
   firstName?:	string;
   lastName?: string;

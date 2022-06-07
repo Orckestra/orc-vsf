@@ -5,23 +5,6 @@ import {
   ComputedProperty
 } from '@vue-storefront/core';
 
-export interface UserUpdateParams{
-  cellNumber: string;
-  customerType: string;
-  email: string;
-  faxExtension: string;
-  faxNumber: string;
-  firstname: string;
-  language: string;
-  lastname: string;
-  passwordQuestion: string;
-  phoneExtension: string;
-  phoneExtensionWork: string;
-  phoneNumber: string;
-  phoneNumberWork: string;
-  username: string;
-}
-
 export type TODO = any;
 
 export type UseBillingAddParams = TODO;
@@ -40,9 +23,29 @@ export type UseShippingAddParams = TODO;
 
 export type UseStoreFilterParams = TODO;
 
-export type UseUserUpdateParams = UserUpdateParams;
+export type UserUpdateParams = {
+  cellNumber: string;
+  customerType: string;
+  email: string;
+  faxExtension: string;
+  faxNumber: string;
+  firstname: string;
+  language: string;
+  lastname: string;
+  passwordQuestion: string;
+  phoneExtension: string;
+  phoneExtensionWork: string;
+  phoneNumber: string;
+  phoneNumberWork: string;
+  username: string;
+}
 
-export type UseUserRegisterParams = TODO;
+export type UserRegisterParams = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
 
 export type useUserOrderSearchParams = TODO;
 
