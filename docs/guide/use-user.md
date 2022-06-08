@@ -5,14 +5,14 @@
 
 ## API
 ```typescript
-interface UseUser<USER, UPDATE_USER_PARAMS, API extends PlatformApi = any> extends Composable<API>  {
-  register: (params: { user: UseUserRegisterParams; customQuery?: CustomQuery; }) => Promise<void>;
+interface UseUser<USER, UserUpdateParams, API extends PlatformApi = any> extends Composable<API>  {
+  register: (params: { user: UserRegisterParams; customQuery?: CustomQuery; }) => Promise<void>;
   login:(params: { user: UseUserLoginParams; customQuery?: CustomQuery; }) => Promise<void>;
   load: (params?: { customQuery: CustomQuery; }) => Promise<void>;
   changePassword: (params: { current: string; new: string; customQuery?: CustomQuery; }) => Promise<void>;
   logout: (params?: { customQuery: CustomQuery; }) => Promise<void>;
   setUser: (user: USER) => void;
-  updateUser: (params: { user: UPDATE_USER_PARAMS; customQuery?: CustomQuery; }) => Promise<void>;
+  updateUser: (params: { user: UserUpdateParams; customQuery?: CustomQuery; }) => Promise<void>;
   loading: ComputedProperty<boolean>;
   error: ComputedProperty<UseUserErrors>;
   user: ComputedProperty<USER>;
