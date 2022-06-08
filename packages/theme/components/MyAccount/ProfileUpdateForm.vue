@@ -7,7 +7,7 @@
       <div class="form__horizontal">
         <ValidationProvider
           v-slot="{ errors }"
-          rules="required|min:2"
+          rules="required|min:2|max:36"
           class="form__element"
         >
           <SfInput
@@ -21,7 +21,7 @@
         </ValidationProvider>
         <ValidationProvider
           v-slot="{ errors }"
-          rules="required|min:2"
+          rules="required|min:2|max:36"
           class="form__element"
         >
           <SfInput
@@ -49,54 +49,7 @@
           :error-message="$t(errors[0])"
         />
       </ValidationProvider>
-      <SfModal
-        :visible="requirePassword"
-        :title="$t('Attention!')"
-        cross
-        persistent
-        @close="requirePassword = false"
-      >
-        {{ $t('Please type your current password to change your email address.') }}
-        <SfInput
-          v-model="currentPassword"
-          type="password"
-          name="currentPassword"
-          :label="$t('Current Password')"
-          required
-          class="form__element"
-          style="margin-top: 10px"
-          @keypress.enter="handleSubmit(submitForm(reset))"
-        />
-        <SfButton
-          class="form__button"
-          @click="handleSubmit(submitForm(reset))"
-        >
-          {{ $t('Update personal data') }}
-        </SfButton>
-      </SfModal>
-      <div
-        v-if="requirePassword"
-        class="smartphone-only"
-      >
-        {{ $t('Please type your current password to change your email address.') }}
-        <SfInput
-          v-model="currentPassword"
-          type="password"
-          name="currentPassword"
-          :label="$t('Current Password')"
-          required
-          class="form__element"
-          style="margin-top: 10px"
-          @keypress.enter="handleSubmit(submitForm(reset))"
-        />
-        <SfButton
-          class="form__button"
-          @click="handleSubmit(submitForm(reset))"
-        >
-          {{ $t('Update personal data') }}
-        </SfButton>
-      </div>
-      <SfButton v-if="!requirePassword" class="form__button">
+      <SfButton class="form__button">
         {{ $t('Update personal data') }}
       </SfButton>
     </form>
@@ -106,7 +59,7 @@
 <script>
 import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { email } from 'vee-validate/dist/rules';
+import { email, min, max } from 'vee-validate/dist/rules';
 import { useUser, userGetters } from '@vue-storefront/orc-vsf';
 import {
   SfInput,
@@ -118,6 +71,16 @@ import { useUiNotification } from '~/composables';
 extend('email', {
   ...email,
   message: 'The email field must be a valid email'
+});
+
+extend('min', {
+  ...min,
+  message: 'The field should have at least {length} characters'
+});
+
+extend('max', {
+  ...max,
+  message: 'The field should have not more then {length} characters'
 });
 
 export default defineComponent({
@@ -138,7 +101,7 @@ export default defineComponent({
   },
   emits: ['submit'],
   setup(props, { emit }) {
-    const { user } = useUser();
+    const { user, error: userError } = useUser();
     const currentPassword = ref('');
     const requirePassword = ref(false);
     const resetForm = () => ({
@@ -146,25 +109,32 @@ export default defineComponent({
       lastname: userGetters.getLastName(user.value),
       email: userGetters.getEmailAddress(user.value)
     });
-    const {
-      send: sendNotification
-    } = useUiNotification();
-
+    const { send: sendNotification } = useUiNotification();
     const form = ref(resetForm());
 
-    const submitForm = (resetValidationFn) => () => {
-      const onComplete = () => {
+    const submitForm = (resetValidationFn) => async () => {
+      const onComplete = async () => {
         form.value = resetForm();
         requirePassword.value = false;
         currentPassword.value = '';
-        sendNotification({
-          id: Symbol('user_updated'),
-          message: 'The user account data was successfully updated!',
-          type: 'success',
-          icon: 'check',
-          persist: false,
-          title: 'User Account'
-        });
+        if (userError.value.updateUser) {
+          sendNotification({
+            id: Symbol('user_updated_error'),
+            message: userError.value.updateUser.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Account'});
+        } else {
+          sendNotification({
+            id: Symbol('user_updated'),
+            message: 'The user account data was successfully updated!',
+            type: 'success',
+            icon: 'check',
+            persist: false,
+            title: 'User Account'
+          });
+        }
         resetValidationFn();
       };
 
@@ -172,20 +142,18 @@ export default defineComponent({
         form.value = resetForm();
         requirePassword.value = false;
         currentPassword.value = '';
+        if (userError.value.updateUser) {
+          sendNotification({
+            id: Symbol('user_updated_error'),
+            message: userError.value.updateUser.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Account'});
+        }
       };
 
-      if (
-        userGetters.getEmailAddress(user.value) !== form.value.email &&
-        !requirePassword.value
-      ) {
-        requirePassword.value = true;
-      } else {
-        if (currentPassword.value) {
-          form.value.password = currentPassword.value;
-        }
-
-        emit('submit', { form, onComplete, onError });
-      }
+      emit('submit', { form, onComplete, onError });
     };
 
     return {
