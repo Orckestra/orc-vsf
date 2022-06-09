@@ -78,7 +78,10 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    const response = await context.$occ.api.changePassword({ currentUser, currentPassword, newPassword });
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    const response = await context.$occ.api.changePassword({ userToken, currentPassword, newPassword });
     if (response?.responseStatus?.errorCode) {
       const error = new Error(response.responseStatus.message);
       error.name = response.responseStatus.errorCode;
