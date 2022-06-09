@@ -1,16 +1,15 @@
 <template>
-  <ValidationObserver v-slot="{ handleSubmit }">
+  <ValidationObserver v-slot="{ handleSubmit, reset }">
     <form
       id="password-reset-form"
       class="form"
-      @submit.prevent="handleSubmit(submitForm)"
+      @submit.prevent="handleSubmit(submitForm(reset))"
     >
       <div class="form__horizontal">
         <ValidationProvider
-          rules="required|password"
+          rules="password"
           v-slot="{ errors }"
           class="form__element"
-          vid="confirmation"
         >
           <SfInput
             type="password"
@@ -29,7 +28,7 @@
           rules="required|password"
           v-slot="{ errors }"
           class="form__element"
-          vid="confirmation"
+          vid="password"
         >
           <SfInput
             type="password"
@@ -43,7 +42,7 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          rules="required|password|confirmed:confirmation"
+          rules="required|password|confirmed:password"
           v-slot="{ errors }"
           class="form__element"
         >
@@ -105,10 +104,16 @@ export default defineComponent({
   setup(props, { emit }) {
     const { error: userError } = useUser();
     const { send: sendNotification } = useUiNotification();
-    const form = ref({});
+    const resetForm = () => ({
+      currentPassword: '',
+      newPassword: '',
+      repeatPassword: ''
+    });
 
-    const submitForm = async () => {
-      const onComplete = async () => {
+    const form = ref(resetForm());
+
+    const submitForm = (resetValidationFn) => {
+      const onComplete = () => {
         if (userError.value.changePassword) {
           sendNotification({
             id: Symbol('user_change_password_error'),
@@ -127,7 +132,8 @@ export default defineComponent({
             title: 'User Account'
           });
         }
-        form.value = {};
+          form.value = resetForm();
+          resetValidationFn();
       };
       const onError = () => {
         if (userError.value.changePassword) {
@@ -139,7 +145,7 @@ export default defineComponent({
             persist: false,
             title: 'User Account'});
         }
-        form.value = {};
+        form.value = resetForm();
       };
 
       emit('submit', { form, onComplete, onError });
