@@ -7,7 +7,14 @@ import {
 const factoryParams: UseForgotPasswordFactoryParams<any> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   resetPassword: async (context: Context, { email, customQuery }) => {
-    return await context.$occ.api.resetPassword({ email });
+    const response = await context.$occ.api.resetPassword({ email });
+    if (response?.responseStatus?.errorCode) {
+      const error = new Error(response.responseStatus.message);
+      error.name = response.responseStatus.errorCode;
+      throw error;
+    } else {
+      return response;
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
