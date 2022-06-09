@@ -8,7 +8,7 @@ import type {
   UserUpdateParams as UpdateParams,
   UserRegisterParams as RegisterParams
 } from '../types';
-import checkResponseForError from '../helpers/responseUtils';
+import { checkResponseForError } from '../helpers/responseUtils';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

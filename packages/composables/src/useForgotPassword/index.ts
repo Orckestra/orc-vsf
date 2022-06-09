@@ -3,18 +3,14 @@ import {
   useForgotPasswordFactory,
   UseForgotPasswordFactoryParams
 } from '@vue-storefront/core';
+import { checkResponseForError } from '../helpers/responseUtils';
 
 const factoryParams: UseForgotPasswordFactoryParams<any> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   resetPassword: async (context: Context, { email, customQuery }) => {
     const response = await context.$occ.api.resetPassword({ email });
-    if (response?.responseStatus?.errorCode) {
-      const error = new Error(response.responseStatus.message);
-      error.name = response.responseStatus.errorCode;
-      throw error;
-    } else {
-      return response;
-    }
+    checkResponseForError(response);
+    return response;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
