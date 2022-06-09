@@ -85,9 +85,6 @@
                 class="form__element"
               />
             </ValidationProvider>
-            <div v-if="forgotPasswordError.request">
-              {{ forgotPasswordError.request.message }}
-            </div>
             <SfButton
               v-e2e="'forgot-modal-submit'"
               type="submit"
@@ -365,7 +362,15 @@ export default {
       userEmail.value = form.value.username;
       await request({ email: userEmail.value });
 
-      if (!forgotPasswordError.value.request) {
+      if (forgotPasswordError.value.request) {
+        sendNotification({
+          id: Symbol('forgot_password_error'),
+          message: forgotPasswordError.value.request.message,
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'User Account'});
+      } else {
         setCurrentScreen(SCREEN_THANK_YOU);
       }
     };
@@ -381,7 +386,6 @@ export default {
       toggleLoginModal,
       handleLogin,
       handleRegister,
-      forgotPasswordError,
       forgotPasswordLoading,
       handleForgotten,
       closeModal,

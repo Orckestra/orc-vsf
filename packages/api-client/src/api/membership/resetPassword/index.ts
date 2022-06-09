@@ -9,6 +9,10 @@ export default async function resetPassword(context, params) {
     username,
     passwordAnswer,
     password
+  }, {
+    validateStatus: (status) => {
+      return status >= 200 && status < 500;
+    }
   });
   return data;
 }
