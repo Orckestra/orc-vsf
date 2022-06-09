@@ -70,11 +70,10 @@
 import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, confirmed } from 'vee-validate/dist/rules';
-import { useUser, userGetters } from '@vue-storefront/orc-vsf';
+import { useUser } from '@vue-storefront/orc-vsf';
 import {
   SfInput,
-  SfButton,
-  SfModal
+  SfButton  
 } from '@storefront-ui/vue';
 import { useUiNotification } from '~/composables';
 
@@ -103,8 +102,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props, { emit }) {
-    
+  setup(props, { emit }) {    
     const { error: userError } = useUser();
     const { send: sendNotification } = useUiNotification();
     const form = ref({});
@@ -131,6 +129,7 @@ export default defineComponent({
         }
         form.value = {};
       }
+      
       const onError = () => {
         if (userError.value.changePassword) {
           sendNotification({
