@@ -132,8 +132,8 @@ export default defineComponent({
             title: 'User Account'
           });
         }
-          form.value = resetForm();
-          resetValidationFn();
+        form.value = resetForm();
+        resetValidationFn();
       };
       const onError = () => {
         if (userError.value.changePassword) {
@@ -146,6 +146,7 @@ export default defineComponent({
             title: 'User Account'});
         }
         form.value = resetForm();
+        resetValidationFn();
       };
 
       emit('submit', { form, onComplete, onError });
