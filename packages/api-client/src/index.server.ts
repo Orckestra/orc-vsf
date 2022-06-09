@@ -22,6 +22,7 @@ import getMembershipConfiguration from './api/membership/getConfiguration';
 import resetPassword from './api/membership/resetPassword';
 import getByTicket from './api/users/getByTicket';
 import updateUser from './api/users/updateUser';
+import changePassword from './api/membership/changePassword';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -60,7 +61,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getMembershipConfiguration,
     resetPassword,
     getByTicket,
-    updateUser
+    updateUser,
+    changePassword
   }
 });
 

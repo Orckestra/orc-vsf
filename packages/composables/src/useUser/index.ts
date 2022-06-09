@@ -8,6 +8,7 @@ import type {
   UserUpdateParams as UpdateParams,
   UserRegisterParams as RegisterParams
 } from '../types';
+import { checkResponseForError } from '../helpers/responseUtils';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,13 +47,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const language: any = app.i18n.locale;
 
     const response = await context.$occ.api.updateUser({...updatedUserData, language, userToken });
-    if (response?.responseStatus?.errorCode) {
-      const error = new Error(response.responseStatus.message);
-      error.name = response.responseStatus.errorCode;
-      throw error;
-    } else {
-      return response;
-    }
+    checkResponseForError(response);
+    return response;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,8 +74,12 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    console.log('Mocked: useUser.changePassword');
-    return null;
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    const response = await context.$occ.api.changePassword({ userToken, currentPassword, newPassword });
+    checkResponseForError(response);
+    return response;
   }
 };
 

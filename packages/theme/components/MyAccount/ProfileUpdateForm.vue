@@ -102,7 +102,6 @@ export default defineComponent({
   emits: ['submit'],
   setup(props, { emit }) {
     const { user, error: userError } = useUser();
-    const currentPassword = ref('');
     const requirePassword = ref(false);
     const resetForm = () => ({
       firstname: userGetters.getFirstName(user.value),
@@ -116,7 +115,6 @@ export default defineComponent({
       const onComplete = async () => {
         form.value = resetForm();
         requirePassword.value = false;
-        currentPassword.value = '';
         if (userError.value.updateUser) {
           sendNotification({
             id: Symbol('user_updated_error'),
@@ -141,7 +139,6 @@ export default defineComponent({
       const onError = () => {
         form.value = resetForm();
         requirePassword.value = false;
-        currentPassword.value = '';
         if (userError.value.updateUser) {
           sendNotification({
             id: Symbol('user_updated_error'),
@@ -158,7 +155,6 @@ export default defineComponent({
 
     return {
       requirePassword,
-      currentPassword,
       form,
       submitForm
     };

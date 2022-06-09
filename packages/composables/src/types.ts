@@ -49,6 +49,15 @@ export type UserRegisterParams = {
 
 export type useUserOrderSearchParams = TODO;
 
+export type ResponseStatus = {
+  errorCode: string;
+  message: string;
+}
+
+export type ResponseData = {
+  responseStatus: ResponseStatus;
+}
+
 /*
 INVENTORY
 */
