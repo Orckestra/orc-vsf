@@ -78,8 +78,14 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    console.log('Mocked: useUser.changePassword');
-    return null;
+    const response = await context.$occ.api.changePassword({ currentUser, currentPassword, newPassword });
+    if (response?.responseStatus?.errorCode) {
+      const error = new Error(response.responseStatus.message);
+      error.name = response.responseStatus.errorCode;
+      throw error;
+    } else if (response.success === true) {
+      return params.load(context);
+    }
   }
 };
 

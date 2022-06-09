@@ -14,6 +14,25 @@
         >
           <SfInput
             type="password"
+            data-cy="password-reset-input_currentPassword"
+            v-model="form.currentPassword"
+            name="currentPassword"
+            label="Current Password"
+            required
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+          />
+        </ValidationProvider>
+      </div>
+      <div class="form__horizontal">
+        <ValidationProvider
+          rules="required|password"
+          v-slot="{ errors }"
+          class="form__element"
+          vid="confirmation"
+        >
+          <SfInput
+            type="password"
             data-cy="password-reset-input_newPassword"
             v-model="form.newPassword"
             name="newPassword"
@@ -23,8 +42,6 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-      </div>
-       <div class="form__horizontal">
         <ValidationProvider
           rules="required|password|confirmed:confirmation"
           v-slot="{ errors }"
@@ -32,10 +49,10 @@
         >
           <SfInput
             type="password"
-            data-cy="password-reset-input_newPasswordConfirmation"
-            v-model="form.newPasswordConfirmation"
-            name="newPasswordConfirmation"
-            label="New Password Confirmation"
+            data-cy="password-reset-input_repeatPassword"
+            v-model="form.repeatPassword"
+            name="repeatPassword"
+            label="Repeat Password"
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
@@ -50,7 +67,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive } from '@nuxtjs/composition-api';
+import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, confirmed } from 'vee-validate/dist/rules';
 import { useUser, userGetters } from '@vue-storefront/orc-vsf';
@@ -65,10 +82,7 @@ extend('required', {
   ...required,
   message: 'This field is required'
 });
-extend('password', {
-  validate: value => String(value).length >= 8 && String(value).match(/[A-Za-z]/gi) && String(value).match(/[0-9]/gi),
-  message: 'Password must have at least 8 characters including one letter and a number'
-});
+
 extend('confirmed', {
   ...confirmed,
   message: 'Passwords don\'t match'
@@ -82,22 +96,55 @@ export default defineComponent({
     ValidationProvider,
     ValidationObserver
   },
-  password: {
-    type: Object,
-    default: () => ({
-      newPassword: '',
-      newPasswordConfirmation: ''
-    })
+  props: {
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
   },
-  setup(password) {
-    const { changePassword } = useUser();
+  setup(props, { emit }) {
     
-const form = reactive({
-      newPassword: password.newPassword,
-      newPasswordConfirmation: password.newPasswordConfirmation
-    });
-    const submitForm = () => {
-      changePassword({current: '', new: form.newPassword });
+    const { error: userError } = useUser();
+    const { send: sendNotification } = useUiNotification();
+    const form = ref({});
+
+    const submitForm = async () => {
+      const onComplete = async () => {
+        if (userError.value.changePassword) {
+          sendNotification({
+            id: Symbol('user_change_password_error'),
+            message: userError.value.changePassword?.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Account'});
+        } else {
+          sendNotification({
+            id: Symbol('user_change_password'),
+            message: 'The user password was successfully updated!',
+            type: 'success',
+            icon: 'check',
+            persist: false,
+            title: 'User Account'
+          });
+        }
+        form.value = {};
+      }
+      const onError = () => {
+        if (userError.value.changePassword) {
+          sendNotification({
+            id: Symbol('user_change_password_error'),
+            message: userError.value.changePassword.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Account'});
+        }
+        form.value = {};
+      };
+
+      emit('submit', { form, onComplete, onError });
     };
     return {
       form,
