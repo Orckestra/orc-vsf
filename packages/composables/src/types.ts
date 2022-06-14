@@ -151,3 +151,29 @@ export interface UseConfigurationGetters<CONFIGURATION, MEMBERSHIPCONFIGURATION>
   getMinRequiredNonAlphanumericCharacters(config: CONFIGURATION): number;
   getMembershipConfiguration(config: CONFIGURATION) : MEMBERSHIPCONFIGURATION;
 }
+
+/*
+COUNTRIES
+*/
+export interface UseCountriesErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface UseCountriesFactoryParams<COUNTRIES> extends FactoryParams {
+  load(context: Context): Promise<COUNTRIES>
+}
+
+export interface UseCountriesInterface<COUNTRIES> {
+  load(): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  countries: ComputedProperty<COUNTRIES>;
+  error: ComputedProperty<UseCountriesErrors>;
+}
+
+export interface UseCountries<COUNTRIES> {
+  (): UseCountriesInterface<COUNTRIES>;
+}
+export interface CountriesGetters<COUNTRIES, REGIONS> {
+  getRegions(countries: COUNTRIES, countryCode: string): REGIONS;
+}

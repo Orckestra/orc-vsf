@@ -254,9 +254,31 @@ export type UserBillingAddressItem = TODO;
 
 export type UserBillingAddressSearchCriteria = TODO;
 
-export type UserShippingAddress = TODO;
+export type UserShippingAddressItem = {
+    addressName: string,
+    city: string,
+    countryCode: string,
+    email: string,
+    firstName: string,
+    id: string,
+    isPreferredBilling: boolean,
+    isPreferredShipping: boolean,
+    lastModified: string,
+    lastModifiedBy: string,
+    lastName: string,
+    latitude: number,
+    line1: string,
+    line2: string,
+    longitude: number,
+    notes: string,
+    phoneExtension: string,
+    phoneNumber: string,
+    postalCode: string,
+    propertyBag: object
+    regionCode: string
+};
 
-export type UserShippingAddressItem = TODO;
+export type UserShippingAddress = UserShippingAddressItem[];
 
 export type UserShippingAddressSearchCriteria = TODO;
 
@@ -368,5 +390,22 @@ export type MembershipConfiguration = {
 
 export type Configuration = {
     membership: MembershipConfiguration
+}
+
+export type RegionItem = {
+    name: string
+    sortOrder: number,
+    isoCode: string,
+    isSupported: boolean,
+    id: string,
+}
+
+export type CountryItem = {
+    name: string,
+    sortOrder: number,
+    isoCode: string,
+    regions: RegionItem[]
+    isSupported: boolean,
+    id: string,
 }
 

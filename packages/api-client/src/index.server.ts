@@ -23,6 +23,8 @@ import resetPassword from './api/membership/resetPassword';
 import getByTicket from './api/users/getByTicket';
 import updateUser from './api/users/updateUser';
 import changePassword from './api/membership/changePassword';
+import getUserAddresses from './api/users/getUserAddresses';
+import getCountries from './api/countries/getCountries';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -62,7 +64,9 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     resetPassword,
     getByTicket,
     updateUser,
-    changePassword
+    changePassword,
+    getUserAddresses,
+    getCountries
   }
 });
 

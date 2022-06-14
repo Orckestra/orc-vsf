@@ -92,15 +92,24 @@
           rules="required|min:2|max:36"
           class="form__element"
         >
-          <SfInput
+          <SfSelect
             v-model="form.state"
             name="state"
             :label="'State/Province'"
+            class=" form__select  sf-select--underlined"
             required
-            disabled
+            :disabled="!form.country"
             :valid="!errors[0]"
             :error-message="errors[0]"
-          />
+          >
+            <SfSelectOption
+              v-for="{isoCode, name} in countriesGetters.getRegions(countries, form.country)"
+              :key="isoCode"
+              :value="isoCode"
+            >
+              {{ name || isoCode }}
+            </SfSelectOption>
+          </SfSelect>
         </ValidationProvider>
       </div>
       <div class="form__horizontal">
@@ -133,11 +142,11 @@
             :error-message="errors[0]"
           >
             <SfSelectOption
-              v-for="{key, label} in countries"
-              :key="key"
-              :value="key"
+              v-for="{isoCode, name} in countries"
+              :key="isoCode"
+              :value="isoCode"
             >
-              {{ label }}
+              {{ name || isoCode }}
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
@@ -164,11 +173,20 @@
         class="form__element form__checkbox"
       />
 
-      <SfButton
-        class="action-button"
+      <div class="form__action-bar">
+        <SfButton
+          class="action-button sf-button"
+          >
+          {{ $t(isNew ? 'Add the address' : 'Update the address') }}
+        </SfButton>
+        <SfButton
+          v-if='!isNew'
+          class="action-button color-secondary cancel-button sf-button"
+          @click="cancelEdit"
         >
-        {{ $t('Add new address') }}
-      </SfButton>
+          {{ $t('Cancel') }}
+        </SfButton>
+      </div>
     </form>
   </ValidationObserver>
 </template>
@@ -178,13 +196,8 @@ import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { SfButton, SfInput, SfModal, SfSelect, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-
-const COUNTRIES = [
-  { key: 'US', label: 'United States' },
-  { key: 'UK', label: 'United Kingdom' },
-  { key: 'IT', label: 'Italy' },
-  { key: 'PL', label: 'Poland' }
-];
+import { useCountries } from '@vue-storefront/orc-vsf/src/useCountries';
+import { countriesGetters } from '@vue-storefront/orc-vsf/src/getters/countriesGetters';
 
 export default {
   name: 'ShippingAddressForm',
@@ -197,8 +210,20 @@ export default {
     ValidationProvider,
     ValidationObserver
   },
-  emits: ['submit'],
+  props: {
+    isNew: {
+      type: Boolean,
+      default: true
+    },
+    address: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  emits: ['submit', 'cancel'],
   setup(props, { emit }) {
+    const { countries } = useCountries();
+
     // const { user, error: userError } = useUser();
   //  const currentPassword = ref('');
     //   const requirePassword = ref(false);
@@ -268,12 +293,16 @@ export default {
       });
     };
 
+    const cancelEdit = () => emit('cancel');
+
     return {
       //   requirePassword,
     //  currentPassword,
-      countries: COUNTRIES,
+      countriesGetters,
+      countries: countries.value,
       form,
-      submitForm
+      submitForm,
+      cancelEdit
     };
   }
 };
@@ -305,6 +334,16 @@ export default {
 
       &:last-child {
         margin-right: 0;
+      }
+    }
+  }
+  &__action-bar {
+    display: flex;
+    flex-direction: row;
+
+    button {
+      &:not(:first-child) {
+        margin-left: var(--spacer-xl);
       }
     }
   }

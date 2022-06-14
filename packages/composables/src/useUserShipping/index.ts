@@ -12,31 +12,40 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
     console.log('Mocked: useUserShipping.addAddress');
-    return {};
+    return [] as Address;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, params) => {
     console.log('Mocked: useUserShipping.deleteAddress');
-    return {};
+    return [] as Address;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAddress: async (context: Context, params) => {
     console.log('Mocked: useUserShipping.updateAddress');
-    return {};
+    return [] as Address;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.load');
-    return {};
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    if (userToken) {
+      const addresses = await context.$occ.api.getUserAddresses({ userToken });
+      return addresses;
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setDefaultAddress: async (context: Context, params) => {
     console.log('Mocked: useUserShipping.setDefaultAddress');
-    return {};
+    return [] as Address;
   }
 };
 

@@ -7,12 +7,12 @@ import type {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAddresses(shipping: Address, criteria?: UserShippingAddressSearchCriteria): AddressItem[] {
-  return [];
+  return shipping as AddressItem[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getDefault(shipping: Address): Address {
-  return {};
+function getDefault(shipping: Address): AddressItem {
+  return shipping.find(a => a.isPreferredShipping);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

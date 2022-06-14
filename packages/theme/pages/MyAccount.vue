@@ -127,7 +127,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 #my-account {
   box-sizing: border-box;
   @include for-desktop {
@@ -149,5 +149,13 @@ export default {
 }
 .breadcrumbs {
   margin: var(--spacer-base) 0 var(--spacer-lg);
+}
+
+.sf-content-pages {
+  &__content,
+  &__sidebar {
+    min-height: calc(-5rem + 100vh);
+    height: auto;
+  }
 }
 </style>
