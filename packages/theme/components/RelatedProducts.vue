@@ -30,9 +30,9 @@ import {
   SfSection,
   SfLoader
 } from '@storefront-ui/vue';
-import { productGetters, useCart } from '@vue-storefront/orc-vsf';
+import { productGetters, useCart, useWishlist, wishlistGetters } from '@vue-storefront/orc-vsf';
 import { addBasePath } from '@vue-storefront/core';
-
+import type { Product } from '@vue-storefront/orc-vsf-api';
 export default {
   name: 'RelatedProducts',
   components: {
@@ -48,17 +48,19 @@ export default {
   },
   setup() {
     const { addItem: addItemToCart, isInCart } = useCart();
-    // const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
-    // const removeProductFromWishlist = (productItem) => {
-    // const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-    // const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
-    // removeItemFromWishlist({ product });
-    // };
+    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
+
+    const removeProductFromWishlist = (productItem) => {
+      const wishListItems = wishlistGetters.getItems(wishlist.value) as Product[];
+      const product = wishListItems.find(wishlistProduct => wishlistProduct.sku === productItem.sku);
+      removeItemFromWishlist({ product });
+    };
+
     return {
       productGetters,
-      // addItemToWishlist,
-      // isInWishlist,
-      // removeProductFromWishlist,
+      addItemToWishlist,
+      isInWishlist,
+      removeProductFromWishlist,
       addItemToCart,
       isInCart,
       addBasePath

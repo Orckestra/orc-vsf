@@ -8,7 +8,7 @@ import type { Wishlist, WishlistItem } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(wishlist: Wishlist): WishlistItem[] {
-  return [];
+  return wishlist as WishlistItem[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
