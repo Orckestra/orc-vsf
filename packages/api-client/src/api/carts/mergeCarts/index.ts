@@ -10,7 +10,7 @@ export default async function mergeCarts(context, params) {
   if (!customerIdFrom || !customerIdTo) return null;
 
   const urlFrom = new URL(`/api/carts/${scope}/${customerIdFrom}/${cartName}`, api.url);
-  const urlTo = new URL(`/api/carts/${scope}/${customerIdFrom}/${cartName}`, api.url
+  const urlTo = new URL(`/api/carts/${scope}/${customerIdTo}/${cartName}`, api.url
   );
 
   const { data: cartFrom } = await context.client.get(urlFrom.href);
