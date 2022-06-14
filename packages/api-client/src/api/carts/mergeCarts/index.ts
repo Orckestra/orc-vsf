@@ -1,4 +1,3 @@
-import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
 import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -17,8 +16,8 @@ export default async function mergeCarts(context, params) {
   const { data: cartFrom } = await context.client.get(urlFrom.href);
   const { data: cartTo } = await context.client.get(urlTo.href);
 
-  if (!cartFrom || !cartTo || !cartFrom.shipments || cartFrom.shipments.length === 0
-    || !cartFrom.shipments[0].lineItems || cartFrom.shipments[0].lineItems.length === 0) {
+  if (!cartFrom || !cartTo || !cartFrom.shipments || cartFrom.shipments.length === 0 ||
+    !cartFrom.shipments[0].lineItems || cartFrom.shipments[0].lineItems.length === 0) {
     return cartTo;
   }
 

@@ -11,11 +11,11 @@ export const getUserToken = (context: Context): string => {
   const app = context.$occ.config.app;
   const appKey = app.$config.appKey;
   return app.$cookies.get(appKey + '_token');
-}
+};
 
 export const setUserToken = (context: Context, userToken: string, opts: any = {}): void => {
   const app = context.$occ.config.app;
   const appKey = app.$config.appKey;
   app.$cookies.set(appKey + '_token', userToken, opts);
-}
+};
 
