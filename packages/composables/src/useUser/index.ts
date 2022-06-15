@@ -76,7 +76,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const userToken = getUserToken(context);
     const response = await context.$occ.api.changePassword({ userToken, currentPassword, newPassword });
     checkResponseForError(response);
-    return response;
+    return params.load(context);
   }
 };
 
