@@ -28,7 +28,7 @@
           rules="required|password"
           v-slot="{ errors }"
           class="form__element"
-          vid="password"
+          vid="confirmation"
         >
           <SfInput
             type="password"
@@ -42,7 +42,7 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          rules="required|password|confirmed:password"
+          rules="required|password|confirmed:confirmation"
           v-slot="{ errors }"
           class="form__element"
         >
@@ -101,6 +101,7 @@ export default defineComponent({
       default: false
     }
   },
+  emits: ['submit'],
   setup(props, { emit }) {
     const { error: userError } = useUser();
     const { send: sendNotification } = useUiNotification();
@@ -112,7 +113,7 @@ export default defineComponent({
 
     const form = ref(resetForm());
 
-    const submitForm = (resetValidationFn) => {
+    const submitForm = (resetValidationFn) => async () => {
       const onComplete = () => {
         if (userError.value.changePassword) {
           sendNotification({
@@ -162,22 +163,14 @@ export default defineComponent({
 .form {
   &__element {
     display: block;
-    margin-bottom: var(--spacer-base);
-  }
-  &__select {
-    display: flex;
-    align-items: center;
-    --select-option-font-size: var(--font-size--lg);
-    ::v-deep .sf-select__dropdown {
-      font-size: var(--font-size--lg);
-      margin: 0;
-      font-family: var(--font-family--secondary);
-      font-weight: var(--font-weight--normal);
-    }
+    margin: 0 0 var(--spacer-lg) 0;
   }
   &__button {
     display: block;
-    margin-top: var(--spacer-lg);
+    width: 100%;
+    @include for-desktop {
+      width: 17.5rem;
+    }
   }
   &__horizontal {
     @include for-desktop {
@@ -188,8 +181,9 @@ export default defineComponent({
     .form__element {
       @include for-desktop {
         flex: 1;
-        margin-right: var(--spacer-lg);
+        margin-right: var(--spacer-2xl);
       }
+
       &:last-child {
         margin-right: 0;
       }
