@@ -11,19 +11,58 @@ import type {
 const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.addAddress');
+    const {shipping, address} = params;
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    if (userToken) {
+      const addedAddress = await context.$occ.api.addUserAddress({ userToken, address });
+      return [...shipping, addedAddress];
+    }
     return [] as Address;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.deleteAddress');
+    const {shipping, address} = params;
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    if (userToken) {
+      const data = await context.$occ.api.deleteUserAddress({ userToken, addressId: address.id });
+      const addresses = [...shipping];
+      if (data !== null) {
+        addresses.splice(shipping.findIndex(a => a.id === address.id), 1);
+      }
+      return addresses;
+    }
     return [] as Address;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.updateAddress');
+    const {shipping, address} = params;
+    const app = context.$occ.config.app;
+    const appKey = app.$config.appKey;
+    const userToken = app.$cookies.get(appKey + '_token');
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    if (userToken) {
+      const updatedAddress = await context.$occ.api.updateUserAddress({ userToken, address, addressId: address.id });
+      const addresses = [...shipping];
+      addresses.splice(shipping.findIndex(a => a.id === updatedAddress.id), 1, updatedAddress);
+      return addresses;
+    }
     return [] as Address;
   },
 

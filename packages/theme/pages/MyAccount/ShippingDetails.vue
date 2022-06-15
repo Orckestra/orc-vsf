@@ -129,7 +129,6 @@ export default {
 
     return {
       changeAddress,
-      updateAddress,
       removeAddress,
       saveAddress,
       cancelEditing,

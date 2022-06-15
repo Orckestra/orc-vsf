@@ -82,7 +82,7 @@ function getTaxNumber(address: AddressItem): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(address: AddressItem): string {
-  return '';
+  return address.id;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

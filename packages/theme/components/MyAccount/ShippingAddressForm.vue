@@ -12,7 +12,7 @@
   <ValidationObserver v-slot="{ handleSubmit, reset }">
     <form
       class="form"
-      @submit.prevent="handleSubmit(submitForm(reset))"
+      @submit.prevent="handleSubmit(submitForm)"
     >
       <div class="form__horizontal">
         <ValidationProvider
@@ -21,7 +21,7 @@
           class="form__element"
         >
           <SfInput
-            v-model="form.firstname"
+            v-model="form.firstName"
             name="firstName"
             :label="'First Name'"
             required
@@ -35,7 +35,7 @@
           class="form__element"
         >
           <SfInput
-            v-model="form.lastname"
+            v-model="form.lastName"
             name="lastName"
             :label="'Last Name'"
             required
@@ -50,8 +50,8 @@
         class="form__element"
       >
         <SfInput
-          v-model="form.streetName"
-          name="streetName"
+          v-model="form.line1"
+          name="line1"
           :label="'Street Name'"
           required
           :valid="!errors[0]"
@@ -64,8 +64,8 @@
         class="form__element"
       >
         <SfInput
-          v-model="form.houseNumber"
-          name="houseNumber"
+          v-model="form.line2"
+          name="line2"
           :label="'House/Apartment number'"
           required
           :valid="!errors[0]"
@@ -93,17 +93,17 @@
           class="form__element"
         >
           <SfSelect
-            v-model="form.state"
-            name="state"
+            v-model="form.regionCode"
+            name="regionCode"
             :label="'State/Province'"
             class=" form__select  sf-select--underlined"
             required
-            :disabled="!form.country"
+            :disabled="!form.countryCode"
             :valid="!errors[0]"
             :error-message="errors[0]"
           >
             <SfSelectOption
-              v-for="{isoCode, name} in countriesGetters.getRegions(countries, form.country)"
+              v-for="{isoCode, name} in countriesGetters.getRegions(countries, form.countryCode)"
               :key="isoCode"
               :value="isoCode"
             >
@@ -119,8 +119,8 @@
           class="form__element"
         >
           <SfInput
-            v-model="form.zipCode"
-            name="zipCode"
+            v-model="form.postalCode"
+            name="postalCode"
             :label="'Zip-code'"
             required
             :valid="!errors[0]"
@@ -133,8 +133,8 @@
           class="form__element"
         >
           <SfSelect
-            v-model="form.country"
-            name="country"
+            v-model="form.countryCode"
+            name="countryCode"
             :label="'Country'"
             class=" form__select  sf-select--underlined"
             required
@@ -167,8 +167,8 @@
       </ValidationProvider>
 
       <SfCheckbox
-        v-model="form.default"
-        name="default"
+        v-model="form.isPreferredShipping"
+        name="isPreferredShipping"
         label="Set as default"
         class="form__element form__checkbox"
       />
@@ -194,10 +194,11 @@
 <script>
 import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
-import { SfButton, SfInput, SfModal, SfSelect, SfCheckbox } from '@storefront-ui/vue';
+import { SfButton, SfInput, SfSelect, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { useCountries } from '@vue-storefront/orc-vsf/src/useCountries';
 import { countriesGetters } from '@vue-storefront/orc-vsf/src/getters/countriesGetters';
+import { useUserShipping } from '@vue-storefront/orc-vsf';
 
 export default {
   name: 'ShippingAddressForm',
@@ -206,7 +207,6 @@ export default {
     SfButton,
     SfSelect,
     SfCheckbox,
-    // SfModal,
     ValidationProvider,
     ValidationObserver
   },
@@ -223,81 +223,90 @@ export default {
   emits: ['submit', 'cancel'],
   setup(props, { emit }) {
     const { countries } = useCountries();
+    const { error: userAddressError } = useUserShipping();
 
-    // const { user, error: userError } = useUser();
-  //  const currentPassword = ref('');
-    //   const requirePassword = ref(false);
-    //    const resetForm = () => ({
-    //      firstname: userGetters.getFirstName(user.value),
-    //      lastname: userGetters.getLastName(user.value),
-    //      email: userGetters.getEmailAddress(user.value)
-    //    });
     const { send: sendNotification } = useUiNotification();
     const form = ref({
-      firstname: '',
-      lastname: '',
-      streetName: '',
-      houseNumber: '',
+      firstName: '',
+      lastName: '',
+      line1: '',
+      line2: '',
       city: '',
-      state: '',
-      zipCode: '',
-      country: '',
+      regionCode: '',
+      postalCode: '',
+      countryCode: '',
       phoneNumber: '',
-      default: false
+      isPreferredShipping: false
     });
 
-    const submitForm = (resetValidationFn) => async () => {
-      // const onComplete = async () => {
-      //   form.value = resetForm();
-      //   requirePassword.value = false;
-      //   currentPassword.value = '';
-      //   if (userError.value.updateUser) {
-      //     sendNotification({
-      //       id: Symbol('user_updated_error'),
-      //       message: userError.value.updateUser.message,
-      //       type: 'danger',
-      //       icon: 'error',
-      //       persist: false,
-      //       title: 'User Account'});
-      //   } else {
-      //     sendNotification({
-      //       id: Symbol('user_updated'),
-      //       message: 'The user account data was successfully updated!',
-      //       type: 'success',
-      //       icon: 'check',
-      //       persist: false,
-      //       title: 'User Account'
-      //     });
-      //   }
-      //   resetValidationFn();
-      // };
-      //
-      // const onError = () => {
-      //   form.value = resetForm();
-      //   requirePassword.value = false;
-      //   currentPassword.value = '';
-      //   if (userError.value.updateUser) {
-      //     sendNotification({
-      //       id: Symbol('user_updated_error'),
-      //       message: userError.value.updateUser.message,
-      //       type: 'danger',
-      //       icon: 'error',
-      //       persist: false,
-      //       title: 'User Account'});
-      //   }
-      // };
+    if (!props.isNew) {
+      form.value = { ...props.address };
+    }
+
+    const submitForm = async () => {
+      const onComplete = async () => {
+        if (props.isNew) {
+          if (userAddressError.value.addAddress) {
+            sendNotification({
+              id: Symbol('user_updated_error'),
+              message: userAddressError.value.addAddress.message,
+              type: 'danger',
+              icon: 'error',
+              persist: false,
+              title: 'User Address'
+            });
+          } else {
+            sendNotification({
+              id: Symbol('user_updated'),
+              message: 'The user address was successfully added!',
+              type: 'success',
+              icon: 'check',
+              persist: false,
+              title: 'User Address'
+            });
+          }
+        } else if (userAddressError.value.updateAddress) {
+          sendNotification({
+            id: Symbol('user_updated_error'),
+            message: userAddressError.value.updateAddress.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Address'
+          });
+        } else {
+          sendNotification({
+            id: Symbol('user_updated'),
+            message: 'The user address was successfully updated!',
+            type: 'success',
+            icon: 'check',
+            persist: false,
+            title: 'User Address'
+          });
+        }
+      };
+
+      const onError = (error) => {
+        sendNotification({
+          id: Symbol('user_updated_error'),
+          message: error.message,
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'User Address'
+        });
+      };
 
       emit('submit', {
-        form
-        // onComplete, onError
+        form: form.value,
+        onComplete,
+        onError
       });
     };
 
     const cancelEdit = () => emit('cancel');
 
     return {
-      //   requirePassword,
-    //  currentPassword,
       countriesGetters,
       countries: countries.value,
       form,
