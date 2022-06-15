@@ -39,6 +39,7 @@
               icon="heart"
               size="1.25rem"
             />
+            <SfBadge v-if="wishListTotalItems" class="sf-badge--number cart-badge">{{wishListTotalItems}}</SfBadge>
           </SfButton>
           <SfButton
             class="sf-button--pure sf-header__action"
@@ -106,7 +107,7 @@
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch } from '@vue-storefront/orc-vsf';
+import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch, wishlistGetters } from '@vue-storefront/orc-vsf';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
@@ -136,6 +137,7 @@ export default {
   setup(props, { root }) {
     const router = useRouter();
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
+    const { wishlist } = useWishlist();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
     const term = ref(null);
@@ -147,6 +149,11 @@ export default {
     const { categories } = useCategory('categories');
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
+      return count ? count.toString() : null;
+    });
+
+    const wishListTotalItems = computed(() => {
+      const count = wishlistGetters.getTotalItems(wishlist.value);
       return count ? count.toString() : null;
     });
 
@@ -222,6 +229,7 @@ export default {
     return {
       accountIcon,
       cartTotalItems,
+      wishListTotalItems,
       handleAccountClick,
       toggleCartSidebar,
       toggleWishlistSidebar,

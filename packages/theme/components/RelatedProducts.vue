@@ -13,9 +13,11 @@
             :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
             :show-add-to-cart-button="true"
             :is-added-to-cart="isInCart({ product })"
+            :is-in-wishlist="isInWishlist({ product })"
             :link="localePath(productGetters.getLink(product))"
             class="product-card"
             @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
+            @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
           />
         </SfCarouselItem>
       </SfCarousel>
