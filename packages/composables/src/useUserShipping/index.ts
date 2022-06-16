@@ -19,6 +19,9 @@ const params: UseUserShippingFactoryParams<AddressItem[], AddressItem> = {
 
     if (userToken) {
       const addedAddress = await context.$occ.api.addUserAddress({ userToken, address });
+      if (addedAddress.isPreferredShipping) {
+        return [...shipping.map(a => ({ ...a, isPreferredShipping: false })), addedAddress];
+      }
       return [...shipping, addedAddress];
     }
     return [];
@@ -53,7 +56,7 @@ const params: UseUserShippingFactoryParams<AddressItem[], AddressItem> = {
 
     if (userToken) {
       const updatedAddress = await context.$occ.api.updateUserAddress({ userToken, address, addressId: address.id });
-      const addresses = [...shipping];
+      const addresses = updatedAddress.isPreferredShipping ? shipping.map(a => ({ ...a, isPreferredShipping: false })) : [...shipping];
       addresses.splice(shipping.findIndex(a => a.id === updatedAddress.id), 1, updatedAddress);
       return addresses;
     }
