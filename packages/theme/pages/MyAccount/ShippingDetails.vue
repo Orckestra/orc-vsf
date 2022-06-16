@@ -79,10 +79,9 @@ import {
 } from '@storefront-ui/vue';
 import UserShippingAddress from '~/components/UserShippingAddress';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
-import { useUserShipping, userShippingGetters } from '@vue-storefront/orc-vsf';
+import { useUserShipping, userShippingGetters, useCountries } from '@vue-storefront/orc-vsf';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useCountries } from '@vue-storefront/orc-vsf/src/useCountries';
 
 export default {
   name: 'ShippingDetails',

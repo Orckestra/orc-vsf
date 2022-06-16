@@ -254,7 +254,7 @@ export type UserBillingAddressItem = TODO;
 
 export type UserBillingAddressSearchCriteria = TODO;
 
-export type UserShippingAddressItem = {
+export type UserAddress = {
     addressName: string,
     city: string,
     countryCode: string,
@@ -277,8 +277,6 @@ export type UserShippingAddressItem = {
     propertyBag: object
     regionCode: string
 };
-
-export type UserShippingAddress = UserShippingAddressItem[];
 
 export type UserShippingAddressSearchCriteria = TODO;
 
@@ -407,5 +405,7 @@ export type CountryItem = {
     regions: RegionItem[]
     isSupported: boolean,
     id: string,
+    phoneRegex: string,
+    postalCodeRegex: string
 }
 

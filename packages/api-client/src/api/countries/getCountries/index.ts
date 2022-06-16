@@ -3,9 +3,9 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getCountries(context, params) {
   const { api } = context.config;
-  const { locale } = params;
+  const { locale, IncludeRegions = false } = params;
   const url = new URL(
-    `api/countries?CultureName=${locale}&IncludeRegions=true`,
+    `api/countries?CultureName=${locale}&IncludeRegions=${IncludeRegions}`,
     api.url
   );
 

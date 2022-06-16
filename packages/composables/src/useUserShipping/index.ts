@@ -4,17 +4,15 @@ import {
   UseUserShippingFactoryParams
 } from '@vue-storefront/core';
 import type {
-  UserShippingAddress as Address,
-  UserShippingAddressItem as AddressItem
+  UserAddress as AddressItem
 } from '@vue-storefront/orc-vsf-api';
+import { getUserToken } from '../helpers/generalUtils';
 
-const params: UseUserShippingFactoryParams<Address, AddressItem> = {
+const params: UseUserShippingFactoryParams<AddressItem[], AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
     const {shipping, address} = params;
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
     }
@@ -23,15 +21,13 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       const addedAddress = await context.$occ.api.addUserAddress({ userToken, address });
       return [...shipping, addedAddress];
     }
-    return [] as Address;
+    return [];
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, params) => {
     const {shipping, address} = params;
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
     }
@@ -44,15 +40,13 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       }
       return addresses;
     }
-    return [] as Address;
+    return [];
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAddress: async (context: Context, params) => {
     const {shipping, address} = params;
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
     }
@@ -63,29 +57,26 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       addresses.splice(shipping.findIndex(a => a.id === updatedAddress.id), 1, updatedAddress);
       return addresses;
     }
-    return [] as Address;
+    return [];
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, params) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
     }
 
     if (userToken) {
-      const addresses = await context.$occ.api.getUserAddresses({ userToken });
-      return addresses;
+      return context.$occ.api.getUserAddresses({ userToken });
     }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setDefaultAddress: async (context: Context, params) => {
     console.log('Mocked: useUserShipping.setDefaultAddress');
-    return [] as Address;
+    return [];
   }
 };
 
-export const useUserShipping = useUserShippingFactory<Address, AddressItem>(params);
+export const useUserShipping = useUserShippingFactory<AddressItem[], AddressItem>(params);

@@ -4,6 +4,20 @@
       class="form"
       @submit.prevent="handleSubmit(submitForm)"
     >
+      <ValidationProvider
+        v-slot="{ errors }"
+        rules="required|min:2|max:36"
+        class="form__element"
+      >
+        <SfInput
+          v-model="form.addressName"
+          name="addressName"
+          :label="'Address Name'"
+          required
+          :valid="!errors[0]"
+          :error-message="errors[0]"
+        />
+      </ValidationProvider>
       <div class="form__horizontal">
         <ValidationProvider
           v-slot="{ errors }"
@@ -65,60 +79,6 @@
       <div class="form__horizontal">
         <ValidationProvider
           v-slot="{ errors }"
-          rules="required|min:2|max:36"
-          class="form__element"
-        >
-          <SfInput
-            v-model="form.city"
-            name="city"
-            :label="'City'"
-            required
-            :valid="!errors[0]"
-            :error-message="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required|min:2|max:36"
-          class="form__element"
-        >
-          <SfSelect
-            v-model="form.regionCode"
-            name="regionCode"
-            :label="'State/Province'"
-            class=" form__select  sf-select--underlined"
-            required
-            :disabled="!form.countryCode"
-            :valid="!errors[0]"
-            :error-message="errors[0]"
-          >
-            <SfSelectOption
-              v-for="{isoCode, name} in countriesGetters.getRegions(countries, form.countryCode)"
-              :key="isoCode"
-              :value="isoCode"
-            >
-              {{ name || isoCode }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-      </div>
-      <div class="form__horizontal">
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required|min:4|max:8"
-          class="form__element"
-        >
-          <SfInput
-            v-model="form.postalCode"
-            name="postalCode"
-            :label="'Zip-code'"
-            required
-            :valid="!errors[0]"
-            :error-message="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          v-slot="{ errors }"
           rules="required"
           class="form__element"
         >
@@ -139,6 +99,60 @@
               {{ name || isoCode }}
             </SfSelectOption>
           </SfSelect>
+        </ValidationProvider>
+        <ValidationProvider
+          v-slot="{ errors }"
+          rules="required|min:2|max:36"
+          class="form__element"
+        >
+          <SfSelect
+            v-model="form.regionCode"
+            name="regionCode"
+            :label="'State/Province'"
+            class=" form__select  sf-select--underlined"
+            required
+            :disabled="!form.countryCode"
+            :valid="!errors[0]"
+            :error-message="errors[0]"
+          >
+            <SfSelectOption
+              v-for="{isoCode, name} in getRegions(form.countryCode)"
+              :key="isoCode"
+              :value="isoCode"
+            >
+              {{ name || isoCode }}
+            </SfSelectOption>
+          </SfSelect>
+        </ValidationProvider>
+      </div>
+      <div class="form__horizontal">
+        <ValidationProvider
+          v-slot="{ errors }"
+          rules="required|min:2|max:36"
+          class="form__element"
+        >
+          <SfInput
+            v-model="form.city"
+            name="city"
+            :label="'City'"
+            required
+            :valid="!errors[0]"
+            :error-message="errors[0]"
+          />
+        </ValidationProvider>
+        <ValidationProvider
+          v-slot="{ errors }"
+          rules="required|min:4|max:8"
+          class="form__element"
+        >
+          <SfInput
+            v-model="form.postalCode"
+            name="postalCode"
+            :label="'Zip-code'"
+            required
+            :valid="!errors[0]"
+            :error-message="errors[0]"
+          />
         </ValidationProvider>
       </div>
       <ValidationProvider
@@ -166,11 +180,11 @@
       <div class="form__action-bar">
         <SfButton
           class="action-button sf-button"
+          :disabled="loading"
           >
           {{ $t(isNew ? 'Add the address' : 'Update the address') }}
         </SfButton>
         <SfButton
-          v-if='!isNew'
           class="action-button color-secondary cancel-button sf-button"
           @click="cancelEdit"
         >
@@ -186,9 +200,7 @@ import { ref } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { SfButton, SfInput, SfSelect, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import { useCountries } from '@vue-storefront/orc-vsf/src/useCountries';
-import { countriesGetters } from '@vue-storefront/orc-vsf/src/getters/countriesGetters';
-import { useUserShipping } from '@vue-storefront/orc-vsf';
+import { useUserShipping, countriesGetters, useCountries } from '@vue-storefront/orc-vsf';
 
 export default {
   name: 'ShippingAddressForm',
@@ -213,10 +225,11 @@ export default {
   emits: ['submit', 'cancel'],
   setup(props, { emit }) {
     const { countries } = useCountries();
-    const { error: userAddressError } = useUserShipping();
+    const { error: userAddressError, loading } = useUserShipping();
 
     const { send: sendNotification } = useUiNotification();
     const form = ref({
+      addressName: '',
       firstName: '',
       lastName: '',
       line1: '',
@@ -228,6 +241,8 @@ export default {
       phoneNumber: '',
       isPreferredShipping: false
     });
+
+    const getRegions = (country) => countriesGetters.getRegions(countries.value, country);
 
     if (!props.isNew) {
       form.value = { ...props.address };
@@ -297,8 +312,9 @@ export default {
     const cancelEdit = () => emit('cancel');
 
     return {
-      countriesGetters,
-      countries: countries.value,
+      getRegions,
+      countries,
+      loading,
       form,
       submitForm,
       cancelEdit

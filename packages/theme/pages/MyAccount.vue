@@ -136,6 +136,7 @@ export default {
   }
 }
 .my-account {
+  height: auto;
   @include for-mobile {
     --content-pages-sidebar-category-title-font-weight: var(
       --font-weight--normal
