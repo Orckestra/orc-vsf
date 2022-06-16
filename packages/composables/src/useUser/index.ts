@@ -9,13 +9,12 @@ import type {
   UserRegisterParams as RegisterParams
 } from '../types';
 import { checkResponseForError } from '../helpers/responseUtils';
+import { getUserToken, setUserToken } from '../helpers/generalUtils';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
     }
@@ -29,24 +28,21 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logOut: async (context: Context) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
     const guestUserToken = await context.$occ.api.initializeGuestToken();
-    app.$cookies.set(appKey + '_token', guestUserToken);
+    setUserToken(context, guestUserToken);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
     if (!updatedUserData) return;
     const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
     }
     const language: any = app.i18n.locale;
 
-    const response = await context.$occ.api.updateUser({...updatedUserData, language, userToken });
+    const response = await context.$occ.api.updateUser({ ...updatedUserData, language, userToken });
     checkResponseForError(response);
     return response;
   },
@@ -56,16 +52,19 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const app: any = context.$occ.config.app;
     const language: any = app.i18n.locale;
     await context.$occ.api.registerUser({ email, password, firstName, lastName, language });
-    return params.logIn(context, {username: email, password});
+    return params.logIn(context, { username: email, password });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
+    const currentUserToken = getUserToken(context);
     const { userToken } = await context.$occ.api.login({ username, password });
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
     if (userToken) {
-      app.$cookies.set(appKey + '_token', userToken);
+      setUserToken(context, userToken);
+      // merge existing guest cart with customer cart
+      if (currentUserToken) {
+        await context.$occ.api.mergeCarts({ userTokenFrom: currentUserToken, userTokenTo: userToken });
+      }
       return params.load(context);
     } else {
       throw new Error('Customer sign-in error');
@@ -74,12 +73,10 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     const response = await context.$occ.api.changePassword({ userToken, currentPassword, newPassword });
     checkResponseForError(response);
-    return response;
+    return params.load(context);
   }
 };
 

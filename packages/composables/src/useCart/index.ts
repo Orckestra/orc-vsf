@@ -10,21 +10,20 @@ import type {
   Product
 } from '@vue-storefront/orc-vsf-api';
 import { getVariantId } from '../helpers/productUtils';
-import { isGuidEmpty } from '../helpers/generalUtils';
+import { isGuidEmpty, getUserToken, setUserToken } from '../helpers/generalUtils';
 
 const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
     const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
     const locale: any = app.i18n.locale;
     Logger.debug('[OCC Storefront]: Loading Cart');
-    let userToken = app.$cookies.get(appKey + '_token');
+    let userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       // Initiate Guest
       Logger.debug('[OCC Storefront]: Initialize Guest User to be used for Cart');
       userToken = await context.$occ.api.initializeGuestToken();
-      app.$cookies.set(appKey + '_token', userToken);
+      setUserToken(context, userToken);
     }
 
     if (userToken) {
@@ -67,26 +66,20 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     const variantId = getVariantId(product);
     return await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     return await context.$occ.api.removeCartItem({ ...params, userToken, id: product.id });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     return await context.$occ.api.updateCartItem({ ...params, userToken, id: product.id, quantity });
   },
 
