@@ -1,14 +1,4 @@
 <template>
-<!--  <SfShipping
-    :shippingMethods='[{"isOpen":false,"price":"Free","delivery":"Delivery from 3 to 7 business days","label":"Pickup in the store","value":"store","description":"Novelty! From now on you have the option of picking up an order in the selected InPack parceled. Just remember that in the case of orders paid on delivery, only the card payment will be accepted."},{"isOpen":false,"price":"$9.90","delivery":"Delivery from 4 to 6 business days","label":"Delivery to home","value":"home","description":"Novelty! From now on you have the option of picking up an order in the selected InPack parceled. Just remember that in the case of orders paid on delivery, only the card payment will be accepted."},{"isOpen":false,"price":"$9.90","delivery":"Delivery from 4 to 6 business days","label":"Paczkomaty InPost","value":"inpost","description":"Novelty! From now on you have the option of picking up an order in the selected InPack parceled. Just remember that in the case of orders paid on delivery, only the card payment will be accepted."},{"isOpen":false,"price":"$11.00","delivery":"Delivery within 48 hours","label":"48 hours coffee","value":"coffee","description":"Novelty! From now on you have the option of picking up an order in the selected InPack parceled. Just remember that in the case of orders paid on delivery, only the card payment will be accepted."},{"isOpen":false,"price":"$14.00","delivery":"Delivery within 24 hours","label":"Urgent 24h","value":"urgent","description":"Novelty! From now on you have the option of picking up an order in the selected InPack parceled. Just remember that in the case of orders paid on delivery, only the card payment will be accepted."}]'
-    headingTitle="Shipping"
-    :headingTitleLevel="2"
-    :inputsLabels='["First name","Last name","Street name","City","State/Province","Zip-code","Phone number"]'
-    selectLabel="Country"
-    :countries='["Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Georgia","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Luxembourg","Macedonia","Malta","Moldova","Monaco","Montenegro","The Netherlands","Norway","Poland","Portugal","Romania","Russia","San Marino","Serbia","Slovakia","Slovenia","Spain","Sweden","Switzerland","Turkey","Ukraine","United Kingdom","Vatican City"]'
-    methodsHeadingTitle="Shipping method"
-    :methodsHeadingTitleLevel="2"
-  />-->
   <ValidationObserver v-slot="{ handleSubmit, reset }">
     <form
       class="form"
@@ -192,7 +182,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from '@nuxtjs/composition-api';
+import { ref } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { SfButton, SfInput, SfSelect, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
