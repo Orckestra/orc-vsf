@@ -4,7 +4,7 @@ import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getCartLineItems(context, params) {
 
-  const { api, scope, myAccount } = context.config;
+  const { api, scope, myAccount, cdnDamProviderConfig } = context.config;
   const { userToken, cartName = 'Default' } = params;
   const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
   if (!customerId) return null;
@@ -15,5 +15,6 @@ export default async function getCartLineItems(context, params) {
   );
 
   const { data } = await context.client.get(url.href);
+  setCartItemsCoverImages(data, cdnDamProviderConfig);
   return data;
 }

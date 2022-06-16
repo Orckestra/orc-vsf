@@ -34,7 +34,7 @@ import {
 } from '@storefront-ui/vue';
 import { productGetters, useCart, useWishlist, wishlistGetters } from '@vue-storefront/orc-vsf';
 import { addBasePath } from '@vue-storefront/core';
-import type { Product } from '@vue-storefront/orc-vsf-api';
+import type { WishlistItem } from '@vue-storefront/orc-vsf-api';
 export default {
   name: 'RelatedProducts',
   components: {
@@ -53,7 +53,7 @@ export default {
     const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
 
     const removeProductFromWishlist = (productItem) => {
-      const wishListItems = wishlistGetters.getItems(wishlist.value) as Product[];
+      const wishListItems = wishlistGetters.getItems(wishlist.value) as WishlistItem[];
       const product = wishListItems.find(wishlistProduct => wishlistProduct.sku === productItem.sku);
       removeItemFromWishlist({ product });
     };

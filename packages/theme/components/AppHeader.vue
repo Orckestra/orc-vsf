@@ -107,7 +107,7 @@
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch, wishlistGetters } from '@vue-storefront/orc-vsf';
+import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch, wishlistGetters, useWishlist } from '@vue-storefront/orc-vsf';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';

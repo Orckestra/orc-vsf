@@ -5,35 +5,33 @@ import {
   AgnosticTotals
 } from '@vue-storefront/core';
 import type { Wishlist, WishlistItem } from '@vue-storefront/orc-vsf-api';
+import { getTotalPrices } from '../helpers/wishlistUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(wishlist: Wishlist): WishlistItem[] {
-  return wishlist as WishlistItem[];
+  return wishlist?.items;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(wishlist: Wishlist): AgnosticTotals {
-  return {
-    total: 10,
-    subtotal: 10
-  };
+  return getTotalPrices(wishlist?.items);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemName(item: WishlistItem): string {
-  return '';
+  return item?.productSummary.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemImage(item: WishlistItem): string {
-  return '';
+  return item.coverImage;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemPrice(item: WishlistItem): AgnosticPrice {
   return {
-    regular: 12,
-    special: 10
+    regular: item.regularPrice,
+    special: item.currentPrice < item.regularPrice ? item.currentPrice : undefined
   };
 }
 
@@ -44,14 +42,18 @@ function getItemQty(item: WishlistItem): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(item: WishlistItem, filters?: string[]): Record<string, AgnosticAttribute | string> {
+  if (!item.kvaDisplayValues) return null;
+
   return {
-    color: 'red'
+    color: item.kvaDisplayValues.Colour ?? undefined,
+    size: item.kvaDisplayValues.RetailSize ?? undefined
+
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemSku(item: WishlistItem): string {
-  return '';
+  return item.sku;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -61,8 +63,7 @@ function getShippingPrice(wishlist: Wishlist): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(wishlist: Wishlist): number {
-  const wishlistItems = wishlist as WishlistItem[];
-  return wishlistItems.length;
+  return wishlist?.items?.length;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
