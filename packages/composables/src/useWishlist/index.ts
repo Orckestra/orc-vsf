@@ -4,37 +4,47 @@ import {
   useWishlistFactory,
   UseWishlistFactoryParams
 } from '@vue-storefront/core';
-import type { Wishlist, WishlistItem, Product } from '@vue-storefront/orc-vsf-api';
+import { Wishlist, WishlistItem, Product } from '@vue-storefront/orc-vsf-api';
+import { getUserToken } from '../helpers/generalUtils';
+import { getVariantId } from '../helpers/productUtils';
 
 const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    console.log('Mocked: useWishlist.load');
-    return {};
+    const userToken = getUserToken(context);
+    return { items: await context.$occ.api.getCartLineItems({cartName: 'Wishlist', userToken}) };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentWishlist, product }) => {
-    console.log('Mocked: useWishlist.addItem');
-    return {};
+    const userToken = getUserToken(context);
+    const variantId = getVariantId(product);
+    const createdCartItemResult = await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity: 1, cartName: 'Wishlist' });
+    const wishListItems = createdCartItemResult.shipments.flatMap(item => item.lineItems);
+    return { items: wishListItems };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentWishlist, product }) => {
-    console.log('Mocked: useWishlist.removeItem');
-    return {};
+    const userToken = getUserToken(context);
+    const prod = product as WishlistItem;
+    const prodLineItemId = currentWishlist.items.find(item => item.sku === prod.sku).id;
+    const removedLineItemResult = await context.$occ.api.removeCartItem({ ...params, userToken, id: prodLineItemId, cartName: 'Wishlist' });
+    const wishListItems = removedLineItemResult.shipments.flatMap(item => item.lineItems);
+    return { items: wishListItems };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentWishlist }) => {
-    console.log('Mocked: useWishlist.clear');
-    return {};
+    const userToken = getUserToken(context);
+    await context.$occ.api.clearCart({ userToken, cartName: 'Wishlist' });
+    return { items: null };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInWishlist: (context: Context, { currentWishlist, product }) => {
-    console.log('Mocked: useWishlist.isInWishlist');
-    return false;
+    const wishListItems = currentWishlist?.items;
+    return wishListItems?.some(item => item.sku === product.sku);
   }
 };
 

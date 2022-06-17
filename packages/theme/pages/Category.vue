@@ -151,12 +151,16 @@
               </template>
               <template #actions>
                 <SfButton
-                  class="sf-button--text desktop-only"
-                  style="margin: 0 0 1rem auto; display: block;"
-                  @click="() => {}"
+                  class="sf-button--pure sf-header__action"
+                  aria-label="Toggle wishlist sidebar"
+                  @click="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
                 >
-                  {{ $t('Save for later') }}
-                </SfButton>
+                  <SfIcon
+                    class="sf-header__icon"
+                    :icon="isInWishlist({ product }) ? 'heart_fill' : 'heart' "
+                    size="1.25rem"
+                  />
+               </SfButton>
               </template>
             </SfProductCardHorizontal>
           </transition-group>
@@ -255,8 +259,8 @@ export default {
     });
 
     const removeProductFromWishlist = (productItem) => {
-      const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+      const wishListItems = wishlistGetters.getItems(wishlist.value);
+      const product = wishListItems.find(wishlistProduct => wishlistProduct.sku === productItem.sku);
       removeItemFromWishlist({ product });
     };
 

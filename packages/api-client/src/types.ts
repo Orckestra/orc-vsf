@@ -268,9 +268,40 @@ export type ShippingProvider = TODO;
 
 export type Store = TODO;
 
-export type Wishlist = TODO;
+export type WishlistItem = {
+    productSummary: any;
+    placedQuantity: number;
+    pricingCalculationSummary: any;
+    listPrice: number;
+    currentPrice: number;
+    defaultListPrice: number;
+    regularPrice: number;
+    defaultPrice: number;
+    shipmentId: string;
+    discountAmount: number;
+    total: number;
+    status: string;
+    sku: string;
+    totalWithoutDiscount: number;
+    rewards: any;
+    additionalFees: any;
+    additionalFeeAmount: number;
+    productDefinitionName: string;
+    kvaValues: any;
+    isGiftItem: false;
+    kvaDisplayValues:any;
+    productId: string;
+    variantId: string;
+    giftWrap: boolean;
+    quantity: number;
+    id: string;
+    propertyBag: any;
+    coverImage?: any;
+};
 
-export type WishlistItem = TODO;
+export type Wishlist = {
+    items: WishlistItem[];
+};
 
 export type LookupValue = {
     id: string,
