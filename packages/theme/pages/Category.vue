@@ -149,7 +149,7 @@
                   style="margin: 0 0 1rem 0;"
                 />
               </template>
-              <template #actions >
+              <template #actions>
                 <SfButton
                   class="sf-button--pure sf-header__action desktop-only"
                   aria-label="Toggle wishlist sidebar"
