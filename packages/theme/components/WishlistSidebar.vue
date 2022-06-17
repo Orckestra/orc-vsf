@@ -14,7 +14,7 @@
             <SfIcon icon="cross" size="14px" color="gray-primary"/>
           </SfButton>
         </div>
-        <SfButton
+        <SfButton  v-if="totalItems"
           class="sf-button--text sf-button"
           @click="clearWishlist()"
           >
