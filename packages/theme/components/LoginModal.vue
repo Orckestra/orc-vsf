@@ -238,8 +238,8 @@ export default {
     const createAccount = ref(false);
     const rememberMe = ref(false);
     const { register, login, loading, error: userError } = useUser();
-    const { load: reloadCart, clear: clearCart } = useCart();
-    const { load: reloadWishlist, clear: clearWishlist } = useWishlist();
+    const { load: reloadCart, setCart } = useCart();
+    const { load: reloadWishlist, setWishlist } = useWishlist();
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
     const currentScreen = ref(SCREEN_REGISTER);
     const { send: sendNotification } = useUiNotification();
@@ -345,9 +345,9 @@ export default {
       await handleForm(register, true)();
       const hasUserErrors = userError.value.register || userError.value.login;
       if (!hasUserErrors) {
-        await clearCart();
-        reloadCart();
-        await clearWishlist();
+        setCart(null);
+        setWishlist(null);
+        await reloadCart();
         await reloadWishlist();
       }
     };
@@ -356,10 +356,9 @@ export default {
       await handleForm(login)();
       const hasUserErrors = userError.value.register || userError.value.login;
       if (!hasUserErrors) {
-        await clearCart();
-        reloadCart();
-
-        await clearWishlist();
+        setCart(null);
+        setWishlist(null);
+        await reloadCart();
         await reloadWishlist();
       }
     };
