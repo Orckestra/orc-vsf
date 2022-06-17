@@ -105,7 +105,6 @@ export default {
     const { wishlist, removeItem } = useWishlist();
     const { isAuthenticated } = useUser();
     const products = computed(() => wishlistGetters.getItems(wishlist.value));
-    const totals = computed(() => wishlistGetters.getTotals(wishlist.value));
     const totalItems = computed(() => wishlistGetters.getTotalItems(wishlist.value));
 
     return {
@@ -115,7 +114,6 @@ export default {
       removeItem,
       isWishlistSidebarOpen,
       toggleWishlistSidebar,
-      totals,
       totalItems,
       wishlistGetters
     };
