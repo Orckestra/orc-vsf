@@ -38,6 +38,12 @@
             <div class="shipping__content">
               <div class="shipping__address">
                 <UserShippingAddress :address="address" />
+                <SfButton
+                  v-if="!address.isPreferredShipping"
+                  class="sf-button--text sf-button"
+                  @click="setDefault(address)">
+                  {{'Set as default'}}
+                </SfButton>
               </div>
             </div>
             <div class="shipping__actions">
@@ -60,12 +66,6 @@
                 {{ $t('Delete') }}
               </SfButton>
 
-              <SfButton
-                class="sf-button--underlined sf-button"
-                @click="setDefault(address)"
-              >
-                {{'as Default'}}
-              </SfButton>
             </div>
           </div>
         </transition-group>
@@ -167,7 +167,7 @@ export default {
   padding: var(--spacer-xs) var(--spacer-xs);
   border-top: 1px solid var(--c-light);
   &.preferred {
-    border: solid 2px var(--c-primary);
+    border: solid 2px var(--c-primary) !important;
   }
 
   &:last-child {
