@@ -34,7 +34,7 @@
           <div
             v-for="address in addresses"
             :key="userShippingGetters.getId(address)"
-            class="shipping">
+            class="shipping" :class="{'preferred': address.isPreferredShipping }">
             <div class="shipping__content">
               <div class="shipping__address">
                 <UserShippingAddress :address="address" />
@@ -154,8 +154,11 @@ export default {
 }
 .shipping {
   display: flex;
-  padding: var(--spacer-xl) 0;
+  padding: var(--spacer-xs) var(--spacer-xs);
   border-top: 1px solid var(--c-light);
+  &.preferred {
+    border: solid 2px var(--c-primary);
+  }
 
   &:last-child {
     border-bottom: 1px solid var(--c-light);
