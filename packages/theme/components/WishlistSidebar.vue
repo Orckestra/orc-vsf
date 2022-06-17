@@ -14,6 +14,12 @@
             <SfIcon icon="cross" size="14px" color="gray-primary"/>
           </SfButton>
         </div>
+        <SfButton
+          class="sf-button--text sf-button"
+          @click="clearWishlist()"
+          >
+          {{ $t('Clear wishlist') }}
+        </SfButton>
       </template>
       <transition name="fade" mode="out-in">
         <div v-if="totalItems" class="my-wishlist" key="my-wishlist">
@@ -100,7 +106,7 @@ export default {
   },
   setup() {
     const { isWishlistSidebarOpen, toggleWishlistSidebar } = useUiState();
-    const { wishlist, removeItem } = useWishlist();
+    const { wishlist, removeItem, clear: clearWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
     const products = computed(() => wishlistGetters.getItems(wishlist.value));
     const totalItems = computed(() => wishlistGetters.getTotalItems(wishlist.value));
@@ -113,7 +119,8 @@ export default {
       isWishlistSidebarOpen,
       toggleWishlistSidebar,
       totalItems,
-      wishlistGetters
+      wishlistGetters,
+      clearWishlist
     };
   }
 };

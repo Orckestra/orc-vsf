@@ -36,7 +36,9 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentWishlist }) => {
-    return { items: [] };
+    const userToken = getUserToken(context);
+    await context.$occ.api.clearCartItems({ userToken, cartName: 'Wishlist' });
+    return { items: null };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

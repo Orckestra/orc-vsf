@@ -25,6 +25,7 @@ import getByTicket from './api/users/getByTicket';
 import updateUser from './api/users/updateUser';
 import getCartLineItems from './api/carts/getCartLineItems';
 import changePassword from './api/membership/changePassword';
+import clearCartItems from './api/carts/clearCartItems';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -66,7 +67,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getByTicket,
     updateUser,
     getCartLineItems,
-    changePassword
+    changePassword,
+    clearCartItems
   }
 });
 
