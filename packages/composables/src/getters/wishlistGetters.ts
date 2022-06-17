@@ -42,8 +42,7 @@ function getItemQty(item: WishlistItem): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(item: WishlistItem, filters?: string[]): Record<string, AgnosticAttribute | string> {
-  if (!item.kvaDisplayValues) return null;
-  
+  if (!item.kvaDisplayValues) return null;  
   const result = {
     ...item?.kvaDisplayValues
   };
