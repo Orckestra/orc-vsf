@@ -1,7 +1,7 @@
 import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default async function clearCartItems(context, params) {
+export default async function clearCart(context, params) {
 
   const { api, scope, myAccount } = context.config;
   const { userToken, cartName = 'Default' } = params;
