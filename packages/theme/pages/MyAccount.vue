@@ -42,7 +42,7 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser, useCart } from '@vue-storefront/orc-vsf';
+import { useUser, useCart, useWishlist } from '@vue-storefront/orc-vsf';
 import MyProfile from './MyAccount/MyProfile';
 import ShippingDetails from './MyAccount/ShippingDetails';
 import BillingDetails from './MyAccount/BillingDetails';
@@ -73,6 +73,7 @@ export default {
 
     const { logout } = useUser();
     const { clear: clearCart, load: reloadCart } = useCart();
+    const { load: reloadWishlist, clear: clearWishlist } = useWishlist();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
     const activePage = computed(() => {
       const { pageName } = route.value.params;
@@ -92,6 +93,8 @@ export default {
         await clearCart();
         await reloadCart();
 
+        await clearWishlist();
+        await reloadWishlist();
         router.push(context.root.localePath({ name: 'home' }));
         return;
       }

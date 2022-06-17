@@ -116,6 +116,21 @@
              </div>
             </SfLoader>
           </div>
+          <div class="product__add-to-wishlist">
+            <SfButton
+              class="sf-button--pure"
+              aria-label="Toggle wishlist sidebar"
+              @click="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
+            >
+              <SfIcon
+                class="sf-header__icon"
+                :icon="isInWishlist({ product }) ? 'heart_fill' : 'heart' "
+                size="lg"
+                viewBox="0 0 24 24"
+              />
+              <span>{{isInWishlist({ product }) ? $t('Remove') : $t('Add to wishlist')}}</span>
+            </SfButton>
+          </div>
           <LazyHydrate when-idle>
             <SfTabs :open-tab="1" class="product__tabs">
               <SfTab title="Description">
@@ -183,7 +198,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, useCategory, productGetters, categoryGetters, useMetadata, metadataGetters, useInventory, inventoryGetters } from '@vue-storefront/orc-vsf';
+import { useProduct, useCart, useCategory, productGetters, categoryGetters, useMetadata, metadataGetters, useInventory, inventoryGetters, useWishlist, wishlistGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
@@ -204,6 +219,7 @@ export default {
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct(`relatedPproducts-${id.value}`);
     const { addItem, loading } = useCart();
     const { response: metadata } = useMetadata();
+    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
     const product = computed(() => productGetters.getProductWithVariant(products.value, variantId.value));
     const productBrand = computed(() => metadataGetters.getLookupValueDisplayName(metadata?.value, 'Brand', product?.value.brand, locale));
     const options = computed(() => productGetters.getAttributes(product.value, []));
@@ -218,7 +234,11 @@ export default {
       alt: product?.value?._name || product?.value?.name
     })));
     const availableQty = computed(() => inventoryGetters.getSkuAvailableQuantity(inventoryResult.value, product.value?.sku));
-
+    const removeProductFromWishlist = (productItem) => {
+      const wishListItems = wishlistGetters.getItems(wishlist.value);
+      const product = wishListItems.find(wishlistProduct => wishlistProduct.sku === productItem.sku);
+      removeItemFromWishlist({ product });
+    };
     onSSR(async () => {
       if (!product.value || !product.value.id || product.value.id !== id.value) {
         await searchProduct({ queryType: 'DETAIL', id: id.value });
@@ -268,7 +288,10 @@ export default {
       productBrand,
       kvas,
       availableQty,
-      loadingInventory
+      loadingInventory,
+      addItemToWishlist,
+      removeProductFromWishlist,
+      isInWishlist
     };
   },
   components: {
@@ -546,5 +569,12 @@ export default {
 
 .disabled  {
   color: #ccc;
+}
+.product__add-to-wishlist{
+  width: 100%;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  float: left;
+  margin-top: 1.5rem;
 }
 </style>

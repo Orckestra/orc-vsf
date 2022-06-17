@@ -189,7 +189,7 @@ import { ref, watch, reactive, computed } from '@nuxtjs/composition-api';
 import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert, SfBar } from '@storefront-ui/vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email, min, max, password } from 'vee-validate/dist/rules';
-import { useUser, useCart, useForgotPassword, useConfiguration, configurationGetters } from '@vue-storefront/orc-vsf';
+import { useUser, useCart, useForgotPassword, useConfiguration, configurationGetters, useWishlist } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
 import { useUiNotification } from '~/composables';
 
@@ -239,6 +239,7 @@ export default {
     const rememberMe = ref(false);
     const { register, login, loading, error: userError } = useUser();
     const { load: reloadCart, clear: clearCart } = useCart();
+    const { load: reloadWishlist, clear: clearWishlist } = useWishlist();
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
     const currentScreen = ref(SCREEN_REGISTER);
     const { send: sendNotification } = useUiNotification();
@@ -346,6 +347,8 @@ export default {
       if (!hasUserErrors) {
         await clearCart();
         reloadCart();
+        await clearWishlist();
+        await reloadWishlist();
       }
     };
 
@@ -355,6 +358,9 @@ export default {
       if (!hasUserErrors) {
         await clearCart();
         reloadCart();
+
+        await clearWishlist();
+        await reloadWishlist();
       }
     };
 

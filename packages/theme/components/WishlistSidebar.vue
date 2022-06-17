@@ -35,7 +35,7 @@
               >
                <template #configuration>
                   <div class="collected-product__properties">
-                    <SfProperty v-for="(attribute, key) in wishlistGetters.getItemAttributes(product, ['color', 'size'])" :key="key" :name="key" :value="attribute"/>
+                    <SfProperty v-for="(attribute, key) in wishlistGetters.getItemAttributes(product, ['Color', 'RetailSize'])" :key="key" :name="key" :value="attribute"/>
                   </div>
                 </template>
                 <template #input="{}">&nbsp;</template>
@@ -48,9 +48,7 @@
             <template #name>
               <span class="my-wishlist__total-price-label">Total price:</span>
             </template>
-            <template #value>
-              <SfPrice :regular="$n(totals.subtotal, 'currency')" />
-            </template>
+            <template #value="{}">&nbsp;</template>
           </SfProperty>
           </div>
         </div>
@@ -58,8 +56,8 @@
           <div class="empty-wishlist__banner">
             <SfImage :src="addBasePath('/icons/empty-cart.svg')" alt="Empty bag" class="empty-wishlist__icon" />
             <SfHeading
-              title="Your bag is empty"
-              description="Looks like you haven’t added any items to the bag yet. Start
+              title="Your wishlist is empty"
+              description="Looks like you haven’t added any items to the wishlist yet. Start
               shopping to fill it in."
               class="empty-wishlist__label"
             />

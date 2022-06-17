@@ -43,12 +43,19 @@ function getItemQty(item: WishlistItem): number {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(item: WishlistItem, filters?: string[]): Record<string, AgnosticAttribute | string> {
   if (!item.kvaDisplayValues) return null;
-
-  return {
-    color: item.kvaDisplayValues.Colour ?? undefined,
-    size: item.kvaDisplayValues.RetailSize ?? undefined
-
+  
+  const result = {
+    ...item?.kvaDisplayValues
   };
+
+  if (filters) {
+    Object.keys(result).forEach(key => {
+      if (!filters.includes(key)) {
+        delete result[key];
+      }
+    });
+  }
+  return result;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

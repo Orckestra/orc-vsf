@@ -5,22 +5,19 @@ import {
   UseWishlistFactoryParams
 } from '@vue-storefront/core';
 import { Wishlist, WishlistItem, Product } from '@vue-storefront/orc-vsf-api';
+import { getUserToken } from '../helpers/generalUtils';
 import { getVariantId } from '../helpers/productUtils';
 
 const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     return { items: await context.$occ.api.getCartLineItems({cartName: 'Wishlist', userToken}) };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentWishlist, product }) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     const variantId = getVariantId(product);
     const createdCartItemResult = await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity: 1, cartName: 'Wishlist' });
     const wishListItems = createdCartItemResult.shipments.flatMap(item => item.lineItems);
@@ -29,9 +26,7 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentWishlist, product }) => {
-    const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
-    const userToken = app.$cookies.get(appKey + '_token');
+    const userToken = getUserToken(context);
     const prod = product as WishlistItem;
     const prodLineItemId = currentWishlist.items.find(item => item.sku === prod.sku).id;
     const removedLineItemResult = await context.$occ.api.removeCartItem({ ...params, userToken, id: prodLineItemId, cartName: 'Wishlist' });
@@ -41,7 +36,6 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentWishlist }) => {
-    console.log('Mocked: useWishlist.clear');
     return { items: [] };
   },
 
