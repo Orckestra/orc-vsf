@@ -59,6 +59,13 @@
                 @click="removeAddress(address)">
                 {{ $t('Delete') }}
               </SfButton>
+
+              <SfButton
+                class="sf-button--underlined sf-button"
+                @click="setDefault(address)"
+              >
+                {{'as Default'}}
+              </SfButton>
             </div>
           </div>
         </transition-group>
@@ -94,7 +101,7 @@ export default {
   },
   setup() {
     const { load: loadCountries } = useCountries();
-    const { shipping, load: loadUserShipping, addAddress, deleteAddress, updateAddress } = useUserShipping();
+    const { shipping, load: loadUserShipping, addAddress, deleteAddress, updateAddress, setDefaultAddress } = useUserShipping();
     const addresses = computed(() => userShippingGetters.getAddresses(shipping.value));
     const edittingAddress = ref(false);
     const activeAddress = ref(undefined);
@@ -111,6 +118,8 @@ export default {
     };
 
     const removeAddress = address => deleteAddress({ address });
+
+    const setDefault = address => setDefaultAddress({ address });
 
     const saveAddress = async ({ form, onComplete, onError }) => {
       try {
@@ -131,6 +140,7 @@ export default {
       removeAddress,
       saveAddress,
       cancelEditing,
+      setDefault,
       userShippingGetters,
       addresses,
       edittingAddress,
@@ -180,13 +190,16 @@ export default {
       flex-direction: row;
       align-items: center;
       justify-content: flex-end;
+
+      button {
+        &:not(:first-child) {
+          margin-left: var(--spacer-base);
+        }
+      }
     }
   }
   &__button-delete {
     color: var(--c-link);
-    @include for-desktop {
-      margin-left: var(--spacer-base);
-    }
   }
   &__address {
     margin: 0;
