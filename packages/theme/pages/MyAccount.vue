@@ -73,7 +73,7 @@ export default {
 
     const { logout } = useUser();
     const { setCart, load: reloadCart } = useCart();
-    const { load: reloadWishlist, setWishlist } = useWishlist();
+    const { setWishlist } = useWishlist();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
     const activePage = computed(() => {
       const { pageName } = route.value.params;
