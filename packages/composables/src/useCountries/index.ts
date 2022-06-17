@@ -6,6 +6,6 @@ export const useCountries = useCountriesFactory<CountryItem[]>({
   load: (context: Context) => {
     const app: any = context.$occ.config.app;
     const locale: any = app.i18n.locale;
-    return context.$occ.api.getCountries({ locale, IncludeRegions: true });
+    return context.$occ.api.getCountries({ locale, includeRegions: true });
   }
 });
