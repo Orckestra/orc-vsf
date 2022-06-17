@@ -45,9 +45,7 @@
           </div>
           <div class="sidebar-bottom">
           <SfProperty class="sf-property--full-width my-wishlist__total-price">
-            <template #name>
-              <span class="my-wishlist__total-price-label">Total price:</span>
-            </template>
+            <template #name"{}">&nbsp;</template>
             <template #value="{}">&nbsp;</template>
           </SfProperty>
           </div>
