@@ -21,6 +21,7 @@ export { useSearch } from './useSearch';
 export { useInventory } from './useInventory';
 export { useConfiguration } from './useConfiguration';
 export { useCountries } from './useCountries';
+export { useUserAddresses } from './useUserAddresses';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';

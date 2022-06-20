@@ -4,6 +4,7 @@ import {
   Context,
   ComputedProperty
 } from '@vue-storefront/core';
+import { Composable, CustomQuery, PlatformApi } from '@vue-storefront/core/lib/src/types';
 
 export type TODO = any;
 
@@ -176,4 +177,37 @@ export interface UseCountries<COUNTRIES> {
 }
 export interface CountriesGetters<COUNTRIES, REGIONS> {
   getRegions(countries: COUNTRIES, countryCode: string): REGIONS;
+}
+
+/*
+ADDRESSES
+*/
+export interface UseUserAddressesErrors {
+  addAddress: Error;
+  deleteAddress: Error;
+  updateAddress: Error;
+  load: Error;
+  setDefaultAddress: Error;
+}
+export interface UseUserAddresses<USER_ADDRESS_ITEM, API extends PlatformApi = any> extends Composable<API> {
+  addresses: ComputedProperty<USER_ADDRESS_ITEM[]>;
+  addAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  deleteAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  updateAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  load: () => Promise<void>;
+  setDefaultAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  loading: ComputedProperty<boolean>;
+  error: ComputedProperty<UseUserAddressesErrors>;
 }

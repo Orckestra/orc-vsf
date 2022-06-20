@@ -73,7 +73,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updateUser,
     getCartLineItems,
     changePassword,
-    clearCart
+    clearCart,
     getUserAddresses,
     getCountries,
     updateUserAddress,
