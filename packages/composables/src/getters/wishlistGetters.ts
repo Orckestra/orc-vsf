@@ -77,6 +77,14 @@ function getFormattedPrice(price: number): string {
   return '';
 }
 
+function getLink(item: WishlistItem): string {
+  if (!item) return;
+  const variantId = item.variantId;
+  const productId = item.productId;
+
+  return `/p/${productId}/${item?.productSummary.displayName}${variantId ? `?variant=${variantId}` : ''}`;
+}
+
 export const wishlistGetters: WishlistGetters<Wishlist, WishlistItem> = {
   getItems,
   getTotals,
@@ -88,5 +96,6 @@ export const wishlistGetters: WishlistGetters<Wishlist, WishlistItem> = {
   getShippingPrice,
   getItemSku,
   getTotalItems,
-  getFormattedPrice
+  getFormattedPrice,
+  getLink
 };
