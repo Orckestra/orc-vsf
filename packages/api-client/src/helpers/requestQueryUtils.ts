@@ -33,6 +33,7 @@ export const getRelatedProductsQuery = (merchandiseTypes: string[], product: Pro
   const query = {
     distinctResults: true,
     includeTotalCount: false,
+    includeFacets: false,
     maximumItems: limit,
     startingIndex: 0,
     sortings,

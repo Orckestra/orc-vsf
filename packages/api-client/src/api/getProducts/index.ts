@@ -53,7 +53,7 @@ export default async function getProducts(
         queryType,
         queryName,
         autoCorrect: true,
-        includeFacets: true,
+        includeFacets,
         facetPredicates: facetPredicates,
         facets: availableFacets,
         query,
