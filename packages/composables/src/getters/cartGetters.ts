@@ -98,6 +98,14 @@ function getDiscounts(cart: Cart): AgnosticDiscount[] {
   return [];
 }
 
+function getLink(item: CartItem): string {
+  if (!item) return;
+  const variantId = item.variantId;
+  const productId = item.productId;
+
+  return `/p/${productId}/${item.productSummary.displayName}${variantId ? `?variant=${variantId}` : ''}`;
+}
+
 export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotals,
   getShippingPrice,
@@ -112,5 +120,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getFormattedPrice,
   getTotalItems,
   getCoupons,
-  getDiscounts
+  getDiscounts,
+  getLink
 };
