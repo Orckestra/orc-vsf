@@ -45,24 +45,24 @@ export default async function getProducts(
     }
     case ProductsQueryType.Merchandising:
     case ProductsQueryType.ProductSet:
-    {
-      const productsByQueryNameUrl = new URL(`/api/search/${scope}/${locale}/bySearchQuery/${queryType}/${queryName}`, api.url);
-      const facetPredicates = buildFacetPredicatesByFilters(filters, searchConfig);
-      const query = getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort));
-      const { data } = await context.client.post(productsByQueryNameUrl.href, {
-        queryType,
-        queryName,
-        autoCorrect: true,
-        includeFacets,
-        facetPredicates: facetPredicates,
-        facets: availableFacets,
-        query,
-        searchTerms: term
-      });
-      const products = data.result?.documents ?? [];
-      setProductsCoverImages(products, cdnDamProviderConfig);
-      return { products, total: data.result?.totalCount, facets: data.result?.facets, selectedFacets: data.selectedFacets };
-    }
+      {
+        const productsByQueryNameUrl = new URL(`/api/search/${scope}/${locale}/bySearchQuery/${queryType}/${queryName}`, api.url);
+        const facetPredicates = buildFacetPredicatesByFilters(filters, searchConfig);
+        const query = getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort));
+        const { data } = await context.client.post(productsByQueryNameUrl.href, {
+          queryType,
+          queryName,
+          autoCorrect: true,
+          includeFacets,
+          facetPredicates: facetPredicates,
+          facets: availableFacets,
+          query,
+          searchTerms: term
+        });
+        const products = data.result?.documents ?? [];
+        setProductsCoverImages(products, cdnDamProviderConfig);
+        return { products, total: data.result?.totalCount, facets: data.result?.facets, selectedFacets: data.selectedFacets };
+      }
 
     case ProductsQueryType.Category: {
       if (!categorySlug) {
@@ -78,11 +78,7 @@ export default async function getProducts(
         includeFacets,
         facetPredicates,
         facets: availableFacets,
-        query: {
-          maximumItems,
-          startingIndex,
-          sortings: getSorting(sort)
-        },
+        query: getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort)),
         searchTerms: term
       });
 
@@ -110,11 +106,7 @@ export default async function getProducts(
         inventoryLocationIds: inventoryIds,
         includeFacets,
         facets: availableFacets,
-        query: {
-          maximumItems,
-          startingIndex,
-          sortings: getSorting(sort)
-        },
+        query: getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort)),
         searchTerms: term
       });
 
