@@ -158,6 +158,11 @@ module.exports = {
         name: 'query',
         path: '/q/:name/',
         component: resolve(__dirname, 'pages/Query.vue')
+      });
+      routes.push({
+        name: 'productset',
+        path: '/s/:name/',
+        component: resolve(__dirname, 'pages/ProductSet.vue')
       })
     }
   },

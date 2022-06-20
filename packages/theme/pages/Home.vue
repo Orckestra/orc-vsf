@@ -122,7 +122,16 @@
           </SfCarouselItem>
         </SfCarousel>
     </LazyHydrate>
-
+    <LazyHydrate when-visible>
+      <div class="see-all">
+        <SfButton
+              class="color-primary sf-button"
+             :link="localePath(`/s/FeaturedProducts`)"
+            >
+            {{ $t('See all') }}
+        </SfButton>
+      </div>
+    </LazyHydrate>
     <LazyHydrate when-visible>
       <InstagramFeed />
     </LazyHydrate>
@@ -250,7 +259,7 @@ export default {
         await getQueryProducts({ queryType: 'Merchandising', queryName: 'SummerWear', limit: 6});
       }
       if (!productsFromSet.value?.products) {
-        await getSetProducts({ queryType: 'ProductSet', queryName: 'HomeSet', limit: 6});
+        await getSetProducts({ queryType: 'ProductSet', queryName: 'FeaturedProducts', limit: 6});
       }
     });
 
