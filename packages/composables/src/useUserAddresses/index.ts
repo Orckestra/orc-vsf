@@ -62,7 +62,31 @@ const factoryParams: UseUserAddressesFactoryParams<AddressItem> = {
       return null;
     }
 
+    await context.$occ.api.updateUserAddress({ userToken, address: { ...address, isPreferredShipping: true, isPreferredBilling: true }, addressId: address.id });
+    return factoryParams.load(context);
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setDefaultShipping: async (context: Context, params) => {
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
     await context.$occ.api.updateUserAddress({ userToken, address: { ...address, isPreferredShipping: true }, addressId: address.id });
+    return factoryParams.load(context);
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setDefaultBilling: async (context: Context, params) => {
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    await context.$occ.api.updateUserAddress({ userToken, address: { ...address, isPreferredBilling: true }, addressId: address.id });
     return factoryParams.load(context);
   }
 };

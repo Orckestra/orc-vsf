@@ -1,11 +1,21 @@
 import type {
-  UserAddress as AddressItem,
+  UserAddress as AddressItem
 } from '@vue-storefront/orc-vsf-api';
 import { UserAddressGetters } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDefault(addresses: AddressItem[]): AddressItem {
+  return addresses.find(a => a.isPreferredShipping && a.isPreferredBilling);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getDefaultShipping(addresses: AddressItem[]): AddressItem {
   return addresses.find(a => a.isPreferredShipping);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getDefaultBilling(addresses: AddressItem[]): AddressItem {
+  return addresses.find(a => a.isPreferredBilling);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -90,6 +100,8 @@ function isDefault(address: AddressItem): boolean {
 
 export const userAddressGetters: UserAddressGetters<AddressItem> = {
   getDefault,
+  getDefaultShipping,
+  getDefaultBilling,
   getTotal,
   getPostCode,
   getStreetName,

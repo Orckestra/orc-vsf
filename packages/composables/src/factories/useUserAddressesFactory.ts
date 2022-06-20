@@ -37,6 +37,18 @@ export interface UseUserAddressesFactoryParams<
       address: Readonly<USER_ADDRESS_ITEM>;
       customQuery?: CustomQuery;
     }) => Promise<USER_ADDRESS_ITEM[]>;
+  setDefaultShipping: (
+    context: Context,
+    params: {
+      address: Readonly<USER_ADDRESS_ITEM>;
+      customQuery?: CustomQuery;
+    }) => Promise<USER_ADDRESS_ITEM[]>;
+  setDefaultBilling: (
+    context: Context,
+    params: {
+      address: Readonly<USER_ADDRESS_ITEM>;
+      customQuery?: CustomQuery;
+    }) => Promise<USER_ADDRESS_ITEM[]>;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -52,7 +64,9 @@ export const useUserAddressesFactory = <USER_ADDRESS_ITEM, API extends PlatformA
       deleteAddress: null,
       updateAddress: null,
       load: null,
-      setDefaultAddress: null
+      setDefaultAddress: null,
+      setDefaultShipping: null,
+      setDefaultBilling: null
     }, 'useUserAddresses-error');
 
     const _factoryParams = configureFactoryParams(
@@ -147,6 +161,42 @@ export const useUserAddressesFactory = <USER_ADDRESS_ITEM, API extends PlatformA
       }
     };
 
+    const setDefaultShipping = async ({ address, customQuery }) => {
+      Logger.debug('useUserAddresses.setDefaultShipping', address);
+
+      try {
+        loading.value = true;
+        addresses.value = await _factoryParams.setDefaultShipping({
+          address,
+          customQuery
+        });
+        error.value.setDefaultShipping = null;
+      } catch (err) {
+        error.value.setDefaultShipping = err;
+        Logger.error('useUserAddresses/setDefaultShipping', err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const setDefaultBilling = async ({ address, customQuery }) => {
+      Logger.debug('useUserAddresses.setDefaultBilling', address);
+
+      try {
+        loading.value = true;
+        addresses.value = await _factoryParams.setDefaultBilling({
+          address,
+          customQuery
+        });
+        error.value.setDefaultBilling = null;
+      } catch (err) {
+        error.value.setDefaultBilling = err;
+        Logger.error('useUserAddresses/setDefaultBilling', err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
     return {
       api: _factoryParams.api,
       addresses: computed(() => addresses.value),
@@ -156,7 +206,9 @@ export const useUserAddressesFactory = <USER_ADDRESS_ITEM, API extends PlatformA
       deleteAddress,
       updateAddress,
       load,
-      setDefaultAddress
+      setDefaultAddress,
+      setDefaultShipping,
+      setDefaultBilling
     };
   };
 

@@ -188,6 +188,8 @@ export interface UseUserAddressesErrors {
   updateAddress: Error;
   load: Error;
   setDefaultAddress: Error;
+  setDefaultShipping: Error;
+  setDefaultBilling: Error;
 }
 export interface UseUserAddresses<USER_ADDRESS_ITEM, API extends PlatformApi = any> extends Composable<API> {
   addresses: ComputedProperty<USER_ADDRESS_ITEM[]>;
@@ -208,13 +210,23 @@ export interface UseUserAddresses<USER_ADDRESS_ITEM, API extends PlatformApi = a
     address: USER_ADDRESS_ITEM;
     customQuery?: CustomQuery;
   }) => Promise<void>;
+  setDefaultShipping: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  setDefaultBilling: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
   loading: ComputedProperty<boolean>;
   error: ComputedProperty<UseUserAddressesErrors>;
 }
 
 export interface UserAddressGetters<USER_ADDRESS_ITEM> {
-  getDefault: (shipping: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
-  getTotal: (shipping: USER_ADDRESS_ITEM[]) => number;
+  getDefault: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getDefaultShipping: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getDefaultBilling: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getTotal: (addresses: USER_ADDRESS_ITEM[]) => number;
   getPostCode: (address: USER_ADDRESS_ITEM) => string;
   getStreetName: (address: USER_ADDRESS_ITEM) => string;
   getStreetNumber: (address: USER_ADDRESS_ITEM) => string | number;
