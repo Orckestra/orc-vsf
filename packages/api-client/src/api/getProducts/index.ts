@@ -1,97 +1,118 @@
-import { buildFacetPredicates } from '../../helpers/buildFacetPredicates';
+import { buildFacetPredicates, buildFacetPredicatesByFilters } from '../../helpers/buildFacetPredicates';
 import { setProductsCoverImages } from '../../helpers/mediaUtils';
-import { getRelatedProductsQuery } from '../../helpers/requestQueryUtils';
+import { getRelatedProductsQuery, getCatalogActiveProductsQuery, getSorting } from '../../helpers/requestQueryUtils';
+import { ProductsQueryType } from '../../types';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default async function getProducts(
   context,
   params
 ) {
-  const { catId, categorySlug, withCategoryCounts, categories, filters, page, itemsPerPage, locale, sort, term, facetCounts, limit, merchandiseTypes, product } = params;
+  const { queryType, queryName, categorySlug, withFacetCounts,
+    categories, filters, page = 1, itemsPerPage, locale, sort, term, includeFacets = true, facetCounts,
+    merchandiseTypes, product } = params;
   const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
-  let url = null;
+  const availableProductsUrl = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
+  const maximumItems = itemsPerPage ?? searchConfig.defaultItemsPerPage;
+  const startingIndex = (page - 1) * maximumItems;
+  const inventoryIds = inventoryLocationIds?.split(',') ?? [];
+  const availableFacets = searchConfig.availableFacets?.map(f => f.name) ?? [];
 
-  const getSort = (sort) => {
-    if (!sort) return {};
-    const sortOptions = sort.split('-');
-    return {
-      direction: sortOptions && sortOptions.length === 2 && sortOptions[1] === 'desc' ? '1' : '0',
-      propertyName: sortOptions && sortOptions.length > 0 ? sortOptions[0] : 'score'
-    };
-  };
-
-  if (facetCounts) {
-    url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-    const { data: facetCountsData } = await context.client.post(url.href, {
-      inventoryLocationIds,
-      includeFacets: true,
-      facets: facetCounts,
-      query: {
-        maximumItems: 0,
-        startingIndex: 0
+  switch (queryType) {
+    case ProductsQueryType.Related: {
+      if (!merchandiseTypes || !product) {
+        console.error('Related query type requires product and merchandiseTypes parameters.');
+        return;
       }
-    });
-    return { facetCounts: facetCountsData.facets };
-  } else if (merchandiseTypes) {
-    url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-    const query = getRelatedProductsQuery(merchandiseTypes, product, limit, getSort(sort));
-    const { data } = await context.client.post(url.href, { query });
-    const products = data.documents ?? [];
-    setProductsCoverImages(products, cdnDamProviderConfig);
-    return products;
-  } else if (categorySlug) {
-    const facetPredicates = buildFacetPredicates(categories, categorySlug, filters, searchConfig);
-    let categoryCounts = [];
-    url = new URL(`/api/search/${scope}/${locale}/availableProducts/byCategory/${categorySlug}`, api.url);
-    const maximumItems = itemsPerPage ?? searchConfig.defaultItemsPerPage;
-    const { data } = await context.client.post(url.href, {
-      inventoryLocationIds: inventoryLocationIds.split(','),
-      categoryName: categorySlug,
-      includeFacets: true,
-      facetPredicates,
-      facets: searchConfig.availableFacets.map(f => f.name),
-      query: {
-        maximumItems: maximumItems,
-        startingIndex: (page - 1) * maximumItems,
-        sortings: [getSort(sort)]
-      },
-      searchTerms: term
-    });
 
-    if (withCategoryCounts) {
-      url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-      const { data: categoryCountsData } = await context.client.post(url.href, {
+      const query = getRelatedProductsQuery(merchandiseTypes, product, itemsPerPage, getSorting(sort));
+      const { data } = await context.client.post(availableProductsUrl.href, { query });
+      const products = data.documents ?? [];
+      setProductsCoverImages(products, cdnDamProviderConfig);
+      return products;
+    }
+    case ProductsQueryType.FacetCounts: {
+      const { data: facetCountsData } = await context.client.post(availableProductsUrl.href, {
         inventoryLocationIds,
-        includeFacets: true,
-        facets: searchConfig.categoryCountFacets,
+        includeFacets,
+        facets: facetCounts,
         query: {
           maximumItems: 0,
           startingIndex: 0
-        },
+        }
+      });
+      return { facetCounts: facetCountsData.facets };
+    }
+    case ProductsQueryType.Merchandising:
+    case ProductsQueryType.ProductSet:
+    {
+      const productsByQueryNameUrl = new URL(`/api/search/${scope}/${locale}/bySearchQuery/${queryType}/${queryName}`, api.url);
+      const facetPredicates = buildFacetPredicatesByFilters(filters, searchConfig);
+      const query = getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort));
+      const { data } = await context.client.post(productsByQueryNameUrl.href, {
+        queryType,
+        queryName,
+        autoCorrect: true,
+        includeFacets,
+        facetPredicates: facetPredicates,
+        facets: availableFacets,
+        query,
+        searchTerms: term
+      });
+      const products = data.result?.documents ?? [];
+      setProductsCoverImages(products, cdnDamProviderConfig);
+      return { products, total: data.result?.totalCount, facets: data.result?.facets, selectedFacets: data.selectedFacets };
+    }
+
+    case ProductsQueryType.Category: {
+      if (!categorySlug) {
+        console.error('Category query type requires categorySlug parameter.');
+        return;
+      }
+      const facetPredicates = buildFacetPredicates(categories, categorySlug, filters, searchConfig);
+      let facetCountsResult = [];
+      const availableProductsByCategoryUrl = new URL(`/api/search/${scope}/${locale}/availableProducts/byCategory/${categorySlug}`, api.url);
+      const { data } = await context.client.post(availableProductsByCategoryUrl.href, {
+        inventoryLocationIds: inventoryIds,
+        categoryName: categorySlug,
+        includeFacets,
+        facetPredicates,
+        facets: availableFacets,
+        query: getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort)),
         searchTerms: term
       });
 
-      categoryCounts = categoryCountsData.facets;
+      if (withFacetCounts || facetCounts) {
+        const { data: facetCountsData } = await context.client.post(availableProductsUrl.href, {
+          inventoryLocationIds,
+          includeFacets,
+          facets: facetCounts ?? searchConfig.categoryCountFacets,
+          query: {
+            maximumItems: 0,
+            startingIndex: 0
+          }
+        });
+
+        facetCountsResult = facetCountsData.facets;
+      }
+
+      const products = data.documents ?? [];
+      setProductsCoverImages(products, cdnDamProviderConfig);
+      return { products, total: data.totalCount, facets: data.facets, facetCounts: facetCountsResult };
     }
+    case ProductsQueryType.List:
+    default: {
+      const { data } = await context.client.post(availableProductsUrl.href, {
+        inventoryLocationIds: inventoryIds,
+        includeFacets,
+        facets: availableFacets,
+        query: getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort)),
+        searchTerms: term
+      });
 
-    const products = data.documents ?? [];
-    setProductsCoverImages(products, cdnDamProviderConfig);
-    return { products, total: data.totalCount, facets: data.facets, facetCounts: categoryCounts };
-  } else {
-
-    url = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
-
-    const { data } = await context.client.post(url.href, {
-      query: {
-        distinctResults: true,
-        maximumItems: searchConfig.defaultItemsPerPage,
-        startingIndex: 0,
-        sortings: [getSort(sort)]
-      },
-      searchTerms: term
-    });
-    const products = data.documents ?? [];
-    setProductsCoverImages(products, cdnDamProviderConfig);
-    return { products, total: data.totalCount, facets: data.facets };
+      const products = data.documents ?? [];
+      setProductsCoverImages(products, cdnDamProviderConfig);
+      return { products, total: data.totalCount, facets: data.facets };
+    }
   }
 }

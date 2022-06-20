@@ -29,6 +29,7 @@
           <div v-else>
             <SfFilter
               v-for="option in facet.options"
+              :class="{'filters__item__query': option.metadata.selectedInQuery }"
               :key="`${facet.id}-${option.value}`"
               :label="option.id + `${option.count ? ` (${option.count})` : ''}`"
               :selected="isFilterSelected(facet, option)"
@@ -52,6 +53,7 @@
               :label="option.id"
               :selected="isFilterSelected(facet, option)"
               class="filters__item"
+              :class="{'filters__item__query': option.metadata.selectedInQuery }"
               @change="() => selectFilter(facet, option)"
             />
           </SfAccordionItem>
@@ -124,9 +126,11 @@ export default {
       }), {});
     };
 
-    const isFilterSelected = (facet, option) => (selectedFilters.value[facet.id] || []).includes(option.id);
+    const isFilterSelected = (facet, option) => (selectedFilters.value[facet.id] || []).includes(option.id) || option.metadata?.selectedInQuery;
 
     const selectFilter = (facet, option) => {
+      if (option.metadata?.selectedInQuery) return;
+
       if (!selectedFilters.value[facet.id]) {
         Vue.set(selectedFilters.value, facet.id, []);
       }
@@ -238,6 +242,9 @@ export default {
     --checkbox-padding: 0 var(--spacer-sm) 0 var(--spacer-xl);
     padding: var(--spacer-sm) 0;
     border-bottom: 1px solid var(--c-light);
+    &__query {
+        --checkbox-background:var(--c-light-darken);;
+    }
     &:last-child {
       border-bottom: 0;
     }

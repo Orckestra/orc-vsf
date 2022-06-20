@@ -197,9 +197,9 @@ export default {
         term.value = paramValue.target.value;
       }
       if (categoryCounts.value.length === 0) {
-        await categoryCountsSearch({facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
+        await categoryCountsSearch({qyeryType: 'FacetCounts', facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
       }
-      await search({ term: term.value });
+      await search({ qyeryType: 'List', term: term.value, includeFacets: false });
     }, 1000);
 
     const closeOrFocusSearchBar = () => {

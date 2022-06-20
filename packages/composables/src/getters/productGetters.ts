@@ -49,9 +49,11 @@ function getPrice(product: Product): AgnosticPrice {
       special: (prices.pricing.price < prices.defaultPrice ? prices.pricing.price : undefined)
     };
   } else {
+    const regularPrice = product.regularPrice ?? product.propertyBag?.RegularPrice?.value;
+    const currentPrice = product.currentPrice ?? product.propertyBag?.CurrentPrice?.value;
     return {
-      regular: product.regularPrice,
-      special: product.currentPrice < product.regularPrice ? product.currentPrice : undefined
+      regular: regularPrice,
+      special: currentPrice < regularPrice ? currentPrice : undefined
     };
   }
 }
@@ -119,8 +121,9 @@ function getVariantId(product: Product): string {
 function getLink(product: Product): string {
   if (!product) return;
   const variantId = product.propertyBag?.VariantId;
+  const productId = product.productId ?? product.propertyBag?.ProductId;
 
-  return `/p/${product.productId}/${product.propertyBag?.ProductDisplayName}${variantId ? `?variant=${variantId}` : ''}`;
+  return `/p/${productId}/${product.propertyBag?.ProductDisplayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
 function getKvaItems(product: Product, metadata: Metadata, locale: string, selectedVariantId?: string): KeyVariantAttributeItem[] {

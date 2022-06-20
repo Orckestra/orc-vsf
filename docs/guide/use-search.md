@@ -6,7 +6,7 @@ Facet Counts can be used to build category or other facet suggestions in search 
 
 ## API
 ```typescript
-interface UseFacet<any> {
+interface UseSearch<any> {
   result: ComputedProperty<SearchResults>;
   loading: ComputedProperty<boolean>;
   search: (params?: ProductsSearchParams) => Promise<void>;

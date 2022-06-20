@@ -7,8 +7,9 @@ export const setProductsCoverImages = (products: any, cdnDamProviderConfig: any)
     if (imageUrl) {
       pr.coverImage = imageUrl;
     } else {
-      const variantId = pr.propertBag?.VarialtId;
-      pr.coverImage = `${serverUrl}/${imageFolderName}/${pr.productId}_${variantId ? `${variantId}_` : ''}0_M.jpg`;
+      const variantId = pr.propertyBag?.VariantId;
+      const productId = pr.productId ?? pr.propertyBag?.ProductId;
+      pr.coverImage = `${serverUrl}/${imageFolderName}/${productId}_${variantId ? `${variantId}_` : ''}0_M.jpg`;
     }
   });
 };
