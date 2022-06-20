@@ -1,7 +1,7 @@
 # useUserAddresses
 
 ## Features
-`useUserAddresses` composable is responsible for fetching a list of user addresses. A common usage scenario for this composable is getting user addresses.
+`useUserAddresses` composable is responsible for fetching a list of user addresses. A common usage scenario for this composable is managing user addresses.
 
 ## API
 ```typescript
@@ -52,7 +52,7 @@ Function that delete selected address for current user.
 Function that update selected address for current user.
 
 ### `setDefaultAddress`
-Function that set selected address as default for current user.
+Function that set selected address as default for shipping and billing.
 
 ### `setDefaultShipping`
 Function that set selected address as default for shipping.
@@ -82,6 +82,8 @@ export interface UserAddressGetters<USER_ADDRESS_ITEM> {
   getId: (address: USER_ADDRESS_ITEM) => string | number;
   getApartmentNumber: (address: USER_ADDRESS_ITEM) => string | number;
   isDefault: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultShipping: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultBilling: (address: USER_ADDRESS_ITEM) => boolean;
 }
 ````
 ## Example

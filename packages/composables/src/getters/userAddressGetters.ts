@@ -95,7 +95,17 @@ function getApartmentNumber(address: AddressItem): string | number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function isDefault(address: AddressItem): boolean {
-  return false;
+  return address.isPreferredBilling && address.isPreferredShipping;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isDefaultShipping(address: AddressItem): boolean {
+  return address.isPreferredShipping;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isDefaultBilling(address: AddressItem): boolean {
+  return address.isPreferredBilling;
 }
 
 export const userAddressGetters: UserAddressGetters<AddressItem> = {
@@ -117,5 +127,7 @@ export const userAddressGetters: UserAddressGetters<AddressItem> = {
   getTaxNumber,
   getId,
   getApartmentNumber,
-  isDefault
+  isDefault,
+  isDefaultShipping,
+  isDefaultBilling
 };

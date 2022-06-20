@@ -242,4 +242,6 @@ export interface UserAddressGetters<USER_ADDRESS_ITEM> {
   getId: (address: USER_ADDRESS_ITEM) => string | number;
   getApartmentNumber: (address: USER_ADDRESS_ITEM) => string | number;
   isDefault: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultShipping: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultBilling: (address: USER_ADDRESS_ITEM) => boolean;
 }
