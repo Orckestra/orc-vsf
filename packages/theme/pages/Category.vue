@@ -151,7 +151,7 @@
               </template>
               <template #actions>
                 <SfButton
-                  class="sf-button--pure sf-header__action"
+                  class="sf-button--pure sf-header__action desktop-only"
                   aria-label="Toggle wishlist sidebar"
                   @click="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
                 >
