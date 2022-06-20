@@ -68,7 +68,8 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
     const userToken = getUserToken(context);
     const variantId = getVariantId(product);
-    return await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity });
+    const productId = product.productId ?? product.propertyBag?.ProductId ?? product.id;
+    return await context.$occ.api.addCartItem({ ...params, userToken, productId, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -109,7 +110,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   isInCart: (context: Context, { currentCart, product }) => {
     const getLineItemByProduct = ({ currentCart, product }) => {
       if (product) {
-        const productId = product.productId ?? product.id;
+        const productId = product.productId ?? product.propertyBag?.ProductId ?? product.id;
         // TODO: const withVariants = product.variants && product.variants.length;
         // TODO: const variantId = withVariants ? product.variants[0].id : undefined;
 

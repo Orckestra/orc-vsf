@@ -1,10 +1,28 @@
 # useProduct
 
 ## Features
-`useProduct` composable is responsible for fetching a list of products or product details based on `queryType` parameter. A common usage scenario for this composable is products sets and product details.
+`useProduct` composable is responsible for fetching a list of products or product details based on `queryType` parameter. A common usage scenario for this composable is products queries or sets and product details.
 
 ## API
 ```typescript
+
+export interface UseProduct<PRODUCTS, ProductsSearchParams> {
+    products: ComputedProperty<PRODUCTS>;
+    loading: ComputedProperty<boolean>;
+    error: ComputedProperty<UseProductErrors>;
+    search(params: ProductsSearchParams & {
+      queryType: ProductsQueryType;
+    }): Promise<void>;
+    [x: string]: any;
+}
+
+export declare enum ProductsQueryType {
+    Detail = "List";
+    Category = "Category";
+    Related = "Related";
+    Merchandising = "Merchandising";
+    ProductSet = "ProductSet";
+}
 
 export declare type Product = {
     id?: string;
@@ -164,14 +182,14 @@ export default {
     const variantId = computed(() => route.value.query?.variant);
     const { products, search: searchProduct, loading } = useProduct(`product-${id}`);
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct(`relatedPproducts-${id.value}`);
+    const { products: productsFromQuery, search: searchQueryProducts , loading: queryLoading } = useProduct(`products-WomenDresses`);
     
     const product = computed(() => productGetters.getProductWithVariant(products.value, variantId.value));
 
     onSSR(async () => {
-        await searchProduct({ queryType: 'DETAIL', id: id.value });
-        if (product.value && relatedProducts.value?.length === 0) {
-        await searchRelatedProducts({ merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
-      }
+       await searchProduct({ queryType: 'Detail', id: id.value });
+       await searchQueryProducts(({ queryType: 'Merchandising', queryName: 'WomenDresses', limit: 6}));
+       await searchRelatedProducts({ queryType: 'Related', merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
     });
 
     return {
@@ -179,7 +197,9 @@ export default {
       loading,
       productGetters,
       relatedProducts,
-      relatedLoading
+      relatedLoading,
+      productsFromQuery,
+      queryLoading
     }
   }
 }

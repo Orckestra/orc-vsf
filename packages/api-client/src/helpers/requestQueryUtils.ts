@@ -29,3 +29,35 @@ export const getRelatedProductsQuery = (merchandiseTypes: string[], product: Pro
 
   return query;
 };
+
+export const getCatalogActiveProductsQuery = (scope: string, maximumItems, startingIndex, sortings): any => {
+  const query = {
+    filter: {
+      "BinaryOperator": 0,
+      "FilterGroups": [],
+      "Filters": [
+        {
+          "Not": false,
+          "Operator": 0,
+          "Member": "CatalogId",
+          "Value": scope,
+          "CustomExpression": null
+        },
+        {
+          "Not": false,
+          "Operator": 0,
+          "Member": "Active",
+          "Value": "True",
+          "CustomExpression": null
+        }
+      ],
+      "Not": false
+    },
+    distinctResults: false,
+    includeTotalCount: true,
+    maximumItems,
+    startingIndex,
+    sortings
+  }
+  return query;
+};

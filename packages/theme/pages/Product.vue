@@ -241,10 +241,10 @@ export default {
     };
     onSSR(async () => {
       if (!product.value || !product.value.id || product.value.id !== id.value) {
-        await searchProduct({ queryType: 'DETAIL', id: id.value });
+        await searchProduct({ queryType: 'Detail', id: id.value });
       }
       if (product.value && relatedProducts.value?.length === 0) {
-        await searchRelatedProducts({ merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
+        await searchRelatedProducts({ queryType: 'Related',  merchandiseTypes: ['CrossSell', 'UpSell'], product: product.value, limit: 8 });
       }
       if (product.value && product.value.sku) {
         await findInventory({skus: [product.value.sku]});

@@ -152,7 +152,14 @@ module.exports = {
   },
 
   router: {
-    middleware: ['checkout']
+    middleware: ['checkout'],
+    extendRoutes (routes, resolve) {
+      routes.push({
+        name: 'query',
+        path: '/q/:name/',
+        component: resolve(__dirname, 'pages/Query.vue')
+      })
+    }
   },
   publicRuntimeConfig: {
     theme,

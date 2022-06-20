@@ -98,10 +98,16 @@ export type Facet = {
     endValue?: string
 };
 
+export type SelectedFacet = {
+    facetName: string,
+    values: string[]
+};
+
 export type SearchResults = {
-    total: any,
-    products: any,
-    facets: Facet[],
+    total?: number,
+    products?: any,
+    facets?: Facet[],
+    selectedFacets?: SelectedFacet[],
     categories?: Category[],
     facetCounts?: any
 };
@@ -232,8 +238,13 @@ export type Product = {
 };
 
 export const enum ProductsQueryType {
-    List = 'LIST',
-    Detail = 'DETAIL'
+    List = "List",
+    Category = "Category",
+    Related = "Related",
+    FacetCounts = "FacetCounts",
+    Detail = "Detail",
+    Merchandising = "Merchandising",
+    ProductSet = "ProductSet"
 }
 
 export type ProductFilter = TODO;
