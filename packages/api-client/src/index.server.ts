@@ -23,7 +23,9 @@ import getMembershipConfiguration from './api/membership/getConfiguration';
 import resetPassword from './api/membership/resetPassword';
 import getByTicket from './api/users/getByTicket';
 import updateUser from './api/users/updateUser';
+import getCartLineItems from './api/carts/getCartLineItems';
 import changePassword from './api/membership/changePassword';
+import clearCart from './api/carts/clearCart';
 import getUserAddresses from './api/users/getUserAddresses';
 import getCountries from './api/countries/getCountries';
 import updateUserAddress from './api/users/updateUserAddress';
@@ -69,7 +71,9 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     resetPassword,
     getByTicket,
     updateUser,
+    getCartLineItems,
     changePassword,
+    clearCart
     getUserAddresses,
     getCountries,
     updateUserAddress,
