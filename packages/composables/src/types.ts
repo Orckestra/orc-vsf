@@ -211,3 +211,23 @@ export interface UseUserAddresses<USER_ADDRESS_ITEM, API extends PlatformApi = a
   loading: ComputedProperty<boolean>;
   error: ComputedProperty<UseUserAddressesErrors>;
 }
+
+export interface UserAddressGetters<USER_ADDRESS_ITEM> {
+  getDefault: (shipping: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getTotal: (shipping: USER_ADDRESS_ITEM[]) => number;
+  getPostCode: (address: USER_ADDRESS_ITEM) => string;
+  getStreetName: (address: USER_ADDRESS_ITEM) => string;
+  getStreetNumber: (address: USER_ADDRESS_ITEM) => string | number;
+  getCity: (address: USER_ADDRESS_ITEM) => string;
+  getFirstName: (address: USER_ADDRESS_ITEM) => string;
+  getLastName: (address: USER_ADDRESS_ITEM) => string;
+  getCountry: (address: USER_ADDRESS_ITEM) => string;
+  getPhone: (address: USER_ADDRESS_ITEM) => string;
+  getEmail: (address: USER_ADDRESS_ITEM) => string;
+  getProvince: (address: USER_ADDRESS_ITEM) => string;
+  getCompanyName: (address: USER_ADDRESS_ITEM) => string;
+  getTaxNumber: (address: USER_ADDRESS_ITEM) => string;
+  getId: (address: USER_ADDRESS_ITEM) => string | number;
+  getApartmentNumber: (address: USER_ADDRESS_ITEM) => string | number;
+  isDefault: (address: USER_ADDRESS_ITEM) => boolean;
+}

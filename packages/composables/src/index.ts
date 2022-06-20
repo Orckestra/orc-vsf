@@ -41,6 +41,7 @@ export { searchGetters } from './getters/searchGetters';
 export { inventoryGetters } from './getters/inventoryGetters';
 export { configurationGetters } from './getters/configurationGetters';
 export { countriesGetters } from './getters/countriesGetters';
+export { userAddressGetters } from './getters/userAddressGetters';
 
 // Types
 export * from './types';

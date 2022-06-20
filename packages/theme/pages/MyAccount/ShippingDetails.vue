@@ -33,7 +33,7 @@
         <transition-group tag="div" name="fade" class="shipping-list">
           <div
             v-for="address in addresses"
-            :key="userShippingGetters.getId(address)"
+            :key="userAddressGetters.getId(address)"
             class="shipping" :class="{'preferred': address.isPreferredShipping }">
             <div class="shipping__content">
               <div class="shipping__address">
@@ -86,7 +86,7 @@ import {
 } from '@storefront-ui/vue';
 import UserShippingAddress from '~/components/UserShippingAddress';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
-import { useUserAddresses, userShippingGetters, useCountries } from '@vue-storefront/orc-vsf';
+import { useUserAddresses, userAddressGetters, useCountries } from '@vue-storefront/orc-vsf';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 
@@ -140,7 +140,7 @@ export default {
       saveAddress,
       cancelEditing,
       setDefault,
-      userShippingGetters,
+      userAddressGetters,
       addresses,
       edittingAddress,
       activeAddress,
