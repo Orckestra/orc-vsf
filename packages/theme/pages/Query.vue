@@ -52,7 +52,7 @@
                   </SfList>
               </SfListItem>
            </SfList>
-           
+
           </SfLoader>
         </LazyHydrate>
       </div>
@@ -201,7 +201,7 @@ export default {
   name: 'query',
   transition: 'fade',
   setup(props, context) {
-     const { name: queryName } = context.root.$route.params;
+    const { name: queryName } = context.root.$route.params;
     const th = useUiHelpers();
     const uiState = useUiState();
     const { addItem: addItemToCart, isInCart } = useCart();
@@ -226,26 +226,27 @@ export default {
     });
 
     const filteredQueryCategoryTree = computed(() => {
-      let filteredQueryCategoryTree = categoryTree.value;
+      const filteredQueryCategoryTree = categoryTree.value;
       const items = filteredQueryCategoryTree?.items;
-       if (!items || !items.length) {
+      if (!items || !items.length) {
         return null;
       }
 
       const selectedInQueryCategories = result.value?.data?.selectedFacets?.filter(f => f.facetName.startsWith('CategoryLevel'));
-       const selectedInQueryCategoriesValues = selectedInQueryCategories?.flatMap(i => i.values) ?? [];
-     
+      const selectedInQueryCategoriesValues = selectedInQueryCategories?.flatMap(i => i.values) ?? [];
+
       filteredQueryCategoryTree.items = filteredQueryCategoryTree?.items.filter(i=> selectedInQueryCategoriesValues.includes(i.label));
       filteredQueryCategoryTree.items.forEach(item => {
-         item.items = item.items.filter(i => selectedInQueryCategoriesValues.includes(i.label));
+        item.items = item.items.filter(i => selectedInQueryCategoriesValues.includes(i.label));
       });
 
       return filteredQueryCategoryTree;
     });
 
     const removeProductFromWishlist = (productItem) => {
-      const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+      const wishListItems = wishlistGetters.getItems(wishlist.value);
+      const sku = productItem.sku ?? productItem.propertyBag?.Sku;
+      const product = wishListItems.find(i => i.sku === sku);
       removeItemFromWishlist({ product });
     };
 

@@ -20,7 +20,6 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
     const locale: any = app.i18n.locale;
     const { queryType, limit } = params;
 
-
     switch (queryType) {
       case ProductsQueryType.Detail:
         return await context.$occ.api.getProduct({ ...params, locale });

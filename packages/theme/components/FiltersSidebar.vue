@@ -129,8 +129,8 @@ export default {
     const isFilterSelected = (facet, option) => (selectedFilters.value[facet.id] || []).includes(option.id) || option.metadata?.selectedInQuery;
 
     const selectFilter = (facet, option) => {
-      if(option.metadata?.selectedInQuery) return;
-      
+      if (option.metadata?.selectedInQuery) return;
+
       if (!selectedFilters.value[facet.id]) {
         Vue.set(selectedFilters.value, facet.id, []);
       }

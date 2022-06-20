@@ -19,7 +19,8 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   addItem: async (context: Context, { currentWishlist, product }) => {
     const userToken = getUserToken(context);
     const variantId = getVariantId(product);
-    const createdCartItemResult = await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity: 1, cartName: 'Wishlist' });
+    const productId = product.productId ?? product.propertyBag?.ProductId ?? product.id;
+    const createdCartItemResult = await context.$occ.api.addCartItem({ ...params, userToken, productId: productId, variantId, quantity: 1, cartName: 'Wishlist' });
     const wishListItems = createdCartItemResult.shipments.flatMap(item => item.lineItems);
     return { items: wishListItems };
   },
@@ -28,7 +29,8 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   removeItem: async (context: Context, { currentWishlist, product }) => {
     const userToken = getUserToken(context);
     const prod = product as WishlistItem;
-    const prodLineItemId = currentWishlist.items.find(item => item.sku === prod.sku).id;
+    const sku = prod.sku ?? prod.propertyBag?.Sku;
+    const prodLineItemId = currentWishlist.items.find(item => item.sku === sku).id;
     const removedLineItemResult = await context.$occ.api.removeCartItem({ ...params, userToken, id: prodLineItemId, cartName: 'Wishlist' });
     const wishListItems = removedLineItemResult.shipments.flatMap(item => item.lineItems);
     return { items: wishListItems };
@@ -44,7 +46,8 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInWishlist: (context: Context, { currentWishlist, product }) => {
     const wishListItems = currentWishlist?.items;
-    return wishListItems?.some(item => item.sku === product.sku);
+    const sku = product.sku ?? product.propertyBag?.Sku;
+    return wishListItems?.some(item => item.sku === sku);
   }
 };
 

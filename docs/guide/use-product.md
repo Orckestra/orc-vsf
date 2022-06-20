@@ -1,7 +1,7 @@
 # useProduct
 
 ## Features
-`useProduct` composable is responsible for fetching a list of products or product details based on `queryType` parameter. A common usage scenario for this composable is products queries or sets and product details.
+`useProduct` composable is responsible for fetching a list of products or product details based on `queryType` parameter. A common usage scenario for this composable is product details or small product lists like related products, query or set highlights.
 
 ## API
 ```typescript

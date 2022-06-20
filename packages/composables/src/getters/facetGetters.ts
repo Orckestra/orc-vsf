@@ -24,7 +24,7 @@ function getGrouped(params: FacetSearchResult<SearchResults>, criteria?: string[
   if (!facets) return;
 
   const getMetadata = (facet: Facet, facetValue: FacetValue, selectedFilters: string[]) => {
-    let selectedInQuery = !selectedFilters.includes(facetValue.value) &&
+    const selectedInQuery = !selectedFilters.includes(facetValue.value) &&
       selectedFacets?.find(sf => sf.facetName === facet.fieldName)?.values?.includes(facetValue.value);
     return {
       startValue: facet.startValue,

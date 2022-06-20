@@ -238,13 +238,13 @@ export type Product = {
 };
 
 export const enum ProductsQueryType {
-    List = "List",
-    Category = "Category",
-    Related = "Related",
-    FacetCounts = "FacetCounts",
-    Detail = "Detail",
-    Merchandising = "Merchandising",
-    ProductSet = "ProductSet"
+    List = 'List',
+    Category = 'Category',
+    Related = 'Related',
+    FacetCounts = 'FacetCounts',
+    Detail = 'Detail',
+    Merchandising = 'Merchandising',
+    ProductSet = 'ProductSet'
 }
 
 export type ProductFilter = TODO;

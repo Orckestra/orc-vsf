@@ -1,6 +1,6 @@
 import { buildFacetPredicates, buildFacetPredicatesByFilters } from '../../helpers/buildFacetPredicates';
 import { setProductsCoverImages } from '../../helpers/mediaUtils';
-import { getRelatedProductsQuery, getCatalogActiveProductsQuery } from '../../helpers/requestQueryUtils';
+import { getRelatedProductsQuery, getCatalogActiveProductsQuery, getSorting } from '../../helpers/requestQueryUtils';
 import { ProductsQueryType } from '../../types';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -18,37 +18,20 @@ export default async function getProducts(
   const inventoryIds = inventoryLocationIds?.split(',') ?? [];
   const availableFacets = searchConfig.availableFacets?.map(f => f.name) ?? [];
 
-  const getSort = (sort) => {
-    const defaultSort = {
-      direction: '1',
-      propertyName: 'score'
-    };
-    if (!sort) return defaultSort;
-    const sortOptions = sort.split('-');
-    return {
-      direction: sortOptions && sortOptions.length === 2 && sortOptions[1] === 'desc' ? '1' : '0',
-      propertyName: sortOptions && sortOptions.length > 0 ? sortOptions[0] : defaultSort.propertyName
-    };
-  };
-
   switch (queryType) {
     case ProductsQueryType.Related: {
       if (!merchandiseTypes || !product) {
         console.error('Related query type requires product and merchandiseTypes parameters.');
         return;
-      };
+      }
 
-      const query = getRelatedProductsQuery(merchandiseTypes, product, itemsPerPage, getSort(sort));
+      const query = getRelatedProductsQuery(merchandiseTypes, product, itemsPerPage, getSorting(sort));
       const { data } = await context.client.post(availableProductsUrl.href, { query });
       const products = data.documents ?? [];
       setProductsCoverImages(products, cdnDamProviderConfig);
       return products;
     }
     case ProductsQueryType.FacetCounts: {
-      if (!facetCounts) {
-        console.error('FacetCounts query type requires facetCounts parameter.');
-        return;
-      };
       const { data: facetCountsData } = await context.client.post(availableProductsUrl.href, {
         inventoryLocationIds,
         includeFacets,
@@ -62,34 +45,30 @@ export default async function getProducts(
     }
     case ProductsQueryType.Merchandising:
     case ProductsQueryType.ProductSet:
-      {
-        if (!queryName) {
-          console.error('Merchandising/ProductSet query type requires queryName parameter.');
-          return;
-        };
-        const productsByQueryNameUrl = new URL(`/api/search/${scope}/${locale}/bySearchQuery/${queryType}/${queryName}`, api.url);
-        const facetPredicates = buildFacetPredicatesByFilters(filters, searchConfig);
-        let query = getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, [getSort(sort)]);
-        const { data } = await context.client.post(productsByQueryNameUrl.href, {
-          queryType,
-          queryName,
-          autoCorrect: true,
-          includeFacets: true,
-          facetPredicates: facetPredicates,
-          facets: availableFacets,
-          query,
-          searchTerms: term
-        });
-        const products = data.result?.documents ?? [];
-        setProductsCoverImages(products, cdnDamProviderConfig);
-        return { products, total: data.result?.totalCount, facets: data.result?.facets, selectedFacets: data.selectedFacets };
-      }
+    {
+      const productsByQueryNameUrl = new URL(`/api/search/${scope}/${locale}/bySearchQuery/${queryType}/${queryName}`, api.url);
+      const facetPredicates = buildFacetPredicatesByFilters(filters, searchConfig);
+      const query = getCatalogActiveProductsQuery(scope, maximumItems, startingIndex, getSorting(sort));
+      const { data } = await context.client.post(productsByQueryNameUrl.href, {
+        queryType,
+        queryName,
+        autoCorrect: true,
+        includeFacets: true,
+        facetPredicates: facetPredicates,
+        facets: availableFacets,
+        query,
+        searchTerms: term
+      });
+      const products = data.result?.documents ?? [];
+      setProductsCoverImages(products, cdnDamProviderConfig);
+      return { products, total: data.result?.totalCount, facets: data.result?.facets, selectedFacets: data.selectedFacets };
+    }
 
     case ProductsQueryType.Category: {
       if (!categorySlug) {
         console.error('Category query type requires categorySlug parameter.');
         return;
-      };
+      }
       const facetPredicates = buildFacetPredicates(categories, categorySlug, filters, searchConfig);
       let facetCountsResult = [];
       const availableProductsByCategoryUrl = new URL(`/api/search/${scope}/${locale}/availableProducts/byCategory/${categorySlug}`, api.url);
@@ -102,7 +81,7 @@ export default async function getProducts(
         query: {
           maximumItems,
           startingIndex,
-          sortings: [getSort(sort)]
+          sortings: getSorting(sort)
         },
         searchTerms: term
       });
@@ -134,7 +113,7 @@ export default async function getProducts(
         query: {
           maximumItems,
           startingIndex,
-          sortings: [getSort(sort)]
+          sortings: getSorting(sort)
         },
         searchTerms: term
       });

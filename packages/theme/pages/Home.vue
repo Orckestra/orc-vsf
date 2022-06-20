@@ -67,7 +67,8 @@
               @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
               :link="localePath(productGetters.getLink(product))"
               class="carousel__item__product"
-              @click:wishlist="toggleWishlist(i)"
+              :is-in-wishlist="isInWishlist({ product })"
+              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
             />
           </SfCarouselItem>
         </SfCarousel>
@@ -115,7 +116,8 @@
                @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
               :link="localePath(productGetters.getLink(product))"
               class="carousel__item__product"
-              @click:wishlist="toggleWishlist(i)"
+              :is-in-wishlist="isInWishlist({ product })"
+              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
             />
           </SfCarouselItem>
         </SfCarousel>
@@ -143,13 +145,13 @@ import {
   SfLink
 } from '@storefront-ui/vue';
 
-import { computed, ref, useContext } from '@nuxtjs/composition-api';
+import { computed, useContext } from '@nuxtjs/composition-api';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import { useUiState } from '../composables';
 import { addBasePath, onSSR } from '@vue-storefront/core';
-import { useProduct, productGetters, useCart } from '@vue-storefront/orc-vsf';
+import { useProduct, productGetters, useCart, useWishlist, wishlistGetters} from '@vue-storefront/orc-vsf';
 
 export default {
   name: 'Home',
@@ -174,8 +176,9 @@ export default {
     const { $config } = useContext();
     const { toggleNewsletterModal } = useUiState();
     const { addItem: addItemToCart, isInCart } = useCart();
-    const { products: productsFromQuery, search: getQueryProducts, loading: queryLoading } = useProduct('products-home-query');
-    const { products: productsFromSet, search: getSetProducts, loading: setLoading } = useProduct('products-home-set');
+    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
+    const { products: productsFromQuery, search: getQueryProducts } = useProduct('products-home-query');
+    const { products: productsFromSet, search: getSetProducts } = useProduct('products-home-set');
     const heroes = [
       {
         title: 'Colorful summer dresses are already in store',
@@ -256,12 +259,14 @@ export default {
       toggleNewsletterModal();
     };
 
-    const toggleWishlist = (index) => {
-      products.value[index].isInWishlist = !products.value[index].isInWishlist;
+    const removeProductFromWishlist = (productItem) => {
+      const wishListItems = wishlistGetters.getItems(wishlist.value);
+      const sku = productItem.sku ?? productItem.propertyBag?.Sku;
+      const product = wishListItems.find(i => i.sku === sku);
+      removeItemFromWishlist({ product });
     };
 
     return {
-      toggleWishlist,
       toggleNewsletterModal,
       onSubscribe,
       addBasePath,
@@ -271,7 +276,10 @@ export default {
       productsFromSet: computed(() => productsFromSet.value?.products),
       productGetters,
       addItemToCart,
-      isInCart
+      isInCart,
+      addItemToWishlist,
+      isInWishlist,
+      removeProductFromWishlist
     };
   }
 };
