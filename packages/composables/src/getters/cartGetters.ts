@@ -100,7 +100,7 @@ function getActiveShipments(cart: Cart): Shipment[] {
 }
 
 function isShippingTaxable(shipment: Shipment): boolean {
-  return shipment.taxes?.some(t => t.taxForShipmentId === shipment.fulfillmentMethod?.shipmentId && t.taxTotal > 0);
+  return shipment?.taxes?.some(t => t.taxForShipmentId === shipment.fulfillmentMethod?.shipmentId && t.taxTotal > 0);
 }
 
 function isShippingEstimated(shipment: Shipment): boolean {
@@ -119,15 +119,15 @@ function isActiveShippingTaxable(cart: Cart): boolean {
 
 function getTaxes(cart: Cart): Tax[] {
   const shipment = getActiveShipment(cart);
-  return shipment.taxes?.filter(t => t.taxTotal > 0);
+  return shipment?.taxes?.filter(t => t.taxTotal > 0);
 }
 
 function getRewards(cart: Cart, levels?: RewardLevel[]): Reward[] {
   const shipment = getActiveShipment(cart);
-  const rewards = shipment.rewards;
+  const rewards = shipment?.rewards;
 
   if (levels) {
-    return rewards.filter(r => levels.includes(r.level));
+    return rewards?.filter(r => levels.includes(r.level));
   }
 
   return rewards;

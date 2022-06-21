@@ -34,15 +34,15 @@
                 :class="`collected-product status-${cartGetters.getItemStatus(product)}`"
               >
                 <template #price>
-                <SfPrice
-                  :regular="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
-                  :special="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
-                />
-                <SfProperty
-                      name="Total"
-                      :value="$n(cartGetters.getItemTotals(product).total, 'currency')"
-                />
-      </template>
+                  <SfPrice
+                    :regular="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
+                    :special="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
+                  />
+                  <SfProperty
+                        name="Total"
+                        :value="$n(cartGetters.getItemTotals(product).total, 'currency')"
+                  />
+                </template>
                 <template #configuration>
                   <div class="collected-product__properties">
 
@@ -223,19 +223,6 @@ export default {
   &__saving {
     margin-bottom: var(--spacer-base);
   }
-}
-
-.rewards-title {
-  --heading-title-color: var(--c-warning);
-  padding-bottom: var(--spacer-xs);
-}
-
-.property-reward {
-  color: var(--c-warning);
-  &:last-child {
-    padding-bottom: var(--spacer-xs);
-  }
-
 }
 
 .empty-cart {
