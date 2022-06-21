@@ -6,7 +6,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import type { Cart, CartItem } from '@vue-storefront/orc-vsf-api';
+import type { Cart, CartItem, Shipment, Tax, Reward, RewardLevel } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
@@ -30,6 +30,15 @@ function getItemPrice(item: CartItem): AgnosticPrice {
     regular: item?.regularPrice,
     special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : null
   };
+}
+
+function getItemTotals(item: CartItem): AgnosticTotals {
+  return {
+    total: item?.total,
+    subtotal: item?.total,
+    special: undefined,
+    totalWithoutDiscount: item?.totalWithoutDiscount
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -69,13 +78,59 @@ function getTotals(cart: Cart): AgnosticTotals {
   return {
     total: cart?.total,
     subtotal: cart?.subTotal,
-    special: cart?.subTotal
+    special: cart?.subTotal,
+    discount: cart?.discountTotal,
+    subtotaldiscount: cart?.subTotalDiscount,
+    tax: cart?.taxTotal
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(cart: Cart): number {
-  return 0;
+  return cart?.fulfillmentCost ?? 0;
+
+}
+
+function getActiveShipment(cart: Cart): Shipment {
+  return cart?.shipments?.find(s => s.status !== 'Canceled')
+}
+
+function getActiveShipments(cart: Cart): Shipment[] {
+  return cart?.shipments?.filter(s => s.status !== 'Canceled')
+}
+
+function isShippingTaxable(shipment: Shipment): boolean {
+  return shipment.taxes?.some(t => t.taxForShipmentId === shipment.fulfillmentMethod?.shipmentId && t.taxTotal > 0)
+}
+
+function isShippingEstimated(shipment: Shipment): boolean {
+  return Boolean(shipment?.address?.postalCode);
+}
+
+function isActiveShippingEstimated(cart: Cart): boolean {
+  const shipment = getActiveShipment(cart);
+  return isShippingEstimated(shipment);
+}
+
+function isActiveShippingTaxable(cart: Cart): boolean {
+  const shipment = getActiveShipment(cart);
+  return isShippingTaxable(shipment);
+}
+
+function getTaxes(cart: Cart): Tax[] {
+  const shipment = getActiveShipment(cart);
+  return shipment.taxes?.filter(t => t.taxTotal > 0);
+}
+
+function getRewards(cart: Cart, levels?: RewardLevel[]): Reward[] {
+  const shipment = getActiveShipment(cart);
+  const rewards = shipment.rewards;
+
+  if (levels) {
+    return rewards.filter(r => levels.includes(r.level));
+  }
+
+  return rewards;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -114,6 +169,7 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getItemImage,
   getItemPrice,
   getItemQty,
+  getItemTotals,
   getItemAttributes,
   getItemSku,
   getItemStatus,
@@ -121,5 +177,12 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotalItems,
   getCoupons,
   getDiscounts,
-  getLink
+  getLink,
+  getActiveShipment,
+  isShippingTaxable,
+  isShippingEstimated,
+  isActiveShippingEstimated,
+  isActiveShippingTaxable,
+  getTaxes,
+  getRewards
 };

@@ -1,3 +1,5 @@
+import { UseUserAddress } from '@vue-storefront/core';
+
 export type TODO = unknown;
 
 export type Setttings = TODO;
@@ -19,6 +21,73 @@ export type CartItemSummary = {
     allowSelectionWithoutScan: boolean
 }
 
+export type Tax = {
+    code: string,
+    displayName: any,
+    id: string,
+    isShippingFeeTax: boolean,
+    isShippingTax: boolean,
+    lineItemIds: any,
+    percentage: number,
+    taxAmount: number,
+    taxCategoryId: string,
+    taxForShipmentId: string,
+    taxTotal: number
+}
+
+export type FulfillmentMethod = {
+    id: string,
+    propertyBag: any,
+    carrierName: string,
+    carrierOptionDisplayName: any,
+    carrierServiceLevel: string,
+    cost: number,
+    displayName: any,
+    expectedDeliveryDate: string,
+    fulfillmentMethodType: string,
+    shipmentId: string,
+    shippingProviderId: string,
+    taxCategory: string
+}
+
+export type ShipmentAdditionalFee = {
+    id: string,
+    amount: number,
+    description: string,
+    displayName: any,
+    name: string,
+    taxable: boolean,
+    taxCategory: string
+}
+
+export const enum RewardLevel {
+    LineItem = 0,
+    Shipment = 1,
+    FulfillmentMethod = 2,
+    None = 3
+}
+
+export const enum RewardType {
+    Discount = 0,
+    External = 1,
+    Gift = 2
+}
+
+export type Reward = {
+    id: string,
+    amount: number,
+    propertyBag: any,
+    campaignId: string,
+    campaignName: string,
+    description: string,
+    level: RewardLevel,
+    promotionId: string,
+    promotionName: string,
+    promotionVersion: number,
+    relatedObjectId: string,
+    rewardType: RewardType
+}
+
 export type CartItem = {
     id: string,
     productSummary: CartItemSummary,
@@ -29,6 +98,7 @@ export type CartItem = {
     regularPrice: number,
     defaultPrice: number,
     placedPrice: number,
+    discountAmount: number,
     total: number,
     status: string,
     sku: string,
@@ -39,12 +109,27 @@ export type CartItem = {
     variantId: string,
     recurringOrderProgramName: string,
     recurringOrderFrequencyName: string,
-    coverImage?:string
+    coverImage?:string,
+    isGiftItem: boolean,
+    rewards: Reward[],
 }
 
 export type Shipment = {
-    lineItems: CartItem [],
-    fulfillmentLocationId: string
+    id: string,
+    additionalFeeAmount?: number,
+    additionalFees?: ShipmentAdditionalFee[],
+    address?: UserAddress,
+    lineItems: CartItem[],
+    fulfillmentLocationId: string,
+    fulfillmentMethod: FulfillmentMethod,
+    status: string,
+    taxes?: Tax[],
+    taxProviderId?: string,
+    taxTotal?: number,
+    total: number,
+    trackingNumber?: string,
+    propertyBag?: any,
+    rewards?: Reward[]
 }
 
 export type Cart = {
@@ -58,12 +143,17 @@ export type Cart = {
     taxTotal: number,
     merchandiseTotal: number,
     total: number,
+    fulfillmentCost: number,
+    fulfillmentCostWithoutDiscount: number,
+    fulfillmentLevelDiscountTotal: number,
     scopeId: string,
     status: string,
     lineItemsTotalWithoutDiscount: number,
     lineItemLevelDiscount: number,
     lineItemsTotal: number,
-    itemCount: number
+    itemCount: number,
+    discountTotal: number,
+    subTotalDiscount: number
 };
 
 export type Category = {

@@ -28,12 +28,24 @@
                 :regular-price="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
                 :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
                 :stock="99"
+                :qty="cartGetters.getItemQty(product)"
                 :link="localePath(cartGetters.getLink(product))"
                 @click:remove="removeItem({ product: { id: product.id } })"
                 :class="`collected-product status-${cartGetters.getItemStatus(product)}`"
               >
+                <template #price>
+                <SfPrice
+                  :regular="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
+                  :special="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
+                />
+                <SfProperty
+                      name="Total"
+                      :value="$n(cartGetters.getItemTotals(product).total, 'currency')"
+                />
+      </template>
                 <template #configuration>
                   <div class="collected-product__properties">
+                  
                     <SfProperty
                       v-for="(attribute, key) in cartGetters.getItemAttributes(product, ['Colour', 'RetailSize'])"
                       :key="key"
@@ -90,11 +102,12 @@
             >
               <template #value>
                 <SfPrice
-                  :regular="$n(totals.subtotal, 'currency')"
-                  :special="(totals.special !== totals.subtotal) ? $n(totals.special, 'currency') : 0"
+                  :regular="totals.subtotaldiscount > 0 ? $n(totals.subtotal + totals.subtotaldiscount, 'currency') : $n(totals.subtotal, 'currency')"
+                  :special="(totals.subtotaldiscount > 0) ? $n(totals.subtotal, 'currency') : 0"
                 />
               </template>
             </SfProperty>
+            <CartSaving class="my-cart__saving"/>
             <nuxt-link :to="localePath({ name: 'shipping' })">
               <SfButton
                 class="sf-button--full-width color-secondary"
@@ -128,6 +141,7 @@ import {
   SfImage,
   SfQuantitySelector
 } from '@storefront-ui/vue';
+import  CartSaving from './Checkout/CartSaving'
 import { computed, useRouter} from '@nuxtjs/composition-api';
 import { useCart, cartGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
@@ -145,7 +159,8 @@ export default {
     SfPrice,
     SfCollectedProduct,
     SfImage,
-    SfQuantitySelector
+    SfQuantitySelector,
+    CartSaving
   },
   setup() {
     const router = useRouter();
@@ -156,7 +171,6 @@ export default {
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
-
     const updateQuantity = debounce(async ({ product, quantity }) => {
       await updateItemQty({ product, quantity });
     }, 500);
@@ -206,7 +220,24 @@ export default {
     --price-font-weight: var(--font-weight--medium);
     margin: 0 0 var(--spacer-base) 0;
   }
+  &__saving {
+    margin-bottom: var(--spacer-base);
+  }
 }
+
+.rewards-title {
+  --heading-title-color: var(--c-warning);
+  padding-bottom: var(--spacer-xs);
+}
+
+.property-reward {
+  color: var(--c-warning);
+  &:last-child {
+    padding-bottom: var(--spacer-xs);
+  }
+
+}
+
 .empty-cart {
   --heading-description-margin: 0 0 var(--spacer-xl) 0;
   --heading-title-margin: 0 0 var(--spacer-xl) 0;
