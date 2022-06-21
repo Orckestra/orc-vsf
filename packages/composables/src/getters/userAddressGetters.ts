@@ -1,27 +1,31 @@
-import { UserShippingGetters } from '@vue-storefront/core';
 import type {
-  UserAddress as AddressItem,
-  UserShippingAddressSearchCriteria
+  UserAddress as AddressItem
 } from '@vue-storefront/orc-vsf-api';
+import { UserAddressGetters } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getAddresses(shipping: AddressItem[], criteria?: UserShippingAddressSearchCriteria): AddressItem[] {
-  return shipping;
+function getDefault(addresses: AddressItem[]): AddressItem {
+  return addresses.find(a => a.isPreferredShipping && a.isPreferredBilling);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getDefault(shipping: AddressItem[]): AddressItem {
-  return shipping.find(a => a.isPreferredShipping);
+function getDefaultShipping(addresses: AddressItem[]): AddressItem {
+  return addresses.find(a => a.isPreferredShipping);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getTotal(shipping: AddressItem[]): number {
-  return shipping.length;
+function getDefaultBilling(addresses: AddressItem[]): AddressItem {
+  return addresses.find(a => a.isPreferredBilling);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getTotal(addresses: AddressItem[]): number {
+  return addresses.length;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPostCode(address: AddressItem): string {
-  return '';
+  return address.postalCode;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,32 +40,32 @@ function getStreetNumber(address: AddressItem): string | number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCity(address: AddressItem): string {
-  return '';
+  return address.city;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFirstName(address: AddressItem): string {
-  return '';
+  return address.firstName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getLastName(address: AddressItem): string {
-  return '';
+  return address.lastName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCountry(address: AddressItem): string {
-  return '';
+  return address.countryCode;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPhone(address: AddressItem): string {
-  return '';
+  return address.phoneNumber;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getEmail(address: AddressItem): string {
-  return '';
+  return address.email;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -91,12 +95,23 @@ function getApartmentNumber(address: AddressItem): string | number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function isDefault(address: AddressItem): boolean {
-  return false;
+  return address.isPreferredBilling && address.isPreferredShipping;
 }
 
-export const userShippingGetters: UserShippingGetters<AddressItem[], AddressItem> = {
-  getAddresses,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isDefaultShipping(address: AddressItem): boolean {
+  return address.isPreferredShipping;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isDefaultBilling(address: AddressItem): boolean {
+  return address.isPreferredBilling;
+}
+
+export const userAddressGetters: UserAddressGetters<AddressItem> = {
   getDefault,
+  getDefaultShipping,
+  getDefaultBilling,
   getTotal,
   getPostCode,
   getStreetName,
@@ -112,5 +127,7 @@ export const userShippingGetters: UserShippingGetters<AddressItem[], AddressItem
   getTaxNumber,
   getId,
   getApartmentNumber,
-  isDefault
+  isDefault,
+  isDefaultShipping,
+  isDefaultBilling
 };

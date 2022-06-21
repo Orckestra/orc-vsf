@@ -4,6 +4,7 @@ import {
   Context,
   ComputedProperty
 } from '@vue-storefront/core';
+import { Composable, CustomQuery, PlatformApi } from '@vue-storefront/core/lib/src/types';
 
 export type TODO = any;
 
@@ -150,4 +151,97 @@ export interface UseConfigurationGetters<CONFIGURATION, MEMBERSHIPCONFIGURATION>
   getMinRequiredPasswordLength(config: CONFIGURATION): number;
   getMinRequiredNonAlphanumericCharacters(config: CONFIGURATION): number;
   getMembershipConfiguration(config: CONFIGURATION) : MEMBERSHIPCONFIGURATION;
+}
+
+/*
+COUNTRIES
+*/
+export interface UseCountriesErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface UseCountriesFactoryParams<COUNTRIES> extends FactoryParams {
+  load(context: Context): Promise<COUNTRIES>
+}
+
+export interface UseCountriesInterface<COUNTRIES> {
+  load(): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  countries: ComputedProperty<COUNTRIES>;
+  error: ComputedProperty<UseCountriesErrors>;
+}
+
+export interface UseCountries<COUNTRIES> {
+  (): UseCountriesInterface<COUNTRIES>;
+}
+export interface CountriesGetters<COUNTRIES, REGIONS> {
+  getRegions(countries: COUNTRIES, countryCode: string): REGIONS;
+}
+
+/*
+ADDRESSES
+*/
+export interface UseUserAddressesErrors {
+  addAddress: Error;
+  deleteAddress: Error;
+  updateAddress: Error;
+  load: Error;
+  setDefaultAddress: Error;
+  setDefaultShipping: Error;
+  setDefaultBilling: Error;
+}
+export interface UseUserAddresses<USER_ADDRESS_ITEM, API extends PlatformApi = any> extends Composable<API> {
+  addresses: ComputedProperty<USER_ADDRESS_ITEM[]>;
+  addAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  deleteAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  updateAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  load: () => Promise<void>;
+  setDefaultAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  setDefaultShipping: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  setDefaultBilling: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  loading: ComputedProperty<boolean>;
+  error: ComputedProperty<UseUserAddressesErrors>;
+}
+
+export interface UserAddressGetters<USER_ADDRESS_ITEM> {
+  getDefault: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getDefaultShipping: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getDefaultBilling: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getTotal: (addresses: USER_ADDRESS_ITEM[]) => number;
+  getPostCode: (address: USER_ADDRESS_ITEM) => string;
+  getStreetName: (address: USER_ADDRESS_ITEM) => string;
+  getStreetNumber: (address: USER_ADDRESS_ITEM) => string | number;
+  getCity: (address: USER_ADDRESS_ITEM) => string;
+  getFirstName: (address: USER_ADDRESS_ITEM) => string;
+  getLastName: (address: USER_ADDRESS_ITEM) => string;
+  getCountry: (address: USER_ADDRESS_ITEM) => string;
+  getPhone: (address: USER_ADDRESS_ITEM) => string;
+  getEmail: (address: USER_ADDRESS_ITEM) => string;
+  getProvince: (address: USER_ADDRESS_ITEM) => string;
+  getCompanyName: (address: USER_ADDRESS_ITEM) => string;
+  getTaxNumber: (address: USER_ADDRESS_ITEM) => string;
+  getId: (address: USER_ADDRESS_ITEM) => string | number;
+  getApartmentNumber: (address: USER_ADDRESS_ITEM) => string | number;
+  isDefault: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultShipping: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultBilling: (address: USER_ADDRESS_ITEM) => boolean;
 }

@@ -1,14 +1,13 @@
 import {
-  Context,
-  useUserShippingFactory,
-  UseUserShippingFactoryParams
+  Context
 } from '@vue-storefront/core';
 import type {
   UserAddress as AddressItem
 } from '@vue-storefront/orc-vsf-api';
 import { getUserToken } from '../helpers/generalUtils';
+import { useUserAddressesFactory, UseUserAddressesFactoryParams } from '../factories/useUserAddressesFactory';
 
-const factoryParams: UseUserShippingFactoryParams<AddressItem[], AddressItem> = {
+const factoryParams: UseUserAddressesFactoryParams<AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
     const {address} = params;
@@ -18,7 +17,7 @@ const factoryParams: UseUserShippingFactoryParams<AddressItem[], AddressItem> = 
     }
 
     await context.$occ.api.addUserAddress({ userToken, address });
-    return factoryParams.load(context, params);
+    return factoryParams.load(context);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,7 +29,7 @@ const factoryParams: UseUserShippingFactoryParams<AddressItem[], AddressItem> = 
     }
 
     await context.$occ.api.deleteUserAddress({ userToken, addressId: address.id });
-    return factoryParams.load(context, params);
+    return factoryParams.load(context);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,11 +41,11 @@ const factoryParams: UseUserShippingFactoryParams<AddressItem[], AddressItem> = 
     }
 
     await context.$occ.api.updateUserAddress({ userToken, address, addressId: address.id });
-    return factoryParams.load(context, params);
+    return factoryParams.load(context);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, params) => {
+  load: async (context: Context) => {
     const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
@@ -63,9 +62,33 @@ const factoryParams: UseUserShippingFactoryParams<AddressItem[], AddressItem> = 
       return null;
     }
 
+    await context.$occ.api.updateUserAddress({ userToken, address: { ...address, isPreferredShipping: true, isPreferredBilling: true }, addressId: address.id });
+    return factoryParams.load(context);
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setDefaultShipping: async (context: Context, params) => {
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
     await context.$occ.api.updateUserAddress({ userToken, address: { ...address, isPreferredShipping: true }, addressId: address.id });
-    return factoryParams.load(context, params);
+    return factoryParams.load(context);
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setDefaultBilling: async (context: Context, params) => {
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    await context.$occ.api.updateUserAddress({ userToken, address: { ...address, isPreferredBilling: true }, addressId: address.id });
+    return factoryParams.load(context);
   }
 };
 
-export const useUserShipping = useUserShippingFactory<AddressItem[], AddressItem>(factoryParams);
+export const useUserAddresses = useUserAddressesFactory<AddressItem>(factoryParams);

@@ -26,6 +26,11 @@ import updateUser from './api/users/updateUser';
 import getCartLineItems from './api/carts/getCartLineItems';
 import changePassword from './api/membership/changePassword';
 import clearCart from './api/carts/clearCart';
+import getUserAddresses from './api/users/getUserAddresses';
+import getCountries from './api/countries/getCountries';
+import updateUserAddress from './api/users/updateUserAddress';
+import addUserAddress from './api/users/addUserAddress';
+import deleteUserAddress from './api/users/deleteUserAddress';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -68,7 +73,12 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updateUser,
     getCartLineItems,
     changePassword,
-    clearCart
+    clearCart,
+    getUserAddresses,
+    getCountries,
+    updateUserAddress,
+    addUserAddress,
+    deleteUserAddress
   }
 });
 
