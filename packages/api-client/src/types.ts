@@ -1,5 +1,3 @@
-import { UseUserAddress } from '@vue-storefront/core';
-
 export type TODO = unknown;
 
 export type Setttings = TODO;
@@ -7,6 +5,30 @@ export type Setttings = TODO;
 export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
+
+export type UserAddress = {
+    addressName: string,
+    city: string,
+    countryCode: string,
+    email: string,
+    firstName: string,
+    id: string,
+    isPreferredBilling: boolean,
+    isPreferredShipping: boolean,
+    lastModified: string,
+    lastModifiedBy: string,
+    lastName: string,
+    latitude: number,
+    line1: string,
+    line2: string,
+    longitude: number,
+    notes: string,
+    phoneExtension: string,
+    phoneNumber: string,
+    postalCode: string,
+    propertyBag: object
+    regionCode: string
+};
 
 export type CartItemSummary = {
     propertyBag: any,
@@ -354,30 +376,6 @@ export type UserBillingAddress = TODO;
 export type UserBillingAddressItem = TODO;
 
 export type UserBillingAddressSearchCriteria = TODO;
-
-export type UserAddress = {
-    addressName: string,
-    city: string,
-    countryCode: string,
-    email: string,
-    firstName: string,
-    id: string,
-    isPreferredBilling: boolean,
-    isPreferredShipping: boolean,
-    lastModified: string,
-    lastModifiedBy: string,
-    lastName: string,
-    latitude: number,
-    line1: string,
-    line2: string,
-    longitude: number,
-    notes: string,
-    phoneExtension: string,
-    phoneNumber: string,
-    postalCode: string,
-    propertyBag: object
-    regionCode: string
-};
 
 export type UserShippingAddressSearchCriteria = TODO;
 

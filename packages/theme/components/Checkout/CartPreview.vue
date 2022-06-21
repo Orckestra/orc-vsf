@@ -41,7 +41,7 @@
         :value="$n(cartGetters.getShippingPrice(cart), 'currency')"
         :class="['sf-property--full-width', 'sf-property--small property']"
       />
-    
+
       <SfProperty
         :name="$t('Total')"
         :value="$n(totals.total, 'currency')"
@@ -66,26 +66,25 @@
 
 <script>
 import { SfHeading, SfProperty, SfCharacteristic } from '@storefront-ui/vue';
-import  CartSaving from './CartSaving'
-import { computed, ref, defineComponent, useRouter } from '@nuxtjs/composition-api';
+import CartSaving from './CartSaving';
+import { computed, useRouter } from '@nuxtjs/composition-api';
 import { useCart, cartGetters} from '@vue-storefront/orc-vsf';
-    const CHARACTERISTICS = [
+const CHARACTERISTICS = [
   {
     title: 'Safety',
     description: 'It carefully packaged with a personal touch',
-    icon: 'safety',
+    icon: 'safety'
   },
   {
     title: 'Easy shipping',
     description: 'You’ll receive dispatch confirmation and an arrival date',
-    icon: 'shipping',
+    icon: 'shipping'
   }
 ];
 
-
 export default {
   name: 'CartPreview',
-    components: {
+  components: {
     SfHeading,
     SfProperty,
     SfCharacteristic,
@@ -96,12 +95,11 @@ export default {
     const router = useRouter();
     const { locale } = router.app.$i18n;
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
-    const items = computed(() => cartGetters.getItems(cart.value));
     const isActiveShippingTaxable = computed(() => cartGetters.isActiveShippingTaxable(cart.value));
     const isActiveShippingEstimated = computed(() => cartGetters.isActiveShippingEstimated(cart.value));
     const taxes = computed(() => cartGetters.getTaxes(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
-return {
+    return {
       cartGetters,
       cart,
       totalItems,
@@ -111,9 +109,9 @@ return {
       isActiveShippingEstimated,
       locale,
       characteristics: CHARACTERISTICS
-    }
+    };
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .highlighted {

@@ -38,7 +38,7 @@ function getItemTotals(item: CartItem): AgnosticTotals {
     subtotal: item?.total,
     special: undefined,
     totalWithoutDiscount: item?.totalWithoutDiscount
-  }
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -92,15 +92,15 @@ function getShippingPrice(cart: Cart): number {
 }
 
 function getActiveShipment(cart: Cart): Shipment {
-  return cart?.shipments?.find(s => s.status !== 'Canceled')
+  return cart?.shipments?.find(s => s.status !== 'Canceled');
 }
 
 function getActiveShipments(cart: Cart): Shipment[] {
-  return cart?.shipments?.filter(s => s.status !== 'Canceled')
+  return cart?.shipments?.filter(s => s.status !== 'Canceled');
 }
 
 function isShippingTaxable(shipment: Shipment): boolean {
-  return shipment.taxes?.some(t => t.taxForShipmentId === shipment.fulfillmentMethod?.shipmentId && t.taxTotal > 0)
+  return shipment.taxes?.some(t => t.taxForShipmentId === shipment.fulfillmentMethod?.shipmentId && t.taxTotal > 0);
 }
 
 function isShippingEstimated(shipment: Shipment): boolean {
@@ -179,6 +179,7 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getDiscounts,
   getLink,
   getActiveShipment,
+  getActiveShipments,
   isShippingTaxable,
   isShippingEstimated,
   isActiveShippingEstimated,

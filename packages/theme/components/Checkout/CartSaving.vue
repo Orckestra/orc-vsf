@@ -11,12 +11,12 @@
             class="sf-property--full-width sf-property--large property-saving-total"
           />
         </div>
-      </template>   
+      </template>
       <SfProperty
         :name="$t('Items savings')"
         :value="$n(productsDiscountAmount, 'currency')"
         :class="['sf-property--full-width', 'sf-property--small property']"
-      />  
+      />
       <div v-if="hasRewards">
         <SfProperty
             v-for="(reward, i) in rewards"
@@ -34,30 +34,29 @@
 
 <script>
 import { SfHeading, SfProperty, SfAccordion } from '@storefront-ui/vue';
-import { computed, ref, defineComponent, useRouter } from '@nuxtjs/composition-api';
+import { computed } from '@nuxtjs/composition-api';
 import { useCart, cartGetters} from '@vue-storefront/orc-vsf';
-
 
 export default {
   name: 'CartSaving',
-    components: {
+  components: {
     SfHeading,
     SfProperty,
-    SfAccordion 
+    SfAccordion
   },
   setup() {
     const { cart } = useCart();
     const items = computed(() => cartGetters.getItems(cart.value));
-    const rewards = computed(() => cartGetters.getRewards(cart.value)); 
+    const rewards = computed(() => cartGetters.getRewards(cart.value));
     const hasRewards = computed(() => rewards.value?.length > 0);
     const discounts = computed(() => cartGetters.getDiscounts(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const productsDiscountAmount = computed(
-          () => items.value?.reduce((a, el) => (el.defaultPrice - el.currentPrice) * el.quantity + a, 0),
+      () => items.value?.reduce((a, el) => ((el.defaultPrice - el.currentPrice) * el.quantity) + a, 0)
     );
     const totalDiscountsAmount = computed(() => totals.value?.discount + productsDiscountAmount.value);
     const hasDiscounts = computed(() => totalDiscountsAmount.value > 0);
-return {
+    return {
       cartGetters,
       cart,
       rewards,
@@ -66,9 +65,9 @@ return {
       productsDiscountAmount,
       totalDiscountsAmount,
       hasDiscounts
-    }
+    };
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .cart-saving {

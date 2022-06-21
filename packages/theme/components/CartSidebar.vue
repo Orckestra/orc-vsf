@@ -45,7 +45,7 @@
       </template>
                 <template #configuration>
                   <div class="collected-product__properties">
-                  
+
                     <SfProperty
                       v-for="(attribute, key) in cartGetters.getItemAttributes(product, ['Colour', 'RetailSize'])"
                       :key="key"
@@ -141,7 +141,7 @@ import {
   SfImage,
   SfQuantitySelector
 } from '@storefront-ui/vue';
-import  CartSaving from './Checkout/CartSaving'
+import CartSaving from './Checkout/CartSaving';
 import { computed, useRouter} from '@nuxtjs/composition-api';
 import { useCart, cartGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
