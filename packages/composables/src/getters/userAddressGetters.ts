@@ -25,7 +25,7 @@ function getTotal(addresses: AddressItem[]): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPostCode(address: AddressItem): string {
-  return '';
+  return address.postalCode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,32 +40,32 @@ function getStreetNumber(address: AddressItem): string | number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCity(address: AddressItem): string {
-  return '';
+  return address.city;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFirstName(address: AddressItem): string {
-  return '';
+  return address.firstName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getLastName(address: AddressItem): string {
-  return '';
+  return address.lastName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCountry(address: AddressItem): string {
-  return '';
+  return address.countryCode;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPhone(address: AddressItem): string {
-  return '';
+  return address.phoneNumber;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getEmail(address: AddressItem): string {
-  return '';
+  return address.email;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
