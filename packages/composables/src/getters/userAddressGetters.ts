@@ -25,7 +25,7 @@ function getTotal(addresses: AddressItem[]): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPostCode(address: AddressItem): string {
-  return address.postalCode
+  return address.postalCode;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
