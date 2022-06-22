@@ -6,11 +6,11 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import type { Cart, CartItem } from '@vue-storefront/orc-vsf-api';
+import type { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
-  const shipment = cart?.shipments[0];
+  const shipment = getActiveShipment(cart);
   return shipment?.lineItems;
 }
 
@@ -29,6 +29,15 @@ function getItemPrice(item: CartItem): AgnosticPrice {
   return {
     regular: item?.regularPrice,
     special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : null
+  };
+}
+
+function getItemTotals(item: CartItem): AgnosticTotals {
+  return {
+    total: item?.total,
+    subtotal: item?.total,
+    special: undefined,
+    totalWithoutDiscount: item?.totalWithoutDiscount
   };
 }
 
@@ -69,13 +78,69 @@ function getTotals(cart: Cart): AgnosticTotals {
   return {
     total: cart?.total,
     subtotal: cart?.subTotal,
-    special: cart?.subTotal
+    special: cart?.subTotal,
+    discount: cart?.discountTotal,
+    subtotaldiscount: cart?.subTotalDiscount,
+    tax: cart?.taxTotal
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(cart: Cart): number {
-  return 0;
+  return cart?.fulfillmentCost ?? 0;
+
+}
+
+function getActiveShipment(cart: Cart): Shipment {
+  return cart?.shipments?.find(s => s.status !== 'Canceled');
+}
+
+function getActiveShipments(cart: Cart): Shipment[] {
+  return cart?.shipments?.filter(s => s.status !== 'Canceled');
+}
+
+function isShippingTaxable(shipment: Shipment): boolean {
+  return shipment?.taxes?.some(t => t.taxForShipmentId === shipment.fulfillmentMethod?.shipmentId && t.taxTotal > 0);
+}
+
+function isShippingEstimated(shipment: Shipment): boolean {
+  return Boolean(shipment?.address?.postalCode);
+}
+
+function isActiveShippingEstimated(cart: Cart): boolean {
+  const shipment = getActiveShipment(cart);
+  return isShippingEstimated(shipment);
+}
+
+function isActiveShippingTaxable(cart: Cart): boolean {
+  const shipment = getActiveShipment(cart);
+  return isShippingTaxable(shipment);
+}
+
+function getTaxes(cart: Cart): Tax[] {
+  const shipment = getActiveShipment(cart);
+  return shipment?.taxes?.filter(t => t.taxTotal > 0);
+}
+
+function getRewards(cart: Cart, levels?: RewardLevel[]): Reward[] {
+  const shipment = getActiveShipment(cart);
+  const rewards = shipment?.rewards;
+
+  if (levels) {
+    return rewards?.filter(r => levels.includes(r.level));
+  }
+
+  return rewards;
+}
+
+function getTaxableAdditionalFees(cart: Cart): ShipmentAdditionalFee[] {
+  const shipment = getActiveShipment(cart);
+  return shipment?.additionalFees?.filter(f => f.taxable);
+}
+
+function getNotTaxableAdditionalFees(cart: Cart): ShipmentAdditionalFee[] {
+  const shipment = getActiveShipment(cart);
+  return shipment?.additionalFees?.filter(f => !f.taxable);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -98,6 +163,12 @@ function getDiscounts(cart: Cart): AgnosticDiscount[] {
   return [];
 }
 
+function getItemsDiscountsAmount(cart: Cart): number {
+  const items = getItems(cart);
+  if (!items) return 0;
+  return items.reduce((a, el) => ((el.defaultPrice - el.currentPrice) * el.quantity) + a, 0);
+}
+
 function getLink(item: CartItem): string {
   if (!item) return;
   const variantId = item.variantId;
@@ -114,6 +185,7 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getItemImage,
   getItemPrice,
   getItemQty,
+  getItemTotals,
   getItemAttributes,
   getItemSku,
   getItemStatus,
@@ -121,5 +193,16 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotalItems,
   getCoupons,
   getDiscounts,
-  getLink
+  getItemsDiscountsAmount,
+  getLink,
+  getActiveShipment,
+  getActiveShipments,
+  isShippingTaxable,
+  isShippingEstimated,
+  isActiveShippingEstimated,
+  isActiveShippingTaxable,
+  getTaxes,
+  getRewards,
+  getTaxableAdditionalFees,
+  getNotTaxableAdditionalFees
 };
