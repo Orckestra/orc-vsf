@@ -272,7 +272,7 @@ export default {
     };
 
     onSSR(async () => {
-      await search({...th.getFacetsFromURL(), withCategoryCounts: true});
+      await search({queryType: 'Category', ...th.getFacetsFromURL(), withFacetCounts: true});
       if (error?.value?.search) context.root.$nuxt.error({ statusCode: 404 });
     });
 
