@@ -70,8 +70,8 @@
                     />
                   </div>
                 </template>
-                <!-- @TODO: remove if https://github.com/vuestorefront/storefront-ui/issues/2022 is done -->
-                <template #more-actions>{{  }}</template>
+                 <template #actions="{}">&nbsp;</template>
+                 <template #more-actions>&nbsp;</template>
               </SfCollectedProduct>
             </transition-group>
           </div>

@@ -13,6 +13,7 @@
         </div>
       </template>
       <SfProperty
+        v-if="productsDiscountAmount > 0"
         :name="$t('Items savings')"
         :value="$n(productsDiscountAmount, 'currency')"
         :class="['sf-property--full-width', 'sf-property--small property']"

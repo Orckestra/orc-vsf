@@ -79,6 +79,11 @@ const CHARACTERISTICS = [
     title: 'Easy shipping',
     description: 'You’ll receive dispatch confirmation and an arrival date',
     icon: 'shipping'
+  },
+  {
+    title: 'Fees',
+    description: 'Additional fees may apply in case of oversized packages.',
+    icon: 'info'
   }
 ];
 

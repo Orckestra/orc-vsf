@@ -6,7 +6,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import type { Cart, CartItem, Shipment, Tax, Reward, RewardLevel } from '@vue-storefront/orc-vsf-api';
+import type { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
@@ -133,6 +133,16 @@ function getRewards(cart: Cart, levels?: RewardLevel[]): Reward[] {
   return rewards;
 }
 
+function getTaxableAdditionalFees(cart: Cart): ShipmentAdditionalFee[] {
+  const shipment = getActiveShipment(cart);
+  return shipment?.additionalFees?.filter(f => f.taxable);
+}
+
+function getNotTaxableAdditionalFees(cart: Cart): ShipmentAdditionalFee[] {
+  const shipment = getActiveShipment(cart);
+  return shipment?.additionalFees?.filter(f => !f.taxable);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
   return cart?.itemCount;
@@ -185,5 +195,7 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   isActiveShippingEstimated,
   isActiveShippingTaxable,
   getTaxes,
-  getRewards
+  getRewards,
+  getTaxableAdditionalFees,
+  getNotTaxableAdditionalFees
 };
