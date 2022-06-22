@@ -170,6 +170,7 @@ export interface CartGetters<Cart, CartItem> {
     getFormattedPrice: (price: number) => string;
     getCoupons: (cart: Cart) => AgnosticCoupon[]; // TODO
     getDiscounts: (cart: Cart) => AgnosticDiscount[]; // TODO or use getRewards
+    getItemsDiscountsAmount(cart: Cart) => number;
     getRewards(cart: Cart, levels?: RewardLevel[]) =>  Reward[];
     getTaxes(cart: Cart) => Tax[];
     getActiveShipment(cart: Cart) =>  Shipment;

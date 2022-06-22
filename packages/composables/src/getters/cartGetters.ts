@@ -10,7 +10,7 @@ import type { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditi
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
-  const shipment = cart?.shipments[0];
+  const shipment = getActiveShipment(cart);
   return shipment?.lineItems;
 }
 
@@ -163,6 +163,12 @@ function getDiscounts(cart: Cart): AgnosticDiscount[] {
   return [];
 }
 
+function getItemsDiscountsAmount(cart: Cart): number {
+  const items = getItems(cart);
+  if (!items) return 0;
+  return items.reduce((a, el) => ((el.defaultPrice - el.currentPrice) * el.quantity) + a, 0);
+}
+
 function getLink(item: CartItem): string {
   if (!item) return;
   const variantId = item.variantId;
@@ -187,6 +193,7 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotalItems,
   getCoupons,
   getDiscounts,
+  getItemsDiscountsAmount,
   getLink,
   getActiveShipment,
   getActiveShipments,

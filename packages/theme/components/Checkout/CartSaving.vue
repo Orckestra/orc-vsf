@@ -13,9 +13,9 @@
         </div>
       </template>
       <SfProperty
-        v-if="productsDiscountAmount > 0"
+        v-if="itemsDiscountsAmount > 0"
         :name="$t('Items savings')"
-        :value="$n(productsDiscountAmount, 'currency')"
+        :value="$n(itemsDiscountsAmount, 'currency')"
         :class="['sf-property--full-width', 'sf-property--small property']"
       />
       <div v-if="hasRewards">
@@ -47,23 +47,19 @@ export default {
   },
   setup() {
     const { cart } = useCart();
-    const items = computed(() => cartGetters.getItems(cart.value));
     const rewards = computed(() => cartGetters.getRewards(cart.value));
     const hasRewards = computed(() => rewards.value?.length > 0);
-    const discounts = computed(() => cartGetters.getDiscounts(cart.value));
+    const itemsDiscountsAmount = computed(() => cartGetters.getItemsDiscountsAmount(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
-    const productsDiscountAmount = computed(
-      () => items.value?.reduce((a, el) => ((el.defaultPrice - el.currentPrice) * el.quantity) + a, 0)
-    );
-    const totalDiscountsAmount = computed(() => totals.value?.discount + productsDiscountAmount.value);
+
+    const totalDiscountsAmount = computed(() => totals.value?.discount + itemsDiscountsAmount.value);
     const hasDiscounts = computed(() => totalDiscountsAmount.value > 0);
     return {
       cartGetters,
       cart,
       rewards,
       hasRewards,
-      discounts,
-      productsDiscountAmount,
+      itemsDiscountsAmount,
       totalDiscountsAmount,
       hasDiscounts
     };
