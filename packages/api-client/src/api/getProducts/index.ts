@@ -85,12 +85,10 @@ export default async function getProducts(
       if (withFacetCounts || facetCounts) {
         const { data: facetCountsData } = await context.client.post(availableProductsUrl.href, {
           inventoryLocationIds,
-          includeFacets,
+          includeFacets: true,
+          facetPredicates: [],
           facets: facetCounts ?? searchConfig.categoryCountFacets,
-          query: {
-            maximumItems: 0,
-            startingIndex: 0
-          }
+          query: getCatalogActiveProductsQuery(scope, 0, 0, [])
         });
 
         facetCountsResult = facetCountsData.facets;
