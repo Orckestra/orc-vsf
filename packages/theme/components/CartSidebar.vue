@@ -29,10 +29,16 @@
                 :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
                 :stock="99"
                 :qty="cartGetters.getItemQty(product)"
-                :link="localePath(cartGetters.getLink(product))"
                 @click:remove="removeItem({ product: { id: product.id } })"
+
                 :class="`collected-product status-${cartGetters.getItemStatus(product)}`"
               >
+              <template #title>
+                <SfLink :link="localePath(cartGetters.getLink(product))"
+                  @click.native="toggleCartSidebar">
+                  {{cartGetters.getItemName(product)}}
+                </SfLink>
+              </template>
                 <template #price>
                   <SfPrice
                     :regular="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
@@ -134,6 +140,7 @@ import {
   SfSidebar,
   SfHeading,
   SfButton,
+  SfLink,
   SfIcon,
   SfProperty,
   SfPrice,
@@ -155,6 +162,7 @@ export default {
     SfButton,
     SfHeading,
     SfIcon,
+    SfLink,
     SfProperty,
     SfPrice,
     SfCollectedProduct,

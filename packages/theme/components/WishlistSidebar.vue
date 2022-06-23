@@ -29,7 +29,6 @@
               <SfCollectedProduct
                 v-for="product in products"
                 :key="wishlistGetters.getItemSku(product)"
-                :link="localePath(wishlistGetters.getLink(product))"
                 :image="addBasePath(wishlistGetters.getItemImage(product))"
                 :title="wishlistGetters.getItemName(product)"
                 :regular-price="$n(wishlistGetters.getItemPrice(product).regular, 'currency')"
@@ -40,6 +39,12 @@
                 @click:remove="removeItem({ product })"
                 class="collected-product"
               >
+              <template #title>
+                <SfLink :link="localePath(wishlistGetters.getLink(product))"
+                  @click.native="toggleWishlistSidebar">
+                  {{wishlistGetters.getItemName(product)}}
+                </SfLink>
+              </template>
                <template #configuration>
                   <div class="collected-product__properties">
                     <SfProperty v-for="(attribute, key) in wishlistGetters.getItemAttributes(product, ['Color', 'RetailSize'])" :key="key" :name="key" :value="attribute"/>
@@ -82,6 +87,7 @@ import {
   SfSidebar,
   SfHeading,
   SfButton,
+  SfLink,
   SfIcon,
   SfProperty,
   SfPrice,
@@ -103,7 +109,8 @@ export default {
     SfProperty,
     SfPrice,
     SfCollectedProduct,
-    SfImage
+    SfImage,
+    SfLink
   },
   setup() {
     const { isWishlistSidebarOpen, toggleWishlistSidebar } = useUiState();
