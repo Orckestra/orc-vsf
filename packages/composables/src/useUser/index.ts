@@ -57,10 +57,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    //const currentUserToken = getUserToken(context);
-    const { id } = await context.$occ.api.login({ username, password });
-    if (id) {
-      setUserToken(context, id);
+    const userToken = await context.$occ.api.login({ username, password });
+    if (userToken?.id) {
+      setUserToken(context, userToken);
       return params.load(context);
     } else {
       throw new Error('Customer sign-in error');

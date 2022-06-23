@@ -2,7 +2,6 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function login(context, params) {
   try {
-    console.log(`login1`);
     const { api, scope, myAccount } = context.config;
     const { password, username } = params;
     if (
@@ -17,8 +16,6 @@ export default async function login(context, params) {
 
     const { id: customerIdFrom } = context.config.auth.getCustomerToken();
 
-    console.log(`login10`);
-
     const url = new URL(`/api/membership/${scope}/Login`, api.url);
 
     const { data } = await context.client.put(url.href, {
@@ -27,31 +24,24 @@ export default async function login(context, params) {
     });
 
     if (data?.success) {
-      console.log('356');
       const urlGetUser = new URL(
         `/api/customers/${scope}/byUsername/${username}`,
         api.url
       );
-      console.log(`login20`);
       const { data } = await context.client.get(urlGetUser.href);
       const tokenData = { id: data.id, isGuest: false };
 
-      console.log(`context.config.auth.setCustomerToken`);
-      context.config.auth.setCustomerToken(tokenData); 
-
-      console.log(`login40`);
+      context.config.auth.setCustomerToken(tokenData);
 
       await mergeCarts(context, {
         customerIdFrom,
-        customerIdTo: tokenData.id
+        customerIdTo: tokenData.id,
       });
-
-      console.log(`login80`);
 
       return tokenData;
     }
-  } catch (ex1) {
-    console.log(ex1);
+  } catch (ex) {
+    console.log(ex);
   }
   return {};
 }
@@ -59,8 +49,6 @@ export default async function login(context, params) {
 const mergeCarts = async (context, params) => {
   const { api, scope } = context.config;
   const { customerIdFrom, customerIdTo, cartName = 'Default' } = params;
-
-  console.log(`merge10, ${customerIdFrom}, ${customerIdTo},`);
 
   if (!customerIdFrom || !customerIdTo) return null;
 
@@ -73,12 +61,8 @@ const mergeCarts = async (context, params) => {
     api.url
   );
 
-  console.log(`merge20`);
-
   const { data: cartFrom } = await context.client.get(urlFrom.href);
   const { data: cartTo } = await context.client.get(urlTo.href);
-
-  console.log(`merge30`);
 
   if (
     !cartFrom ||

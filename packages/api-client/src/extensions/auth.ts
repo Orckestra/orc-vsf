@@ -21,7 +21,6 @@ export const tokenExtension: ApiClientExtension = {
                     token,
                     myAccount.secretPassphrase
                   );
-                  console.log(`decoded: ${decoded}`);
                   return decoded;
                 } catch (e) {
                   console.log('userToken parse error');
@@ -34,7 +33,6 @@ export const tokenExtension: ApiClientExtension = {
           },
           setCustomerToken: (tokenData) => {
             try {
-              console.log(`setCustomerToken`);
               if (!tokenData) {
                 delete req.cookies[AUTH_COOKIE_NAME];
                 return;
