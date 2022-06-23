@@ -54,7 +54,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
             CultureName: locale
           };
 
-          cart = await context.$occ.api.updateCartShipment({ userToken, cartName: cart.name, updateShipmentRequest });
+          cart = await context.$occ.api.updateCartShipment({ cartName: cart.name, updateShipmentRequest });
         }
       }
       Logger.debug('[Result]:', { cart });
@@ -66,21 +66,18 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    const userToken = getUserToken(context);
     const variantId = getVariantId(product);
-    return await context.$occ.api.addCartItem({ ...params, userToken, productId: product.productId ?? product.id, variantId, quantity });
+    return await context.$occ.api.addCartItem({ ...params, productId: product.productId ?? product.id, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    const userToken = getUserToken(context);
-    return await context.$occ.api.removeCartItem({ ...params, userToken, id: product.id });
+    return await context.$occ.api.removeCartItem({ ...params, id: product.id });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    const userToken = getUserToken(context);
-    return await context.$occ.api.updateCartItem({ ...params, userToken, id: product.id, quantity });
+    return await context.$occ.api.updateCartItem({ ...params, id: product.id, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

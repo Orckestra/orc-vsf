@@ -20,7 +20,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     }
 
     if (userToken) {
-      const user = await context.$occ.api.getUser({ userToken });
+      const user = await context.$occ.api.getUser();
       return user;
     }
 
@@ -57,14 +57,10 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    const currentUserToken = getUserToken(context);
-    const { userToken } = await context.$occ.api.login({ username, password });
-    if (userToken) {
-      setUserToken(context, userToken);
-      // merge existing guest cart with customer cart
-      if (currentUserToken) {
-        await context.$occ.api.mergeCarts({ userTokenFrom: currentUserToken, userTokenTo: userToken });
-      }
+    //const currentUserToken = getUserToken(context);
+    const { id } = await context.$occ.api.login({ username, password });
+    if (id) {
+      setUserToken(context, id);
       return params.load(context);
     } else {
       throw new Error('Customer sign-in error');
@@ -72,9 +68,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    const userToken = getUserToken(context);
-    const response = await context.$occ.api.changePassword({ userToken, currentPassword, newPassword });
+  changePassword: async (context: Context, { currentPassword, newPassword }) => {
+    const response = await context.$occ.api.changePassword({ currentPassword, newPassword });
     checkResponseForError(response);
     return response;
   }

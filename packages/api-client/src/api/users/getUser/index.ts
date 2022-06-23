@@ -1,11 +1,13 @@
-import { parseUserToken } from '../../../helpers/generalUtils';
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getUser(context, params) {
 
-  const { api, scope, myAccount } = context.config;
-  const { userToken } = params;
-  const { id, isGuest } = parseUserToken(userToken, myAccount.secretPassphrase);
+  console.log('getUser10')
+  const { api, scope, auth } = context.config;
+  const { id, isGuest } = auth.getCustomerToken();
+
+  console.log('getUser20')
 
   if (id && !isGuest) {
     const url = new URL(
@@ -13,7 +15,11 @@ export default async function getUser(context, params) {
       api.url
     );
 
+    console.log('getUser30')
+
     const { data } = await context.client.get(url.href);
+
+    console.log('getUser40')
     return data;
   }
 

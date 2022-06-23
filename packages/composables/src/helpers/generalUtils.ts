@@ -10,12 +10,13 @@ export const isGuidEmpty = (guid: string): boolean => {
 export const getUserToken = (context: Context): string => {
   const app = context.$occ.config.app;
   const appKey = app.$config.appKey;
-  return app.$cookies.get(appKey + '_token');
+  return app.$cookies.get(appKey + '-data');
 };
 
 export const setUserToken = (context: Context, userToken: string, opts: any = {}): void => {
   const app = context.$occ.config.app;
   const appKey = app.$config.appKey;
-  app.$cookies.set(appKey + '_token', userToken, opts);
+  console.log(app);
+  app.$cookies.set(appKey + '-data', userToken, opts);
 };
 

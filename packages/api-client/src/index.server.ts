@@ -6,7 +6,6 @@ import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
 import getCart from './api/carts/getCart';
-import mergeCarts from './api/carts/mergeCarts';
 import addCartItem from './api/carts/addCartItem';
 import removeCartItem from './api/carts/removeCartItem';
 import updateCartItem from './api/carts/updateCartItem';
@@ -25,18 +24,20 @@ import getByTicket from './api/users/getByTicket';
 import updateUser from './api/users/updateUser';
 import changePassword from './api/membership/changePassword';
 
+import { tokenExtension } from './extensions/auth';
+
 function onCreate(settings) {
   const client = axios.create({
     baseURL: settings.api.url,
     headers: {
       'X-AUTH': settings.api.authToken,
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   });
 
   return {
     config: settings,
-    client
+    client,
   };
 }
 
@@ -47,7 +48,6 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getProducts,
     getCategory,
     getCart,
-    mergeCarts,
     addCartItem,
     removeCartItem,
     updateCartItem,
@@ -64,10 +64,9 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     resetPassword,
     getByTicket,
     updateUser,
-    changePassword
-  }
+    changePassword,
+  },
+  extensions: [tokenExtension],
 });
 
-export {
-  createApiClient
-};
+export { createApiClient };
