@@ -15,7 +15,7 @@ export default async function login(context, params) {
       return { errorMessage: 'Secret passphrase is not configured.' };
     }
 
-    // const { id: customerIdFrom } = context.config.auth.getCustomerToken();
+    const { id: customerIdFrom } = context.config.auth.getCustomerToken();
 
     console.log(`login10`);
 
@@ -41,10 +41,10 @@ export default async function login(context, params) {
 
       console.log(`login40`);
 
-      // await mergeCarts(context, {
-      //   customerIdFrom,
-      //   customerIdto: tokenData.id
-      // });
+      await mergeCarts(context, {
+        customerIdFrom,
+        customerIdTo: tokenData.id
+      });
 
       console.log(`login80`);
 
