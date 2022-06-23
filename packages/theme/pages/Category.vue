@@ -139,7 +139,7 @@
               :link="localePath(productGetters.getLink(product))"
               @input="productsQuantity[product.id] = $event"
               @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
-              @click:add-to-cart="addToCart({ product, quantity: Number(productsQuantity[product.id] ?  productsQuantity[product.id] : 1) })"
+              @click:add-to-cart="addToCart({ product, quantity: Number(productsQuantity[product.id] || 1) })"
             >
               <template #configuration>
                 <SfProperty
