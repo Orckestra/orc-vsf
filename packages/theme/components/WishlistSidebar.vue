@@ -39,7 +39,7 @@
                 @click:remove="removeItem({ product })"
                 class="collected-product"
               >
-              <template #title> 
+              <template #title>
                 <SfLink :link="localePath(wishlistGetters.getLink(product))"
                   @click.native="toggleWishlistSidebar">
                   {{wishlistGetters.getItemName(product)}}

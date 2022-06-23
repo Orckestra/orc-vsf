@@ -33,7 +33,7 @@
 
                 :class="`collected-product status-${cartGetters.getItemStatus(product)}`"
               >
-              <template #title> 
+              <template #title>
                 <SfLink :link="localePath(cartGetters.getLink(product))"
                   @click.native="toggleCartSidebar">
                   {{cartGetters.getItemName(product)}}
