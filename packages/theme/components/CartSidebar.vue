@@ -108,7 +108,7 @@
               </template>
             </SfProperty>
             <CartSaving class="my-cart__saving"/>
-            <nuxt-link :to="localePath({ name: 'shipping' })">
+            <nuxt-link :to="localePath({ name: 'personalDetails' })">
               <SfButton
                 class="sf-button--full-width color-secondary"
                 @click="toggleCartSidebar"

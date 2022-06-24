@@ -1,0 +1,203 @@
+<template>
+  <ValidationObserver v-slot="{ handleSubmit }">
+    <div class="sf-personal-details">
+      <slot name="heading" v-bind="{ headingTitle, headingTitleLevel }">
+        <SfHeading
+          :title="headingTitle"
+          :level="headingTitleLevel"
+          class="sf-heading--left sf-heading--no-underline title"
+        />
+      </slot>
+      <form @submit.prevent="handleSubmit(handleFormSubmit)">
+        <div class="form">
+          <slot name="form">
+            <SfInput
+              v-model="form.firstName"
+              label="First name"
+              name="firstName"
+              class="form__element form__element--half"
+              required
+            />
+            <SfInput
+              v-model="form.lastName"
+              label="Last name"
+              name="lastName"
+              class="form__element form__element--half form__element--half-even"
+              required
+            />
+            <SfInput
+              v-model="form.email"
+              label="Your email"
+              name="email"
+              class="form__element"
+              required
+            />
+            <slot
+              v-if='!isAuthenticated'
+              name="create-account"
+            >
+              <SfCheckbox
+                v-model="form.createAccount"
+                name="createAccount"
+                label="I want to create an account"
+                class="form__checkbox"
+                data-testid="create-account-checkbox"
+              />
+              <transition name="sf-fade">
+                <SfInput
+                  v-if="form.createAccount"
+                  v-model="form.password"
+                  :has-show-password="true"
+                  type="password"
+                  label="Create Password"
+                  class="form__element"
+                  required
+                  data-testid="create-password-input"
+                />
+              </transition>
+            </slot>
+          </slot>
+        </div>
+        <div class="form">
+          <div class="form__action">
+            <SfButton
+              class="form__action-button"
+              type="submit"
+            >
+              {{ $t('Go to shipping') }}
+            </SfButton>
+            <SfButton
+              v-if='!isAuthenticated'
+              class="form__action-button--secondary color-secondary"
+              @click.prevent="toggleLoginModal"
+            >{{ "Log into your account" }}</SfButton>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ValidationObserver>
+</template>
+
+<script>
+import {
+  SfInput,
+  SfCheckbox,
+  SfButton,
+  SfHeading,
+  SfCharacteristic
+} from '@storefront-ui/vue';
+import { ref, useRouter, watch } from '@nuxtjs/composition-api';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
+import { userGetters, useUser } from '@vue-storefront/orc-vsf';
+import { useUiState } from '~/composables';
+export default {
+  name: 'PersonalDetails',
+  components: {
+    SfInput,
+    SfCheckbox,
+    SfButton,
+    SfHeading,
+    SfCharacteristic,
+    ValidationProvider,
+    ValidationObserver
+  },
+  props: {
+    headingTitle: {
+      type: String,
+      default: 'Personal details'
+    },
+    headingTitleLevel: {
+      type: Number,
+      default: 2
+    }
+  },
+  setup (props, context) {
+    const router = useRouter();
+    const { isAuthenticated, user } = useUser();
+    const { toggleLoginModal } = useUiState();
+
+    const resetForm = () => ({
+      firstName: userGetters.getFirstName(user.value),
+      lastName: userGetters.getLastName(user.value),
+      email: userGetters.getEmailAddress(user.value),
+      password: '',
+      createAccount: false
+    });
+
+    const form = ref(resetForm());
+
+    watch(isAuthenticated, () => form.value = resetForm());
+
+    const handleFormSubmit = () => {
+      router.push(context.root.localePath({ name: 'shipping' }));
+    };
+
+    return {
+      isAuthenticated,
+      form,
+      router,
+      handleFormSubmit,
+      toggleLoginModal
+    };
+  }
+};
+</script>
+<style lang="scss" scoped>
+.sf-personal-details {
+  .title {
+    --heading-padding: var(--spacer-xl) 0 var(--spacer-base);
+    --heading-title-font-weight: var(--font-weight--bold);
+    --heading-title-font-size: var(--h3-font-size);
+    @include for-desktop {
+      --heading-title-font-weight: var(--font-weight--semibold);
+      --heading-padding: var(--spacer-xl) 0;
+    }
+  }
+  .form {
+    &__element {
+      --input-padding: var(--spacer-sm) 0 var(--spacer-2xs) 0;
+      margin: 0 0 var(--spacer-base) 0;
+    }
+    &__checkbox {
+      margin: var(--spacer-base) 0 var(--spacer-xl);
+      --checkbox-font-family: var(--font-family--primary);
+      --checkbox-font-size: var(--font-size--base);
+    }
+    &__action {
+      @include for-desktop {
+        flex: 0 0 100%;
+        display: flex;
+      }
+    }
+    &__action-button {
+      &--secondary {
+        margin: var(--spacer-xl) 0 var(--spacer-sm);
+        &:hover {
+          color:  var(--c-white);
+        }
+        @include for-desktop {
+          margin: 0 0 0 var(--spacer-xl);
+        }
+      }
+    }
+    @include for-desktop {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      &__element {
+        margin: 0 0 var(--spacer-base) 0;
+        flex: 0 0 100%;
+        &--half {
+          flex: 1 1 50%;
+          &-even {
+            padding: 0 0 0 var(--spacer-base);
+          }
+        }
+      }
+      &__checkbox {
+        margin: var(--spacer-lg) 0 var(--spacer-xl);
+      }
+    }
+  }
+}
+</style>
