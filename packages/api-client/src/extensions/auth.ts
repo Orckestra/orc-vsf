@@ -1,7 +1,8 @@
 import { ApiClientExtension } from '@vue-storefront/core';
 import jwt from 'jsonwebtoken';
 
-const AUTH_COOKIE_NAME: string = 'vsf-occ-user-token';
+const AUTH_COOKIE_NAME: string = 'vsf-occ-token';
+const DATA_COOKIE_NAME: string = 'vsf-occ-data';
 
 export const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
@@ -50,13 +51,27 @@ export const tokenExtension: ApiClientExtension = {
                 }
               );
 
-              const options = {
+              const authOptions = {
                 expires: new Date(cookieExpiration),
                 httpOnly: true,
                 secure: req.secure,
               };
+              const publicDataOptions = {
+                expires: new Date(cookieExpiration),
+              };
 
-              res.cookie(AUTH_COOKIE_NAME, token, options);
+              // the JWT token is HTTP only to protect from XSS
+              // reminder: data in JWT token can be decoded without a secure key, but can be verified only via a secure key.
+              res.cookie(AUTH_COOKIE_NAME, token, authOptions);
+              // customerId and IsGuest property is public
+              res.cookie(DATA_COOKIE_NAME, tokenData, publicDataOptions);
+
+
+              const cookies = require('cookie-universal')(req, res)
+              cookies.set('cookie-name', 'cookie-value')
+
+              console.log(`res.cookie(AUTH_COOKIE_NAME, token, authOptions)`);
+              console.log(`res.cookie(DATA_COOKIE_NAME, tokenData, publicDataOptions);`);
             } catch (ex) {
               console.log(ex);
             }

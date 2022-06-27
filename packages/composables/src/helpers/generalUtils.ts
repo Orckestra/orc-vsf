@@ -11,7 +11,8 @@ export const getUserToken = (context: Context): any => {
   try {
     const app = context.$occ.config.app;
     const appKey = app.$config.appKey;
-    return app.$cookies.get(appKey + '-data');
+    return app.$cookies.get('vsf-occ-data');
+    //return app.$cookies.get(appKey + '-data');
   } catch {
     // Ignore
   }

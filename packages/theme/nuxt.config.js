@@ -7,6 +7,9 @@ module.exports = {
     host: '0.0.0.0'
   },
 
+  ssr: true,
+  target: 'server',
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Vue Storefront',

@@ -7,6 +7,9 @@ export default async function addCartItem(context, params) {
   const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
   const { cartName = 'Default', quantity, productId, variantId } = params;
   const { id: customerId } = context.config.auth.getCustomerToken();
+
+  if (!customerId) return null;
+
   if (!customerId) return null;
 
   const url = new URL(
