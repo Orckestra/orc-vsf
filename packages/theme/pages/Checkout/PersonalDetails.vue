@@ -63,10 +63,12 @@
             <SfButton
               class="form__action-button"
               type="submit"
+              :disabled="userLoading || cartLoading"
             >
               {{ $t('Go to shipping') }}
             </SfButton>
             <SfButton
+              :disabled="userLoading || cartLoading"
               v-if='!isAuthenticated'
               class="form__action-button--secondary color-secondary"
               @click.prevent="toggleLoginModal"
@@ -88,7 +90,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import { useCart, useUser, cartGetters } from '@vue-storefront/orc-vsf';
+import { useCart, useUser } from '@vue-storefront/orc-vsf';
 import { useUiState, useUiNotification } from '~/composables';
 export default {
   name: 'PersonalDetails',
@@ -113,8 +115,8 @@ export default {
   },
   setup (props, context) {
     const router = useRouter();
-    const { isAuthenticated, user } = useUser();
-    const { cart, update, error } = useCart();
+    const { isAuthenticated, register, error: userError, loading: userLoading } = useUser();
+    const { cart, update, error, loading: cartLoading } = useCart();
     const { toggleLoginModal } = useUiState();
     const { send: sendNotification } = useUiNotification();
 
@@ -145,6 +147,24 @@ export default {
         }
       };
 
+      const { createAccount, ...updatedUser } = form.value;
+
+      if (createAccount) {
+        await register({ user: updatedUser });
+
+        if (userError.value.register) {
+          sendNotification({
+            id: Symbol('user_updated_error'),
+            message: userError.value.register.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'Checkout process'
+          });
+          return;
+        }
+      }
+
       await update({ cart: updatedCart });
 
       if (error.value.update) {
@@ -166,7 +186,9 @@ export default {
       form,
       router,
       handleFormSubmit,
-      toggleLoginModal
+      toggleLoginModal,
+      userLoading,
+      cartLoading
     };
   }
 };

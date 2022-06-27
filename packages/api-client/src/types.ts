@@ -157,7 +157,7 @@ export type Shipment = {
 export const enum CustomerType {
     Registered = 'Registered',
     Guest = 'Guest',
-    Unregistered  = 'Unregistered '
+    Unregistered = 'Unregistered '
 }
 
 export type Customer = {
