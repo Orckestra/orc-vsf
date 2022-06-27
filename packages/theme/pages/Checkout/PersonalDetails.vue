@@ -88,8 +88,8 @@ import {
 } from '@storefront-ui/vue';
 import { ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import { userGetters, useUser } from '@vue-storefront/orc-vsf';
-import { useUiState } from '~/composables';
+import { useCart, useUser, cartGetters } from '@vue-storefront/orc-vsf';
+import { useUiState, useUiNotification } from '~/composables';
 export default {
   name: 'PersonalDetails',
   components: {
@@ -114,22 +114,51 @@ export default {
   setup (props, context) {
     const router = useRouter();
     const { isAuthenticated, user } = useUser();
+    const { cart, update, error } = useCart();
     const { toggleLoginModal } = useUiState();
+    const { send: sendNotification } = useUiNotification();
 
     const resetForm = () => ({
-      firstName: userGetters.getFirstName(user.value),
-      lastName: userGetters.getLastName(user.value),
-      email: userGetters.getEmailAddress(user.value),
+      firstName: cart.value.customer?.firstName,
+      lastName: cart.value.customer?.lastName,
+      email: cart.value.customer?.email,
       password: '',
       createAccount: false
     });
 
     const form = ref(resetForm());
 
-    watch(isAuthenticated, () => form.value = resetForm());
+    watch(cart, () => {
+      if (cart.value) {
+        form.value = resetForm();
+      }
+    });
 
-    const handleFormSubmit = () => {
-      router.push(context.root.localePath({ name: 'shipping' }));
+    const handleFormSubmit = async () => {
+      const updatedCart = {
+        ...cart.value,
+        customer: {
+          ...cart.value.customer,
+          firstName: form.value.firstName,
+          lastName: form.value.lastName,
+          email: form.value.email
+        }
+      };
+
+      await update({ cart: updatedCart });
+
+      if (error.value.update) {
+        sendNotification({
+          id: Symbol('user_updated_error'),
+          message: error.value.update.message,
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'Checkout process'
+        });
+      } else {
+        router.push(context.root.localePath({ name: 'shipping' }));
+      }
     };
 
     return {

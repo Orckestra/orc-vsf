@@ -154,6 +154,21 @@ export type Shipment = {
     rewards?: Reward[]
 }
 
+export const enum CustomerType {
+    Registered = 'Registered',
+    Guest = 'Guest',
+    Unregistered  = 'Unregistered '
+}
+
+export type Customer = {
+    email: string,
+    firstName: string
+    lastName: string
+    middleName: string
+    phone: string
+    type: CustomerType
+}
+
 export type Cart = {
     messages?: any,
     customerId: any,
@@ -175,7 +190,8 @@ export type Cart = {
     lineItemsTotal: number,
     itemCount: number,
     discountTotal: number,
-    subTotalDiscount: number
+    subTotalDiscount: number,
+    customer: Customer
 };
 
 export type Category = {
