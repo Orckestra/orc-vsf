@@ -1,5 +1,5 @@
 import { UserOrderGetters } from '@vue-storefront/core';
-import type { Order, OrderItem } from '@vue-storefront/orc-vsf-api';
+import type { Order, OrderItem, LineItem } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: Order): string {
@@ -22,27 +22,27 @@ function getPrice(order: Order): number | null {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItems(order: Order): OrderItem[] {
+function getItems(order: Order): LineItem[] {
   return [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemSku(item: OrderItem): string {
+function getItemSku(item: LineItem): string {
   return '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemName(item: OrderItem): string {
+function getItemName(item: LineItem): string {
   return '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemQty(item: OrderItem): number {
+function getItemQty(item: LineItem): number {
   return 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemPrice(item: OrderItem): number {
+function getItemPrice(item: LineItem): number {
   return 0;
 }
 
@@ -56,7 +56,7 @@ function getOrdersTotal(orders: any): number {
   return 1;
 }
 
-export const orderGetters: UserOrderGetters<Order, OrderItem> = {
+export const orderGetters: UserOrderGetters<Order, LineItem> = {
   getDate,
   getId,
   getStatus,

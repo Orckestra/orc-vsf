@@ -22,6 +22,7 @@ export { useInventory } from './useInventory';
 export { useConfiguration } from './useConfiguration';
 export { useCountries } from './useCountries';
 export { useUserAddresses } from './useUserAddresses';
+export { useOrdersHistory } from './useOrdersHistory';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
@@ -42,6 +43,7 @@ export { inventoryGetters } from './getters/inventoryGetters';
 export { configurationGetters } from './getters/configurationGetters';
 export { countriesGetters } from './getters/countriesGetters';
 export { userAddressGetters } from './getters/userAddressGetters';
+export { ordersHistoryGetters } from './getters/ordersHistoryGetters';
 
 // Types
 export * from './types';

@@ -96,6 +96,33 @@ export const enum InventoryStatus {
 }
 
 /*
+ORDERSHISTORY
+*/
+export interface UseOrdersHistoryErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface UseOrdersHistoryFactoryParams<ORDERHISTORY> extends FactoryParams {
+  load(context: Context): Promise<ORDERHISTORY[]>
+}
+
+export interface UseOrdersHistoryInterface<ORDERHISTORY> {
+  load(): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  response: ComputedProperty<ORDERHISTORY>;
+  error: ComputedProperty<UseOrdersHistoryErrors>;
+}
+
+export interface UseOrdersHistory<ORDERHISTORY> {
+  (): UseOrdersHistoryInterface<ORDERHISTORY>;
+}
+
+export interface UseOrdersHistoryGetters<ORDERHISTORY> {
+  getOrdersHistory(orders: ORDERHISTORY[]): any[];
+}
+
+/*
 METADATDA
 */
 export interface UseMetadataErrors {
@@ -150,7 +177,7 @@ export interface useConfiguration<CONFIGURATION> {
 export interface UseConfigurationGetters<CONFIGURATION, MEMBERSHIPCONFIGURATION> {
   getMinRequiredPasswordLength(config: CONFIGURATION): number;
   getMinRequiredNonAlphanumericCharacters(config: CONFIGURATION): number;
-  getMembershipConfiguration(config: CONFIGURATION) : MEMBERSHIPCONFIGURATION;
+  getMembershipConfiguration(config: CONFIGURATION): MEMBERSHIPCONFIGURATION;
 }
 
 /*
