@@ -3,168 +3,151 @@
     <SfHeading
       v-e2e="'shipping-heading'"
       :level="3"
-      :title="$t('Shipping')"
+      :title="$t('Shipping method')"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form">
-        <ValidationProvider
-          name="firstName"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
+      <div class="form__radio-group" data-testid="shipping-method">
+        <SfRadio
+          v-for="item in fulfillmentMethods"
+          :key="item.shippingProviderId"
+          v-model="form.shippingMethod"
+          :label="item.displayName || item.name"
+          :value="item.shippingProviderId"
+          name="shippingMethod"
+          :description="item.fulfillmentMethodType"
+          class="form__radio shipping"
+          @input="updateShippingMethod"
         >
-          <SfInput
-            v-e2e="'shipping-firstName'"
-            v-model="form.firstName"
-            label="First name"
-            name="firstName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="lastName"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-lastName'"
-            v-model="form.lastName"
-            label="Last name"
-            name="lastName"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="streetName"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-streetName'"
-            v-model="form.streetName"
-            label="Street name"
-            name="streetName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="apartment"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-apartment'"
-            v-model="form.apartment"
-            label="House/Apartment number"
-            name="apartment"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="city"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-city'"
-            v-model="form.city"
-            label="City"
-            name="city"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="state"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-state'"
-            v-model="form.state"
-            label="State/Province"
-            name="state"
-            class="form__element form__element--half form__element--half-even"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="country"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfSelect
-            v-e2e="'shipping-country'"
-            v-model="form.country"
-            label="Country"
-            name="country"
-            class="form__element form__element--half form__select sf-select--underlined"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          >
-            <SfSelectOption
-              v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
-            >
-              {{ countryOption.label }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
-          name="zipCode"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-zipcode'"
-            v-model="form.postalCode"
-            label="Zip-code"
-            name="zipCode"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="phone"
-          rules="required|digits:9"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-phone'"
-            v-model="form.phone"
-            label="Phone number"
-            name="phone"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          <template #label="{ label }">
+            <div class="sf-radio__label shipping__label">
+              <div>
+                {{ label }}
+                <SfButton
+                  class="sf-button--text shipping__action desktop-only"
+                  :class="{ 'shipping__action--is-active': item.isOpen }"
+                  @click="
+                      (item.isOpen = !item.isOpen),
+                        $emit('toggle-info', item.value)
+                    "
+                >{{ item.isOpen ? "- info" : "+ info" }}
+                </SfButton>
+              </div>
+              <div class="shipping__label-price">{{ item.price }}</div>
+            </div>
+          </template>
+          <template #description="{ description }">
+            <div class="sf-radio__description shipping__description">
+              <div class="shipping__delivery">
+                <span>{{ item.delivery }}</span>
+              </div>
+              <transition name="sf-fade">
+                <div v-if="item.isOpen" class="shipping__info">
+                  {{ description }}
+                </div>
+              </transition>
+            </div>
+          </template>
+        </SfRadio>
       </div>
+      <template v-if="fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods, form.shippingMethod) === 'Shipping'">
+        <SfHeading
+          :level="4"
+          :title="'Shipping address'"
+          class="sf-heading--left sf-heading--no-underline title"
+        />
+        <template v-if="isAuthenticated">
+          <SfRadio
+            v-for="item in addresses"
+            :key="item.id"
+            v-model="form.addressId"
+            :label="item.addressName"
+            :value="item.id"
+            name="shippingAddress"
+            class="form__radio shipping"
+            @input="changeAddress"
+          >
+            <template #label="{ label }">
+              <div class="sf-radio__label shipping__label">
+                <div>
+                  {{ label }}
+                  <SfButton
+                    class="sf-button--text shipping__action desktop-only"
+                    :class="{ 'shipping__action--is-active': item.isOpen }"
+                    @click="
+                      (item.isOpen = !item.isOpen),
+                        $emit('toggle-info', item.value)
+                    "
+                  >{{ item.isOpen ? "- info" : "+ info" }}
+                  </SfButton>
+                </div>
+              </div>
+            </template>
+            <template  #description="{ description }">
+              <div class="sf-radio__description shipping__description">
+                <transition name="sf-fade">
+                  <div v-if="item.isOpen" class="shipping__info">
+                    <p>
+                      {{ "sdfsdf" }}
+                      <span>{{ item.firstName }} {{ item.lastName }}</span><br />
+                      {{ item.line1 }} {{ item.line2 }} {{item.city}} {{item.regionCode}} {{item.postalCode}}
+                    </p>
+                    <p>
+                      {{ item.phoneNumber }}
+                    </p>
+                  </div>
+                </transition>
+              </div>
+            </template>
+          </SfRadio>
+          <template v-if="addingAddress">
+            <SfHeading
+              :level="4"
+              :title="'Add shipping address'"
+              class="sf-heading--left sf-heading--no-underline title"
+            />
+            <ValidationObserver v-slot="{ handleSubmit: hS, reset }">
+              <form
+                class="form"
+                @submit.prevent="hS(saveAddress)"
+              >
+                <AddressForm
+                  :form="addressForm"
+                />
+                <div class="form__action-bar">
+                  <SfButton
+                    class="action-button sf-button"
+                    :disabled="loading"
+                  >
+                    Save new address
+                  </SfButton>
+    <!--              <SfButton
+                    class="action-button color-secondary cancel-button sf-button"
+                    @click.prevent="cancelEdit"
+                  >
+                    {{ $t('Cancel') }}
+                  </SfButton>-->
+                </div>
+              </form>
+            </ValidationObserver>
+          </template>
+          <template v-else>
+            <SfButton
+              class="action-button sf-button"
+              :disabled="loading"
+              @click="addNewAddress"
+            >
+              Add a new address
+            </SfButton>
+          </template>
+        </template>
+        <template v-else>
+          <AddressForm
+            :form="addressForm"
+            :showName="false"
+          />
+        </template>
+      </template>
       <div class="form">
         <div class="form__action">
           <SfButton
@@ -175,7 +158,6 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            v-if="!isFormSubmitted"
             :disabled="loading"
             class="form__action-button"
             type="submit"
@@ -184,10 +166,6 @@
           </SfButton>
         </div>
       </div>
-      <VsfShippingProvider
-        v-if="isFormSubmitted"
-        @submit="router.push(localePath({ name: 'billing' }))"
-      />
     </form>
   </ValidationObserver>
 </template>
@@ -197,20 +175,15 @@ import {
   SfHeading,
   SfInput,
   SfButton,
-  SfSelect
+  SfSelect, SfRadio
 } from '@storefront-ui/vue';
 import { ref, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useShipping } from '@vue-storefront/orc-vsf';
+import { useCountries, useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-
-const COUNTRIES = [
-  { key: 'US', label: 'United States' },
-  { key: 'UK', label: 'United Kingdom' },
-  { key: 'IT', label: 'Italy' },
-  { key: 'PL', label: 'Poland' }
-];
+import AddressForm from '~/components/Checkout/AddressForm';
+import UserShippingAddress from '~/components/UserShippingAddress';
 
 extend('required', {
   ...required,
@@ -232,48 +205,107 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
+    SfRadio,
     ValidationProvider,
     ValidationObserver,
-    VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
+    AddressForm,
+    UserShippingAddress
   },
   setup (props, context) {
     const router = useRouter();
-    const isFormSubmitted = ref(false);
-    const { load, save, loading } = useShipping();
+    const { cart } = useCart();
+    const { addresses, load: loadUserShipping, addAddress } = useUserAddresses();
+    const { load: loadCountries } = useCountries();
+    const { load: loadFulfillmentMethods, fulfillmentMethods, loading } = useFulfillmentMethods();
+    const { isAuthenticated } = useUser();
+
+    const shipment = cartGetters.getShipment(cart.value);
 
     const form = ref({
+      shippingMethod: shipment?.fulfillmentMethod?.shippingProviderId || fulfillmentMethods.value?.[0].shippingProviderId,
+      addressId: null
+    });
+
+    const addressForm = ref({
+      addressName: '',
       firstName: '',
       lastName: '',
-      streetName: '',
-      apartment: '',
+      line1: '',
+      line2: '',
       city: '',
-      state: '',
-      country: '',
+      regionCode: '',
       postalCode: '',
-      phone: null
+      countryCode: '',
+      phoneNumber: ''
     });
 
-    const handleFormSubmit = async () => {
-      await save({ shippingDetails: form.value });
-      isFormSubmitted.value = true;
+    console.log(fulfillmentMethods.value);
+    console.log(shipment);
+    console.log(shipment?.fulfillmentMethod);
+    console.log(fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod));
+
+    const addingAddress = ref(false);
+
+    const updateShippingMethod = () => {
+      console.log('updateShippingMethod');
     };
 
-    onSSR(async () => {
-      await load();
-    });
+    const addNewAddress = () => {
+      addingAddress.value = true;
+      form.value.addressId = null;
+    };
+
+    const saveAddress = async ({ form, onComplete, onError }) => {
+      console.log('saveAddress');
+
+      try {
+        addingAddress.value = false;
+        //    await onComplete(data);
+      } catch (error) {
+        //    onError(error);
+      }
+    };
+
+    const handleFormSubmit = async () => {
+      console.log('handleFormSubmit');
+
+      //  await save({ shippingDetails: form.value });
+      router.push(context.root.localePath({ name: 'billing' }));
+    };
+
+    onSSR(async () => Promise.allSettled([
+      loadUserShipping(),
+      loadCountries(),
+      loadFulfillmentMethods()
+    ]));
 
     const goBack = () => {
       router.push(context.root.localePath({ name: 'personalDetails' }));
     };
 
+    const changeAddress = (address) => {
+      addingAddress.value = false;
+    //  form.value.addressId = userAddressGetters.getId(address);
+    };
+
     return {
       router,
       loading,
-      isFormSubmitted,
+      addingAddress,
       form,
-      countries: COUNTRIES,
+      addressForm,
+      countries: [],
+      isAuthenticated,
+      saveAddress,
+      addNewAddress,
       handleFormSubmit,
-      goBack
+      updateShippingMethod,
+      changeAddress,
+      goBack,
+      fulfillmentMethods,
+      addresses,
+      fulfillmentMethodsGetters,
+      userAddressGetters
     };
   }
 };

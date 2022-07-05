@@ -177,6 +177,10 @@ function getLink(item: CartItem): string {
   return `/p/${productId}/${item.productSummary.displayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
+function getShipment(cart: Cart): Shipment {
+  return cart.shipments?.[0];
+}
+
 export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotals,
   getShippingPrice,
@@ -204,5 +208,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getTaxes,
   getRewards,
   getTaxableAdditionalFees,
-  getNotTaxableAdditionalFees
+  getNotTaxableAdditionalFees,
+  getShipment
 };

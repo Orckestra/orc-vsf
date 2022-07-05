@@ -555,3 +555,14 @@ export type CountryItem = {
     postalCodeRegex: string
 }
 
+export const enum FulfillmentMethodType {
+    Shipping = 'Shipping',
+    PickUp = 'PickUp'
+}
+
+export type FulfillmentMethodInfo = {
+    name: string,
+    displayName: string,
+    shippingProviderId: string,
+    fulfillmentMethodType: FulfillmentMethodType
+}
