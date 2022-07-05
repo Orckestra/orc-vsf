@@ -160,7 +160,7 @@ export const enum CustomerType {
     Unregistered = 'Unregistered '
 }
 
-export type Customer = {
+export type CustomerSummary = {
     email: string,
     firstName: string
     lastName: string
@@ -191,7 +191,7 @@ export type Cart = {
     itemCount: number,
     discountTotal: number,
     subTotalDiscount: number,
-    customer: Customer
+    customer: CustomerSummary
 };
 
 export type Category = {

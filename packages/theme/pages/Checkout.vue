@@ -36,10 +36,10 @@ import CartPreview from '~/components/Checkout/CartPreview';
 import { computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 
 const STEPS = {
-  personalDetails: 'Personal Details',
+  personalDetails: 'Details',
   shipping: 'Shipping',
-  billing: 'Billing',
-  payment: 'Payment'
+  payment: 'Payment',
+  review: 'Review'
 };
 
 export default {
@@ -49,7 +49,7 @@ export default {
     SfSteps,
     CartPreview
   },
-  setup() {
+  setup(props, context) {
     const route = useRoute();
     const router = useRouter();
     const currentStep = computed(() => route.value.path.split('/').pop());
@@ -58,7 +58,8 @@ export default {
 
     const handleStepClick = (stepIndex) => {
       const key = Object.keys(STEPS)[stepIndex];
-      router.push(`/checkout/${key}`);
+      const transformedPath = `/checkout/${key}`;
+      router.push(context.root.localePath(transformedPath));
     };
 
     return {
