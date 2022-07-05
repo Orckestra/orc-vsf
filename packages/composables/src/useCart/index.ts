@@ -1,7 +1,5 @@
 import {
   Context,
-  useCartFactory,
-  UseCartFactoryParams,
   Logger
 } from '@vue-storefront/core';
 import type {
@@ -11,6 +9,7 @@ import type {
 } from '@vue-storefront/orc-vsf-api';
 import { getVariantId } from '../helpers/productUtils';
 import { isGuidEmpty, getUserToken, setUserToken } from '../helpers/generalUtils';
+import { useCartFactory, UseCartFactoryParams } from '../factories/useCartFactory';
 
 const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,6 +81,12 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
     const userToken = getUserToken(context);
     return await context.$occ.api.updateCartItem({ ...params, userToken, id: product.id, quantity });
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  update: (context: Context, { currentCart, cart }) => {
+    const userToken = getUserToken(context);
+    return context.$occ.api.updateCart({ ...params, userToken, cart, cartName: currentCart.name });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -6,6 +6,7 @@ import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
 import getCart from './api/carts/getCart';
+import updateCart from './api/carts/updateCart';
 import mergeCarts from './api/carts/mergeCarts';
 import addCartItem from './api/carts/addCartItem';
 import removeCartItem from './api/carts/removeCartItem';
@@ -54,6 +55,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getProducts,
     getCategory,
     getCart,
+    updateCart,
     mergeCarts,
     addCartItem,
     removeCartItem,

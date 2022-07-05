@@ -245,3 +245,56 @@ export interface UserAddressGetters<USER_ADDRESS_ITEM> {
   isDefaultShipping: (address: USER_ADDRESS_ITEM) => boolean;
   isDefaultBilling: (address: USER_ADDRESS_ITEM) => boolean;
 }
+
+/*
+CART
+*/
+export interface UseCartErrors {
+  addItem: Error;
+  removeItem: Error;
+  update: Error;
+  updateItemQty: Error;
+  load: Error;
+  clear: Error;
+  applyCoupon: Error;
+  removeCoupon: Error;
+}
+export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any> extends Composable<API> {
+  cart: ComputedProperty<CART>;
+  setCart(cart: CART): void;
+  addItem(params: {
+    product: PRODUCT;
+    quantity: number;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  isInCart: ({ product: PRODUCT }: {
+    product: any;
+  }) => boolean;
+  removeItem(params: {
+    product: CART_ITEM;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  update: (params: {
+    cart: CART;
+  }) => Promise<void>;
+  updateItemQty(params: {
+    product: CART_ITEM;
+    quantity?: number;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  clear(): Promise<void>;
+  applyCoupon(params: {
+    couponCode: string;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  removeCoupon(params: {
+    couponCode: string;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  load(): Promise<void>;
+  load(params: {
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  error: ComputedProperty<UseCartErrors>;
+  loading: ComputedProperty<boolean>;
+}
