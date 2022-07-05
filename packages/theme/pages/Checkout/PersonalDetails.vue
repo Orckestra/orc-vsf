@@ -44,16 +44,23 @@
                 data-testid="create-account-checkbox"
               />
               <transition name="sf-fade">
-                <SfInput
-                  v-if="form.createAccount"
-                  v-model="form.password"
-                  :has-show-password="true"
-                  type="password"
-                  label="Create Password"
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  rules="required|password"
                   class="form__element"
-                  required
-                  data-testid="create-password-input"
-                />
+                >
+                  <SfInput
+                    v-if="form.createAccount"
+                    v-model="form.password"
+                    :has-show-password="true"
+                    type="password"
+                    label="Create Password"
+                    required
+                    data-testid="create-password-input"
+                    :valid="!errors[0]"
+                    :error-message="$t(errors[0])"
+                  />
+                </ValidationProvider>
               </transition>
             </slot>
           </slot>
@@ -89,8 +96,8 @@ import {
   SfCharacteristic
 } from '@storefront-ui/vue';
 import { ref, useRouter, watch } from '@nuxtjs/composition-api';
-import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import { useCart, useUser } from '@vue-storefront/orc-vsf';
+import { extend, ValidationObserver, ValidationProvider } from 'vee-validate';
+import { configurationGetters, useCart, useConfiguration, useUser } from '@vue-storefront/orc-vsf';
 import { useUiState, useUiNotification } from '~/composables';
 export default {
   name: 'PersonalDetails',
@@ -119,6 +126,16 @@ export default {
     const { cart, update, error, loading: cartLoading } = useCart();
     const { toggleLoginModal } = useUiState();
     const { send: sendNotification } = useUiNotification();
+
+    const { response: configuration } = useConfiguration();
+    extend('password', {
+      validate(value) {
+        const minRequiredPasswordLength = configurationGetters.getMinRequiredPasswordLength(configuration.value);
+        const minRequiredNonAlphanumericCharacters = configurationGetters.getMinRequiredNonAlphanumericCharacters(configuration.value);
+        return new RegExp(`^(?=.*?[~!@#$%^&*()--+={}[]|\\:;"'<>,.?]{${minRequiredNonAlphanumericCharacters}}).{${minRequiredPasswordLength},}$`).test(value);
+      },
+      message: 'Your password must have a minimum 6 characters including at least 1 special character'
+    });
 
     const resetForm = () => ({
       firstName: cart.value.customer?.firstName,
