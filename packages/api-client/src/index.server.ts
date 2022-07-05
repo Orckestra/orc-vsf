@@ -31,6 +31,8 @@ import getCountries from './api/countries/getCountries';
 import updateUserAddress from './api/users/updateUserAddress';
 import addUserAddress from './api/users/addUserAddress';
 import deleteUserAddress from './api/users/deleteUserAddress';
+import getOrderByNumber from './api/orders/getOrderByNumber';
+import getUserOrders from './api/orders/getUserOrders';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -78,7 +80,9 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getCountries,
     updateUserAddress,
     addUserAddress,
-    deleteUserAddress
+    deleteUserAddress,
+    getOrderByNumber,
+    getUserOrders
   }
 });
 

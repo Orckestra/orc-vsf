@@ -233,7 +233,23 @@ export const enum FacetType
 
 export type FacetSearchCriteria = TODO;
 
-export type Order = TODO;
+export type Order = {
+    cart: Cart,
+    created: Date,
+    createdBy: string,
+    customerId:	string,
+    customerName: string,
+    entityVersion: string,
+    id: string,
+    itemCount: number,
+    lastModified: Date,
+    lastModifiedBy: string,
+    orderNumber: string,
+    orderStatus: string,
+    scopeId: string,
+    source: string,
+    transactionOrderNumber: number
+};
 
 export type OrderItem = TODO;
 
@@ -538,4 +554,3 @@ export type CountryItem = {
     phoneRegex: string,
     postalCodeRegex: string
 }
-

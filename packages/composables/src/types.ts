@@ -48,7 +48,10 @@ export type UserRegisterParams = {
   lastName: string;
 };
 
-export type useUserOrderSearchParams = TODO;
+export type useUserOrderSearchParams<ORDER_ITEM> = {
+  totalCount: number,
+  result: ORDER_ITEM
+};
 
 export type ResponseStatus = {
   errorCode: string;
@@ -244,4 +247,32 @@ export interface UserAddressGetters<USER_ADDRESS_ITEM> {
   isDefault: (address: USER_ADDRESS_ITEM) => boolean;
   isDefaultShipping: (address: USER_ADDRESS_ITEM) => boolean;
   isDefaultBilling: (address: USER_ADDRESS_ITEM) => boolean;
+}
+
+/*
+ORDER
+*/
+
+export interface UseOrderFactoryParams<ORDER> extends FactoryParams {
+  find(context: Context, orderNumber: string[]): Promise<ORDER>
+}
+
+export interface UseOrderErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface useOrderInterface<ORDER> {
+  find(orderNumber: string[]): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  response: ComputedProperty<ORDER>;
+  error: ComputedProperty<UseOrderErrors>;
+}
+
+export interface useOrder<ORDER> {
+  (): useOrderInterface<ORDER>;
+}
+
+export interface UseOrderGetters<ORDER, PRODUCTS> {
+  getOrderProducts(config: ORDER): PRODUCTS;
 }
