@@ -6,7 +6,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import type { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee } from '@vue-storefront/orc-vsf-api';
+import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
@@ -133,6 +133,23 @@ function getRewards(cart: Cart, levels?: RewardLevel[]): Reward[] {
   return rewards;
 }
 
+function getAllRewards(cart: Cart, levels?: RewardLevel[]): Reward[] {
+  const shipment = getActiveShipment(cart);
+  let rewards = shipment?.rewards ?? [];
+  shipment?.lineItems?.forEach(i => {
+    if (i.rewards) {
+      rewards = rewards.concat(i.rewards);
+    }
+  }
+  );
+
+  if (levels) {
+    return rewards?.filter(r => levels.includes(r.level));
+  }
+
+  return rewards;
+}
+
 function getTaxableAdditionalFees(cart: Cart): ShipmentAdditionalFee[] {
   const shipment = getActiveShipment(cart);
   return shipment?.additionalFees?.filter(f => f.taxable);
@@ -155,7 +172,31 @@ function getFormattedPrice(price: number): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoupons(cart: Cart): AgnosticCoupon[] {
-  return [];
+  const rewards = getAllRewards(cart);
+  const validCoupons = cart?.coupons?.filter(c => c.couponState === CouponState.Ok);
+  return validCoupons?.map(c => {
+    const reward = rewards.find(r => r.promotionId === c.promotionId);
+    return ({
+      id: c.id,
+      name: reward?.promotionName,
+      code: c.couponCode,
+      value: reward?.amount
+    });
+  });
+}
+
+function getInvalidCoupons(cart: Cart): Coupon[] {
+  return cart?.coupons?.filter(c => c.couponState !== CouponState.Ok);
+}
+
+function getCouponStateMessages(cart: Cart): string[] {
+  const notValidCoupons = getInvalidCoupons(cart);
+  return notValidCoupons?.map(c => {
+    switch (c.couponState) {
+      case CouponState.ValidCouponCannotApply: return `The promotional code ${c.couponCode} is valid, however you don’t meet the promotion’s purchase conditions.`;
+      default: return `The promotional code ${c.couponCode} is not valid, has been used or has expired.`;
+    }
+  });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -192,6 +233,8 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getFormattedPrice,
   getTotalItems,
   getCoupons,
+  getInvalidCoupons,
+  getCouponStateMessages,
   getDiscounts,
   getItemsDiscountsAmount,
   getLink,

@@ -96,19 +96,16 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   applyCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    console.log('Mocked: useCart.applyCoupon');
-    return {
-      updatedCart: null,
-      updatedCoupon: {}
-    };
+    const userToken = getUserToken(context);
+    const updatedCart = await context.$occ.api.addCoupon({ ...params, userToken, couponCode, cartName: currentCart.name });
+    return { updatedCart };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    console.log('Mocked: useCart.removeCoupon');
-    return {
-      updatedCart: null
-    };
+    const userToken = getUserToken(context);
+    const updatedCart = await context.$occ.api.removeCoupon({ ...params, userToken, couponCode, cartName: currentCart.name });
+    return { updatedCart };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
