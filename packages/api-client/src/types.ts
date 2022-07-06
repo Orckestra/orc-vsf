@@ -169,12 +169,44 @@ export type CustomerSummary = {
     type: CustomerType
 }
 
+export const enum CouponMode {
+    Unspecified = 'Unspecified',
+    None = 'None',
+    Single = 'Single',
+    Multiple = 'Multiple'
+}
+
+export const enum CouponState {
+    Unspecified = 'Unspecified',
+    Ok = 'Ok',
+    NotYetActive = 'NotYetActive',
+    Expired = 'Expired',
+    GlobalMaximumUsed = 'GlobalMaximumUsed',
+    CustomerMaximumUsed = 'CustomerMaximumUsed',
+    CampaignNotFound = 'CampaignNotFound',
+    CampaignNotLive = 'CampaignNotLive',
+    InvalidCoupon = 'InvalidCoupon',
+    ValidCouponCannotApply = 'ValidCouponCannotApply'
+}
+
+export type Coupon = {
+    id: string,
+    couponCode: string,
+    couponState: CouponState,
+    hasBeenConsumed: boolean,
+    isActive: boolean,
+    isDeleted: boolean,
+    mode: CouponMode,
+    promotionId: string,
+    usedCount: number
+};
+
 export type Cart = {
     messages?: any,
     customerId: any,
     name: string,
     cartType?: string,
-    coupons?: string,
+    coupons?: Coupon[],
     shipments: Shipment[],
     subTotal: number,
     taxTotal: number,
@@ -205,8 +237,6 @@ export type Category = {
     includeInSearch: boolean,
     productsCount: number
 };
-
-export type Coupon = TODO;
 
 export type FacetValue = {
     minimumValue?: any,
