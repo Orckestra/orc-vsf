@@ -11,5 +11,9 @@ export default async function getFulfillmentMethods(context, params) {
 
   const { data } = await context.client.get(url.href);
 
-  return data?.fulfillmentMethods?.map(({ displayName, ...x }) => ({ ...x, displayName: displayName[locale] })) || [];
+  return data?.fulfillmentMethods?.map((x) => ({
+    ...x,
+    displayName: x.displayName[locale],
+    shippingProviderId: x.shippingProviderId.replaceAll('-', '')
+  })) || [];
 }

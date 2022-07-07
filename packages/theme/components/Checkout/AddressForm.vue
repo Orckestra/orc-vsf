@@ -194,7 +194,7 @@ export default {
       default: true
     }
   },
-  setup(props) {
+  setup() {
     const { countries } = useCountries();
     const getRegions = (country) => countriesGetters.getRegions(countries.value, country);
 

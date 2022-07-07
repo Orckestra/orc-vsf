@@ -7,6 +7,7 @@ import {
   AgnosticAttribute
 } from '@vue-storefront/core';
 import type { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee } from '@vue-storefront/orc-vsf-api';
+import { CustomerSummary } from '@vue-storefront/orc-vsf-api/src';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
@@ -178,7 +179,11 @@ function getLink(item: CartItem): string {
 }
 
 function getShipment(cart: Cart): Shipment {
-  return cart.shipments?.[0];
+  return cart?.shipments?.[0];
+}
+
+function getCustomer(cart: Cart): CustomerSummary | any {
+  return cart?.customer || {};
 }
 
 export const cartGetters: CartGetters<Cart, CartItem> = {
@@ -209,5 +214,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getRewards,
   getTaxableAdditionalFees,
   getNotTaxableAdditionalFees,
-  getShipment
+  getShipment,
+  getCustomer
 };

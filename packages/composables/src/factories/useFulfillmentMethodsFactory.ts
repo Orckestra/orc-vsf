@@ -12,7 +12,7 @@ export function useFulfillmentMethodsFactory <METHOD>(
     const _factoryParams = configureFactoryParams(factoryParams);
 
     /* @readonly */
-    const fulfillmentMethods: Ref<METHOD[] | null> = sharedRef(null, 'useFulfillmentMethods-fulfillmentMethods');
+    const fulfillmentMethods: Ref<METHOD[] | null> = sharedRef([], 'useFulfillmentMethods-fulfillmentMethods');
     const loading: Ref<boolean> = sharedRef(false, 'useFulfillmentMethods-loading');
     const error: Ref<UseFulfillmentMethodsErrors> = sharedRef({ load: null }, 'useFulfillmentMethods-error');
 
