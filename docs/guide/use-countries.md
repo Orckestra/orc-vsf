@@ -39,8 +39,12 @@ Reactive object containing the error message, if load failed for any reason.
 
 ## Getters
 ````typescript
-export interface CountriesGetters<COUNTRIES, REGIONS> {
-  getRegions(countries: COUNTRIES, countryCode: string): REGIONS;
+export interface CountriesGetters<CountryItem, RegionItem> {
+  getCountry(countries: CountryItem[], countryCode: string): CountryItem;
+  getCountryName(countries: CountryItem[], countryCode: string): string;
+  getCountryRegion(countries: CountryItem[], countryCode: string, regionCode: string): RegionItem;
+  getCountryRegionName(countries: CountryItem[], countryCode: string, regionCode: string): string;
+  getRegions(countries: CountryItem[], countryCode: string): RegionItem[]; 
 }
 ````
 ## Example

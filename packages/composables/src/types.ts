@@ -179,8 +179,8 @@ export interface CountriesGetters<COUNTRY, REGION> {
   getCountry(countries: COUNTRY[], countryCode: string): COUNTRY;
   getCountryName(countries: COUNTRY[], countryCode: string): string;
   getCountryRegion(countries: COUNTRY[], countryCode: string, regionCode: string): REGION;
-  getRegions(countries: COUNTRY[], countryCode: string): REGION[];
   getCountryRegionName(countries: COUNTRY[], countryCode: string, regionCode: string): string;
+  getRegions(countries: COUNTRY[], countryCode: string): REGION[]; 
 }
 
 /*
