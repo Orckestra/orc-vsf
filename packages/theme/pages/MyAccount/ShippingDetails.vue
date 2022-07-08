@@ -86,7 +86,7 @@ import {
 } from '@storefront-ui/vue';
 import UserShippingAddress from '~/components/UserShippingAddress';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
-import { useUserAddresses, userAddressGetters, useCountries } from '@vue-storefront/orc-vsf';
+import { useUserAddresses, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 
@@ -100,7 +100,6 @@ export default {
     ShippingAddressForm
   },
   setup() {
-    const { load: loadCountries } = useCountries();
     const { addresses, load: loadUserShipping, addAddress, deleteAddress, updateAddress, setDefaultAddress } = useUserAddresses();
     const edittingAddress = ref(false);
     const activeAddress = ref(undefined);
@@ -132,7 +131,7 @@ export default {
       }
     };
 
-    onSSR(() => Promise.all([loadUserShipping(), loadCountries()]));
+    onSSR(() => Promise.all([loadUserShipping()]));
 
     return {
       changeAddress,
