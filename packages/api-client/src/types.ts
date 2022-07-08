@@ -1,3 +1,5 @@
+import { Address } from 'cluster';
+
 export type TODO = unknown;
 
 export type Setttings = TODO;
@@ -201,6 +203,15 @@ export type Coupon = {
     usedCount: number
 };
 
+export type Payment = {
+    amount: number,
+    billingAddress: Address,
+    billingAddressId: string,
+    id: string,
+    paymentStatus: string,
+    propertyBag?: any;
+}
+
 export type Cart = {
     messages?: any,
     customerId: any,
@@ -223,7 +234,8 @@ export type Cart = {
     itemCount: number,
     discountTotal: number,
     subTotalDiscount: number,
-    customer: CustomerSummary
+    customer: CustomerSummary,
+    payments: Payment[]
 };
 
 export type Category = {
