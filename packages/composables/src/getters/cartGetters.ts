@@ -6,7 +6,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon } from '@vue-storefront/orc-vsf-api';
+import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
@@ -218,6 +218,10 @@ function getLink(item: CartItem): string {
   return `/p/${productId}/${item.productSummary.displayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
+function getActivePayment(cart: Cart): Payment {
+  return cart?.payments?.find(p => p.paymentStatus !== 'Voided');
+}
+
 export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotals,
   getShippingPrice,
@@ -247,5 +251,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getTaxes,
   getRewards,
   getTaxableAdditionalFees,
-  getNotTaxableAdditionalFees
+  getNotTaxableAdditionalFees,
+  getActivePayment
 };

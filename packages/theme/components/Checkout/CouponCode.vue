@@ -10,6 +10,7 @@
       />
       <SfButton
         class="promo-code__button"
+        :disabled="loading"
         @click="handleAddCoupon"
       >
         {{ $t('Apply') }}
@@ -60,7 +61,7 @@ export default defineComponent({
     SfCircleIcon
   },
   setup() {
-    const { cart, applyCoupon, removeCoupon } = useCart();
+    const { cart, applyCoupon, removeCoupon, loading } = useCart();
     const promoCode = ref('');
     const messages = computed(() => cartGetters.getCouponStateMessages(cart.value));
     const invalidCoupons = computed(() => cartGetters.getInvalidCoupons(cart.value));
@@ -115,7 +116,8 @@ export default defineComponent({
       handleAddCoupon,
       handleRemoveCoupon,
       promosApplied,
-      promoCode
+      promoCode,
+      loading
     };
   }
 });
