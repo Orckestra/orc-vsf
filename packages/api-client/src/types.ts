@@ -1,5 +1,3 @@
-import { Address } from 'cluster';
-
 export type TODO = unknown;
 
 export type Setttings = TODO;
@@ -205,7 +203,7 @@ export type Coupon = {
 
 export type Payment = {
     amount: number,
-    billingAddress: Address,
+    billingAddress: UserAddress,
     billingAddressId: string,
     id: string,
     paymentStatus: string,

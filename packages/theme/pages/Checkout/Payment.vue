@@ -39,7 +39,6 @@ import {
   SfDivider,
   SfIcon,
   SfProperty,
-  SfAccordion,
   SfLink
 } from '@storefront-ui/vue';
 import { ref, useRouter } from '@nuxtjs/composition-api';
@@ -53,7 +52,6 @@ export default {
     SfDivider,
     SfIcon,
     SfProperty,
-    SfAccordion,
     SfLink,
     VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
   },
@@ -84,36 +82,6 @@ export default {
 <style lang="scss" scoped>
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
-}
-.table {
-  margin: 0 0 var(--spacer-base) 0;
-  &__row {
-    justify-content: space-between;
-  }
-  @include for-desktop {
-    &__header {
-      text-align: center;
-      &:last-child {
-        text-align: right;
-      }
-    }
-    &__data {
-      text-align: center;
-    }
-    &__description {
-      text-align: left;
-      flex: 0 0 12rem;
-    }
-    &__image {
-      --image-width: 5.125rem;
-      text-align: left;
-      margin: 0 var(--spacer-xl) 0 0;
-    }
-  }
-}
-.product-sku {
-  color: var(--c-text-muted);
-  font-size: var(--font-size--sm);
 }
 .price {
   display: flex;
