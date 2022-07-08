@@ -45,12 +45,12 @@
               />
               <transition name="sf-fade">
                 <ValidationProvider
+                  v-if="form.createAccount"
                   v-slot="{ errors }"
                   rules="required|password"
                   class="form__element"
                 >
                   <SfInput
-                    v-if="form.createAccount"
                     v-model="form.password"
                     :has-show-password="true"
                     type="password"

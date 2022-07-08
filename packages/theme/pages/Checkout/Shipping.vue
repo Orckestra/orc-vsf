@@ -48,7 +48,7 @@
           </template>
         </SfRadio>
       </div>
-      <template v-if="fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods, form.shippingMethod) === 'Shipping'">
+      <template v-if="isShipping">
         <SfHeading
           :level="4"
           :title="'Shipping address'"
@@ -131,7 +131,7 @@
               class="action-button sf-button form__action-button--add-address"
               :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart"
               type="button"
-              @click="(isOpen.addingAddress = true),(form.addressId = null)"
+              @click="addNewAddress"
             >
               Add a new address
             </SfButton>
@@ -154,7 +154,7 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || isOpen.addingAddress"
+            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isShipping && !form.addressId)"
             class="form__action-button"
             type="submit"
           >
@@ -173,7 +173,7 @@ import {
   SfButton,
   SfSelect, SfRadio
 } from '@storefront-ui/vue';
-import { ref, useRouter, watch } from '@nuxtjs/composition-api';
+import { computed, ref, useRouter } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import { useCountries, useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
@@ -222,24 +222,30 @@ export default {
     const isOpen = ref({ addingAddress: false });
     const form = ref({
       shippingMethod: shipment?.fulfillmentMethod?.shippingProviderId || fulfillmentMethods.value[0]?.shippingProviderId,
-      addressId: shipment?.address?.id || addresses.value?.find(x => x.isPreferredShipping)?.id
+      addressId: shipment?.address?.id || addresses.value.find(x => x.isPreferredShipping)?.id
     });
 
-    const resetForm = () => ({
-      addressName: '',
-      firstName: '',
-      lastName: '',
-      line1: '',
-      line2: '',
-      city: '',
-      regionCode: '',
-      postalCode: '',
-      countryCode: '',
-      phoneNumber: ''
+    const resetForm = (address) => ({
+      addressName: address?.addressName || '',
+      firstName: address?.firstName || '',
+      lastName: address?.lastName || '',
+      line1: address?.line1 || '',
+      line2: address?.line2 || '',
+      city: address?.city || '',
+      regionCode: address?.regionCode || '',
+      postalCode: address?.postalCode || '',
+      countryCode: address?.countryCode || '',
+      phoneNumber: address?.phoneNumber || ''
     });
-    const addressForm = ref(resetForm());
+    const addressForm = ref(resetForm(shipment?.address));
 
-    watch(fulfillmentMethods, () => {});
+    const isShipping = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
+
+    const addNewAddress = () => {
+      addressForm.value = resetForm();
+      isOpen.value.addingAddress = true;
+      form.value.addressId = null;
+    };
 
     const saveAddress = async () => {
       try {
@@ -257,7 +263,6 @@ export default {
         } else {
           isOpen.value.addingAddress = false;
           form.value.addressId = addresses.value.find(x => x.addressName === addressForm.value.addressName)?.id;
-          addressForm.value = resetForm();
 
           sendNotification({
             id: Symbol('user_updated'),
@@ -301,13 +306,17 @@ export default {
     };
 
     const handleFormSubmit = () => {
-      const fulfillmentMethod = fulfillmentMethods.value.find(x => x.shippingProviderId === form.value.shippingMethod);
-
       const updatedShipment = {
         ...shipment,
-        address: addresses.value.find(x => x.id === form.value.addressId),
-        fulfillmentMethod: { ...fulfillmentMethod, displayName: undefined }
+        fulfillmentMethod: {
+          ...fulfillmentMethods.value.find(x => x.shippingProviderId === form.value.shippingMethod),
+          displayName: undefined
+        }
       };
+
+      if (isShipping.value) {
+        updatedShipment.address = isAuthenticated.value ? addresses.value.find(x => x.id === form.value.addressId) : addressForm.value;
+      }
 
       onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
     };
@@ -327,11 +336,13 @@ export default {
       loadingFulfillmentMethods,
       loadingAddresses,
       loadingCart,
+      isShipping,
       isOpen,
       form,
       addressForm,
       countries: [],
       isAuthenticated,
+      addNewAddress,
       saveAddress,
       handleFormSubmit,
       updateShippingMethod,

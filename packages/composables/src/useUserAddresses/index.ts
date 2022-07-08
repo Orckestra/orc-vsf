@@ -48,10 +48,10 @@ const factoryParams: UseUserAddressesFactoryParams<AddressItem> = {
   load: async (context: Context) => {
     const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
-      return null;
+      return [];
     }
 
-    return context.$occ.api.getUserAddresses({ userToken });
+    return (await context.$occ.api.getUserAddresses({ userToken })) || [];
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
