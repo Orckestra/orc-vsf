@@ -218,6 +218,7 @@ export interface CartGetters<Cart, CartItem> {
     isActiveShippingEstimated(cart: Cart) => boolean;
     getTaxableAdditionalFees(cart: Cart) => ShipmentAdditionalFee[];
     getNotTaxableAdditionalFees(cart: Cart) => ShipmentAdditionalFee[];
+    getActivePayment(cart: Cart) =>  Payment;
 }
 ````
 
