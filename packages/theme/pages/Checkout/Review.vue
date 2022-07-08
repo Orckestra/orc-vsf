@@ -228,19 +228,19 @@ export default {
     };
 
     const shipping = {
-      method: activeShipment?.value?.fulfillmentMethod.displayName[locale],
+      method: activeShipment?.value?.fulfillmentMethod?.displayName?.[locale],
       address: {
         ...activeShipment?.value.address
       }
     };
 
     const payment = {
-      method: activePayment?.value?.paymentMethod?.displayName[locale],
+      method: activePayment?.value?.paymentMethod?.displayName?.[locale],
       address: activePayment?.value?.billingAddress
     };
 
     const terms = ref(false);
-    const isOrderReady = ref(false);
+    const isOrderReady = computed(() => cartGetters.isReadyForOrder(cart.value));
 
     const goBack = () => {
       router.push(context.root.localePath({ name: 'payment' }));

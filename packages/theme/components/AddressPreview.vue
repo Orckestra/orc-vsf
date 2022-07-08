@@ -1,11 +1,11 @@
 <template>
   <div class="address-preview" v-if="address">
     <span v-if="address.addressName" class="sf-property__value">{{address.addressName}}</span>
-    <span>{{`${address.firstName} ${address.lastName}`}}</span>
-    <span>{{`${address.city}, ${address.line1 ? address.line1 : ''} ${address.line2 ? address.line2 : ''}`}}</span>
-    <span>{{`${countriesGetters.getCountryRegionName(countries, address.countryCode, address.regionCode)}, ${address.postalCode}`}}</span>
-    <span>{{`${countriesGetters.getCountryName(countries, address.countryCode)}`}}</span>
-    <span>{{address.phoneNumber}}</span>
+    <span v-if="address.firstName">{{`${address.firstName} ${address.lastName}`}}</span>
+    <span v-if="address.city">{{`${address.city}, ${address.line1 ? address.line1 : ''} ${address.line2 ? address.line2 : ''}`}}</span>
+    <span v-if="address.regionCode">{{`${countriesGetters.getCountryRegionName(countries, address.countryCode, address.regionCode)}, ${address.postalCode}`}}</span>
+    <span v-if="address.countryCode">{{`${countriesGetters.getCountryName(countries, address.countryCode)}`}}</span>
+    <span v-if="address.phoneNumber">{{address.phoneNumber}}</span>
   </div>
 
 </template>

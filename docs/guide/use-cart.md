@@ -219,6 +219,7 @@ export interface CartGetters<Cart, CartItem> {
     getTaxableAdditionalFees(cart: Cart) => ShipmentAdditionalFee[];
     getNotTaxableAdditionalFees(cart: Cart) => ShipmentAdditionalFee[];
     getActivePayment(cart: Cart) =>  Payment;
+    isReadyForOrder(cart: Cart) => boolean;
 }
 ````
 
