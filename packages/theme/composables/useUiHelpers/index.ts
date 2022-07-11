@@ -107,24 +107,25 @@ const useUiHelpers = () => {
     console.warn('[VSF] please implement useUiHelpers.getSearchTermFromUrl.');
   };
 
-  const getTranslation = (translations: object, fallbackValue: string = ''): string => {
+  const getTranslation = (translations: object, fallbackValue = ''): string => {
     const { locale } = router.app.$i18n;
     if (!translations) return fallbackValue;
     let translation = translations[locale];
-    if (!translation) {
-      const translationKeys = Object.keys(translations);
-      const language = locale.substring(0, locale.indexOf("-"));
-      for (let key of translationKeys) {
-        if (key !== locale && key.startsWith(language)) {
-          translation = translations[key];
-          if (translation) {
-            break;
-          }
+    if (translation) return translation;
+
+    const translationKeys = Object.keys(translations);
+    const language = locale.substring(0, locale.indexOf('-'));
+    for (const key of translationKeys) {
+      if (key !== locale && key.startsWith(language)) {
+        translation = translations[key];
+        if (translation) {
+          break;
         }
       }
     }
+
     return translation ?? fallbackValue;
-  }
+  };
 
   return {
     getFacetsFromURL,
