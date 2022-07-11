@@ -1,13 +1,11 @@
 <template>
   <div>
     <div class="highlighted">
-      <SfHeading
+       <SfHeading
         :level="3"
         :title="$t('Order summary')"
         class="sf-heading--left sf-heading--no-underline title"
       />
-    </div>
-    <div class="highlighted">
       <SfProperty
         :name="$t('Products')"
         :value="totalItems"
@@ -51,6 +49,9 @@
       <CartSaving class="cart-saving"/>
 
     </div>
+    <div class="highlighted spaced coupons">
+        <CouponCode class="cart-coupon" />
+    </div>
     <div class="highlighted">
       <SfCharacteristic
         v-for="characteristic in characteristics"
@@ -67,6 +68,7 @@
 <script>
 import { SfHeading, SfProperty, SfCharacteristic } from '@storefront-ui/vue';
 import CartSaving from './CartSaving';
+import CouponCode from './CouponCode';
 import { computed, useRouter } from '@nuxtjs/composition-api';
 import { useCart, cartGetters} from '@vue-storefront/orc-vsf';
 const CHARACTERISTICS = [
@@ -93,7 +95,8 @@ export default {
     SfHeading,
     SfProperty,
     SfCharacteristic,
-    CartSaving
+    CartSaving,
+    CouponCode
   },
   setup() {
     const { cart } = useCart();
@@ -119,15 +122,20 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.spaced {
+  margin: var(--spacer-xs) 0;
+}
+
 .highlighted {
   box-sizing: border-box;
   width: 100%;
   background-color: var(--c-light);
-  padding: var(--spacer-xl) var(--spacer-xl) 0;
-  &:last-child {
-    padding-bottom: var(--spacer-xl);
+  padding: var(--spacer-xl) var(--spacer-xl);
+  &.coupons {
+   padding-bottom: var(--spacer-sm);
   }
 }
+
 .cart-saving {
   margin-left: -15px;
   margin-right: -15px;
@@ -144,7 +152,6 @@ export default {
 .property-total {
   margin-top: var(--spacer-xl);
   padding-top: var(--spacer-lg);
-  padding-bottom: var(--spacer-base);
   font-size: var(--font-size-xl);
   border-top: var(--c-white) 1px solid;
   --property-name-font-weight: var(--font-weight--semibold);

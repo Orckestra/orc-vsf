@@ -163,7 +163,17 @@ module.exports = {
         name: 'productset',
         path: '/s/:name/',
         component: resolve(__dirname, 'pages/ProductSet.vue')
-      })
+      });
+      routes.push({
+        name: 'personalDetails',
+        path: '/checkout/personalDetails',
+        component: resolve(__dirname, 'pages/Checkout/PersonalDetails.vue')
+      });
+      routes.push({
+        name: 'review',
+        path: '/checkout/review',
+        component: resolve(__dirname, 'pages/Checkout/Review.vue')
+      });
     }
   },
   publicRuntimeConfig: {

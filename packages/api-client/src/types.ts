@@ -161,25 +161,68 @@ export type PaymentMethod = {
     type: string
 }
 
-export type Payment = {
-    id:	string,
-    propertyBag: any,
-    billingAddress:	any,
-    created: Date,
-    createdBy: string,
-    lastModified: Date,
-    lastModifiedBy: string,
-    paymentCaptureAction: any,
-    paymentDate: Date,
-    paymentMethod: PaymentMethod,
-    paymentStatus: string
+export const enum CustomerType {
+    Registered = 'Registered',
+    Guest = 'Guest',
+    Unregistered = 'Unregistered '
 }
+
+export type CustomerSummary = {
+    email: string,
+    firstName: string
+    lastName: string
+    middleName: string
+    phone: string
+    type: CustomerType
+}
+
+export const enum CouponMode {
+    Unspecified = 'Unspecified',
+    None = 'None',
+    Single = 'Single',
+    Multiple = 'Multiple'
+}
+
+export const enum CouponState {
+    Unspecified = 'Unspecified',
+    Ok = 'Ok',
+    NotYetActive = 'NotYetActive',
+    Expired = 'Expired',
+    GlobalMaximumUsed = 'GlobalMaximumUsed',
+    CustomerMaximumUsed = 'CustomerMaximumUsed',
+    CampaignNotFound = 'CampaignNotFound',
+    CampaignNotLive = 'CampaignNotLive',
+    InvalidCoupon = 'InvalidCoupon',
+    ValidCouponCannotApply = 'ValidCouponCannotApply'
+}
+
+export type Coupon = {
+    id: string,
+    couponCode: string,
+    couponState: CouponState,
+    hasBeenConsumed: boolean,
+    isActive: boolean,
+    isDeleted: boolean,
+    mode: CouponMode,
+    promotionId: string,
+    usedCount: number
+};
+
+export type Payment = {
+    amount: number,
+    billingAddress: UserAddress,
+    billingAddressId: string,
+    id: string,
+    paymentStatus: string,
+    propertyBag?: any;
+}
+
 export type Cart = {
     messages?: any,
     customerId: any,
     name: string,
     cartType?: string,
-    coupons?: string,
+    coupons?: Coupon[],
     shipments: Shipment[],
     subTotal: number,
     taxTotal: number,
@@ -196,6 +239,7 @@ export type Cart = {
     itemCount: number,
     discountTotal: number,
     subTotalDiscount: number,
+    customer: CustomerSummary,
     payments: Payment[]
 };
 
@@ -210,8 +254,6 @@ export type Category = {
     includeInSearch: boolean,
     productsCount: number
 };
-
-export type Coupon = TODO;
 
 export type FacetValue = {
     minimumValue?: any,

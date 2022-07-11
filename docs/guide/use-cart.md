@@ -16,6 +16,14 @@ export declare type CartItemSummary = {
     isProductWithoutPrice: boolean;
     allowSelectionWithoutScan: boolean;
 };
+export declare type CustomerSummary = {
+    email: string;
+    firstName: string;
+    lastName: string;
+    middleName: string;
+    phone: string;
+    type: CustomerType;
+};
 export declare type CartItem = {
     id: string;
     productSummary: CartItemSummary;
@@ -116,9 +124,34 @@ export declare type Shipment = {
     propertyBag?: any;
     rewards?: Reward[];
 };
+export declare const enum CouponState {
+    Unspecified,
+    Ok,
+    NotYetActive,
+    Expired,
+    GlobalMaximumUsed,
+    CustomerMaximumUsed,
+    CampaignNotFound,
+    CampaignNotLive,
+    InvalidCoupon,
+    ValidCouponCannotApply
+}
+export declare type Coupon = {
+    id: string;
+    couponCode: string;
+    couponState: CouponState;
+    hasBeenConsumed: boolean;
+    isActive: boolean;
+    isDeleted: boolean;
+    mode: CouponMode;
+    promotionId: string;
+    usedCount: number;
+};
 export declare type Cart = {
     messages?: any;
     customerId: any;
+    customer: CustomerSummary;
+    coupons?: Coupon[];
     name: string;
     cartType?: string;
     coupons?: string;
@@ -145,6 +178,9 @@ Adds cart items to an current cart
 ### `removeItem`
 Removes cart item from the current cart
 
+### `update`
+Update cart with new values. It used for update cart customer details, shipping, billing informations.
+
 ### `updateItemQty`
 Updates cart item quantity in an current cart 
 
@@ -168,7 +204,9 @@ export interface CartGetters<Cart, CartItem> {
     getShippingPrice: (cart: Cart) => number;
     getTotalItems: (cart: CACartRT) => number;
     getFormattedPrice: (price: number) => string;
-    getCoupons: (cart: Cart) => AgnosticCoupon[]; // TODO
+    getCoupons: (cart: Cart) => AgnosticCoupon[];
+    getInvalidCoupons(cart: Cart) => Coupon[];
+    getCouponStateMessages(cart: Cart): string[];
     getDiscounts: (cart: Cart) => AgnosticDiscount[]; // TODO or use getRewards
     getItemsDiscountsAmount(cart: Cart) => number;
     getRewards(cart: Cart, levels?: RewardLevel[]) =>  Reward[];
@@ -180,6 +218,8 @@ export interface CartGetters<Cart, CartItem> {
     isActiveShippingEstimated(cart: Cart) => boolean;
     getTaxableAdditionalFees(cart: Cart) => ShipmentAdditionalFee[];
     getNotTaxableAdditionalFees(cart: Cart) => ShipmentAdditionalFee[];
+    getActivePayment(cart: Cart) =>  Payment;
+    isReadyForOrder(cart: Cart) => boolean;
 }
 ````
 
