@@ -3,13 +3,14 @@ import {
   useMakeOrderFactory,
   UseMakeOrderFactoryParams
 } from '@vue-storefront/core';
+import { getUserToken } from '../helpers/generalUtils';
 import type { Order } from '@vue-storefront/orc-vsf-api';
 
 const factoryParams: UseMakeOrderFactoryParams<Order> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   make: async (context: Context, { customQuery }) => {
-    console.log('Mocked: useMakeOrder.make');
-    return {};
+    const userToken = getUserToken(context);
+    return context.$occ.api.completeCheckout({ userToken });
   }
 };
 

@@ -112,7 +112,7 @@
         <SfProperty
           v-for="(tax, i) in taxes"
           :key="i"
-          :name="tax.displayName[locale]"
+          :name="th.getTranslation(tax.displayName)"
           :value="$n(tax.taxTotal, 'currency')"
           :class="['sf-property--full-width', 'sf-property--small property']"
         />
@@ -152,11 +152,12 @@
               class="sf-button color-secondary form__back-button"
               type="button"
               @click="goBack"
+              :disabled="makeOrderLoading || cartLoading"
             >
               {{ $t('Go back') }}
             </SfButton>
             <SfButton
-              :disabled="cartLoading || !isOrderReady || !terms"
+              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms"
               class="form__action-button"
               type="submit"
               @click="processOrder"
@@ -179,6 +180,7 @@
 </template>
 <script>
 import { onSSR } from '@vue-storefront/core';
+import { useUiHelpers } from '~/composables';
 import {
   SfHeading,
   SfButton,
@@ -208,11 +210,10 @@ export default {
     CouponCode
   },
   setup(props, context) {
-
+    const th = useUiHelpers();
     const { cart, load: loadCart, loading: cartLoading, setCart } = useCart();
-    const { order, make } = useMakeOrder();
+    const { order, make, loading: makeOrderLoading } = useMakeOrder();
     const router = useRouter();
-    const { locale } = router.app.$i18n;
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const isActiveShippingTaxable = computed(() => cartGetters.isActiveShippingTaxable(cart.value));
     const isActiveShippingEstimated = computed(() => cartGetters.isActiveShippingEstimated(cart.value));
@@ -221,23 +222,23 @@ export default {
     const activeShipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
 
-    const personalDetails = {
+    const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
       lastName: cart.value?.customer?.lastName,
       email: cart.value?.customer?.email
-    };
+    }));
 
-    const shipping = {
-      method: activeShipment?.value?.fulfillmentMethod?.displayName?.[locale],
+    const shipping = computed(() => ({
+      method: th.getTranslation(activeShipment?.value?.fulfillmentMethod?.displayName),
       address: {
-        ...activeShipment?.value.address
+        ...activeShipment?.value?.address
       }
-    };
+    }));
 
-    const payment = {
-      method: activePayment?.value?.paymentMethod?.displayName?.[locale],
+    const payment = computed(() => ({
+      method: th.getTranslation(activePayment?.value?.paymentMethod?.displayName),
       address: activePayment?.value?.billingAddress
-    };
+    }));
 
     const terms = ref(false);
     const isOrderReady = computed(() => cartGetters.isReadyForOrder(cart.value));
@@ -271,8 +272,9 @@ export default {
       taxes,
       isActiveShippingTaxable,
       isActiveShippingEstimated,
-      locale,
+      th,
       cartLoading,
+      makeOrderLoading,
       processOrder
     };
   }
