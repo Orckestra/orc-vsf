@@ -61,14 +61,13 @@
     </ValidationProvider>
     <ValidationProvider
       v-slot="{ errors }"
-      rules="required|max:6"
+      rules="max:6"
       class="form__element"
     >
       <SfInput
         v-model="form.line2"
         name="line2"
         :label="'House/Apartment number'"
-        required
         :valid="!errors[0]"
         :error-message="errors[0]"
       />

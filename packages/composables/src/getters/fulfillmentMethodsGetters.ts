@@ -1,15 +1,15 @@
-import type { FulfillmentMethodInfo, FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
+import type { FulfillmentMethod, FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
 import { FulfillmentMethodsGetters } from '../types';
 
-function getFulfillmentMethod(fulfillmentMethods: FulfillmentMethodInfo[], shippingProviderId: string): FulfillmentMethodInfo {
+function getFulfillmentMethod(fulfillmentMethods: FulfillmentMethod[], shippingProviderId: string): FulfillmentMethod {
   return fulfillmentMethods?.find(c => c.shippingProviderId === shippingProviderId);
 }
 
-function getFulfillmentMethodType(fulfillmentMethods: FulfillmentMethodInfo[], shippingProviderId: string): FulfillmentMethodType {
+function getFulfillmentMethodType(fulfillmentMethods: FulfillmentMethod[], shippingProviderId: string): FulfillmentMethodType {
   return this.getFulfillmentMethod(fulfillmentMethods, shippingProviderId)?.fulfillmentMethodType;
 }
 
-export const fulfillmentMethodsGetters: FulfillmentMethodsGetters<FulfillmentMethodInfo> = {
+export const fulfillmentMethodsGetters: FulfillmentMethodsGetters<FulfillmentMethod> = {
   getFulfillmentMethod,
   getFulfillmentMethodType
 };

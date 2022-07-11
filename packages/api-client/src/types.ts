@@ -57,6 +57,11 @@ export type Tax = {
     taxTotal: number
 }
 
+export const enum FulfillmentMethodType {
+    Shipping = 'Shipping',
+    PickUp = 'PickUp'
+}
+
 export type FulfillmentMethod = {
     id: string,
     propertyBag: any,
@@ -66,7 +71,7 @@ export type FulfillmentMethod = {
     cost: number,
     displayName: any,
     expectedDeliveryDate: string,
-    fulfillmentMethodType: string,
+    fulfillmentMethodType: FulfillmentMethodType,
     shipmentId: string,
     shippingProviderId: string,
     taxCategory: string
@@ -593,16 +598,4 @@ export type CountryItem = {
     id: string,
     phoneRegex: string,
     postalCodeRegex: string
-}
-
-export const enum FulfillmentMethodType {
-    Shipping = 'Shipping',
-    PickUp = 'PickUp'
-}
-
-export type FulfillmentMethodInfo = {
-    name: string,
-    displayName: string,
-    shippingProviderId: string,
-    fulfillmentMethodType: FulfillmentMethodType
 }

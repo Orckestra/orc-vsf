@@ -12,7 +12,7 @@ import {
   PlatformApi
 } from '@vue-storefront/core/lib/src/types';
 import { Shipment } from '@vue-storefront/orc-vsf-api/src';
-import { FulfillmentMethodInfo, FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
+import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
 
 export type TODO = any;
 
@@ -353,5 +353,5 @@ export interface UseFulfillmentMethods<METHOD> {
 
 export interface FulfillmentMethodsGetters<METHOD> {
   getFulfillmentMethod(fulfillmentMethods: METHOD[], shippingProviderId: string): METHOD;
-  getFulfillmentMethodType(fulfillmentMethods: FulfillmentMethodInfo[], shippingProviderId: string): FulfillmentMethodType
+  getFulfillmentMethodType(fulfillmentMethods: METHOD[], shippingProviderId: string): FulfillmentMethodType
 }

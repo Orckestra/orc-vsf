@@ -31,7 +31,7 @@
                 >{{ isOpen[item.shippingProviderId] ? "- info" : "+ info" }}
                 </SfButton>
               </div>
-              <div class="shipping__label-price">{{ item.price }}</div>
+              <div class="shipping__label-price">{{$n(Number(item.cost), 'currency')}}</div>
             </div>
           </template>
           <template #description="{ description }">
@@ -41,7 +41,8 @@
               </div>
               <transition name="sf-fade">
                 <div v-if="isOpen[item.shippingProviderId]" class="shipping__info">
-                  {{ item.fulfillmentMethodType }}
+                  <p>{{ item.fulfillmentMethodType }}</p>
+                  <span v-if="item.expectedDeliveryDate">Estimated Ship Time: {{((new Date(item.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days</span>
                 </div>
               </transition>
             </div>
@@ -158,7 +159,7 @@
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Select shipping method') }}
+            {{ $t('Go to Payment') }}
           </SfButton>
         </div>
       </div>
@@ -303,15 +304,20 @@ export default {
     };
 
     const updateShippingMethod = () => {
-    };
-
-    const handleFormSubmit = () => {
       const updatedShipment = {
         ...shipment,
         fulfillmentMethod: {
           ...fulfillmentMethods.value.find(x => x.shippingProviderId === form.value.shippingMethod),
           displayName: undefined
         }
+      };
+
+      onUpdate(updatedShipment, () => {});
+    };
+
+    const handleFormSubmit = () => {
+      const updatedShipment = {
+        ...shipment,
       };
 
       if (isShipping.value) {
