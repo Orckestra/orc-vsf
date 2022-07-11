@@ -11,7 +11,6 @@ import {
   CustomQuery,
   PlatformApi
 } from '@vue-storefront/core/lib/src/types';
-import { Shipment } from '@vue-storefront/orc-vsf-api/src';
 import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
 
 export type TODO = any;
@@ -325,7 +324,6 @@ export interface CartGetters<CART, CART_ITEM> {
   getFormattedPrice: (price: number) => string;
   getCoupons: (cart: CART) => AgnosticCoupon[];
   getDiscounts: (cart: CART) => AgnosticDiscount[];
-  getShipment: (cart: CART) => Shipment;
   [getterName: string]: (element: any, options?: any) => unknown;
 }
 

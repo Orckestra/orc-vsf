@@ -251,10 +251,6 @@ function isReadyForOrder(cart: Cart): boolean {
   return true;
 }
 
-function getShipment(cart: Cart): Shipment {
-  return cart?.shipments?.[0];
-}
-
 function getCustomer(cart: Cart): CustomerSummary | any {
   return cart?.customer || {};
 }
@@ -294,6 +290,5 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   isShippingReady,
   isPaymentReady,
   isReadyForOrder,
-  getShipment,
   getCustomer
 };

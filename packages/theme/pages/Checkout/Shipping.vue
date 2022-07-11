@@ -12,7 +12,7 @@
           v-for="item in fulfillmentMethods"
           :key="item.shippingProviderId"
           v-model="form.shippingMethod"
-          :label="item.displayName || item.name"
+          :label="th.getTranslation(item.displayName) || item.name"
           :value="item.shippingProviderId"
           name="shippingMethod"
           :description="item.fulfillmentMethodType"
@@ -85,13 +85,7 @@
                 <div class="sf-radio__description shipping__description">
                   <transition name="sf-fade">
                     <div v-if="isOpen[item.id]" class="shipping__info">
-                      <p>
-                        <span>{{ item.firstName }} {{ item.lastName }}</span><br />
-                        {{ item.line1 }} {{ item.line2 }} {{item.city}} {{item.regionCode}} {{item.postalCode}}
-                      </p>
-                      <p>
-                        {{ item.phoneNumber }}
-                      </p>
+                      <AddressPreview :address="item" />
                     </div>
                   </transition>
                 </div>
@@ -175,13 +169,13 @@ import {
   SfSelect, SfRadio
 } from '@storefront-ui/vue';
 import { computed, ref, useRouter } from '@nuxtjs/composition-api';
-import { useUiNotification } from '~/composables';
+import { useUiNotification, useUiHelpers } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import { useCountries, useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/Checkout/AddressForm';
-import UserShippingAddress from '~/components/UserShippingAddress';
+import AddressPreview from '~/components/AddressPreview';
 
 extend('required', {
   ...required,
@@ -207,10 +201,11 @@ export default {
     ValidationProvider,
     ValidationObserver,
     AddressForm,
-    UserShippingAddress
+    AddressPreview
   },
   setup (props, context) {
     const router = useRouter();
+    const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
     const { cart, update, error, loading: loadingCart } = useCart();
     const { addresses, load: loadUserShipping, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
@@ -218,7 +213,7 @@ export default {
     const { load: loadFulfillmentMethods, fulfillmentMethods, loading: loadingFulfillmentMethods } = useFulfillmentMethods();
     const { isAuthenticated } = useUser();
 
-    const shipment = cartGetters.getShipment(cart.value);
+    const shipment = cartGetters.getActiveShipment(cart.value);
 
     const isOpen = ref({ addingAddress: false });
     const form = ref({
@@ -303,13 +298,14 @@ export default {
       }
     };
 
-    const updateShippingMethod = () => {
+    const updateShippingMethod = (value) => {
       const updatedShipment = {
         ...shipment,
-        fulfillmentMethod: {
-          ...fulfillmentMethods.value.find(x => x.shippingProviderId === form.value.shippingMethod),
-          displayName: undefined
-        }
+        fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
+        // if PickUpLocationId
+        // pickUpLocationId: null,
+        // address: null,
+        // fulfillmentLocationId = fulfillmentLocation.Id;
       };
 
       onUpdate(updatedShipment, () => {});
@@ -317,14 +313,14 @@ export default {
 
     const handleFormSubmit = () => {
       const updatedShipment = {
-        ...shipment,
+        ...shipment
       };
 
       if (isShipping.value) {
         updatedShipment.address = isAuthenticated.value ? addresses.value.find(x => x.id === form.value.addressId) : addressForm.value;
       }
 
-      onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
+      onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
     };
 
     onSSR(async () => Promise.allSettled([
@@ -356,7 +352,8 @@ export default {
       fulfillmentMethods,
       addresses,
       fulfillmentMethodsGetters,
-      userAddressGetters
+      userAddressGetters,
+      th
     };
   }
 };
