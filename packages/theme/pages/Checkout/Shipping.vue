@@ -7,48 +7,11 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form__radio-group" data-testid="shipping-method">
-        <SfRadio
-          v-for="item in fulfillmentMethods"
-          :key="item.shippingProviderId"
-          v-model="form.shippingMethod"
-          :label="th.getTranslation(item.displayName) || item.name"
-          :value="item.shippingProviderId"
-          name="shippingMethod"
-          :description="item.fulfillmentMethodType"
-          class="form__radio shipping"
-          @input="updateShippingMethod"
-        >
-          <template #label="{ label }">
-            <div class="sf-radio__label shipping__label">
-              <div>
-                {{ label }}
-                <SfButton
-                  class="sf-button--text shipping__action desktop-only"
-                  :class="{ 'shipping__action--is-active': isOpen[item.shippingProviderId] }"
-                  type="button"
-                  @click="(isOpen = { ...isOpen, [item.shippingProviderId]: !isOpen[item.shippingProviderId] })"
-                >{{ isOpen[item.shippingProviderId] ? "- info" : "+ info" }}
-                </SfButton>
-              </div>
-              <div class="shipping__label-price">{{$n(Number(item.cost), 'currency')}}</div>
-            </div>
-          </template>
-          <template #description="{ description }">
-            <div class="sf-radio__description shipping__description">
-              <div class="shipping__delivery">
-                <span>{{ item.delivery }}</span>
-              </div>
-              <transition name="sf-fade">
-                <div v-if="isOpen[item.shippingProviderId]" class="shipping__info">
-                  <p>{{ item.fulfillmentMethodType }}</p>
-                  <span v-if="item.expectedDeliveryDate">Estimated Ship Time: {{((new Date(item.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days</span>
-                </div>
-              </transition>
-            </div>
-          </template>
-        </SfRadio>
-      </div>
+      <VsfShippingProvider
+        :fulfillmentMethods="fulfillmentMethods"
+        :selected="form.shippingMethod"
+        @change="updateShippingMethod"
+      />
       <template v-if="isShipping">
         <SfHeading
           :level="4"
@@ -164,18 +127,18 @@
 <script>
 import {
   SfHeading,
-  SfInput,
   SfButton,
-  SfSelect, SfRadio
+  SfRadio
 } from '@storefront-ui/vue';
 import { computed, ref, useRouter } from '@nuxtjs/composition-api';
-import { useUiNotification, useUiHelpers } from '~/composables';
+import { useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
-import { useCountries, useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
+import { useCountries, useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/Checkout/AddressForm';
 import AddressPreview from '~/components/AddressPreview';
+import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
 
 extend('required', {
   ...required,
@@ -194,18 +157,15 @@ export default {
   name: 'Shipping',
   components: {
     SfHeading,
-    SfInput,
     SfButton,
-    SfSelect,
     SfRadio,
-    ValidationProvider,
     ValidationObserver,
     AddressForm,
-    AddressPreview
+    AddressPreview,
+    VsfShippingProvider
   },
   setup (props, context) {
     const router = useRouter();
-    const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
     const { cart, update, error, loading: loadingCart } = useCart();
     const { addresses, load: loadUserShipping, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
@@ -299,6 +259,7 @@ export default {
     };
 
     const updateShippingMethod = (value) => {
+      form.value.shippingMethod = value;
       const updatedShipment = {
         ...shipment,
         fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
@@ -342,7 +303,6 @@ export default {
       isOpen,
       form,
       addressForm,
-      countries: [],
       isAuthenticated,
       addNewAddress,
       saveAddress,
@@ -351,9 +311,7 @@ export default {
       goBack,
       fulfillmentMethods,
       addresses,
-      fulfillmentMethodsGetters,
-      userAddressGetters,
-      th
+      fulfillmentMethodsGetters
     };
   }
 };
