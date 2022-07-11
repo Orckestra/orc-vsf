@@ -51,9 +51,7 @@
             {{ orderGetters.getFulfillmentMethodName(currentOrder) }}
           </p>
 
-          <template #value>
-       <AddressPreview :address="shipping.address" />
-      </template>
+            <AddressPreview :address="orderGetters.getShippingAddress(currentOrder)" />
         </div>
         <div class="highlighted highlighted--total">
           <SfHeading
@@ -64,6 +62,7 @@
           <p class="message">
             {{ orderGetters.getPaymentMethod(currentOrder) }}
           </p>
+            <AddressPreview :address="orderGetters.getPaymentAddress(currentOrder)" />
         </div>
         <div class="highlighted highlighted--total">
           <SfHeading
@@ -78,7 +77,7 @@
           />
           <div v-for="tax in orderGetters.getTaxes(currentOrder)">
           <SfProperty
-            :name="orderGetters.getTaxName(tax)?.[locale]"
+            :name="orderGetters.getTaxName(tax, locale)"
             :value="orderGetters.getTaxTotal(tax)"
             class="sf-property--full-width property"
           />
@@ -169,6 +168,7 @@ import {
   SfLink,
   SfHeading
 } from '@storefront-ui/vue';
+import AddressPreview from '../../components/AddressPreview';
 import { computed, ref } from '@nuxtjs/composition-api';
 import { useOrdersHistory, ordersHistoryGetters, orderGetters, useOrder, useRouter } from '@vue-storefront/orc-vsf';
 import { AgnosticOrderStatus } from '@vue-storefront/core';
@@ -181,7 +181,8 @@ export default {
     SfTable,
     SfButton,
     SfProperty,
-    SfLink
+    SfLink,
+    AddressPreview
   },
   setup() {
     const { response: orderHistoryCurrent, load: loadOrdersHistoryCurrent } = useOrdersHistory('order-history-current');
@@ -231,8 +232,6 @@ export default {
     const getOrderDetails = async (order) => {      
       await getOrderByNumber({orderNumber: ordersHistoryGetters.getNumber(order)});
       isOrderSelected.value = true;
-      //currentOrder = orderByNumber.value;
-      //console.log(currentOrder);      
     }
 
     const currentOrders = computed(() => ordersHistoryGetters.getOrdersHistory(orderHistoryCurrent.value));

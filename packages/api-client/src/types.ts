@@ -215,6 +215,7 @@ export type Payment = {
     id: string,
     paymentStatus: string,
     propertyBag?: any;
+    paymentMethod: PaymentMethod
 }
 
 export type Cart = {
