@@ -1,48 +1,48 @@
 import { UserOrderGetters } from '@vue-storefront/core';
-import type { Order, OrderItem, LineItem } from '@vue-storefront/orc-vsf-api';
+import type { UserOrder, OrderItem, CartItem, Tax} from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getDate(order: Order): string {
-  return '';
+function getDate(order: UserOrder): string {
+  return order.created;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getId(order: Order): string {
-  return '1';
+function getId(order: UserOrder): string {
+  return order.id;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getStatus(order: Order): string {
-  return '';
+function getStatus(order: UserOrder): string {
+  return order.orderStatus;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getPrice(order: Order): number | null {
-  return 0;
+function getPrice(order: UserOrder): number | null {
+  return order.cart.total;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItems(order: Order): LineItem[] {
+function getItems(order: UserOrder): OrderItem[] {
   return [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemSku(item: LineItem): string {
+function getItemSku(item: OrderItem): string {
   return '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemName(item: LineItem): string {
+function getItemName(item: OrderItem): string {
   return '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemQty(item: LineItem): number {
+function getItemQty(item: OrderItem): number {
   return 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemPrice(item: LineItem): number {
+function getItemPrice(item: OrderItem): number {
   return 0;
 }
 
@@ -56,7 +56,80 @@ function getOrdersTotal(orders: any): number {
   return 1;
 }
 
-export const orderGetters: UserOrderGetters<Order, LineItem> = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProducts(order: UserOrder): CartItem[] {
+  return order.cart.shipments[0]?.lineItems;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProductQty(item: CartItem): number {
+  return item.quantity;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProductPrice(item: CartItem): number {
+  return item.listPrice;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProductSku(item: CartItem): string {
+  return item.sku;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProductName(item: CartItem): string {
+  return item.productSummary.displayName;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProductRegularPrice(item: CartItem): number {
+  return item.regularPrice;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getFulfillmentMethodName(order: UserOrder): string {
+  console.log(order.cart.shipments[0]?.fulfillmentMethod.name);
+  return order.cart.shipments[0]?.fulfillmentMethod.name;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getPaymentMethod(order: UserOrder): string {
+  return order.cart.payments[0].paymentMethod.type;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getSubTotal(order: UserOrder): number {
+  return order.cart.subTotal;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getTaxes(order: UserOrder): Tax[] {
+  return order.cart.shipments[0]?.taxes;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getTaxTotal(tax: any): number {
+  return tax.taxTotal;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getTaxName(tax: any): string {
+  return tax.displayName;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getTotal(order: UserOrder): number {
+  return order.cart.total;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getSaving(order: UserOrder): number {
+  let saving = 0;
+  order.cart.shipments[0]?.lineItems.forEach(item => saving += item.regularPrice - item.listPrice );
+  return saving;
+}
+
+export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getDate,
   getId,
   getStatus,
@@ -67,5 +140,20 @@ export const orderGetters: UserOrderGetters<Order, LineItem> = {
   getItemQty,
   getItemPrice,
   getFormattedPrice,
-  getOrdersTotal
+  getOrdersTotal,
+  getProducts,
+  getProductQty,
+  getProductPrice,
+  getProductSku,
+  getProductName,
+  getProductRegularPrice,
+  getFulfillmentMethodName,
+  getPaymentMethod,
+  getSubTotal,
+  getTaxes,
+  getTaxTotal,
+  getTaxName,
+  getTotal,
+  getSaving
+
 };

@@ -55,20 +55,18 @@ export default {
     const { load: loadStores } = useStore();
     const { load: loadUser } = useUser();
     const { load: loadCart } = useCart();
-    //const { load: loadWishlist } = useWishlist();
+    const { load: loadWishlist } = useWishlist();
     const { load: loadMetadata} = useMetadata();
     const { load: loadConfiguration} = useConfiguration();
-    const { load: loadOrdersHistory } = useOrdersHistory();
 
     onSSR(async () => {
       await Promise.all([
         loadStores(),
         loadUser(),
         loadCart(),
-       // loadWishlist(),
+        loadWishlist(),
         loadMetadata(),
-        loadConfiguration(),
-        loadOrdersHistory()
+        loadConfiguration()
       ]);
     });
 

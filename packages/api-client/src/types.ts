@@ -69,7 +69,8 @@ export type FulfillmentMethod = {
     fulfillmentMethodType: string,
     shipmentId: string,
     shippingProviderId: string,
-    taxCategory: string
+    taxCategory: string,
+    name: string
 }
 
 export type ShipmentAdditionalFee = {
@@ -153,7 +154,26 @@ export type Shipment = {
     propertyBag?: any,
     rewards?: Reward[]
 }
+export type PaymentMethod = {
+    id: string,
+    paymentProviderName: string,
+    propertyBag: any,
+    type: string
+}
 
+export type Payment = {
+    id:	string,
+    propertyBag: any,
+    billingAddress:	any,
+    created: Date,
+    createdBy: string,
+    lastModified: Date,
+    lastModifiedBy: string,
+    paymentCaptureAction: any,
+    paymentDate: Date,
+    paymentMethod: PaymentMethod,
+    paymentStatus: string
+}
 export type Cart = {
     messages?: any,
     customerId: any,
@@ -175,7 +195,8 @@ export type Cart = {
     lineItemsTotal: number,
     itemCount: number,
     discountTotal: number,
-    subTotalDiscount: number
+    subTotalDiscount: number,
+    payments: Payment[]
 };
 
 export type Category = {
@@ -233,23 +254,24 @@ export const enum FacetType {
 export type FacetSearchCriteria = TODO;
 
 export type Order = TODO;
-// {
-//     cart: Cart,
-//     created: string,
-//     createdBy: string,
-//     customerId: string,
-//     customerName: string,
-//     entityVersion: string,
-//     id: string,
-//     itemCount: number,
-//     lastModified: string,
-//     lastModifiedBy: string,
-//     orderNumber: string,
-//     orderStatus: string,
-//     scopeId: string,
-//     source: string,
-//     transactionOrderNumber: number
-// };
+
+export type UserOrder = {
+    cart: Cart,
+    created: string,
+    createdBy: string,
+    customerId: string,
+    customerName: string,
+    entityVersion: string,
+    id: string,
+    itemCount: number,
+    lastModified: string,
+    lastModifiedBy: string,
+    orderNumber: string,
+    orderStatus: string,
+    scopeId: string,
+    source: string,
+    transactionOrderNumber: number
+};
 
 export type OrderItem = {
     billingCurrency: string,
@@ -267,6 +289,11 @@ export type OrderItem = {
     shipmentItems: ShipmentItem[],
     source: string,
     total: number
+};
+
+export type OrderQueryResult = {
+    totalCount: number;
+    results: OrderItem[];
 };
 
 export type LineItem = TODO;

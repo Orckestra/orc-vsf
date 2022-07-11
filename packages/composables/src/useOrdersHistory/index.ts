@@ -1,24 +1,20 @@
 
-import type { OrderItem } from '@vue-storefront/orc-vsf-api';
+import type { OrderQueryResult } from '@vue-storefront/orc-vsf-api';
 import { Context } from '@vue-storefront/core';
-import { UseOrdersHistoryFactoryParams } from '../types';
 import { getUserToken } from '../helpers/generalUtils';
 import { useOrdersHistoryFactory } from '../factories/useOrdersHistoryFactory';
+import { UseOrdersHistoryFactoryParams} from '../types';
 
-
-const params: UseOrdersHistoryFactoryParams<OrderItem> = {
-  load: async (context: Context) => {
-
+const factoryParams: UseOrdersHistoryFactoryParams<OrderQueryResult> = {
+  load: async (context: Context, { orderTense,  page, itemsPerPage }) => {
     const app = context.$occ.config.app;
     const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       return null;
     }
     const locale: any = app.i18n.locale;
-
-    const orders: OrderItem[] = await context.$occ.api.getOrders({ userToken, locale });
-    return orders;
+    return await context.$occ.api.getOrders({ userToken, locale,  orderTense,  page, itemsPerPage });
   }
-}
+};
+export const useOrdersHistory =  useOrdersHistoryFactory<OrderQueryResult>(factoryParams);
 
-export const useOrdersHistory = useOrdersHistoryFactory<OrderItem>(params);

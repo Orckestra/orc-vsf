@@ -6,25 +6,25 @@ export function useOrdersHistoryFactory<ORDERSHISTORY>(
   factoryParams: UseOrdersHistoryFactoryParams<ORDERSHISTORY>
 ): UseOrdersHistory<ORDERSHISTORY> {
 
-  return function useOrdersHistory() {
+  return function useOrdersHistory(id: string) {
 
     /* @private */
     const _factoryParams = configureFactoryParams(factoryParams);
 
     /* @readonly */
-    const response: Ref<ORDERSHISTORY | null> = sharedRef(null, 'useOrdersHistory-response');
+    const response: Ref<ORDERSHISTORY | null> = sharedRef(null, `useOrdersHistory-response${id}`);
     const loading: Ref<boolean> = sharedRef(false, 'useOrdersHistory-loading');
     const error: Ref<UseOrdersHistoryErrors> = sharedRef({ load: null }, 'useOrdersHistory-error');
 
     /* @public */
-    async function load(): Promise<void> {
+    async function load(params): Promise<void> {
       Logger.debug('useOrdersHistoryFactory.load');
 
       error.value.load = null;
 
       try {
         loading.value = true;
-        response.value = await _factoryParams.load();
+        response.value = await _factoryParams.load(params);
       } catch (err) {
         error.value.load = err;
         console.error(err)

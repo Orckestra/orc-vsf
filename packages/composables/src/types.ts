@@ -104,22 +104,28 @@ export interface UseOrdersHistoryErrors {
 }
 
 export interface UseOrdersHistoryFactoryParams<ORDERHISTORY> extends FactoryParams {
-  load(context: Context): Promise<ORDERHISTORY[]>
+  load(context: Context, params: { orderTense: number,  page: number, itemsPerPage: number}): Promise<ORDERHISTORY[]>
 }
 
 export interface UseOrdersHistoryInterface<ORDERHISTORY> {
-  load(): Promise<void>;
+  load(params: { orderTense: number,  page: number, itemsPerPage: number}): Promise<void>;
   loading: ComputedProperty<boolean>;
   response: ComputedProperty<ORDERHISTORY>;
   error: ComputedProperty<UseOrdersHistoryErrors>;
 }
 
 export interface UseOrdersHistory<ORDERHISTORY> {
-  (): UseOrdersHistoryInterface<ORDERHISTORY>;
+  (id: string): UseOrdersHistoryInterface<ORDERHISTORY>;
 }
 
-export interface UseOrdersHistoryGetters<ORDERHISTORY> {
-  getOrdersHistory(orders: ORDERHISTORY[]): any[];
+export interface UseOrdersHistoryGetters<ORDERQUERYRESULT, ORDERITEM> {
+  getOrdersHistory(orders: ORDERQUERYRESULT): ORDERITEM[];
+  getOrdersTotal(orders: ORDERQUERYRESULT): number;
+  getDate(orderItem: ORDERITEM): string;
+  getId(orderItem: ORDERITEM): string ;
+  getStatus(orderItem: ORDERITEM): string;
+  getPrice(orderItem: ORDERITEM): number | null;
+  getNumber(orderItem: ORDERITEM): string;
 }
 
 /*
@@ -271,4 +277,32 @@ export interface UserAddressGetters<USER_ADDRESS_ITEM> {
   isDefault: (address: USER_ADDRESS_ITEM) => boolean;
   isDefaultShipping: (address: USER_ADDRESS_ITEM) => boolean;
   isDefaultBilling: (address: USER_ADDRESS_ITEM) => boolean;
+}
+
+/*
+ORDER
+*/
+
+export interface UseOrderFactoryParams<ORDER> extends FactoryParams {
+  find(context: Context, orderNumber: string[]): Promise<ORDER>
+}
+
+export interface UseOrderErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface useOrderInterface<ORDER> {
+  find(orderNumber: string[]): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  response: ComputedProperty<ORDER>;
+  error: ComputedProperty<UseOrderErrors>;
+}
+
+export interface useOrder<ORDER> {
+  (): useOrderInterface<ORDER>;
+}
+
+export interface UseOrderGetters<ORDER, PRODUCTS> {
+  getOrderProducts(config: ORDER): PRODUCTS;
 }

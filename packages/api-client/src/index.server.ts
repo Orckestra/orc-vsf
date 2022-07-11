@@ -32,6 +32,7 @@ import updateUserAddress from './api/users/updateUserAddress';
 import addUserAddress from './api/users/addUserAddress';
 import deleteUserAddress from './api/users/deleteUserAddress';
 import getOrders from './api/orders/getOrders';
+import getOrderByNumber from './api/orders/getOrderByNumber';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -80,7 +81,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updateUserAddress,
     addUserAddress,
     deleteUserAddress,
-    getOrders
+    getOrders,
+    getOrderByNumber
   }
 });
 

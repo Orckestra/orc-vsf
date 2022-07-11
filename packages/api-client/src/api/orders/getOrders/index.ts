@@ -5,7 +5,9 @@ import { parseUserToken } from '../../../helpers/generalUtils';
 export default async function getOrders(context, params) {
 
   const { api, scope, myAccount } = context.config;
-  const { userToken, locale } = params;
+  const { userToken, locale, orderTense,  page = 1, itemsPerPage } = params;
+  const maximumItems = itemsPerPage;
+  const startingIndex = (page - 1) * maximumItems;
   const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
   if (!customerId) return null;
 
@@ -14,17 +16,86 @@ export default async function getOrders(context, params) {
     api.url
   );
 
+  const filters = 
+    orderTense === 0 ? 
+      [{
+        Not: false,
+        Operator: "Equals",
+        Member: "OrderStatus",
+        Value: "Canceled",
+        CustomExpression: null
+      },
+      {
+        Not: false,
+        Operator: "Equals",
+        Member: "OrderStatus",
+        Value: "Completed",
+        CustomExpression: null
+      },
+      {
+        Not: false,
+        Operator: "Equals",
+        Member: "OrderStatus",
+        Value: "Shipped",
+        CustomExpression: null
+      }] : [
+        {
+          Not: false,
+          Operator: "Equals",
+          Member: "OrderStatus",
+          Value: "InProgress",
+          CustomExpression: null
+        },
+        {
+          Not: false,
+          Operator: "Equals",
+          Member: "OrderStatus",
+          Value: "PendingProcess",
+          CustomExpression: null
+        },
+        {
+          Not: false,
+          Operator: "Equals",
+          Member: "OrderStatus",
+          Value: "PartiallyFulfilled",
+          CustomExpression: null
+        },
+        {
+          Not: false,
+          Operator: "Equals",
+          Member: "OrderStatus",
+          Value: "New",
+          CustomExpression: null
+        }];
+
+  const query = {
+    filter: {
+        BinaryOperator: 0,
+        FilterGroups: {
+          BinaryOperator: 1,
+          Not: false,
+          filters
+        },
+        Filters: [],
+        Not: false
+    },
+    Sortings: [
+      {
+        Direction: 1,
+        PropertyName: "Created"
+      }
+    ],
+    includeTotalCount: true,
+    maximumItems,
+    startingIndex
+  };
   const body = {
     customerId,
     cultureName: locale,
-    includeFulfillmentStates: true
+    includeFulfillmentStates: true,
+    query
   };
-
-  console.log("url === " + url.href);
-  console.log(JSON.stringify(body))
-
-  const { data } = await context.client.put(url.href, body);
-
-  return data.results;
+  const { data } = await context.client.post(url.href, body);
+  return data;
 
 }
