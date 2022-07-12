@@ -10,6 +10,7 @@ import type {
 import { getVariantId } from '../helpers/productUtils';
 import { isGuidEmpty, getUserToken, setUserToken } from '../helpers/generalUtils';
 import { useCartFactory, UseCartFactoryParams } from '../factories/useCartFactory';
+import { cartGetters } from '../getters/cartGetters';
 
 const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,43 +25,46 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
       userToken = await context.$occ.api.initializeGuestToken();
       setUserToken(context, userToken);
     }
+    if (!userToken) return null;
 
-    if (userToken) {
+    let cart = await context.$occ.api.getCart({ ...params, locale, userToken });
 
-      let cart = await context.$occ.api.getCart({ ...params, locale, userToken });
+    const shipment = cart.shipments && cart.shipments.length ? cart.shipments[0] : {};
+    const payment = cartGetters.getActivePayment(cart);
 
-      const shipment = cart.shipments && cart.shipments.length ? cart.shipments[0] : {};
+    if (cart && (!shipment.fulfillmentLocationId ||
+      isGuidEmpty(shipment.fulfillmentLocationId))) {
+      // Need to setup fulfilment location for the cart for the items inventory status
+      const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
+      const location = locations && locations.length ? locations[0] : undefined;
 
-      if (cart && (!shipment.fulfillmentLocationId ||
-        isGuidEmpty(shipment.fulfillmentLocationId))) {
-        // Need to setup fulfilment location for the cart for the items inventory status
-        const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
-        const location = locations && locations.length ? locations[0] : undefined;
+      if (location) {
+        const { id, fulfillmentScheduleMode, fulfillmentScheduledTimeBeginDate, fulfillmentScheduledTimeEndDate, propertyBag, pickUpLocationId } = shipment;
+        const updateShipmentRequest = {
+          id,
+          pickUpLocationId,
+          fulfillmentLocationId: location.id,
+          fulfillmentMethodName: shipment.fulfillmentMethod?.name,
+          shippingAddress: shipment.address,
+          fulfillmentScheduleMode,
+          fulfillmentScheduledTimeBeginDate,
+          fulfillmentScheduledTimeEndDate,
+          shippingProviderId: shipment.FulfillmentMethod?.ShippingProviderId,
+          propertyBag,
+          CultureName: locale
+        };
 
-        if (location) {
-          const { id, fulfillmentScheduleMode, fulfillmentScheduledTimeBeginDate, fulfillmentScheduledTimeEndDate, propertyBag, pickUpLocationId } = shipment;
-          const updateShipmentRequest = {
-            id,
-            pickUpLocationId,
-            fulfillmentLocationId: location.id,
-            fulfillmentMethodName: shipment.fulfillmentMethod?.name,
-            shippingAddress: shipment.address,
-            fulfillmentScheduleMode,
-            fulfillmentScheduledTimeBeginDate,
-            fulfillmentScheduledTimeEndDate,
-            shippingProviderId: shipment.FulfillmentMethod?.ShippingProviderId,
-            propertyBag,
-            CultureName: locale
-          };
-
-          cart = await context.$occ.api.updateCartShipment({ userToken, cartName: cart.name, updateShipmentRequest });
-        }
+        cart = await context.$occ.api.updateCartShipment({ userToken, cartName: cart.name, updateShipmentRequest });
       }
-      Logger.debug('[Result]:', { cart });
-      return cart;
     }
 
-    return null;
+    if (cart && !payment) {
+      cart = await context.$occ.api.addPayment({ userToken, cartName: cart.name });
+    }
+
+    Logger.debug('[Result]:', { cart });
+    return cart;
+
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

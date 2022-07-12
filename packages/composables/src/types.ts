@@ -302,3 +302,35 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any
   error: ComputedProperty<UseCartErrors>;
   loading: ComputedProperty<boolean>;
 }
+
+/*
+UsePaymentMethods
+*/
+export interface UsePaymentMethodsErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface UsePaymentMethodsFactoryParams<PAYMENTMETHOD> extends FactoryParams {
+  load(context: Context, { providerName }): Promise<PAYMENTMETHOD>
+}
+
+export interface UsePaymentMethodsInterface<PAYMENTMETHOD> {
+  load(context: any, { providerName }): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  methods: ComputedProperty<PAYMENTMETHOD[]>;
+  error: ComputedProperty<UsePaymentMethodsErrors>;
+}
+
+export interface UsePaymentMethods<PAYMENTMETHOD> {
+  (): UsePaymentMethodsInterface<PAYMENTMETHOD>;
+}
+
+export interface UsePaymentMethodsGetters<PAYMENTMETHOD> {
+  getMethods(): PAYMENTMETHOD[];
+}
+
+export interface PaymentMethodGetters<PAYMENTMETHOD> {
+  getDefaultMethod(methods: PAYMENTMETHOD[]): PAYMENTMETHOD;
+  getValidPaymentMethods(methods: PAYMENTMETHOD[]): PAYMENTMETHOD[];
+}

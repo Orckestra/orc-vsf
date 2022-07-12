@@ -595,3 +595,27 @@ export type CountryItem = {
     postalCodeRegex: string
 }
 
+export declare const enum PaymentMethodType {
+    CreditCard, 
+    SavedCreditCard, 
+    GiftCertificate, 
+    PurchaseOrder, 
+    CashCard, 
+    Cash, 
+    Debit, 
+    OnSiteCredit, 
+    OnSiteDebit, 
+    Cheque, 
+    OnSiteUnspecified, 
+    Paypal
+}
+
+export declare type PaymentMethod = {
+    id: string,
+    name: string,
+    paymentProviderName: string,
+    default: boolean,
+    enabled: boolean,
+    displayName: any,
+    type: PaymentMethodType
+}
