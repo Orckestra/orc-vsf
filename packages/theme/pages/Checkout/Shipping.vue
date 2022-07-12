@@ -28,7 +28,7 @@
               :value="item.id"
               name="shippingAddress"
               class="form__radio shipping"
-              @input="(isOpen.addingAddress = false)"
+              @input="updateAddress"
             >
               <template #label="{ label }">
                 <div class="sf-radio__label shipping__label">
@@ -169,16 +169,15 @@ export default {
     const { send: sendNotification } = useUiNotification();
     const { cart, update, error, loading: loadingCart } = useCart();
     const { addresses, load: loadUserShipping, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
-    const { load: loadCountries } = useCountries();
     const { load: loadFulfillmentMethods, fulfillmentMethods, loading: loadingFulfillmentMethods } = useFulfillmentMethods();
     const { isAuthenticated } = useUser();
 
-    const shipment = cartGetters.getActiveShipment(cart.value);
+    const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
 
     const isOpen = ref({ addingAddress: false });
     const form = ref({
-      shippingMethod: shipment?.fulfillmentMethod?.shippingProviderId || fulfillmentMethods.value[0]?.shippingProviderId,
-      addressId: shipment?.address?.id || addresses.value.find(x => x.isPreferredShipping)?.id
+      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId || fulfillmentMethods.value[0]?.shippingProviderId,
+      addressId: shipment.value?.address?.id || addresses.value.find(x => x.isPreferredShipping)?.id
     });
 
     const resetForm = (address) => ({
@@ -193,7 +192,7 @@ export default {
       countryCode: address?.countryCode || '',
       phoneNumber: address?.phoneNumber || ''
     });
-    const addressForm = ref(resetForm(shipment?.address));
+    const addressForm = ref(resetForm(shipment.value?.address));
 
     const isShipping = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
 
@@ -203,42 +202,10 @@ export default {
       form.value.addressId = null;
     };
 
-    const saveAddress = async () => {
-      try {
-        await addAddress({ address: addressForm.value });
-
-        if (userAddressError.value.addAddress) {
-          sendNotification({
-            id: Symbol('user_updated_error'),
-            message: userAddressError.value.addAddress.message,
-            type: 'danger',
-            icon: 'error',
-            persist: false,
-            title: 'User Address'
-          });
-        } else {
-          isOpen.value.addingAddress = false;
-          form.value.addressId = addresses.value.find(x => x.addressName === addressForm.value.addressName)?.id;
-
-          sendNotification({
-            id: Symbol('user_updated'),
-            message: 'The user address was successfully added!',
-            type: 'success',
-            icon: 'check',
-            persist: false,
-            title: 'User Address'
-          });
-        }
-
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     const onUpdate = async (updatedShipment, onComplete) => {
       const updatedCart = {
         ...cart.value,
-        shipments: cart.value.shipments.map(x => x.id === shipment.id ? updatedShipment : x)
+        shipments: cart.value.shipments.map(x => x.id === shipment.value.id ? updatedShipment : x)
       };
 
       if (!cart.value.shipments?.length) return;
@@ -258,10 +225,50 @@ export default {
       }
     };
 
+    const updateCartAddress = (address) => {
+      isOpen.value.addingAddress = false;
+      onUpdate({ ...shipment.value, address }, () => {});
+    };
+
+    const saveAddress = async () => {
+      try {
+        await addAddress({ address: addressForm.value });
+
+        if (userAddressError.value.addAddress) {
+          sendNotification({
+            id: Symbol('user_updated_error'),
+            message: userAddressError.value.addAddress.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Address'
+          });
+        } else {
+          const address = addresses.value.find(x => x.addressName === addressForm.value.addressName);
+          if (address) {
+            form.value.addressId = address?.id;
+            updateCartAddress(address);
+          }
+
+          sendNotification({
+            id: Symbol('user_updated'),
+            message: 'The user address was successfully added!',
+            type: 'success',
+            icon: 'check',
+            persist: false,
+            title: 'User Address'
+          });
+        }
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const updateShippingMethod = (value) => {
       form.value.shippingMethod = value;
       const updatedShipment = {
-        ...shipment,
+        ...shipment.value,
         fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
         // if PickUpLocationId
         // pickUpLocationId: null,
@@ -272,13 +279,15 @@ export default {
       onUpdate(updatedShipment, () => {});
     };
 
+    const updateAddress = (value) => updateCartAddress(addresses.value.find(x => x.id === value));
+
     const handleFormSubmit = () => {
       const updatedShipment = {
-        ...shipment
+        ...shipment.value
       };
 
-      if (isShipping.value) {
-        updatedShipment.address = isAuthenticated.value ? addresses.value.find(x => x.id === form.value.addressId) : addressForm.value;
+      if (isShipping.value && !isAuthenticated.value) {
+        updatedShipment.address = addressForm.value;
       }
 
       onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
@@ -286,7 +295,6 @@ export default {
 
     onSSR(async () => Promise.allSettled([
       loadUserShipping(),
-      loadCountries(),
       loadFulfillmentMethods()
     ]));
 
@@ -308,6 +316,7 @@ export default {
       saveAddress,
       handleFormSubmit,
       updateShippingMethod,
+      updateAddress,
       goBack,
       fulfillmentMethods,
       addresses,
