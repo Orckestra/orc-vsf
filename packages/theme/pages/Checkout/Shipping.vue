@@ -33,15 +33,19 @@
               <template #label="{ label }">
                 <div class="sf-radio__label shipping__label">
                   <div>
-                    {{ label }}
-                    <SfButton
-                      class="sf-button--text shipping__action desktop-only"
-                      :class="{ 'shipping__action--is-active': isOpen[item.id] }"
-                      type="button"
-                      @click="(isOpen = { ...isOpen, [item.id]: !isOpen[item.id] })"
-                    >{{ isOpen[item.id] ? "- info" : "+ info" }}
-                    </SfButton>
+                   {{ label }}
                   </div>
+                  <SfButton
+                    class="sf-button--text shipping__action desktop-only"
+                    :class="{ 'shipping__action--is-active': isOpen[item.id] }"
+                    type="button"
+                    @click="(isOpen = { ...isOpen, [item.id]: !isOpen[item.id] })"
+                  ><SfIcon
+                    icon="more"
+                    size="22px"
+                    color="black"
+                  />
+                  </SfButton>
                 </div>
               </template>
               <template  #description="{ description }">
@@ -86,12 +90,18 @@
           </template>
           <template v-else>
             <SfButton
-              class="action-button sf-button form__action-button--add-address"
+              class="action-button sf-button form__action-button--add-address sf-button--pure"
               :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart"
               type="button"
               @click="addNewAddress"
             >
-              Add a new address
+              <SfIcon
+                icon="plus"
+                size="sm"
+                color="green-primary"
+                viewBox="0 0 24 24"
+                :coverage="1"
+              /> <span>Add a new address</span>
             </SfButton>
           </template>
         </template>
@@ -128,7 +138,8 @@
 import {
   SfHeading,
   SfButton,
-  SfRadio
+  SfRadio,
+  SfIcon
 } from '@storefront-ui/vue';
 import { computed, ref, useRouter } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
@@ -163,7 +174,8 @@ export default {
     ValidationObserver,
     AddressForm,
     AddressPreview,
-    VsfShippingProvider
+    VsfShippingProvider,
+    SfIcon
   },
   setup (props, context) {
     const router = useRouter();
