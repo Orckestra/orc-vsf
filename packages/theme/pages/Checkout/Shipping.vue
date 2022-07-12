@@ -133,7 +133,7 @@ import {
 import { computed, ref, useRouter } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
-import { useCountries, useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters } from '@vue-storefront/orc-vsf';
+import { useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/Checkout/AddressForm';
