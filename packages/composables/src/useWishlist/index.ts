@@ -13,7 +13,7 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   load: async (context: Context) => {
     const userToken = getUserToken(context);
     const items = await context.$occ.api.getCartLineItems({ cartName: 'Wishlist', userToken });
-    return { items: items ? items : [] };
+    return { items: items || [] };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
