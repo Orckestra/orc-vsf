@@ -37,6 +37,7 @@ import deleteUserAddress from './api/users/deleteUserAddress';
 import completeCheckout from './api/carts/completeCheckout';
 import getOrders from './api/orders/getOrders';
 import getOrderByNumber from './api/orders/getOrderByNumber';
+import getOrderLookups from './api/metadata/getOrderLookups';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -90,7 +91,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     deleteUserAddress,
     completeCheckout,
     getOrders,
-    getOrderByNumber
+    getOrderByNumber,
+    getOrderLookups
   }
 });
 

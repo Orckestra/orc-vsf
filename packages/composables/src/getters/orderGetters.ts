@@ -3,7 +3,7 @@ import type { UserOrder, OrderItem, CartItem, Tax, UserAddress} from '@vue-store
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: UserOrder): string {
-  return order.created;
+  return new Date(order?.created).toLocaleDateString() || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -113,8 +113,8 @@ function getTaxTotal(tax: any): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getTaxName(tax: any, locale: string): string {
-  return tax.displayName?.[locale];
+function getTaxName(tax: any): string {
+  return tax.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -137,6 +137,14 @@ function getShippingAddress(order: UserOrder): UserAddress {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPaymentAddress(order: UserOrder): UserAddress {
   return order.cart.payments[0].billingAddress;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProductLink(item: CartItem): string {
+  const variantId = item.variantId;
+  const productId = item.productId;
+
+  return `/p/${productId}/${item.productSummary.displayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
 export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
@@ -166,5 +174,6 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getTotal,
   getSaving,
   getShippingAddress,
-  getPaymentAddress
+  getPaymentAddress,
+  getProductLink
 };
