@@ -241,7 +241,7 @@ export default {
     const { load: reloadCart, setCart } = useCart();
     const { load: reloadWishlist, setWishlist } = useWishlist();
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
-    const currentScreen = ref(SCREEN_REGISTER);
+    const currentScreen = ref(SCREEN_LOGIN);
     const { send: sendNotification } = useUiNotification();
     const { response: configuration } = useConfiguration();
 
