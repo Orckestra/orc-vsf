@@ -112,7 +112,7 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isShipping && !form.addressId)"
+            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isShipping && !form.addressId) || !form.shippingMethod"
             class="form__action-button"
             type="submit"
           >
@@ -133,12 +133,13 @@ import {
 import { computed, ref, useRouter } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
-import { useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters } from '@vue-storefront/orc-vsf';
+import { useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/Checkout/AddressForm';
 import AddressPreview from '~/components/AddressPreview';
 import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
+import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api/src';
 
 extend('required', {
   ...required,
@@ -176,8 +177,8 @@ export default {
 
     const isOpen = ref({ addingAddress: false });
     const form = ref({
-      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId || fulfillmentMethods.value[0]?.shippingProviderId,
-      addressId: shipment.value?.address?.id || addresses.value.find(x => x.isPreferredShipping)?.id
+      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId,
+      addressId: shipment.value?.address?.id
     });
 
     const resetForm = (address) => ({
@@ -275,6 +276,13 @@ export default {
         // address: null,
         // fulfillmentLocationId = fulfillmentLocation.Id;
       };
+
+      if (isAuthenticated.value && !shipment.value?.address?.id && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.Shipping) {
+        const preferredAddress = userAddressGetters.getDefaultShipping(addresses.value);
+
+        form.value.addressId = preferredAddress?.id;
+        updatedShipment.address = preferredAddress;
+      }
 
       onUpdate(updatedShipment, () => {});
     };
