@@ -23,6 +23,7 @@ export { useConfiguration } from './useConfiguration';
 export { useCountries } from './useCountries';
 export { useUserAddresses } from './useUserAddresses';
 export { usePaymentMethods} from './usePaymentMethods';
+export { useFulfillmentMethods } from './useFulfillmentMethods';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
@@ -44,5 +45,7 @@ export { configurationGetters } from './getters/configurationGetters';
 export { countriesGetters } from './getters/countriesGetters';
 export { userAddressGetters } from './getters/userAddressGetters';
 export { paymentMethodGetters } from './getters/paymentMethodGetters';
+export { fulfillmentMethodsGetters } from './getters/fulfillmentMethodsGetters';
+
 // Types
 export * from './types';

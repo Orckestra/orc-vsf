@@ -229,7 +229,7 @@ export default {
     }));
 
     const shipping = computed(() => ({
-      method: th.getTranslation(activeShipment?.value?.fulfillmentMethod?.displayName),
+      method: th.getTranslation(activeShipment?.value?.fulfillmentMethod?.displayName, activeShipment?.value?.fulfillmentMethod?.name),
       address: {
         ...activeShipment?.value?.address
       }

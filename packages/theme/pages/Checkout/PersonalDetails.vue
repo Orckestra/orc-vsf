@@ -45,12 +45,12 @@
               />
               <transition name="sf-fade">
                 <ValidationProvider
+                  v-if="form.createAccount"
                   v-slot="{ errors }"
                   rules="required|password"
                   class="form__element"
                 >
                   <SfInput
-                    v-if="form.createAccount"
                     v-model="form.password"
                     :has-show-password="true"
                     type="password"
@@ -97,7 +97,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate';
-import { configurationGetters, useCart, useConfiguration, useUser } from '@vue-storefront/orc-vsf';
+import { configurationGetters, useCart, useConfiguration, useUser, cartGetters } from '@vue-storefront/orc-vsf';
 import { useUiState, useUiNotification } from '~/composables';
 export default {
   name: 'PersonalDetails',
@@ -137,10 +137,12 @@ export default {
       message: 'Your password must have a minimum 6 characters including at least 1 special character'
     });
 
+    const customer = cartGetters.getCustomer(cart.value);
+
     const resetForm = () => ({
-      firstName: cart.value.customer?.firstName,
-      lastName: cart.value.customer?.lastName,
-      email: cart.value.customer?.email,
+      firstName: customer?.firstName,
+      lastName: customer?.lastName,
+      email: customer?.email,
       password: '',
       createAccount: false
     });
@@ -157,7 +159,7 @@ export default {
       const updatedCart = {
         ...cart.value,
         customer: {
-          ...cart.value.customer,
+          ...customer,
           firstName: form.value.firstName,
           lastName: form.value.lastName,
           email: form.value.email

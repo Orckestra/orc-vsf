@@ -58,7 +58,7 @@ export const useUserAddressesFactory = <USER_ADDRESS_ITEM, API extends PlatformA
 
   const useUserAddresses = (): UseUserAddresses<USER_ADDRESS_ITEM, API> => {
     const loading: Ref<boolean> = sharedRef(false, 'useUserAddresses-loading');
-    const addresses: Ref<USER_ADDRESS_ITEM[]> = sharedRef({}, 'useUserAddresses-addresses');
+    const addresses: Ref<USER_ADDRESS_ITEM[]> = sharedRef([], 'useUserAddresses-addresses');
     const error: Ref<UseUserAddressesErrors> = sharedRef({
       addAddress: null,
       deleteAddress: null,

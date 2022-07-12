@@ -4,7 +4,14 @@ import {
   Context,
   ComputedProperty
 } from '@vue-storefront/core';
-import { Composable, CustomQuery, PlatformApi } from '@vue-storefront/core/lib/src/types';
+import {
+  AgnosticAttribute, AgnosticCoupon, AgnosticDiscount,
+  AgnosticPrice, AgnosticTotals,
+  Composable,
+  CustomQuery,
+  PlatformApi
+} from '@vue-storefront/core/lib/src/types';
+import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
 
 export type TODO = any;
 
@@ -333,4 +340,48 @@ export interface UsePaymentMethodsGetters<PAYMENTMETHOD> {
 export interface PaymentMethodGetters<PAYMENTMETHOD> {
   getDefaultMethod(methods: PAYMENTMETHOD[]): PAYMENTMETHOD;
   getValidPaymentMethods(methods: PAYMENTMETHOD[]): PAYMENTMETHOD[];
+}
+
+export interface CartGetters<CART, CART_ITEM> {
+  getItems: (cart: CART) => CART_ITEM[];
+  getItemName: (cartItem: CART_ITEM) => string;
+  getItemImage: (cartItem: CART_ITEM) => string;
+  getItemPrice: (cartItem: CART_ITEM) => AgnosticPrice;
+  getItemQty: (cartItem: CART_ITEM) => number;
+  getItemAttributes: (cartItem: CART_ITEM, filters?: Array<string>) => Record<string, AgnosticAttribute | string>;
+  getItemSku: (cartItem: CART_ITEM) => string;
+  getTotals: (cart: CART) => AgnosticTotals;
+  getShippingPrice: (cart: CART) => number;
+  getTotalItems: (cart: CART) => number;
+  getFormattedPrice: (price: number) => string;
+  getCoupons: (cart: CART) => AgnosticCoupon[];
+  getDiscounts: (cart: CART) => AgnosticDiscount[];
+  [getterName: string]: (element: any, options?: any) => unknown;
+}
+
+/*
+FULFILLMENT METHODS
+*/
+export interface UseFulfillmentMethodsErrors {
+  load: Error | null;
+}
+
+export interface UseFulfillmentMethodsFactoryParams<METHOD> extends FactoryParams {
+  load(context: Context): Promise<METHOD[]>
+}
+
+export interface UseFulfillmentMethodsInterface<METHOD> {
+  load(): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  fulfillmentMethods: ComputedProperty<METHOD[]>;
+  error: ComputedProperty<UseFulfillmentMethodsErrors>;
+}
+
+export interface UseFulfillmentMethods<METHOD> {
+  (): UseFulfillmentMethodsInterface<METHOD>;
+}
+
+export interface FulfillmentMethodsGetters<METHOD> {
+  getFulfillmentMethod(fulfillmentMethods: METHOD[], shippingProviderId: string): METHOD;
+  getFulfillmentMethodType(fulfillmentMethods: METHOD[], shippingProviderId: string): FulfillmentMethodType
 }

@@ -186,7 +186,7 @@
         </SfButton>
         <SfButton
           class="action-button color-secondary cancel-button sf-button"
-          @click="cancelEdit"
+          @click.prevent="cancelEdit"
         >
           {{ $t('Cancel') }}
         </SfButton>
@@ -200,7 +200,7 @@ import { ref } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { SfButton, SfInput, SfSelect, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import { useUserShipping, countriesGetters, useCountries } from '@vue-storefront/orc-vsf';
+import { useUserAddresses, countriesGetters, useCountries } from '@vue-storefront/orc-vsf';
 
 export default {
   name: 'ShippingAddressForm',
@@ -225,7 +225,7 @@ export default {
   emits: ['submit', 'cancel'],
   setup(props, { emit }) {
     const { countries } = useCountries();
-    const { error: userAddressError, loading } = useUserShipping();
+    const { error: userAddressError, loading } = useUserAddresses();
 
     const { send: sendNotification } = useUiNotification();
     const form = ref({
