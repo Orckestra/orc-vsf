@@ -1,4 +1,4 @@
-import { UserOrderGetters } from '@vue-storefront/core';
+import { UserOrderGetters, AgnosticPrice } from '@vue-storefront/core';
 import type { UserOrder, OrderItem, CartItem, Tax, UserAddress} from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -9,6 +9,11 @@ function getDate(order: UserOrder): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(order: UserOrder): string {
   return order.id;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getNumber(order: UserOrder): string {
+  return order.orderNumber;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -67,8 +72,11 @@ function getProductQty(item: CartItem): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductPrice(item: CartItem): number {
-  return item.listPrice;
+function getProductPrice(item: CartItem): AgnosticPrice {
+  return {
+    regular: item?.regularPrice,
+    special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : null
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,14 +90,13 @@ function getProductName(item: CartItem): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductRegularPrice(item: CartItem): number {
-  return item.regularPrice;
+function getProductTotal(item: CartItem): number {
+  return item.total;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFulfillmentMethodName(order: UserOrder): string {
-  console.log(order.cart.shipments[0]?.fulfillmentMethod.name);
-  return order.cart.shipments[0]?.fulfillmentMethod.name;
+  return order.cart.shipments[0]?.fulfillmentMethod.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -143,8 +150,17 @@ function getPaymentAddress(order: UserOrder): UserAddress {
 function getProductLink(item: CartItem): string {
   const variantId = item.variantId;
   const productId = item.productId;
-
   return `/p/${productId}/${item.productSummary.displayName}${variantId ? `?variant=${variantId}` : ''}`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getProductImage(item: CartItem): string{
+  return item.coverImage;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getShipmentStatus(order: UserOrder): string {
+  return order.cart.shipments[0]?.status;
 }
 
 export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
@@ -164,7 +180,7 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getProductPrice,
   getProductSku,
   getProductName,
-  getProductRegularPrice,
+  getProductTotal,
   getFulfillmentMethodName,
   getPaymentMethod,
   getSubTotal,
@@ -175,5 +191,8 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getSaving,
   getShippingAddress,
   getPaymentAddress,
-  getProductLink
+  getProductLink,
+  getNumber,
+  getProductImage,
+  getShipmentStatus
 };

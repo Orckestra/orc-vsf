@@ -134,7 +134,7 @@ export type CartItem = {
     recurringOrderFrequencyName: string,
     coverImage?: string,
     isGiftItem: boolean,
-    rewards: Reward[],
+    rewards: Reward[]
 }
 
 export type Shipment = {

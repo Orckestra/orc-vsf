@@ -3,7 +3,6 @@ import type { OrderQueryResult, OrderItem } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getOrdersHistory(orderQueryResult: OrderQueryResult): OrderItem[] {
-  console.log(orderQueryResult?.results)
   return orderQueryResult?.results;
 }
 
