@@ -44,6 +44,7 @@ module.exports = {
     '@nuxtjs/composition-api/module',
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
+    '@nuxtjs/pwa',
     ['@vue-storefront/nuxt', {
       // @core-development-only-start
       coreDevelopment: true,
@@ -179,7 +180,27 @@ module.exports = {
   pwa: {
     meta: {
       theme_color: '#5ECE7B'
+    },
+    workbox: {
+      enabled: true,
+      cachingExtensions: '@/plugins/workbox-range-request.js',
+      config: {
+        debug: true,
+      }
+      // runtimeCaching: [{
+      //   urlPattern: /\/api/,
+      //   method: "POST",
+      //   //handler: "StaleWhileRevalidate",
+      //   options: {
+      //     cacheName: "api",
+      //     expiration: {
+      //       maxEntries: 64,
+      //       maxAgeSeconds: 24 * 60 * 60, // 24 hours
+      //     },
+      //   },
+      // },]
     }
   },
+ 
   telemetry: false
 };

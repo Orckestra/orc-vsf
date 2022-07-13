@@ -44,6 +44,13 @@ function onCreate(settings) {
     }
   });
 
+  client.interceptors.request.use(
+    request => {
+      console.log('Starting Request', JSON.stringify(request, null, 2))
+      return request;
+    }
+  );
+
   return {
     config: settings,
     client
