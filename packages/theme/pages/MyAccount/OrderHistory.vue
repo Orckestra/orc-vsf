@@ -14,7 +14,7 @@
       />
       <SfProperty
         name="Status"
-        :value="metadataGetters.getLookupValueDisplayName(metadata?.value, orderGetters.getStatus(currentOrder), orderGetters.getStatus(currentOrder), locale) 
+        :value="getOrderStatusLookup(currentOrder)" 
         class="sf-property--full-width property"
       />
       <SfProperty
@@ -23,20 +23,39 @@
         class="sf-property--full-width property"
       />
     </div>
-    <SfTable class="products">
-      <SfTableHeading>
-        <SfTableHeader class="products__name">{{ $t('Product') }}</SfTableHeader>
-        <SfTableHeader>{{ $t('Quantity') }}</SfTableHeader>
-        <SfTableHeader>{{ $t('Price') }}</SfTableHeader>
+    <SfTable class="sf-table--bordered table">
+      <SfTableHeading class="table__row">
+        <SfTableHeader class="table__header table__image">Item</SfTableHeader>
+        <SfTableHeader
+          v-for="tableHeader in tableHeaders"
+          :key="tableHeader"
+          class="table__header"
+          :class="{ table__description: tableHeader === 'Description' }"
+          >{{ tableHeader }}
+        </SfTableHeader>
       </SfTableHeading>
-      <SfTableRow v-for="(item, i) in orderGetters.getProducts(currentOrder)" :key="i">
-        <SfTableData class="products__name">
+      <SfTableRow v-for="(item, i) in orderGetters.getProducts(currentOrder)" :key="i" class="table__row">
+       <SfTableData class="table__image">
+          <SfImage
+            :src="addBasePath(orderGetters.getProductImage(item))"
+            :alt="orderGetters.getProductName(item)"
+            data-testid="product-image-table-data"
+          />
+        </SfTableData>
+        <SfTableData class="table__description">
           <nuxt-link :to="localePath(orderGetters.getProductLink(item))">
             {{orderGetters.getProductName(item)}}
           </nuxt-link>
         </SfTableData>
-        <SfTableData>{{orderGetters.getProductQty(item)}}</SfTableData>
-        <SfTableData>{{$n(orderGetters.getProductPrice(item), 'currency')}}</SfTableData>
+        <SfTableData class="table__data">
+          <SfPrice
+            class="product-price"
+            :regular="orderGetters.getProductPrice(item).regular && $n(orderGetters.getProductPrice(item).regular, 'currency')"
+            :special="orderGetters.getProductPrice(item).special && $n(orderGetters.getProductPrice(item).special, 'currency')"
+          />
+        </SfTableData>     
+        <SfTableData class="table__data">{{orderGetters.getProductQty(item)}}</SfTableData>
+        <SfTableData class="table__data">{{$n(orderGetters.getProductTotal(item), 'currency')}}</SfTableData>
       </SfTableRow>
     </SfTable>
     <div class="highlighted highlighted--total">
@@ -47,12 +66,17 @@
       />
       <SfProperty
         name="Shipping method"
-        :value="orderGetters.getFulfillmentMethodName(currentOrder)"
-        class="sf-property"
+        :value="th.getTranslation(orderGetters.getFulfillmentMethodName(currentOrder))"
+        class="sf-property--full-width property"
+      />
+      <SfProperty
+        name="Status"
+        :value="getShipmentStatusLookup(currentOrder)"
+        class="sf-property--full-width property"
       />
       <SfProperty
         name="Shiping address"
-        class="sf-property">
+        class="sf-property--full-width">
         <template #value>
           <AddressPreview :address="orderGetters.getShippingAddress(currentOrder)" />
         </template>
@@ -67,7 +91,7 @@
       <SfProperty
         name="Payment method"
         :value="orderGetters.getPaymentMethod(currentOrder)"
-        class="sf-property"
+        class="sf-property--full-width property"
       />
       <SfProperty
         name="Billing address"
@@ -114,7 +138,7 @@
         <p class="message">
           {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
         </p>
-        <div v-if="totalOrders === 0" class="no-orders">
+        <div v-if="totalOrdersCurrent === 0" class="no-orders">
           <p class="no-orders__title">{{ $t('You currently have no orders') }}</p>
           <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
         </div>
@@ -131,7 +155,7 @@
             <SfTableData>{{ ordersHistoryGetters.getDate(order) }}</SfTableData>
             <SfTableData>{{ $n(ordersHistoryGetters.getPrice(order), 'currency') }}</SfTableData>
             <SfTableData>
-              <span :class="getStatusTextClass(order)">{{ ordersHistoryGetters.getStatus(order) }}</span>
+              <span :class="getStatusTextClass(order)">{{ getOrderStatusLookup(order) }}</span>
             </SfTableData>
             <SfTableData class="orders__view orders__element--right">
               <SfButton class="sf-button--text desktop-only" @click="getOrderDetails(order)">
@@ -159,7 +183,7 @@
               <SfTableData v-e2e="'order-number'">{{ ordersHistoryGetters.getNumber(pastOrder) }}</SfTableData>
               <SfTableData>{{ ordersHistoryGetters.getDate(pastOrder) }}</SfTableData>
               <SfTableData>
-                <span :class="getStatusTextClass(pastOrder)">{{ ordersHistoryGetters.getStatus(pastOrder) }}</span>
+                <span :class="getStatusTextClass(pastOrder)">{{ getOrderStatusLookup(pastOrder) }}</span>
               </SfTableData>
               <SfTableData class="orders__view orders__element--right">
                 <SfButton class="sf-button--text desktop-only" @click="getOrderDetails(pastOrder)">
@@ -182,16 +206,17 @@ import {
   SfButton,
   SfProperty,
   SfLink,
-  SfHeading
+  SfHeading,
+  SfImage,
+  SfPrice
 } from '@storefront-ui/vue';
 import AddressPreview from '../../components/AddressPreview';
 import { computed, ref } from '@nuxtjs/composition-api';
-import { useOrdersHistory, ordersHistoryGetters, orderGetters, useOrder, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
+import { useOrdersHistory, ordersHistoryGetters, orderGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
 import { useUiHelpers } from '~/composables';
 import { useRouter } from '@nuxtjs/composition-api';
-import { AgnosticOrderStatus } from '@vue-storefront/core';
+import { AgnosticOrderStatus, addBasePath } from '@vue-storefront/core';
 import { onSSR } from '@vue-storefront/core';
-
 export default {
   name: 'PersonalDetails',
   components: {
@@ -201,7 +226,9 @@ export default {
     SfProperty,
     SfLink,
     AddressPreview,
-    SfHeading
+    SfHeading,
+    SfImage,
+    SfPrice
   },
   setup() {
     const th = useUiHelpers();
@@ -209,6 +236,7 @@ export default {
     const { response: orderHistoryPast, load: loadOrdersHistoryPast } = useOrdersHistory('order-history-past');
     const { response: orderByNumber, find: getOrderByNumber } = useOrder();
     const { response: metadata } = useMetadata();
+    
     const router = useRouter();
     const { locale } = router.app.$i18n;
     
@@ -256,6 +284,18 @@ export default {
       isOrderSelected.value = true;
     }
 
+    const getOrderStatusLookup = (order) => {
+      return getLookupValue("OrderStatus", orderGetters.getStatus(order));
+    }
+
+    const getShipmentStatusLookup = (order) => {
+      return getLookupValue("ShipmentStatus", orderGetters.getShipmentStatus(order));
+    }
+
+    const getLookupValue = (lookupName, value) => {
+      return metadataGetters.getLookupValueDisplayName(metadata?.value, lookupName , value, locale);
+    }
+
     const currentOrders = computed(() => ordersHistoryGetters.getOrdersHistory(orderHistoryCurrent.value));
     const pastOrders = computed(() => ordersHistoryGetters.getOrdersHistory(orderHistoryPast.value));
     
@@ -275,13 +315,20 @@ export default {
       th,
       metadataGetters,
       metadata,
-      locale
+      locale,
+      getOrderStatusLookup,
+      addBasePath,
+      getShipmentStatusLookup,
+      tableHeaders: ['Description', 'Unit Price', 'Quantity', 'Subtotal']
     };
   }
 };
 </script>
 
 <style lang='scss' scoped>
+img.sf-image.sf-image-loaded{
+  max-height: 100px !important;
+}
 .no-orders {
   &__title {
     margin: 0 0 var(--spacer-lg) 0;
@@ -307,49 +354,7 @@ export default {
 .all-orders {
   --button-padding: var(--spacer-base) 0;
 }
-.message {
-  margin: 0 0 var(--spacer-xl) 0;
-  font: var(--font-weight--light) var(--font-size--base) / 1.6 var(--font-family--primary);
-  &__link {
-    color: var(--c-primary);
-    font-weight: var(--font-weight--medium);
-    font-family: var(--font-family--primary);
-    font-size: var(--font-size--base);
-    text-decoration: none;
-    &:hover {
-      color: var(--c-text);
-    }
-  }
-}
-.product {
-  &__properties {
-    margin: var(--spacer-xl) 0 0 0;
-  }
-  &__property,
-  &__action {
-    font-size: var(--font-size--sm);
-  }
-  &__action {
-    color: var(--c-gray-variant);
-    font-size: var(--font-size--sm);
-    margin: 0 0 var(--spacer-sm) 0;
-    &:last-child {
-      margin: 0;
-    }
-  }
-  &__qty {
-    color: var(--c-text);
-  }
-}
-.products {
-  --table-column-flex: 1;
-  &__name {
-    margin-right: var(--spacer-sm);
-    @include for-desktop {
-      --table-column-flex: 2;
-    }
-  }
-}
+
 .highlighted {
   box-sizing: border-box;
   width: 100%;
@@ -363,9 +368,6 @@ export default {
   ::v-deep .sf-property__name {
     white-space: nowrap;
   }
-  ::v-deep .sf-property__value {
-    text-align: right;
-  }
   &--total {
     margin-bottom: var(--spacer-sm);
   }
@@ -377,5 +379,88 @@ export default {
     --property-value-font-weight: var(--font-weight--semibold);
   }
 }
+.title {
+  --heading-padding: var(--spacer-xl) 0 var(--spacer-base);
+  --heading-title-font-weight: var(--font-weight--bold);
+  @include for-desktop {
+    --heading-title-font-size: var(--h3-font-size);
+    --heading-title-font-weight: var(--font-weight--semibold);
+    --heading-padding: var(--spacer-xl) 0;
+  }
+}
+.table {
+  --table-row-padding: var(--spacer-sm) 0 var(--spacer-xs);
+  :nth-of-type(4), :nth-of-type(3) {
+    text-align: center;
+  }
+  &__header:last-child {
+    text-align: right;
+  }
+  &__header:nth-of-type(odd),
+  .sf-table__data:nth-of-type(odd) {
+    padding-bottom: var(--spacer-sm);
+  }
+  &__row {
+    justify-content: space-between;
+    --property-name-font-size: var(--font-size--sm);
+    --property-value-font-size: var(--font-size--sm);
+    &.status-OutOfStock {
+      --table-row-border-width: 2px;
+      --table-row-border-color: red;
+    }
+  }
+  &__data:nth-of-type(4), &__data:nth-of-type(3) {
+    text-align: center;
+  }
+  &__data:last-child {
+      text-align: right;
+  }
+  @include for-desktop {
+    margin: 0 0 var(--spacer-base) 0;
+    --table-heading-padding: var(--spacer-sm) 0;
+    &__header {
+      &:last-of-type {
+        margin-right: var(--spacer-xs);
+      }
+      &:nth-of-type(4), &:nth-of-type(3) {
+        text-align: center;
+      }
+      &__description {
+        order: -1;
+      }
+    }
+    &__header:nth-of-type(odd),
+    .sf-table__data:nth-of-type(odd) {
+      padding-bottom: 0;
+    }
+    &__data {
+      &:nth-of-type(4), &:nth-of-type(3) {
+        text-align: center;
+      }
+      &:last-of-type {
+        margin-right: var(--spacer-xs);
+      }
+    }
+    &__description {
+      text-align: left;
+      flex: 0 0 15rem;
+      order: -1;
+    }
+    &__image {
+      --image-width: 5.125rem;
+      order: -1;
+      text-align: center;
+      margin: 0 var(--spacer-xl) 0 0;
+    }
+  }
+}
+.product-price {
+  --price-regular-font-size: var(--font-size--base);
+  --price-regular-font-weight: var(--font-weight--normal);
+  --price-special-font-weight: var(--font-weight--normal);
+  --price-flex-direction: column;
+  --price-align-items: center;
+}
+
 
 </style>
