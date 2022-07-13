@@ -12,7 +12,8 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
     const userToken = getUserToken(context);
-    return { items: await context.$occ.api.getCartLineItems({cartName: 'Wishlist', userToken}) };
+    const items = await context.$occ.api.getCartLineItems({ cartName: 'Wishlist', userToken });
+    return { items: items || [] };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,9 +46,8 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInWishlist: (context: Context, { currentWishlist, product }) => {
-    const wishListItems = currentWishlist?.items;
     const sku = product.sku ?? product.propertyBag?.Sku;
-    return wishListItems?.some(item => item.sku === sku);
+    return currentWishlist && currentWishlist.items?.some(item => item.sku === sku);
   }
 };
 

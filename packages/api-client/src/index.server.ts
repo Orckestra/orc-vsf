@@ -35,6 +35,7 @@ import updateUserAddress from './api/users/updateUserAddress';
 import addUserAddress from './api/users/addUserAddress';
 import deleteUserAddress from './api/users/deleteUserAddress';
 import completeCheckout from './api/carts/completeCheckout';
+import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
 import getOrders from './api/orders/getOrders';
 import getOrderByNumber from './api/orders/getOrderByNumber';
 import getOrderLookups from './api/metadata/getOrderLookups';
@@ -90,6 +91,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     addUserAddress,
     deleteUserAddress,
     completeCheckout,
+    getFulfillmentMethods,
     getOrders,
     getOrderByNumber,
     getOrderLookups

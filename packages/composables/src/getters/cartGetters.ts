@@ -7,6 +7,7 @@ import {
   AgnosticAttribute
 } from '@vue-storefront/core';
 import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress } from '@vue-storefront/orc-vsf-api';
+import { CustomerSummary } from '@vue-storefront/orc-vsf-api/src';
 
 function getItems(cart: Cart): CartItem[] {
   const shipment = getActiveShipment(cart);
@@ -250,6 +251,10 @@ function isReadyForOrder(cart: Cart): boolean {
   return true;
 }
 
+function getCustomer(cart: Cart): CustomerSummary | any {
+  return cart?.customer || {};
+}
+
 export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotals,
   getShippingPrice,
@@ -284,5 +289,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   isPersonalDetailsReady,
   isShippingReady,
   isPaymentReady,
-  isReadyForOrder
+  isReadyForOrder,
+  getCustomer
 };
