@@ -27,7 +27,7 @@ export function useOrdersHistoryFactory<ORDERSHISTORY>(
         response.value = await _factoryParams.load(params);
       } catch (err) {
         error.value.load = err;
-        console.error(err)
+        console.error(err);
       } finally {
         loading.value = false;
       }

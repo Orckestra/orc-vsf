@@ -132,7 +132,7 @@ function getTotal(order: UserOrder): number {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSaving(order: UserOrder): number {
   let saving = 0;
-  order.cart.shipments[0]?.lineItems.forEach(item => saving += item.regularPrice - item.listPrice );
+  order.cart.shipments[0]?.lineItems.forEach(item => saving += item.regularPrice - item.listPrice);
   return saving;
 }
 
@@ -154,7 +154,7 @@ function getProductLink(item: CartItem): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductImage(item: CartItem): string{
+function getProductImage(item: CartItem): string {
   return item.coverImage;
 }
 

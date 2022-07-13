@@ -111,11 +111,11 @@ export interface UseOrdersHistoryErrors {
 }
 
 export interface UseOrdersHistoryFactoryParams<ORDERHISTORY> extends FactoryParams {
-  load(context: Context, params: { orderTense: number,  page: number, itemsPerPage: number}): Promise<ORDERHISTORY[]>
+  load(context: Context, params: { orderTense: number, page: number, itemsPerPage: number}): Promise<ORDERHISTORY[]>
 }
 
 export interface UseOrdersHistoryInterface<ORDERHISTORY> {
-  load(params: { orderTense: number,  page: number, itemsPerPage: number}): Promise<void>;
+  load(params: { orderTense: number, page: number, itemsPerPage: number}): Promise<void>;
   loading: ComputedProperty<boolean>;
   response: ComputedProperty<ORDERHISTORY>;
   error: ComputedProperty<UseOrdersHistoryErrors>;

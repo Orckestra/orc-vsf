@@ -14,7 +14,6 @@ export function useOrderFactory<USERORDER>(factoryParams: UseOrderFactoryParams<
     const loading: Ref<boolean> = sharedRef(false, 'useOrder-loading');
     const error: Ref<UseOrderErrors> = sharedRef({ load: null}, 'useOrder-error');
 
-
     /* @public */
     async function find(params): Promise<void> {
       Logger.debug('useOrderFactory.find');
