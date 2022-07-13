@@ -5,7 +5,7 @@ import { parseUserToken } from '../../../helpers/generalUtils';
 export default async function updatePaymentMethod(context, params) {
 
   const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
-  const { userToken, cartName = 'Default', paymentId, paymentMethodId, paymentProviderName } = params;
+  const { userToken, cartName = 'Default', paymentId, id, paymentProviderName } = params;
   const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
   if (!customerId) return null;
 
@@ -15,7 +15,7 @@ export default async function updatePaymentMethod(context, params) {
   );
 
   const body = {
-    paymentMethodId,
+    paymentMethodId: id,
     paymentProviderName
   }
   const { data } = await context.client.put(url.href, body);

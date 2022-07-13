@@ -6,6 +6,7 @@
       :key="method.id"
       :label="th.getTranslation(method.displayName)"
       :value="method.id"
+      :disabled="loading"
       :selected ="selectedMethod"
       name="spaymentMethod"
       class="form__radio payment"
@@ -34,20 +35,32 @@ export default {
   },
 
   setup(props, { emit }) {
-    const selectedMethod = ref('d1d43d03e79144698f93503c4e46ec5b');
+    
     const { methods: onsiteMethods, load } = usePaymentMethods('Onsite');
-    const { cart } = useCart();
+    const { cart, updatePaymentMethod, loading } = useCart();
     const validMethods = computed(() => paymentMethodGetters.getValidPaymentMethods(onsiteMethods.value))
+    const defaultMethod = computed(() => paymentMethodGetters.getDefaultMethod(onsiteMethods.value))
     const payment = computed(() => cartGetters.getActivePayment(cart.value));
+    const selectedMethod = computed(() => payment.value?.paymentMethod?.id);
     const th = useUiHelpers();
-    const selectMethod = (method) => {
-      selectedMethod.value = method;
+
+    if(selectedMethod) {
+      emit('status');
+    }
+
+    const selectMethod = async (id) => {
+      const paymentMethod = validMethods.value?.find(p => p.id === id);
+      await updatePaymentMethod({paymentMethod})
       emit('status');
     };
 
-      onSSR(async () => {
+    onSSR(async () => {
       if (!onsiteMethods.value) {
         await load({providerName: 'Onsite payment'});
+      }
+
+      if(payment && !payment.value?.paymentMethod) {
+        await updatePaymentMethod({paymentMethod: defaultMethod.value})
       }
     });
 
@@ -56,6 +69,7 @@ export default {
       methods: validMethods,
       selectedMethod,
       selectMethod,
+      loading,
       th
     };
   }

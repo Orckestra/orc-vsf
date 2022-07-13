@@ -48,7 +48,7 @@
                   </SfButton>
                 </div>
               </template>
-              <template  #description="{ description }">
+              <template  #description>
                 <div class="sf-radio__description shipping__description">
                   <transition name="sf-fade">
                     <div v-if="isOpen[item.id]" class="shipping__info">
@@ -65,7 +65,7 @@
               :title="'Add shipping address'"
               class="sf-heading--left sf-heading--no-underline title"
             />
-            <ValidationObserver v-slot="{ handleSubmit: hS, reset }">
+            <ValidationObserver v-slot="{ handleSubmit: hS }">
               <form
                 class="form"
                 @submit.prevent="hS(saveAddress)"

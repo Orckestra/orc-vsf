@@ -11,7 +11,7 @@ import {
   CustomQuery,
   PlatformApi
 } from '@vue-storefront/core/lib/src/types';
-import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
+import { FulfillmentMethodType, Payment } from '@vue-storefront/orc-vsf-api';
 
 export type TODO = any;
 
@@ -270,7 +270,7 @@ export interface UseCartErrors {
   applyCoupon: Error;
   removeCoupon: Error;
 }
-export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any> extends Composable<API> {
+export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends PlatformApi = any> extends Composable<API> {
   cart: ComputedProperty<CART>;
   setCart(cart: CART): void;
   addItem(params: {
@@ -287,6 +287,9 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any
   }): Promise<void>;
   update: (params: {
     cart: CART;
+  }) => Promise<void>;
+  updatePaymentMethod: (params: {
+    paymentMethod: PAYMENTMETHOD;
   }) => Promise<void>;
   updateItemQty(params: {
     product: CART_ITEM;
@@ -308,6 +311,25 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any
   }): Promise<void>;
   error: ComputedProperty<UseCartErrors>;
   loading: ComputedProperty<boolean>;
+}
+
+
+export interface CartGetters<CART, CART_ITEM> {
+  getItems: (cart: CART) => CART_ITEM[];
+  getItemName: (cartItem: CART_ITEM) => string;
+  getItemImage: (cartItem: CART_ITEM) => string;
+  getItemPrice: (cartItem: CART_ITEM) => AgnosticPrice;
+  getItemQty: (cartItem: CART_ITEM) => number;
+  getItemAttributes: (cartItem: CART_ITEM, filters?: Array<string>) => Record<string, AgnosticAttribute | string>;
+  getItemSku: (cartItem: CART_ITEM) => string;
+  getTotals: (cart: CART) => AgnosticTotals;
+  getShippingPrice: (cart: CART) => number;
+  getTotalItems: (cart: CART) => number;
+  getFormattedPrice: (price: number) => string;
+  getCoupons: (cart: CART) => AgnosticCoupon[];
+  getDiscounts: (cart: CART) => AgnosticDiscount[];
+  getActivePayment: (cart: CART) => Payment;
+  [getterName: string]: (element: any, options?: any) => unknown;
 }
 
 /*
@@ -340,23 +362,6 @@ export interface UsePaymentMethodsGetters<PAYMENTMETHOD> {
 export interface PaymentMethodGetters<PAYMENTMETHOD> {
   getDefaultMethod(methods: PAYMENTMETHOD[]): PAYMENTMETHOD;
   getValidPaymentMethods(methods: PAYMENTMETHOD[]): PAYMENTMETHOD[];
-}
-
-export interface CartGetters<CART, CART_ITEM> {
-  getItems: (cart: CART) => CART_ITEM[];
-  getItemName: (cartItem: CART_ITEM) => string;
-  getItemImage: (cartItem: CART_ITEM) => string;
-  getItemPrice: (cartItem: CART_ITEM) => AgnosticPrice;
-  getItemQty: (cartItem: CART_ITEM) => number;
-  getItemAttributes: (cartItem: CART_ITEM, filters?: Array<string>) => Record<string, AgnosticAttribute | string>;
-  getItemSku: (cartItem: CART_ITEM) => string;
-  getTotals: (cart: CART) => AgnosticTotals;
-  getShippingPrice: (cart: CART) => number;
-  getTotalItems: (cart: CART) => number;
-  getFormattedPrice: (price: number) => string;
-  getCoupons: (cart: CART) => AgnosticCoupon[];
-  getDiscounts: (cart: CART) => AgnosticDiscount[];
-  [getterName: string]: (element: any, options?: any) => unknown;
 }
 
 /*

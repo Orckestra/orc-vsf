@@ -5,14 +5,15 @@ import {
 import type {
   Cart,
   CartItem,
-  Product
+  Product,
+  PaymentMethod
 } from '@vue-storefront/orc-vsf-api';
 import { getVariantId } from '../helpers/productUtils';
 import { isGuidEmpty, getUserToken, setUserToken } from '../helpers/generalUtils';
 import { useCartFactory, UseCartFactoryParams } from '../factories/useCartFactory';
 import { cartGetters } from '../getters/cartGetters';
 
-const params: UseCartFactoryParams<Cart, CartItem, Product> = {
+const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
     const app = context.$occ.config.app;
@@ -91,6 +92,12 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   update: (context: Context, { currentCart, cart }) => {
     const userToken = getUserToken(context);
     return context.$occ.api.updateCart({ ...params, userToken, cart, cartName: currentCart.name });
+  },
+
+  updatePaymentMethod: (context: Context, { currentCart, paymentMethod }) => {
+    const userToken = getUserToken(context);
+    const payment: any = cartGetters.getActivePayment(currentCart);
+    return context.$occ.api.updatePaymentMethod({ userToken, paymentId: payment.id, ...paymentMethod, cartName: currentCart.name });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
