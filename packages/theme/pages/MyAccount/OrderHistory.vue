@@ -212,7 +212,7 @@ import {
 } from '@storefront-ui/vue';
 import AddressPreview from '../../components/AddressPreview';
 import { computed, ref } from '@nuxtjs/composition-api';
-import { useOrdersHistory, ordersHistoryGetters, orderGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
+import { useOrdersHistory, ordersHistoryGetters, orderGetters, useMetadata, metadataGetters, useOrder } from '@vue-storefront/orc-vsf';
 import { useUiHelpers } from '~/composables';
 import { useRouter } from '@nuxtjs/composition-api';
 import { AgnosticOrderStatus, addBasePath } from '@vue-storefront/core';
