@@ -122,7 +122,7 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isShipping && !form.addressId) || !form.shippingMethod"
+            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShipping && !form.addressId) || !form.shippingMethod"
             class="form__action-button"
             type="submit"
           >
