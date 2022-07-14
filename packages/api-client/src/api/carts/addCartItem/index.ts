@@ -4,7 +4,7 @@ import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function addCartItem(context, params) {
 
-  const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
+  const { api, scope, cdnDamProviderConfig } = context.config;
   const { cartName = 'Default', quantity, productId, variantId } = params;
   const { id: customerId } = context.config.auth.getCustomerToken();
 

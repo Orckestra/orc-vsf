@@ -89,7 +89,6 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     deleteUserAddress,
     completeCheckout,
     getFulfillmentMethods,
-    changePassword,
   },
   extensions: [tokenExtension],
 });

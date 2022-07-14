@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function changePassword(context, params) {
-  const { userToken, currentPassword, newPassword } = params;
+  const { currentPassword, newPassword } = params;
   const { api, scope } = context.config;
   const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
