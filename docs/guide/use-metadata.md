@@ -5,7 +5,7 @@
 
 ## API
 ```typescript
-interface UseFacet<any> {
+interface UseMetadata<any> {
   response: ComputedProperty<Metadata>;
   loading: ComputedProperty<boolean>;
   load: () => Promise<void>;

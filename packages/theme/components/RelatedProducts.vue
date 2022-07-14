@@ -13,9 +13,11 @@
             :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
             :show-add-to-cart-button="true"
             :is-added-to-cart="isInCart({ product })"
+            :is-in-wishlist="isInWishlist({ product })"
             :link="localePath(productGetters.getLink(product))"
             class="product-card"
             @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
+            @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
           />
         </SfCarouselItem>
       </SfCarousel>
@@ -30,9 +32,9 @@ import {
   SfSection,
   SfLoader
 } from '@storefront-ui/vue';
-import { productGetters, useCart } from '@vue-storefront/orc-vsf';
+import { productGetters, useCart, useWishlist, wishlistGetters } from '@vue-storefront/orc-vsf';
 import { addBasePath } from '@vue-storefront/core';
-
+import type { WishlistItem } from '@vue-storefront/orc-vsf-api';
 export default {
   name: 'RelatedProducts',
   components: {
@@ -48,17 +50,19 @@ export default {
   },
   setup() {
     const { addItem: addItemToCart, isInCart } = useCart();
-    // const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
-    // const removeProductFromWishlist = (productItem) => {
-    // const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-    // const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
-    // removeItemFromWishlist({ product });
-    // };
+    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
+
+    const removeProductFromWishlist = (productItem) => {
+      const wishListItems = wishlistGetters.getItems(wishlist.value) as WishlistItem[];
+      const product = wishListItems.find(wishlistProduct => wishlistProduct.sku === productItem.sku);
+      removeItemFromWishlist({ product });
+    };
+
     return {
       productGetters,
-      // addItemToWishlist,
-      // isInWishlist,
-      // removeProductFromWishlist,
+      addItemToWishlist,
+      isInWishlist,
+      removeProductFromWishlist,
       addItemToCart,
       isInCart,
       addBasePath

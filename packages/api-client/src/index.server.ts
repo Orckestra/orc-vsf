@@ -6,9 +6,12 @@ import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
 import getCart from './api/carts/getCart';
+import updateCart from './api/carts/updateCart';
 import addCartItem from './api/carts/addCartItem';
 import removeCartItem from './api/carts/removeCartItem';
 import updateCartItem from './api/carts/updateCartItem';
+import addCoupon from './api/carts/addCoupon';
+import removeCoupon from './api/carts/removeCoupon';
 import updateCartShipment from './api/carts/updateCartShipment';
 import getFulfillmentLocations from './api/getFulfillmentLocations';
 import getProductLookups from './api/metadata/getProductLookups';
@@ -22,7 +25,16 @@ import getMembershipConfiguration from './api/membership/getConfiguration';
 import resetPassword from './api/membership/resetPassword';
 import getByTicket from './api/users/getByTicket';
 import updateUser from './api/users/updateUser';
+import getCartLineItems from './api/carts/getCartLineItems';
 import changePassword from './api/membership/changePassword';
+import clearCart from './api/carts/clearCart';
+import getUserAddresses from './api/users/getUserAddresses';
+import getCountries from './api/countries/getCountries';
+import updateUserAddress from './api/users/updateUserAddress';
+import addUserAddress from './api/users/addUserAddress';
+import deleteUserAddress from './api/users/deleteUserAddress';
+import completeCheckout from './api/carts/completeCheckout';
+import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
 
 import { tokenExtension } from './extensions/auth';
 
@@ -48,9 +60,12 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getProducts,
     getCategory,
     getCart,
+    updateCart,
     addCartItem,
     removeCartItem,
     updateCartItem,
+    addCoupon,
+    removeCoupon,
     getFulfillmentLocations,
     updateCartShipment,
     getProductLookups,
@@ -64,6 +79,16 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     resetPassword,
     getByTicket,
     updateUser,
+    getCartLineItems,
+    changePassword,
+    clearCart,
+    getUserAddresses,
+    getCountries,
+    updateUserAddress,
+    addUserAddress,
+    deleteUserAddress,
+    completeCheckout,
+    getFulfillmentMethods,
     changePassword,
   },
   extensions: [tokenExtension],

@@ -4,6 +4,14 @@ import {
   Context,
   ComputedProperty
 } from '@vue-storefront/core';
+import {
+  AgnosticAttribute, AgnosticCoupon, AgnosticDiscount,
+  AgnosticPrice, AgnosticTotals,
+  Composable,
+  CustomQuery,
+  PlatformApi
+} from '@vue-storefront/core/lib/src/types';
+import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
 
 export type TODO = any;
 
@@ -150,4 +158,198 @@ export interface UseConfigurationGetters<CONFIGURATION, MEMBERSHIPCONFIGURATION>
   getMinRequiredPasswordLength(config: CONFIGURATION): number;
   getMinRequiredNonAlphanumericCharacters(config: CONFIGURATION): number;
   getMembershipConfiguration(config: CONFIGURATION) : MEMBERSHIPCONFIGURATION;
+}
+
+/*
+COUNTRIES
+*/
+export interface UseCountriesErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface UseCountriesFactoryParams<COUNTRIES> extends FactoryParams {
+  load(context: Context): Promise<COUNTRIES>
+}
+
+export interface UseCountriesInterface<COUNTRIES> {
+  load(): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  countries: ComputedProperty<COUNTRIES>;
+  error: ComputedProperty<UseCountriesErrors>;
+}
+
+export interface UseCountries<COUNTRIES> {
+  (): UseCountriesInterface<COUNTRIES>;
+}
+export interface CountriesGetters<COUNTRY, REGION> {
+  getCountry(countries: COUNTRY[], countryCode: string): COUNTRY;
+  getCountryName(countries: COUNTRY[], countryCode: string): string;
+  getCountryRegion(countries: COUNTRY[], countryCode: string, regionCode: string): REGION;
+  getCountryRegionName(countries: COUNTRY[], countryCode: string, regionCode: string): string;
+  getRegions(countries: COUNTRY[], countryCode: string): REGION[];
+}
+
+/*
+ADDRESSES
+*/
+export interface UseUserAddressesErrors {
+  addAddress: Error;
+  deleteAddress: Error;
+  updateAddress: Error;
+  load: Error;
+  setDefaultAddress: Error;
+  setDefaultShipping: Error;
+  setDefaultBilling: Error;
+}
+export interface UseUserAddresses<USER_ADDRESS_ITEM, API extends PlatformApi = any> extends Composable<API> {
+  addresses: ComputedProperty<USER_ADDRESS_ITEM[]>;
+  addAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  deleteAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  updateAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  load: () => Promise<void>;
+  setDefaultAddress: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  setDefaultShipping: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  setDefaultBilling: (params: {
+    address: USER_ADDRESS_ITEM;
+    customQuery?: CustomQuery;
+  }) => Promise<void>;
+  loading: ComputedProperty<boolean>;
+  error: ComputedProperty<UseUserAddressesErrors>;
+}
+
+export interface UserAddressGetters<USER_ADDRESS_ITEM> {
+  getDefault: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getDefaultShipping: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getDefaultBilling: (addresses: USER_ADDRESS_ITEM[]) => USER_ADDRESS_ITEM;
+  getTotal: (addresses: USER_ADDRESS_ITEM[]) => number;
+  getPostCode: (address: USER_ADDRESS_ITEM) => string;
+  getStreetName: (address: USER_ADDRESS_ITEM) => string;
+  getStreetNumber: (address: USER_ADDRESS_ITEM) => string | number;
+  getCity: (address: USER_ADDRESS_ITEM) => string;
+  getFirstName: (address: USER_ADDRESS_ITEM) => string;
+  getLastName: (address: USER_ADDRESS_ITEM) => string;
+  getCountry: (address: USER_ADDRESS_ITEM) => string;
+  getPhone: (address: USER_ADDRESS_ITEM) => string;
+  getEmail: (address: USER_ADDRESS_ITEM) => string;
+  getProvince: (address: USER_ADDRESS_ITEM) => string;
+  getCompanyName: (address: USER_ADDRESS_ITEM) => string;
+  getTaxNumber: (address: USER_ADDRESS_ITEM) => string;
+  getId: (address: USER_ADDRESS_ITEM) => string | number;
+  getApartmentNumber: (address: USER_ADDRESS_ITEM) => string | number;
+  isDefault: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultShipping: (address: USER_ADDRESS_ITEM) => boolean;
+  isDefaultBilling: (address: USER_ADDRESS_ITEM) => boolean;
+}
+
+/*
+CART
+*/
+export interface UseCartErrors {
+  addItem: Error;
+  removeItem: Error;
+  update: Error;
+  updateItemQty: Error;
+  load: Error;
+  clear: Error;
+  applyCoupon: Error;
+  removeCoupon: Error;
+}
+export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any> extends Composable<API> {
+  cart: ComputedProperty<CART>;
+  setCart(cart: CART): void;
+  addItem(params: {
+    product: PRODUCT;
+    quantity: number;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  isInCart: ({ product: PRODUCT }: {
+    product: any;
+  }) => boolean;
+  removeItem(params: {
+    product: CART_ITEM;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  update: (params: {
+    cart: CART;
+  }) => Promise<void>;
+  updateItemQty(params: {
+    product: CART_ITEM;
+    quantity?: number;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  clear(): Promise<void>;
+  applyCoupon(params: {
+    couponCode: string;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  removeCoupon(params: {
+    couponCode: string;
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  load(): Promise<void>;
+  load(params: {
+    customQuery?: CustomQuery;
+  }): Promise<void>;
+  error: ComputedProperty<UseCartErrors>;
+  loading: ComputedProperty<boolean>;
+}
+
+export interface CartGetters<CART, CART_ITEM> {
+  getItems: (cart: CART) => CART_ITEM[];
+  getItemName: (cartItem: CART_ITEM) => string;
+  getItemImage: (cartItem: CART_ITEM) => string;
+  getItemPrice: (cartItem: CART_ITEM) => AgnosticPrice;
+  getItemQty: (cartItem: CART_ITEM) => number;
+  getItemAttributes: (cartItem: CART_ITEM, filters?: Array<string>) => Record<string, AgnosticAttribute | string>;
+  getItemSku: (cartItem: CART_ITEM) => string;
+  getTotals: (cart: CART) => AgnosticTotals;
+  getShippingPrice: (cart: CART) => number;
+  getTotalItems: (cart: CART) => number;
+  getFormattedPrice: (price: number) => string;
+  getCoupons: (cart: CART) => AgnosticCoupon[];
+  getDiscounts: (cart: CART) => AgnosticDiscount[];
+  [getterName: string]: (element: any, options?: any) => unknown;
+}
+
+/*
+FULFILLMENT METHODS
+*/
+export interface UseFulfillmentMethodsErrors {
+  load: Error | null;
+}
+
+export interface UseFulfillmentMethodsFactoryParams<METHOD> extends FactoryParams {
+  load(context: Context): Promise<METHOD[]>
+}
+
+export interface UseFulfillmentMethodsInterface<METHOD> {
+  load(): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  fulfillmentMethods: ComputedProperty<METHOD[]>;
+  error: ComputedProperty<UseFulfillmentMethodsErrors>;
+}
+
+export interface UseFulfillmentMethods<METHOD> {
+  (): UseFulfillmentMethodsInterface<METHOD>;
+}
+
+export interface FulfillmentMethodsGetters<METHOD> {
+  getFulfillmentMethod(fulfillmentMethods: METHOD[], shippingProviderId: string): METHOD;
+  getFulfillmentMethodType(fulfillmentMethods: METHOD[], shippingProviderId: string): FulfillmentMethodType
 }

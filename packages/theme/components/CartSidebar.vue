@@ -28,11 +28,30 @@
                 :regular-price="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
                 :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
                 :stock="99"
+                :qty="cartGetters.getItemQty(product)"
                 @click:remove="removeItem({ product: { id: product.id } })"
+
                 :class="`collected-product status-${cartGetters.getItemStatus(product)}`"
               >
+              <template #title>
+                <SfLink :link="localePath(cartGetters.getLink(product))"
+                  @click.native="toggleCartSidebar">
+                  {{cartGetters.getItemName(product)}}
+                </SfLink>
+              </template>
+                <template #price>
+                  <SfPrice
+                    :regular="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
+                    :special="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
+                  />
+                  <SfProperty
+                        name="Total"
+                        :value="$n(cartGetters.getItemTotals(product).total, 'currency')"
+                  />
+                </template>
                 <template #configuration>
                   <div class="collected-product__properties">
+
                     <SfProperty
                       v-for="(attribute, key) in cartGetters.getItemAttributes(product, ['Colour', 'RetailSize'])"
                       :key="key"
@@ -57,8 +76,8 @@
                     />
                   </div>
                 </template>
-                <!-- @TODO: remove if https://github.com/vuestorefront/storefront-ui/issues/2022 is done -->
-                <template #more-actions>{{  }}</template>
+                 <template #actions="{}">&nbsp;</template>
+                 <template #more-actions>&nbsp;</template>
               </SfCollectedProduct>
             </transition-group>
           </div>
@@ -89,12 +108,13 @@
             >
               <template #value>
                 <SfPrice
-                  :regular="$n(totals.subtotal, 'currency')"
-                  :special="(totals.special !== totals.subtotal) ? $n(totals.special, 'currency') : 0"
+                  :regular="totals.subtotaldiscount > 0 ? $n(totals.subtotal + totals.subtotaldiscount, 'currency') : $n(totals.subtotal, 'currency')"
+                  :special="(totals.subtotaldiscount > 0) ? $n(totals.subtotal, 'currency') : 0"
                 />
               </template>
             </SfProperty>
-            <nuxt-link :to="localePath({ name: 'shipping' })">
+            <CartSaving class="my-cart__saving"/>
+            <nuxt-link :to="localePath({ name: 'personalDetails' })">
               <SfButton
                 class="sf-button--full-width color-secondary"
                 @click="toggleCartSidebar"
@@ -120,6 +140,7 @@ import {
   SfSidebar,
   SfHeading,
   SfButton,
+  SfLink,
   SfIcon,
   SfProperty,
   SfPrice,
@@ -127,6 +148,7 @@ import {
   SfImage,
   SfQuantitySelector
 } from '@storefront-ui/vue';
+import CartSaving from './Checkout/CartSaving';
 import { computed, useRouter} from '@nuxtjs/composition-api';
 import { useCart, cartGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
@@ -140,11 +162,13 @@ export default {
     SfButton,
     SfHeading,
     SfIcon,
+    SfLink,
     SfProperty,
     SfPrice,
     SfCollectedProduct,
     SfImage,
-    SfQuantitySelector
+    SfQuantitySelector,
+    CartSaving
   },
   setup() {
     const router = useRouter();
@@ -155,7 +179,6 @@ export default {
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
-
     const updateQuantity = debounce(async ({ product, quantity }) => {
       await updateItemQty({ product, quantity });
     }, 500);
@@ -205,7 +228,11 @@ export default {
     --price-font-weight: var(--font-weight--medium);
     margin: 0 0 var(--spacer-base) 0;
   }
+  &__saving {
+    margin-bottom: var(--spacer-base);
+  }
 }
+
 .empty-cart {
   --heading-description-margin: 0 0 var(--spacer-xl) 0;
   --heading-title-margin: 0 0 var(--spacer-xl) 0;

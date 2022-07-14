@@ -137,9 +137,9 @@
               :qty="1"
               :is-in-wishlist="isInWishlist({ product })"
               :link="localePath(productGetters.getLink(product))"
-              @input="productsQuantity[product._id] = $event"
+              @input="productsQuantity[product.id] = $event"
               @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
-              @click:add-to-cart="addToCart({ product, quantity: Number(productsQuantity[product._id]) })"
+              @click:add-to-cart="addToCart({ product, quantity: Number(productsQuantity[product.id] || 1) })"
             >
               <template #configuration>
                 <SfProperty
@@ -151,12 +151,16 @@
               </template>
               <template #actions>
                 <SfButton
-                  class="sf-button--text desktop-only"
-                  style="margin: 0 0 1rem auto; display: block;"
-                  @click="() => {}"
+                  class="sf-button--pure sf-header__action desktop-only"
+                  aria-label="Toggle wishlist sidebar"
+                  @click="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
                 >
-                  {{ $t('Save for later') }}
-                </SfButton>
+                  <SfIcon
+                    class="sf-header__icon"
+                    :icon="isInWishlist({ product }) ? 'heart_fill' : 'heart' "
+                    size="1.25rem"
+                  />
+               </SfButton>
               </template>
             </SfProductCardHorizontal>
           </transition-group>
@@ -255,8 +259,8 @@ export default {
     });
 
     const removeProductFromWishlist = (productItem) => {
-      const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+      const wishListItems = wishlistGetters.getItems(wishlist.value);
+      const product = wishListItems.find(wishlistProduct => wishlistProduct.sku === productItem.sku);
       removeItemFromWishlist({ product });
     };
 
@@ -268,7 +272,7 @@ export default {
     };
 
     onSSR(async () => {
-      await search({...th.getFacetsFromURL(), withCategoryCounts: true});
+      await search({queryType: 'Category', ...th.getFacetsFromURL(), withFacetCounts: true});
       if (error?.value?.search) context.root.$nuxt.error({ statusCode: 404 });
     });
 

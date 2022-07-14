@@ -42,7 +42,7 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser, useCart } from '@vue-storefront/orc-vsf';
+import { useUser, useCart, useWishlist } from '@vue-storefront/orc-vsf';
 import MyProfile from './MyAccount/MyProfile';
 import ShippingDetails from './MyAccount/ShippingDetails';
 import BillingDetails from './MyAccount/BillingDetails';
@@ -72,7 +72,8 @@ export default {
     const router = useRouter();
 
     const { logout } = useUser();
-    const { clear: clearCart, load: reloadCart } = useCart();
+    const { setCart, load: reloadCart } = useCart();
+    const { setWishlist } = useWishlist();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
     const activePage = computed(() => {
       const { pageName } = route.value.params;
@@ -89,9 +90,9 @@ export default {
     const changeActivePage = async (title) => {
       if (title === 'Log out') {
         await logout();
-        await clearCart();
+        setCart(null);
+        setWishlist(null);
         await reloadCart();
-
         router.push(context.root.localePath({ name: 'home' }));
         return;
       }
@@ -127,7 +128,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 #my-account {
   box-sizing: border-box;
   @include for-desktop {
@@ -136,6 +137,7 @@ export default {
   }
 }
 .my-account {
+  height: auto;
   @include for-mobile {
     --content-pages-sidebar-category-title-font-weight: var(
       --font-weight--normal
@@ -149,5 +151,13 @@ export default {
 }
 .breadcrumbs {
   margin: var(--spacer-base) 0 var(--spacer-lg);
+}
+
+.sf-content-pages {
+  &__content,
+  &__sidebar {
+    min-height: calc(-5rem + 100vh);
+    height: auto;
+  }
 }
 </style>

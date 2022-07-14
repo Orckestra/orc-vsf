@@ -1,7 +1,5 @@
 import {
   Context,
-  useCartFactory,
-  UseCartFactoryParams,
   Logger
 } from '@vue-storefront/core';
 import type {
@@ -11,6 +9,7 @@ import type {
 } from '@vue-storefront/orc-vsf-api';
 import { getVariantId } from '../helpers/productUtils';
 import { isGuidEmpty, getUserToken } from '../helpers/generalUtils';
+import { useCartFactory, UseCartFactoryParams } from '../factories/useCartFactory';
 
 const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -66,7 +65,8 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
     const variantId = getVariantId(product);
-    return await context.$occ.api.addCartItem({ ...params, productId: product.productId ?? product.id, variantId, quantity });
+    const productId = product.productId ?? product.propertyBag?.ProductId ?? product.id;
+    return await context.$occ.api.addCartItem({ ...params, productId, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -80,32 +80,35 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  update: (context: Context, { currentCart, cart }) => {
+    const userToken = getUserToken(context);
+    return context.$occ.api.updateCart({ ...params, userToken, cart, cartName: currentCart.name });
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentCart }) => {
     return null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   applyCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    console.log('Mocked: useCart.applyCoupon');
-    return {
-      updatedCart: null,
-      updatedCoupon: {}
-    };
+    const userToken = getUserToken(context);
+    const updatedCart = await context.$occ.api.addCoupon({ ...params, userToken, couponCode, cartName: currentCart.name });
+    return { updatedCart };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    console.log('Mocked: useCart.removeCoupon');
-    return {
-      updatedCart: null
-    };
+    const userToken = getUserToken(context);
+    const updatedCart = await context.$occ.api.removeCoupon({ ...params, userToken, couponCode, cartName: currentCart.name });
+    return { updatedCart };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInCart: (context: Context, { currentCart, product }) => {
     const getLineItemByProduct = ({ currentCart, product }) => {
       if (product) {
-        const productId = product.productId ?? product.id;
+        const productId = product.productId ?? product.propertyBag?.ProductId ?? product.id;
         // TODO: const withVariants = product.variants && product.variants.length;
         // TODO: const variantId = withVariants ? product.variants[0].id : undefined;
 

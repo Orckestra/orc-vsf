@@ -4,40 +4,68 @@ import {
   UseUserShippingFactoryParams
 } from '@vue-storefront/core';
 import type {
-  UserShippingAddress as Address,
-  UserShippingAddressItem as AddressItem
+  UserAddress as AddressItem
 } from '@vue-storefront/orc-vsf-api';
+import { getUserToken } from '../helpers/generalUtils';
 
-const params: UseUserShippingFactoryParams<Address, AddressItem> = {
+const factoryParams: UseUserShippingFactoryParams<AddressItem[], AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.addAddress');
-    return {};
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    await context.$occ.api.addUserAddress({ userToken, address });
+    return factoryParams.load(context, params);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.deleteAddress');
-    return {};
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    await context.$occ.api.deleteUserAddress({ userToken, addressId: address.id });
+    return factoryParams.load(context, params);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.updateAddress');
-    return {};
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    await context.$occ.api.updateUserAddress({ userToken, address, addressId: address.id });
+    return factoryParams.load(context, params);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.load');
-    return {};
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    return context.$occ.api.getUserAddresses({ userToken });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setDefaultAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.setDefaultAddress');
-    return {};
+    const {address} = params;
+    const userToken = getUserToken(context);
+    if ((userToken === undefined || userToken === '')) {
+      return null;
+    }
+
+    await context.$occ.api.updateUserAddress({ userToken, address: { ...address, isPreferredShipping: true }, addressId: address.id });
+    return factoryParams.load(context, params);
   }
 };
 
-export const useUserShipping = useUserShippingFactory<Address, AddressItem>(params);
+export const useUserShipping = useUserShippingFactory<AddressItem[], AddressItem>(factoryParams);

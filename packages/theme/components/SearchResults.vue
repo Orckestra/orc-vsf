@@ -153,8 +153,8 @@ export default {
     };
 
     const removeProductFromWishlist = (productItem) => {
-      const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+      const wishListItems = wishlistGetters.getItems(wishlist.value);
+      const product = wishListItems.find(wishlistProduct => wishlistProduct.sku === productItem.sku);
       removeItemFromWishlist({ product });
     };
 

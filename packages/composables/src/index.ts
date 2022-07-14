@@ -20,6 +20,9 @@ export { useMetadata } from './useMetadata';
 export { useSearch } from './useSearch';
 export { useInventory } from './useInventory';
 export { useConfiguration } from './useConfiguration';
+export { useCountries } from './useCountries';
+export { useUserAddresses } from './useUserAddresses';
+export { useFulfillmentMethods } from './useFulfillmentMethods';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
@@ -38,6 +41,9 @@ export { metadataGetters } from './getters/metadataGetters';
 export { searchGetters } from './getters/searchGetters';
 export { inventoryGetters } from './getters/inventoryGetters';
 export { configurationGetters } from './getters/configurationGetters';
+export { countriesGetters } from './getters/countriesGetters';
+export { userAddressGetters } from './getters/userAddressGetters';
+export { fulfillmentMethodsGetters } from './getters/fulfillmentMethodsGetters';
 
 // Types
 export * from './types';

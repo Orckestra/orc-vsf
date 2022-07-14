@@ -1,23 +1,22 @@
 import { UserShippingGetters } from '@vue-storefront/core';
 import type {
-  UserShippingAddress as Address,
-  UserShippingAddressItem as AddressItem,
+  UserAddress as AddressItem,
   UserShippingAddressSearchCriteria
 } from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getAddresses(shipping: Address, criteria?: UserShippingAddressSearchCriteria): AddressItem[] {
-  return [];
+function getAddresses(shipping: AddressItem[], criteria?: UserShippingAddressSearchCriteria): AddressItem[] {
+  return shipping;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getDefault(shipping: Address): Address {
-  return {};
+function getDefault(shipping: AddressItem[]): AddressItem {
+  return shipping.find(a => a.isPreferredShipping);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getTotal(shipping: Address): number {
-  return 0;
+function getTotal(shipping: AddressItem[]): number {
+  return shipping.length;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,7 +81,7 @@ function getTaxNumber(address: AddressItem): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(address: AddressItem): string {
-  return '';
+  return address.id;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -95,7 +94,7 @@ function isDefault(address: AddressItem): boolean {
   return false;
 }
 
-export const userShippingGetters: UserShippingGetters<Address, AddressItem> = {
+export const userShippingGetters: UserShippingGetters<AddressItem[], AddressItem> = {
   getAddresses,
   getDefault,
   getTotal,

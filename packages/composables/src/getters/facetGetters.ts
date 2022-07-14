@@ -8,7 +8,7 @@ import {
   AgnosticBreadcrumb,
   AgnosticFacet
 } from '@vue-storefront/core';
-import type { SearchResults, FacetSearchCriteria, Facet } from '@vue-storefront/orc-vsf-api';
+import type { SearchResults, FacetSearchCriteria, Facet, FacetValue } from '@vue-storefront/orc-vsf-api';
 import { buildCategoryTree } from '../helpers/buildCategoryTree';
 import { setProductCounts } from '../helpers/categoriesUtils';
 
@@ -19,14 +19,18 @@ function getAll(params: FacetSearchResult<SearchResults>, criteria?: FacetSearch
 
 function getGrouped(params: FacetSearchResult<SearchResults>, criteria?: string[]): (AgnosticGroupedFacet & {type: string})[] {
   let facets = params.data?.facets;
+  const selectedFacets = params.data?.selectedFacets;
   const filters = params.input?.filters;
   if (!facets) return;
 
-  const getMetadata = (facet: Facet) => {
+  const getMetadata = (facet: Facet, facetValue: FacetValue, selectedFilters: string[]) => {
+    const selectedInQuery = !selectedFilters.includes(facetValue.value) &&
+      selectedFacets?.find(sf => sf.facetName === facet.fieldName)?.values?.includes(facetValue.value);
     return {
       startValue: facet.startValue,
       endValue: facet.endValue,
-      gapSize: facet.gapSize
+      gapSize: facet.gapSize,
+      selectedInQuery
     };
   };
 
@@ -35,7 +39,7 @@ function getGrouped(params: FacetSearchResult<SearchResults>, criteria?: string[
   }
 
   return facets.map(facet => {
-    const selectedList = filters && filters[facet.fieldName] ? filters[facet.fieldName] : [];
+    const selectedFilters = filters && filters[facet.fieldName] ? filters[facet.fieldName] : [];
     return {
       id: facet.fieldName,
       label: facet.title,
@@ -46,8 +50,8 @@ function getGrouped(params: FacetSearchResult<SearchResults>, criteria?: string[
           value: v.value,
           type: facet.facetType,
           count: v.count,
-          selected: selectedList.includes(v.value),
-          metadata: getMetadata(facet)
+          selected: selectedFilters.includes(v.value),
+          metadata: getMetadata(facet, v, selectedFilters)
         }))
     };
   }).filter(i => i && i.options && i.options.length);
@@ -69,9 +73,9 @@ function getCategoryTree(params: FacetSearchResult<SearchResults>, root = 'Root'
   if (!params.data) return;
 
   const { facetCounts } = params.data;
-  const { categorySlug, withCategoryCounts } = params.input;
+  const { categorySlug } = params.input;
   const categories = params.data?.categories;
-  if (withCategoryCounts) {
+  if (facetCounts) {
     setProductCounts(categories, facetCounts);
   }
 

@@ -6,6 +6,30 @@ export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
 
+export type UserAddress = {
+    addressName: string,
+    city: string,
+    countryCode: string,
+    email: string,
+    firstName: string,
+    id: string,
+    isPreferredBilling: boolean,
+    isPreferredShipping: boolean,
+    lastModified: string,
+    lastModifiedBy: string,
+    lastName: string,
+    latitude: number,
+    line1: string,
+    line2: string,
+    longitude: number,
+    notes: string,
+    phoneExtension: string,
+    phoneNumber: string,
+    postalCode: string,
+    propertyBag: object
+    regionCode: string
+};
+
 export type CartItemSummary = {
     propertyBag: any,
     displayName: string,
@@ -19,6 +43,78 @@ export type CartItemSummary = {
     allowSelectionWithoutScan: boolean
 }
 
+export type Tax = {
+    code: string,
+    displayName: any,
+    id: string,
+    isShippingFeeTax: boolean,
+    isShippingTax: boolean,
+    lineItemIds: any,
+    percentage: number,
+    taxAmount: number,
+    taxCategoryId: string,
+    taxForShipmentId: string,
+    taxTotal: number
+}
+
+export const enum FulfillmentMethodType {
+    Shipping = 'Shipping',
+    PickUp = 'PickUp'
+}
+
+export type FulfillmentMethod = {
+    id: string,
+    propertyBag: any,
+    carrierName: string,
+    carrierOptionDisplayName: any,
+    carrierServiceLevel: string,
+    cost: number,
+    displayName: any,
+    expectedDeliveryDate: string,
+    fulfillmentMethodType: FulfillmentMethodType,
+    shipmentId: string,
+    shippingProviderId: string,
+    taxCategory: string
+}
+
+export type ShipmentAdditionalFee = {
+    id: string,
+    amount: number,
+    description: string,
+    displayName: any,
+    name: string,
+    taxable: boolean,
+    taxCategory: string
+}
+
+export const enum RewardLevel {
+    LineItem = 0,
+    Shipment = 1,
+    FulfillmentMethod = 2,
+    None = 3
+}
+
+export const enum RewardType {
+    Discount = 0,
+    External = 1,
+    Gift = 2
+}
+
+export type Reward = {
+    id: string,
+    amount: number,
+    propertyBag: any,
+    campaignId: string,
+    campaignName: string,
+    description: string,
+    level: RewardLevel,
+    promotionId: string,
+    promotionName: string,
+    promotionVersion: number,
+    relatedObjectId: string,
+    rewardType: RewardType
+}
+
 export type CartItem = {
     id: string,
     productSummary: CartItemSummary,
@@ -29,6 +125,7 @@ export type CartItem = {
     regularPrice: number,
     defaultPrice: number,
     placedPrice: number,
+    discountAmount: number,
     total: number,
     status: string,
     sku: string,
@@ -39,12 +136,83 @@ export type CartItem = {
     variantId: string,
     recurringOrderProgramName: string,
     recurringOrderFrequencyName: string,
-    coverImage?:string
+    coverImage?:string,
+    isGiftItem: boolean,
+    rewards: Reward[],
 }
 
 export type Shipment = {
-    lineItems: CartItem [],
-    fulfillmentLocationId: string
+    id: string,
+    additionalFeeAmount?: number,
+    additionalFees?: ShipmentAdditionalFee[],
+    address?: UserAddress,
+    lineItems: CartItem[],
+    fulfillmentLocationId: string,
+    fulfillmentMethod: FulfillmentMethod,
+    status: string,
+    taxes?: Tax[],
+    taxProviderId?: string,
+    taxTotal?: number,
+    total: number,
+    trackingNumber?: string,
+    propertyBag?: any,
+    rewards?: Reward[]
+}
+
+export const enum CustomerType {
+    Registered = 'Registered',
+    Guest = 'Guest',
+    Unregistered = 'Unregistered '
+}
+
+export type CustomerSummary = {
+    email: string,
+    firstName: string
+    lastName: string
+    middleName: string
+    phone: string
+    type: CustomerType
+}
+
+export const enum CouponMode {
+    Unspecified = 'Unspecified',
+    None = 'None',
+    Single = 'Single',
+    Multiple = 'Multiple'
+}
+
+export const enum CouponState {
+    Unspecified = 'Unspecified',
+    Ok = 'Ok',
+    NotYetActive = 'NotYetActive',
+    Expired = 'Expired',
+    GlobalMaximumUsed = 'GlobalMaximumUsed',
+    CustomerMaximumUsed = 'CustomerMaximumUsed',
+    CampaignNotFound = 'CampaignNotFound',
+    CampaignNotLive = 'CampaignNotLive',
+    InvalidCoupon = 'InvalidCoupon',
+    ValidCouponCannotApply = 'ValidCouponCannotApply'
+}
+
+export type Coupon = {
+    id: string,
+    couponCode: string,
+    couponState: CouponState,
+    hasBeenConsumed: boolean,
+    isActive: boolean,
+    isDeleted: boolean,
+    mode: CouponMode,
+    promotionId: string,
+    usedCount: number
+};
+
+export type Payment = {
+    amount: number,
+    billingAddress: UserAddress,
+    billingAddressId: string,
+    id: string,
+    paymentStatus: string,
+    propertyBag?: any;
 }
 
 export type Cart = {
@@ -52,18 +220,25 @@ export type Cart = {
     customerId: any,
     name: string,
     cartType?: string,
-    coupons?: string,
+    coupons?: Coupon[],
     shipments: Shipment[],
     subTotal: number,
     taxTotal: number,
     merchandiseTotal: number,
     total: number,
+    fulfillmentCost: number,
+    fulfillmentCostWithoutDiscount: number,
+    fulfillmentLevelDiscountTotal: number,
     scopeId: string,
     status: string,
     lineItemsTotalWithoutDiscount: number,
     lineItemLevelDiscount: number,
     lineItemsTotal: number,
-    itemCount: number
+    itemCount: number,
+    discountTotal: number,
+    subTotalDiscount: number,
+    customer: CustomerSummary,
+    payments: Payment[]
 };
 
 export type Category = {
@@ -77,8 +252,6 @@ export type Category = {
     includeInSearch: boolean,
     productsCount: number
 };
-
-export type Coupon = TODO;
 
 export type FacetValue = {
     minimumValue?: any,
@@ -98,10 +271,16 @@ export type Facet = {
     endValue?: string
 };
 
+export type SelectedFacet = {
+    facetName: string,
+    values: string[]
+};
+
 export type SearchResults = {
-    total: any,
-    products: any,
-    facets: Facet[],
+    total?: number,
+    products?: any,
+    facets?: Facet[],
+    selectedFacets?: SelectedFacet[],
     categories?: Category[],
     facetCounts?: any
 };
@@ -232,8 +411,13 @@ export type Product = {
 };
 
 export const enum ProductsQueryType {
-    List = 'LIST',
-    Detail = 'DETAIL'
+    List = 'List',
+    Category = 'Category',
+    Related = 'Related',
+    FacetCounts = 'FacetCounts',
+    Detail = 'Detail',
+    Merchandising = 'Merchandising',
+    ProductSet = 'ProductSet'
 }
 
 export type ProductFilter = TODO;
@@ -254,10 +438,6 @@ export type UserBillingAddressItem = TODO;
 
 export type UserBillingAddressSearchCriteria = TODO;
 
-export type UserShippingAddress = TODO;
-
-export type UserShippingAddressItem = TODO;
-
 export type UserShippingAddressSearchCriteria = TODO;
 
 export type ShippingAddress = TODO;
@@ -268,9 +448,40 @@ export type ShippingProvider = TODO;
 
 export type Store = TODO;
 
-export type Wishlist = TODO;
+export type WishlistItem = {
+    productSummary: any;
+    placedQuantity: number;
+    pricingCalculationSummary: any;
+    listPrice: number;
+    currentPrice: number;
+    defaultListPrice: number;
+    regularPrice: number;
+    defaultPrice: number;
+    shipmentId: string;
+    discountAmount: number;
+    total: number;
+    status: string;
+    sku: string;
+    totalWithoutDiscount: number;
+    rewards: any;
+    additionalFees: any;
+    additionalFeeAmount: number;
+    productDefinitionName: string;
+    kvaValues: any;
+    isGiftItem: false;
+    kvaDisplayValues:any;
+    productId: string;
+    variantId: string;
+    giftWrap: boolean;
+    quantity: number;
+    id: string;
+    propertyBag: any;
+    coverImage?: any;
+};
 
-export type WishlistItem = TODO;
+export type Wishlist = {
+    items: WishlistItem[];
+};
 
 export type LookupValue = {
     id: string,
@@ -370,3 +581,21 @@ export type Configuration = {
     membership: MembershipConfiguration
 }
 
+export type RegionItem = {
+    name: string
+    sortOrder: number,
+    isoCode: string,
+    isSupported: boolean,
+    id: string,
+}
+
+export type CountryItem = {
+    name: string,
+    sortOrder: number,
+    isoCode: string,
+    regions: RegionItem[]
+    isSupported: boolean,
+    id: string,
+    phoneRegex: string,
+    postalCodeRegex: string
+}

@@ -1,7 +1,7 @@
 # useFacet
 
 ## Features
-`useFacet` composable is responsible for fetching a data of products with facets. A common usage scenario for this composable is category pages.
+`useFacet` composable is responsible for fetching a data of products with facets based on `queryType` parameter. A common usage scenario for this composable is category or query pages.
 
 ## API
 ```typescript
@@ -10,6 +10,13 @@ interface UseFacet<any> {
   loading: ComputedProperty<boolean>;
   search: (params?: AgnosticFacetSearchParams) => Promise<void>;
   error: ComputedProperty<UseFacetErrors>;
+}
+
+export const enum ProductsQueryType {
+    List = "List";
+    Category = "Category";
+    Merchandising = "Merchandising";
+    ProductSet = "ProductSet";
 }
 
 export interface SearchResults {
@@ -86,7 +93,7 @@ export default {
     const facets = computed(() => facetGetters.getGrouped(result.value, ['Brand','SeasonWear']));
 
     onSSR(async () => {
-       await search({...th.getFacetsFromURL(), withCategoryCounts: true});
+       await search({ queryType: 'Category', ...th.getFacetsFromURL(), facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3'] });
     });
 
     return {
