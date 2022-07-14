@@ -95,7 +95,7 @@ import {
   SfHeading,
   SfCharacteristic
 } from '@storefront-ui/vue';
-import { ref, useRouter, watch } from '@nuxtjs/composition-api';
+import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate';
 import { configurationGetters, useCart, useConfiguration, useUser, cartGetters } from '@vue-storefront/orc-vsf';
 import { useUiState, useUiNotification } from '~/composables';
@@ -137,12 +137,12 @@ export default {
       message: 'Your password must have a minimum 6 characters including at least 1 special character'
     });
 
-    const customer = cartGetters.getCustomer(cart.value);
+    const customer = computed(() => cartGetters.getCustomer(cart.value));
 
     const resetForm = () => ({
-      firstName: customer?.firstName,
-      lastName: customer?.lastName,
-      email: customer?.email,
+      firstName: customer.value?.firstName,
+      lastName: customer.value?.lastName,
+      email: customer.value?.email,
       password: '',
       createAccount: false
     });
@@ -159,7 +159,7 @@ export default {
       const updatedCart = {
         ...cart.value,
         customer: {
-          ...customer,
+          ...customer.value,
           firstName: form.value.firstName,
           lastName: form.value.lastName,
           email: form.value.email
