@@ -295,6 +295,7 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   isPersonalDetailsReady,
   isShippingReady,
   isBillingReady,
+  isAddressReady,
   isPaymentReady,
   isReadyForOrder,
   getCustomer

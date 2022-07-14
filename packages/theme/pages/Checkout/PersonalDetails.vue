@@ -68,18 +68,18 @@
         <div class="form">
           <div class="form__action">
             <SfButton
+              :disabled="userLoading || cartLoading"
+              v-if='!isAuthenticated'
+              class="form__action-button--secondary color-secondary"
+              @click.prevent="toggleLoginModal"
+            >{{ "Log into your account" }}</SfButton>
+            <SfButton
               class="form__action-button"
               type="submit"
               :disabled="userLoading || cartLoading"
             >
               {{ $t('Go to shipping') }}
             </SfButton>
-            <SfButton
-              :disabled="userLoading || cartLoading"
-              v-if='!isAuthenticated'
-              class="form__action-button--secondary color-secondary"
-              @click.prevent="toggleLoginModal"
-            >{{ "Log into your account" }}</SfButton>
           </div>
         </div>
       </form>
@@ -241,12 +241,12 @@ export default {
     }
     &__action-button {
       &--secondary {
-        margin: var(--spacer-xl) 0 var(--spacer-sm);
+        margin: var(--spacer-xl) var(--spacer-sm) var(--spacer-sm) 0;
         &:hover {
           color:  var(--c-white);
         }
         @include for-desktop {
-          margin: 0 0 0 var(--spacer-xl);
+          margin: 0 var(--spacer-xl) 0 0 ;
         }
       }
     }

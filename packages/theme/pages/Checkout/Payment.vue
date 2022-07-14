@@ -55,17 +55,24 @@
             <ValidationObserver v-slot="{ handleSubmit: hS }">
               <form
                 class="form"
-                @submit.prevent="hS(saveAddress)"
-              >
+                @submit.prevent="hS(saveAddress)">
+
                 <AddressForm :form="addressForm" />
-                <div class="form__action-bar">
+
+                <div class="form__action">
                   <SfButton
-                    class="action-button sf-button form__action-button--add-address"
-                    :disabled="loadingAddresses"
-                  >
-                    Save new address
+                    type="button"
+                    class="form__action-button--secondary color-light sf-button"
+                    @click="cancelEditing">
+                      {{ $t('Cancel') }}
+                  </SfButton>
+                  <SfButton
+                    class="form__action-button--primary sf-button sf-button--primary"
+                    :disabled="loadingAddresses">
+                    Save address
                   </SfButton>
                 </div>
+
               </form>
             </ValidationObserver>
           </template>
@@ -74,34 +81,64 @@
               class="action-button sf-button form__action-button--add-address sf-button--pure"
               :disabled="loadingAddresses || loadingCart"
               type="button"
-              @click="addNewAddress"
-            >
+              @click="addNewAddress">
               <SfIcon
                 icon="plus"
                 size="sm"
                 color="green-primary"
                 viewBox="0 0 24 24"
                 :coverage="1"
-              /> <span>Add a new address</span>
+              />
+              <span>Add a new address</span>
             </SfButton>
           </template>
         </template>
         <template v-else>
-          <AddressForm
-            :form="addressForm"
-            :showName="false"
-          />
+         <ValidationObserver v-slot="{ handleSubmit: hS }"> 
+           <template v-if="isBilling && !isOpen.editingAddress">
+             <AddressPreview :address="billingAddress"/>
+             <SfButton
+                  class="sf-button--text"
+                  @click="editGuestAddress">
+                Edit address
+            </SfButton>
+           </template>
+            <form
+                v-if="isOpen.editingAddress"
+                class="form"
+                @submit.prevent="hS(saveAddress)">
+              <AddressForm
+                :form="addressForm"
+                :showName="false"
+              />
+              <div class="form__action">
+                <SfButton
+                  type="button"
+                  v-if="isBilling"
+                  class="form__action-button--secondary color-light sf-button"
+                  @click="cancelEditing">
+                  {{ $t('Cancel') }}
+                </SfButton>
+                <SfButton
+                  class="form__action-button--primary sf-button sf-button--primary"
+                  :disabled="loadingCart || !isAddressFormReady">
+                   {{ $t('Save address') }}
+                </SfButton>
+              </div>
+            </form>
+          </ValidationObserver>
         </template>
 
-    <template v-if="isBilling">
+    <div v-show="isBilling">
       <SfHeading
         :level="3"
         title="Payment"
         class="sf-heading--left sf-heading--no-underline title"
       />
+
       <VsfPaymentProvider @status="isPaymentMethod = true"/>
 
-    </template>
+    </div>
     <div class="summary">
         <div class="summary__group">
           <div v-e2e="'payment-summary-buttons'" class="summary__action">
@@ -135,7 +172,7 @@ import {
   SfProperty,
   SfLink
 } from '@storefront-ui/vue';
-import { ref, useRouter, computed } from '@nuxtjs/composition-api';
+import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
 import { useCart, useUser, useUserAddresses, cartGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import AddressPreview from '~/components/AddressPreview';
@@ -162,13 +199,14 @@ export default {
     const { cart, error, update, loading: loadingCart } = useCart();
     const isPaymentMethod = ref(false);
     const { isAuthenticated } = useUser();
-    const { addresses, load: loadAddresses, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
-    const isOpen = ref({ addingAddress: false });
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
+    const billingAddress = computed(() => activePayment.value?.billingAddress);
     const isBilling = computed(() => cartGetters.isBillingReady(cart.value));
-    const form = ref({
-      addressId: activePayment.value?.billingAddress?.id
-    });
+    const { addresses, load: loadAddresses, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
+    const isOpen = ref({ addingAddress: false, editingAddress: !isAuthenticated.value && !isBilling.value });
+  
+
+
 
     const onUpdate = async (updatedPayment, onComplete) => {
       const updatedCart = {
@@ -195,6 +233,7 @@ export default {
 
     const updateCartBillingAddress = (billingAddress) => {
       isOpen.value.addingAddress = false;
+      isOpen.value.editingAddress = false;
       onUpdate({ ...activePayment.value, billingAddress }, () => {});
     };
 
@@ -202,17 +241,18 @@ export default {
 
   const saveAddress = async () => {
       try {
-        await addAddress({ address: addressForm.value });
+        if(isAuthenticated.value) {
 
-        if (userAddressError.value.addAddress) {
-          sendNotification({
-            id: Symbol('user_updated_error'),
-            message: userAddressError.value.addAddress.message,
-            type: 'danger',
-            icon: 'error',
-            persist: false,
-            title: 'User Address'
-          });
+          await addAddress({ address: addressForm.value });
+          if (userAddressError.value.addAddress) {
+            sendNotification({
+              id: Symbol('user_updated_error'),
+              message: userAddressError.value.addAddress.message,
+              type: 'danger',
+              icon: 'error',
+              persist: false,
+              title: 'User Address'
+            });
         } else {
           const address = addresses.value.find(x => x.addressName === addressForm.value.addressName);
           if (address) {
@@ -229,8 +269,10 @@ export default {
             title: 'User Address'
           });
         }
-
-      } catch (error) {
+      } else {
+        updateCartBillingAddress(addressForm.value);
+      }
+    } catch (error) {
         console.error(error);
       }
     };
@@ -256,7 +298,13 @@ export default {
       phoneNumber: address?.phoneNumber || ''
     });
 
+    const resetRadiosForm = (value) => ({
+       addressId: value
+    })
+
+    const form = ref(resetRadiosForm(activePayment.value?.billingAddress?.id));
     const addressForm = ref(resetForm(activePayment.value?.billingAddress));
+    const isAddressFormReady = computed(() => cartGetters.isAddressReady(addressForm.value));
 
     const addNewAddress = () => {
       addressForm.value = resetForm();
@@ -264,11 +312,29 @@ export default {
       form.value.addressId = null;
     };
 
+    const editGuestAddress = () => {
+      addressForm.value = resetForm(activePayment.value?.billingAddress);
+      isOpen.value.editingAddress = true;
+    };
+
+    const cancelEditing = () => {
+      isOpen.value.editingAddress = false;
+      isOpen.value.addingAddress = false;
+      form.value = resetRadiosForm(activePayment.value?.billingAddress?.id);
+    }
+
     onSSR(async () => Promise.allSettled([
       loadAddresses()
     ]));
 
+    watch(isAuthenticated, () => {
+      if (isAuthenticated.value) {
+        loadAddresses();
+      }
+    });
+
     return {
+      billingAddress,
       isAuthenticated,
       isBilling,
       goBack,
@@ -281,9 +347,12 @@ export default {
       loadingAddresses,
       addresses,
       addressForm,
+      isAddressFormReady,
       updateAddress,
       saveAddress,
-      addNewAddress
+      addNewAddress,
+      editGuestAddress,
+      cancelEditing
     };
   }
 };
@@ -292,18 +361,6 @@ export default {
 <style lang="scss" scoped>
 .form {
   --button-width: 100%;
-  &__select {
-    display: flex;
-    align-items: center;
-    --select-option-font-size: var(--font-size--lg);
-    ::v-deep .sf-select__dropdown {
-      font-size: var(--font-size--lg);
-      margin: 0;
-      color: var(--c-text);
-      font-family: var(--font-family--secondary);
-      font-weight: var(--font-weight--normal);
-    }
-  }
   &__radio {
     margin: var(--spacer-xs) 0;
     &:last-of-type {
@@ -352,9 +409,11 @@ export default {
   }
   &__action-button {
     &--secondary {
+      margin: var(--spacer-xl) 0 var(--spacer-sm);
       @include for-desktop {
         order: -1;
         text-align: left;
+        margin: 0 var(--spacer-xl) 0 0;
       }
     }
     &--add-address {
@@ -364,15 +423,6 @@ export default {
         margin: 0 0 var(--spacer-lg) 0;
         width: auto;
       }
-    }
-  }
-  &__back-button {
-    margin: var(--spacer-xl) 0 var(--spacer-sm);
-    &:hover {
-      color:  var(--c-white);
-    }
-    @include for-desktop {
-      margin: 0 var(--spacer-xl) 0 0;
     }
   }
 }
@@ -391,22 +441,8 @@ export default {
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
 }
-.price {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-}
-.product-price {
-  --price-font-size: var(--font-size--base);
-}
+
 .summary {
-  &__terms {
-    margin: var(--spacer-base) 0 0 0;
-  }
-  &__total {
-    margin: 0 0 var(--spacer-sm) 0;
-    flex: 0 0 16.875rem;
-  }
   &__action {
     @include for-desktop {
       display: flex;
@@ -438,38 +474,6 @@ export default {
     &:hover {
       color:  var(--c-white);
     }
-  }
-  &__property-total {
-    margin: var(--spacer-xl) 0 0 0;
-  }
-}
-.property {
-  margin: 0 0 var(--spacer-sm) 0;
-  &__name {
-    color: var(--c-text-muted);
-  }
-}
-.accordion {
-  margin: 0 0 var(--spacer-xl) 0;
-  &__item {
-    display: flex;
-    align-items: flex-start;
-  }
-  &__content {
-    flex: 1;
-  }
-  &__edit {
-    flex: unset;
-  }
-}
-.content {
-  margin: 0 0 var(--spacer-xl) 0;
-  color: var(--c-text);
-  &:last-child {
-    margin: 0;
-  }
-  &__label {
-    font-weight: var(--font-weight--normal);
   }
 }
 </style>

@@ -252,6 +252,7 @@ export default {
       const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
       router.push(context.root.localePath(thankYouPath));
       setCart(null);
+      loadCart();
     };
 
     onSSR(async () => {

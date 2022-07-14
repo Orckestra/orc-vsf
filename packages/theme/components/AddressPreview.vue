@@ -33,6 +33,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .address-preview {
+  margin-bottom: var(--spacer-xs);
   span {
     display: block;
   }
