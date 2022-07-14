@@ -10,7 +10,7 @@ import type {
   Product
 } from '@vue-storefront/orc-vsf-api';
 import { getVariantId } from '../helpers/productUtils';
-import { isGuidEmpty, getUserToken, setUserToken } from '../helpers/generalUtils';
+import { isGuidEmpty, getUserToken } from '../helpers/generalUtils';
 
 const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,14 +18,11 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
     const app = context.$occ.config.app;
     const locale: any = app.i18n.locale;
     Logger.debug('[OCC Storefront]: Loading Cart');
-    console.log('[OCC Storefront]: Loading Cart');
     let userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {
       // Initiate Guest
       Logger.debug('[OCC Storefront]: Initialize Guest User to be used for Cart');
-      console.log('[OCC Storefront]: Initialize Guest User to be used for Cart');
       userToken = await context.$occ.api.initializeGuestToken();
-      //setUserToken(context, userToken);
     }
 
     if (userToken) {

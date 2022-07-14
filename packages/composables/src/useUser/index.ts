@@ -9,7 +9,7 @@ import type {
   UserRegisterParams as RegisterParams
 } from '../types';
 import { checkResponseForError } from '../helpers/responseUtils';
-import { getUserToken, setUserToken } from '../helpers/generalUtils';
+import { getUserToken } from '../helpers/generalUtils';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,8 +28,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logOut: async (context: Context) => {
-    const guestUserToken = await context.$occ.api.initializeGuestToken();
-    //setUserToken(context, guestUserToken);
+    await context.$occ.api.initializeGuestToken();
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,7 +58,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   logIn: async (context: Context, { username, password }) => {
     const userToken = await context.$occ.api.login({ username, password });
     if (userToken?.id) {
-      //setUserToken(context, userToken);
       return params.load(context);
     } else {
       throw new Error('Customer sign-in error');

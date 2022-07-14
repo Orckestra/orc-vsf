@@ -65,13 +65,6 @@ export const tokenExtension: ApiClientExtension = {
               res.cookie(AUTH_COOKIE_NAME, token, authOptions);
               // customerId and IsGuest property is public
               res.cookie(DATA_COOKIE_NAME, tokenData, publicDataOptions);
-
-
-              const cookies = require('cookie-universal')(req, res)
-              cookies.set('cookie-name', 'cookie-value')
-
-              console.log(`res.cookie(AUTH_COOKIE_NAME, token, authOptions)`);
-              console.log(`res.cookie(DATA_COOKIE_NAME, tokenData, publicDataOptions);`);
             } catch (ex) {
               console.log(ex);
             }
