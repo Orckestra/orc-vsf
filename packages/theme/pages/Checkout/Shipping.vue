@@ -122,7 +122,7 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isShipping && !form.addressId) || !form.shippingMethod"
+            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShipping && !form.addressId) || !form.shippingMethod"
             class="form__action-button"
             type="submit"
           >
@@ -141,7 +141,7 @@ import {
   SfRadio,
   SfIcon
 } from '@storefront-ui/vue';
-import { computed, ref, useRouter } from '@nuxtjs/composition-api';
+import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import { useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
@@ -317,6 +317,12 @@ export default {
       loadUserShipping(),
       loadFulfillmentMethods()
     ]));
+
+    watch(isAuthenticated, () => {
+      if (isAuthenticated.value) {
+        loadUserShipping();
+      }
+    });
 
     const goBack = () => {
       router.push(context.root.localePath({ name: 'personalDetails' }));
