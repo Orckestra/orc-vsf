@@ -8,22 +8,22 @@ function getDate(order: UserOrder): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(order: UserOrder): string {
-  return order.id;
+  return order?.id;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getNumber(order: UserOrder): string {
-  return order.orderNumber;
+  return order?.orderNumber;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getStatus(order: UserOrder): string {
-  return order.orderStatus;
+  return order?.orderStatus;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(order: UserOrder): number | null {
-  return order.cart.total;
+  return order?.cart?.total;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,12 +63,12 @@ function getOrdersTotal(orders: any): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProducts(order: UserOrder): CartItem[] {
-  return order.cart.shipments[0]?.lineItems;
+  return order?.cart?.shipments[0]?.lineItems;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductQty(item: CartItem): number {
-  return item.quantity;
+  return item?.quantity;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -81,91 +81,91 @@ function getProductPrice(item: CartItem): AgnosticPrice {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductSku(item: CartItem): string {
-  return item.sku;
+  return item?.sku;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductName(item: CartItem): string {
-  return item.productSummary.displayName;
+  return item?.productSummary?.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductTotal(item: CartItem): number {
-  return item.total;
+  return item?.total;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFulfillmentMethodName(order: UserOrder): string {
-  return order.cart.shipments[0]?.fulfillmentMethod.displayName;
+  return order?.cart?.shipments[0]?.fulfillmentMethod?.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPaymentMethod(order: UserOrder): string {
-  return order.cart.payments[0].paymentMethod.type;
+  return order?.cart?.payments[0]?.paymentMethod?.type;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSubTotal(order: UserOrder): number {
-  return order.cart.subTotal;
+  return order?.cart?.subTotal;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTaxes(order: UserOrder): Tax[] {
-  return order.cart.shipments[0]?.taxes;
+  return order?.cart?.shipments[0]?.taxes;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTaxTotal(tax: Tax): number {
-  return tax.taxTotal;
+  return tax?.taxTotal;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTaxName(tax: Tax): string {
-  return tax.displayName;
+  return tax?.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotal(order: UserOrder): number {
-  return order.cart.total;
+  return order?.cart?.total;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSaving(order: UserOrder): number {
   let saving = 0;
-  order.cart.shipments[0]?.lineItems.forEach(item => saving += item.regularPrice - item.listPrice);
+  order?.cart?.shipments[0]?.lineItems.forEach(item => saving += item?.regularPrice - item?.listPrice);
   return saving;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingAddress(order: UserOrder): UserAddress {
-  return order.cart.shipments[0]?.address;
+  return order?.cart?.shipments[0]?.address;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPaymentAddress(order: UserOrder): UserAddress {
-  return order.cart.payments[0].billingAddress;
+  return order?.cart?.payments[0]?.billingAddress;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductLink(item: CartItem): string {
   const variantId = item.variantId;
   const productId = item.productId;
-  return `/p/${productId}/${item.productSummary.displayName}${variantId ? `?variant=${variantId}` : ''}`;
+  return `/p/${productId}/${item?.productSummary?.displayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductImage(item: CartItem): string {
-  return item.coverImage;
+  return item?.coverImage;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShipmentStatus(order: UserOrder): string {
-  return order.cart.shipments[0]?.status;
+  return order?.cart?.shipments[0]?.status;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(order: UserOrder): number {
-  return order.cart?.fulfillmentCost ?? 0;
+  return order?.cart?.fulfillmentCost ?? 0;
 
 }
 

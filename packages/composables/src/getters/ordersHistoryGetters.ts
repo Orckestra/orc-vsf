@@ -12,34 +12,34 @@ function getOrdersTotal(orderQueryResult: OrderQueryResult): number {
 }
 
 function getDate(orderItem: OrderItem): string {
-  return new Date(orderItem.created).toLocaleDateString() || '';
+  return new Date(orderItem?.created).toLocaleDateString() || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(orderItem: OrderItem): string {
-  return orderItem.id;
+  return orderItem?.id;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getStatus(orderItem: OrderItem): string {
-  return orderItem.orderStatus;
+  return orderItem?.orderStatus;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(orderItem: OrderItem): number | null {
-  return orderItem.total;
+  return orderItem?.total;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getNumber(orderItem: OrderItem): string {
-  return orderItem.orderNumber;
+  return orderItem?.orderNumber;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPagination(orderQueryResult: OrderQueryResult, input: any): AgnosticPagination {
   return {
     currentPage: input.page,
-    totalPages: orderQueryResult ? Math.ceil(orderQueryResult.totalCount / (input.itemsPerPage)) : 0,
+    totalPages: orderQueryResult ? Math.ceil(orderQueryResult?.totalCount / (input.itemsPerPage)) : 0,
     totalItems: orderQueryResult?.totalCount,
     itemsPerPage: input.itemsPerPage,
     pageOptions: [12, 24, 48]
