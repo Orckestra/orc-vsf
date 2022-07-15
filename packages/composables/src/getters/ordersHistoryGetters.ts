@@ -36,12 +36,12 @@ function getNumber(orderItem: OrderItem): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getPagination(orderQueryResult: OrderQueryResult, input: any): AgnosticPagination {
+function getPagination(orderQueryResult: OrderQueryResult, itemsPerPage: number, page: number): AgnosticPagination {
   return {
-    currentPage: input.page,
-    totalPages: orderQueryResult ? Math.ceil(orderQueryResult?.totalCount / (input.itemsPerPage)) : 0,
+    currentPage: page,
+    totalPages: orderQueryResult ? Math.ceil(orderQueryResult?.totalCount / (itemsPerPage)) : 0,
     totalItems: orderQueryResult?.totalCount,
-    itemsPerPage: input.itemsPerPage,
+    itemsPerPage: itemsPerPage,
     pageOptions: [12, 24, 48]
   };
 }

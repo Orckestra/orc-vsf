@@ -53,7 +53,7 @@
             :regular="orderGetters.getProductPrice(item).regular && $n(orderGetters.getProductPrice(item).regular, 'currency')"
             :special="orderGetters.getProductPrice(item).special && $n(orderGetters.getProductPrice(item).special, 'currency')"
           />
-        </SfTableData>     
+        </SfTableData>
         <SfTableData class="table__data">{{orderGetters.getProductQty(item)}}</SfTableData>
         <SfTableData class="table__data">{{$n(orderGetters.getProductTotal(item), 'currency')}}</SfTableData>
       </SfTableRow>
@@ -99,8 +99,7 @@
         <template #value>
           <AddressPreview :address="orderGetters.getPaymentAddress(currentOrder)" />
         </template>
-      </SfProperty>
-      
+      </SfProperty>      
     </div>
     <div class="highlighted highlighted--total" v-if="orderGetters.getSubTotal(currentOrder) !== 0">
       <SfHeading
@@ -138,9 +137,6 @@
     </div>
   </div>
   <div v-else>
-    <p class="message">
-      {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
-    </p>
     <div v-if="totalOrders === 0" class="no-orders">
       <p class="no-orders__title">{{ $t('You currently have no orders') }}</p>
       <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
@@ -222,7 +218,7 @@ import { computed, ref } from '@nuxtjs/composition-api';
 import { useUserOrder, ordersHistoryGetters, orderGetters, useMetadata, metadataGetters, useOrder } from '@vue-storefront/orc-vsf';
 import { useUiHelpers } from '~/composables';
 import { useRouter } from '@nuxtjs/composition-api';
-import { AgnosticOrderStatus, addBasePath } from '@vue-storefront/core';
+import { addBasePath } from '@vue-storefront/core';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 export default {
@@ -248,47 +244,40 @@ export default {
     const { response: metadata } = useMetadata();
     const router = useRouter();
     const { locale } = router.app.$i18n;
-    const orders = ref(null);
-    const currentOrder = ref(null);
-    let isOrderSelected =  ref(false);
+    let isOrderSelected = ref(false);
+    const facetsFromUrl = th.getFacetsFromURL();
 
     onSSR(async () => {
-      const facetsFromUrl = th.getFacetsFromURL();
       await search({ page: facetsFromUrl.page, itemsPerPage: facetsFromUrl.itemsPerPage, filterMember: 'OrderStatus', filterValues: ['PendingProcess','InProgress','PartiallyFulfilled', 'New', 'Completed', 'Canceled','Shipped'] });
     });    
 
     const getStatusTextClass = (order) => {
-     const status = ordersHistoryGetters.getStatus(order);
-     switch (status) {
-       case 'InProgress':
-         return 'text-warning';
-       case 'Completed':
-         return 'text-success';
-       case 'Canceled':
-         return 'text-danger';
-       default:
-         return 'text-info';
+      const status = ordersHistoryGetters.getStatus(order);
+      switch (status) {
+        case 'InProgress':
+          return 'text-warning';
+        case 'Completed':
+          return 'text-success';
+        case 'Canceled':
+          return 'text-danger';
+        default:
+          return 'text-info';
      }
    };
-
+    const getLookupValue = (lookupName, value) => {
+      return metadataGetters.getLookupValueDisplayName(metadata?.value, lookupName , value, locale);
+    }
     const getOrderDetails = async (order) => {      
       await getOrderByNumber({orderNumber: ordersHistoryGetters.getNumber(order)});
       isOrderSelected.value = true;
     }
-
     const getOrderStatusLookup = (order) => {
-      return getLookupValue("OrderStatus", orderGetters.getStatus(order));
+      return getLookupValue('OrderStatus', orderGetters.getStatus(order));
     }
-
     const getShipmentStatusLookup = (order) => {
-      return getLookupValue("ShipmentStatus", orderGetters.getShipmentStatus(order));
-    }
-
-    const getLookupValue = (lookupName, value) => {
-      return metadataGetters.getLookupValueDisplayName(metadata?.value, lookupName , value, locale);
-    }
-
-    const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, th.getFacetsFromURL()));
+      return getLookupValue('ShipmentStatus', orderGetters.getShipmentStatus(order));
+    }    
+    const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, facetsFromUrl.itemsPerPage, facetsFromUrl.page ));
 
     return {
       orders: computed(() => ordersHistoryGetters.getOrdersHistory(orderHistory?.value)),
@@ -447,6 +436,4 @@ img.sf-image.sf-image-loaded{
   --price-flex-direction: column;
   --price-align-items: center;
 }
-
-
 </style>
