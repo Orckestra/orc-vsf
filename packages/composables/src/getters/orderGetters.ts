@@ -1,5 +1,5 @@
 import { UserOrderGetters, AgnosticPrice } from '@vue-storefront/core';
-import type { UserOrder, OrderItem, CartItem, Tax, UserAddress} from '@vue-storefront/orc-vsf-api';
+import type { UserOrder, OrderItem, CartItem, Tax, UserAddress, Cart} from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: UserOrder): string {
@@ -130,13 +130,6 @@ function getTotal(order: UserOrder): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getSaving(order: UserOrder): number {
-  let saving = 0;
-  order?.cart?.shipments[0]?.lineItems.forEach(item => saving += item?.regularPrice - item?.listPrice);
-  return saving;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingAddress(order: UserOrder): UserAddress {
   return order?.cart?.shipments[0]?.address;
 }
@@ -166,7 +159,11 @@ function getShipmentStatus(order: UserOrder): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(order: UserOrder): number {
   return order?.cart?.fulfillmentCost ?? 0;
+}
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getCart(order: UserOrder): Cart {
+  return order?.cart;
 }
 
 export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
@@ -194,12 +191,12 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getTaxTotal,
   getTaxName,
   getTotal,
-  getSaving,
   getShippingAddress,
   getPaymentAddress,
   getProductLink,
   getNumber,
   getProductImage,
   getShipmentStatus,
-  getShippingPrice
+  getShippingPrice,
+  getCart
 };

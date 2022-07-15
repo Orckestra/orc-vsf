@@ -14,7 +14,7 @@
       />
       <SfProperty
         name="Status"
-        :value="getOrderStatusLookup(currentOrder)" 
+        :value="getOrderStatusLookup(currentOrder)"
         class="sf-property property"
       />
       <SfProperty
@@ -99,7 +99,7 @@
         <template #value>
           <AddressPreview :address="orderGetters.getPaymentAddress(currentOrder)" />
         </template>
-      </SfProperty>      
+      </SfProperty>
     </div>
     <div class="highlighted highlighted--total" v-if="orderGetters.getSubTotal(currentOrder) !== 0">
       <SfHeading
@@ -109,13 +109,13 @@
       />
       <SfProperty
         name="Subtotal"
-        :value="orderGetters.getSubTotal(currentOrder)"
+        :value="$n(orderGetters.getSubTotal(currentOrder), 'currency')"
         class="sf-property property"
       />
       <div v-for="tax in orderGetters.getTaxes(currentOrder)">
         <SfProperty
           :name="th.getTranslation(orderGetters.getTaxName(tax))"
-          :value="orderGetters.getTaxTotal(tax)"
+          :value="$n(orderGetters.getTaxTotal(tax), 'currency')"
           class="sf-property property"
         />
       </div>
@@ -126,14 +126,15 @@
       />
       <SfProperty
         name="Total"
-        :value="orderGetters.getTotal(currentOrder)"
+        :value="$n(orderGetters.getTotal(currentOrder), 'currency')"
         class="sf-property property"
       />
       <SfProperty
-        name="Saving"
-        :value="$n(orderGetters.getSaving(currentOrder), 'currency')"
-        class="sf-property property"
-      />
+            v-if="hasDiscounts"
+            :name="$t('Total savings')"
+            :value="$n(getTotalDiscountsAmount(currentOrder), 'currency')"
+            class="sf-property property"
+          />
     </div>
   </div>
   <div v-else>
@@ -142,60 +143,68 @@
       <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
     </div>
     <div v-else>
-      <SfTable class="orders">
-        <SfTableHeading>
-          <SfTableHeader
-            v-for="tableHeader in tableHeaders"
-            :key="tableHeader"
-          >{{ tableHeader }}</SfTableHeader>
-          <SfTableHeader class="orders__element--right" />
-        </SfTableHeading>
-        <SfTableRow v-for="order in orders" :key="ordersHistoryGetters.getId(order)">
-          <SfTableData v-e2e="'order-number'">{{ ordersHistoryGetters.getNumber(order) }}</SfTableData>
-          <SfTableData>{{ ordersHistoryGetters.getDate(order) }}</SfTableData>
-          <SfTableData>{{ $n(ordersHistoryGetters.getPrice(order), 'currency') }}</SfTableData>
-          <SfTableData>
-            <span :class="getStatusTextClass(order)">{{ getOrderStatusLookup(order) }}</span>
-          </SfTableData>
-          <SfTableData class="orders__view orders__element--right">
-            <SfButton class="sf-button--text desktop-only" @click="getOrderDetails(order)">
-              {{ $t('View details') }}
-            </SfButton>
-          </SfTableData>
-        </SfTableRow>
-      </SfTable>
-      <p>My  orders ({{ totalOrders }})</p>
-      <LazyHydrate on-interaction>
-        <SfPagination
-          v-if="!loading"
-          class="products__pagination desktop-only"
-          v-show="pagination.totalPages > 1"
-          :current="pagination.currentPage"
-          :total="pagination.totalPages"
-          :visible="5"
-        />
-      </LazyHydrate>
-      <div
-        v-show="pagination.totalPages > 1"
-        class="products__show-on-page">
-        <span class="products__show-on-page__label">{{ $t('Show on page') }}</span>
+    <SfTabs
+      key="order-history"
+      :open-tab="1"
+      class="tab-orphan"
+    >
+      <SfTab
+        :title="`My  orders (${totalOrders})`">
+        <SfTable class="orders">
+          <SfTableHeading>
+            <SfTableHeader
+              v-for="historyTableHeader in historyTableHeaders"
+              :key="historyTableHeader"
+            >{{ historyTableHeader }}</SfTableHeader>
+            <SfTableHeader class="orders__element--right" />
+          </SfTableHeading>
+          <SfTableRow v-for="order in orders" :key="ordersHistoryGetters.getId(order)">
+            <SfTableData v-e2e="'order-number'">{{ ordersHistoryGetters.getNumber(order) }}</SfTableData>
+            <SfTableData>{{ ordersHistoryGetters.getDate(order) }}</SfTableData>
+            <SfTableData>{{ $n(ordersHistoryGetters.getPrice(order), 'currency') }}</SfTableData>
+            <SfTableData>
+              <span :class="getStatusTextClass(order)">{{ getOrderStatusLookup(order) }}</span>
+            </SfTableData>
+            <SfTableData class="orders__view orders__element--right">
+              <SfButton class="sf-button--text desktop-only" @click="getOrderDetails(order)">
+                {{ $t('View details') }}
+              </SfButton>
+            </SfTableData>
+          </SfTableRow>
+        </SfTable>
         <LazyHydrate on-interaction>
-          <SfSelect
-            :value="pagination && pagination.itemsPerPage ? pagination.itemsPerPage.toString() : ''"
-            class="products__items-per-page"
-            @input="th.changeItemsPerPage"
-          >
-            <SfSelectOption
-              v-for="option in pagination.pageOptions"
-              :key="option"
-              :value="option"
-              class="products__items-per-page__option"
-            >
-              {{ option }}
-            </SfSelectOption>
-          </SfSelect>
+          <SfPagination
+            v-if="!loading"
+            class="orders__pagination"
+            v-show="pagination.totalPages > 1"
+            :current="pagination.currentPage"
+            :total="pagination.totalPages"
+            :visible="5"
+          />
         </LazyHydrate>
-      </div>
+        <div
+          v-show="pagination.totalPages > 1"
+          class="products__show-on-page">
+          <span class="products__show-on-page__label">{{ $t('Show on page') }}</span>
+          <LazyHydrate on-interaction>
+            <SfSelect
+              :value="pagination && pagination.itemsPerPage ? pagination.itemsPerPage.toString() : ''"
+              class="products__items-per-page"
+              @input="th.changeItemsPerPage"
+            >
+              <SfSelectOption
+                v-for="option in pagination.pageOptions"
+                :key="option"
+                :value="option"
+                class="products__items-per-page__option"
+              >
+                {{ option }}
+              </SfSelectOption>
+            </SfSelect>
+          </LazyHydrate>
+        </div>
+       </Sftab>
+      </Sftabs> 
     </div>
   </div>
 </template>
@@ -215,7 +224,7 @@ import {
 } from '@storefront-ui/vue';
 import AddressPreview from '../../components/AddressPreview';
 import { computed, ref } from '@nuxtjs/composition-api';
-import { useUserOrder, ordersHistoryGetters, orderGetters, useMetadata, metadataGetters, useOrder } from '@vue-storefront/orc-vsf';
+import { useUserOrder, ordersHistoryGetters, orderGetters, useMetadata, metadataGetters, useOrder, cartGetters } from '@vue-storefront/orc-vsf';
 import { useUiHelpers } from '~/composables';
 import { useRouter } from '@nuxtjs/composition-api';
 import { addBasePath } from '@vue-storefront/core';
@@ -244,11 +253,11 @@ export default {
     const { response: metadata } = useMetadata();
     const router = useRouter();
     const { locale } = router.app.$i18n;
-    let isOrderSelected = ref(false);
+    const isOrderSelected = ref(false);
     const facetsFromUrl = th.getFacetsFromURL();
 
     onSSR(async () => {
-      await search({ page: facetsFromUrl.page, itemsPerPage: facetsFromUrl.itemsPerPage, filterMember: 'OrderStatus', filterValues: ['PendingProcess','InProgress','PartiallyFulfilled', 'New', 'Completed', 'Canceled','Shipped'] });
+      await search({ page: facetsFromUrl.page, itemsPerPage: facetsFromUrl.itemsPerPage, filterMember: 'OrderStatus', filterValues: ['PendingProcess', 'InProgress', 'PartiallyFulfilled', 'New', 'Completed', 'Canceled', 'Shipped'] });
     });    
 
     const getStatusTextClass = (order) => {
@@ -279,6 +288,12 @@ export default {
     }    
     const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, facetsFromUrl.itemsPerPage, facetsFromUrl.page ));
 
+    const getTotalDiscountsAmount = (order) => {
+      const cart = orderGetters.getCart(order);
+      const itemsDiscountsAmount = cartGetters.getItemsDiscountsAmount(cart);
+      const totals = cartGetters.getTotals(cart);
+      return totals.value?.discount + itemsDiscountsAmount.value;
+    }
     return {
       orders: computed(() => ordersHistoryGetters.getOrdersHistory(orderHistory?.value)),
       totalOrders: computed(() => ordersHistoryGetters.getOrdersTotal(orderHistory?.value)),
@@ -293,8 +308,10 @@ export default {
       addBasePath,
       getShipmentStatusLookup,
       tableHeaders: ['Description', 'Unit Price', 'Quantity', 'Subtotal'],
+      historyTableHeaders: ['Order Number', 'Date', 'Total', 'Status'],
       pagination,
-      loading
+      loading,
+      getTotalDiscountsAmount
     };
   }
 };
@@ -393,6 +410,19 @@ img.sf-image.sf-image-loaded{
   @include for-desktop {
     margin: 0 0 var(--spacer-base) 0;
     --table-heading-padding: var(--spacer-sm) 0;
+    &__pagination {
+    display: flex;
+    justify-content: flex-start;
+    margin: var(--spacer-xl) 0 0 0;
+    }
+    &__show-on-page {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      &__label {
+        font-family: var(--font-family--secondary);
+        font-size: var(--font-size--sm);
+    }}
     &__header {
       &:last-of-type {
         margin-right: var(--spacer-xs);
