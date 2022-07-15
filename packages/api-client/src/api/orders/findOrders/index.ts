@@ -51,10 +51,7 @@ export default async function findOrders(context, params) {
     includeFulfillmentStates: true,
     query
   };
-  console.log(JSON.stringify(body));
-
   const { data } = await context.client.post(url.href, body);
-  console.log(JSON.stringify(data));
   return data;
 
 }
