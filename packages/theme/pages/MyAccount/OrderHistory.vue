@@ -130,7 +130,6 @@
         class="sf-property property"
       />
       <SfProperty
-            v-if="hasDiscounts"
             :name="$t('Total savings')"
             :value="$n(getTotalDiscountsAmount(currentOrder), 'currency')"
             class="sf-property property"
@@ -292,7 +291,7 @@ export default {
       const cart = orderGetters.getCart(order);
       const itemsDiscountsAmount = cartGetters.getItemsDiscountsAmount(cart);
       const totals = cartGetters.getTotals(cart);
-      return totals.value?.discount + itemsDiscountsAmount.value;
+      return totals?.discount + itemsDiscountsAmount;
     };
     return {
       orders: computed(() => ordersHistoryGetters.getOrdersHistory(orderHistory?.value)),
