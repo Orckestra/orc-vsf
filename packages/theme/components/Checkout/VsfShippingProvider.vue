@@ -23,7 +23,7 @@
         <div class="sf-radio__description shipping__description">
               <span>{{item.fulfillmentMethodType}}</span>
               <span v-if="item.expectedDeliveryDate">
-                 / Estimated ship time: 
+                 / Estimated ship time:
                 {{((new Date(item.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days
               </span>
         </div>
