@@ -60,12 +60,9 @@ export default {
   emits: ['change'],
   setup(props, { emit }) {
     const th = useUiHelpers();
-    const isOpen = ref({});
-
     const updateShippingMethod = value => emit('change', value);
 
     return {
-      isOpen,
       th,
       updateShippingMethod
     };
