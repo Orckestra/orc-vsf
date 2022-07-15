@@ -184,19 +184,19 @@
         </LazyHydrate>
         <div
           v-show="pagination.totalPages > 1"
-          class="products__show-on-page">
-          <span class="products__show-on-page__label">{{ $t('Show on page') }}</span>
+          class="orders__show-on-page">
+          <span class="orders__show-on-page__label">{{ $t('Show on page') }}</span>
           <LazyHydrate on-interaction>
             <SfSelect
               :value="pagination && pagination.itemsPerPage ? pagination.itemsPerPage.toString() : ''"
-              class="products__items-per-page"
+              class="orders__items-per-page"
               @input="th.changeItemsPerPage"
             >
               <SfSelectOption
                 v-for="option in pagination.pageOptions"
                 :key="option"
                 :value="option"
-                class="products__items-per-page__option"
+                class="orders__items-per-page__option"
               >
                 {{ option }}
               </SfSelectOption>
@@ -342,6 +342,20 @@ img.sf-image.sf-image-loaded{
       }
     }
   }
+  &__pagination {
+    display: flex;
+    justify-content: flex-start;
+    margin: var(--spacer-xl) 0 0 0;
+    }
+  &__show-on-page {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      &__label {
+        font-family: var(--font-family--secondary);
+        font-size: var(--font-size--sm);
+    }
+  }
 }
 .all-orders {
   --button-padding: var(--spacer-base) 0;
@@ -410,20 +424,7 @@ img.sf-image.sf-image-loaded{
   @include for-desktop {
     margin: 0 0 var(--spacer-base) 0;
     --table-heading-padding: var(--spacer-sm) 0;
-    &__pagination {
-    display: flex;
-    justify-content: flex-start;
-    margin: var(--spacer-xl) 0 0 0;
-    }
-    &__show-on-page {
-      display: flex;
-      justify-content: flex-end;
-      align-items: baseline;
-      &__label {
-        font-family: var(--font-family--secondary);
-        font-size: var(--font-size--sm);
-    }}
-    &__header {
+      &__header {
       &:last-of-type {
         margin-right: var(--spacer-xs);
       }
