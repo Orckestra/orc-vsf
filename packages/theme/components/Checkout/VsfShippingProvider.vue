@@ -34,7 +34,6 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 
 export default {
