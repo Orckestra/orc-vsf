@@ -1,8 +1,8 @@
 <template>
   <div class="form__radio-group" data-testid="shipping-method">
     <SfRadio
-      v-for="item in fulfillmentMethods"
-      :key="item.shippingProviderId"
+      v-for="(item, index) in fulfillmentMethods"
+      :key="index"
       :selected="selected"
       :label="th.getTranslation(item.displayName) || item.name"
       :value="item.shippingProviderId"
@@ -15,28 +15,17 @@
         <div class="sf-radio__label shipping__label">
           <div>
             {{ label }}
-            <SfButton
-              class="sf-button--text shipping__action desktop-only"
-              :class="{ 'shipping__action--is-active': isOpen[item.shippingProviderId] }"
-              type="button"
-              @click="(isOpen = { ...isOpen, [item.shippingProviderId]: !isOpen[item.shippingProviderId] })"
-            >{{ isOpen[item.shippingProviderId] ? "- info" : "+ info" }}
-            </SfButton>
           </div>
           <div class="shipping__label-price">{{$n(Number(item.cost), 'currency')}}</div>
         </div>
       </template>
-      <template #description="{ description }">
+      <template #description>
         <div class="sf-radio__description shipping__description">
-          <div class="shipping__delivery">
-            <span>{{ item.delivery }}</span>
-          </div>
-          <transition name="sf-fade">
-            <div v-if="isOpen[item.shippingProviderId]" class="shipping__info">
-              <p>{{ item.fulfillmentMethodType }}</p>
-              <span v-if="item.expectedDeliveryDate">Estimated Ship Time: {{((new Date(item.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days</span>
-            </div>
-          </transition>
+              <span>{{item.fulfillmentMethodType}}</span>
+              <span v-if="item.expectedDeliveryDate">
+                 / Estimated ship time:
+                {{((new Date(item.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days
+              </span>
         </div>
       </template>
     </SfRadio>
@@ -45,7 +34,6 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 
 export default {
@@ -71,12 +59,9 @@ export default {
   emits: ['change'],
   setup(props, { emit }) {
     const th = useUiHelpers();
-    const isOpen = ref({});
-
     const updateShippingMethod = value => emit('change', value);
 
     return {
-      isOpen,
       th,
       updateShippingMethod
     };
