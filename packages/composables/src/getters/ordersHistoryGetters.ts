@@ -1,5 +1,6 @@
 import { UseOrdersHistoryGetters } from '../types';
 import type { OrderQueryResult, OrderItem } from '@vue-storefront/orc-vsf-api';
+import { AgnosticPagination } from '@vue-storefront/core';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getOrdersHistory(orderQueryResult: OrderQueryResult): OrderItem[] {
@@ -11,7 +12,7 @@ function getOrdersTotal(orderQueryResult: OrderQueryResult): number {
 }
 
 function getDate(orderItem: OrderItem): string {
-  return orderItem.created;
+  return new Date(orderItem.created).toLocaleDateString() || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,8 +30,20 @@ function getPrice(orderItem: OrderItem): number | null {
   return orderItem.total;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getNumber(orderItem: OrderItem): string {
   return orderItem.orderNumber;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getPagination(orderQueryResult: OrderQueryResult, input: any): AgnosticPagination {
+  return {
+    currentPage: input.page,
+    totalPages: orderQueryResult ? Math.ceil(orderQueryResult.totalCount / (input.itemsPerPage)) : 0,
+    totalItems: orderQueryResult?.totalCount,
+    itemsPerPage: input.itemsPerPage,
+    pageOptions: [12, 24, 48]
+  };
 }
 
 export const ordersHistoryGetters: UseOrdersHistoryGetters<OrderQueryResult, OrderItem> = {
@@ -40,5 +53,6 @@ export const ordersHistoryGetters: UseOrdersHistoryGetters<OrderQueryResult, Ord
   getId,
   getStatus,
   getPrice,
-  getNumber
+  getNumber,
+  getPagination
 };

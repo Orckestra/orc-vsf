@@ -2,7 +2,8 @@ import {
   ProductsSearchParams,
   FactoryParams,
   Context,
-  ComputedProperty
+  ComputedProperty,
+  AgnosticPagination
 } from '@vue-storefront/core';
 import {
   AgnosticAttribute, AgnosticCoupon, AgnosticDiscount,
@@ -105,25 +106,6 @@ export const enum InventoryStatus {
 /*
 ORDERSHISTORY
 */
-export interface UseOrdersHistoryErrors {
-  load: Error | null;
-  change: Error | null;
-}
-
-export interface UseOrdersHistoryFactoryParams<ORDERHISTORY> extends FactoryParams {
-  load(context: Context, params: { orderTense: number, page: number, itemsPerPage: number}): Promise<ORDERHISTORY[]>
-}
-
-export interface UseOrdersHistoryInterface<ORDERHISTORY> {
-  load(params: { orderTense: number, page: number, itemsPerPage: number}): Promise<void>;
-  loading: ComputedProperty<boolean>;
-  response: ComputedProperty<ORDERHISTORY>;
-  error: ComputedProperty<UseOrdersHistoryErrors>;
-}
-
-export interface UseOrdersHistory<ORDERHISTORY> {
-  (id: string): UseOrdersHistoryInterface<ORDERHISTORY>;
-}
 
 export interface UseOrdersHistoryGetters<ORDERQUERYRESULT, ORDERITEM> {
   getOrdersHistory(orders: ORDERQUERYRESULT): ORDERITEM[];
@@ -133,6 +115,7 @@ export interface UseOrdersHistoryGetters<ORDERQUERYRESULT, ORDERITEM> {
   getStatus(orderItem: ORDERITEM): string;
   getPrice(orderItem: ORDERITEM): number | null;
   getNumber(orderItem: ORDERITEM): string;
+  getPagination(orders: ORDERQUERYRESULT, itemsPerPage: number, page: number): AgnosticPagination;
 }
 
 /*

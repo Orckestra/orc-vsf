@@ -115,12 +115,12 @@ function getTaxes(order: UserOrder): Tax[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getTaxTotal(tax: any): number {
+function getTaxTotal(tax: Tax): number {
   return tax.taxTotal;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getTaxName(tax: any): string {
+function getTaxName(tax: Tax): string {
   return tax.displayName;
 }
 
@@ -163,6 +163,12 @@ function getShipmentStatus(order: UserOrder): string {
   return order.cart.shipments[0]?.status;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getShippingPrice(order: UserOrder): number {
+  return order.cart?.fulfillmentCost ?? 0;
+
+}
+
 export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getDate,
   getId,
@@ -194,5 +200,6 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getProductLink,
   getNumber,
   getProductImage,
-  getShipmentStatus
+  getShipmentStatus,
+  getShippingPrice
 };

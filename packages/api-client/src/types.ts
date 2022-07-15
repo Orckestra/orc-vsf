@@ -320,6 +320,7 @@ export type UserOrder = {
     source: string,
     transactionOrderNumber: number
 };
+export type ShipmentItem = TODO;
 
 export type OrderItem = {
     billingCurrency: string,
@@ -345,8 +346,6 @@ export type OrderQueryResult = {
 };
 
 export type LineItem = TODO;
-
-export type ShipmentItem = TODO;
 
 export type PasswordResetResult = {
     success: boolean;
