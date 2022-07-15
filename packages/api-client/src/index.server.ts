@@ -40,6 +40,9 @@ import getPaymentProviders from './api/providers/getPaymentProviders';
 import addPayment from './api/carts/addPayment';
 import updatePaymentMethod from './api/carts/updatePaymentMethod';
 import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
+import findOrders from './api/orders/findOrders';
+import getOrderByNumber from './api/orders/getOrderByNumber';
+import getOrderLookups from './api/metadata/getOrderLookups';
 
 function onCreate(settings) {
   const client = axios.create({
@@ -97,6 +100,9 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updatePaymentMethod,
     getFulfillmentMethods,
     completeCheckout,
+    findOrders,
+    getOrderByNumber,
+    getOrderLookups
   }
 });
 

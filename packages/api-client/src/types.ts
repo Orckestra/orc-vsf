@@ -74,7 +74,8 @@ export type FulfillmentMethod = {
     fulfillmentMethodType: FulfillmentMethodType,
     shipmentId: string,
     shippingProviderId: string,
-    taxCategory: string
+    taxCategory: string,
+    name: string
 }
 
 export type ShipmentAdditionalFee = {
@@ -136,9 +137,9 @@ export type CartItem = {
     variantId: string,
     recurringOrderProgramName: string,
     recurringOrderFrequencyName: string,
-    coverImage?:string,
+    coverImage?: string,
     isGiftItem: boolean,
-    rewards: Reward[],
+    rewards: Reward[]
 }
 
 export type Shipment = {
@@ -239,7 +240,7 @@ export type Payment = {
     paymentStatus: string,
     propertyBag?: any,
     paymentMethod: PaymentMethod,
-    paymentDate: string,
+    paymentDate: string
 }
 
 export type Cart = {
@@ -312,8 +313,7 @@ export type SearchResults = {
     facetCounts?: any
 };
 
-export const enum FacetType
-{
+export const enum FacetType {
     SingleSelect = 0,
     MultiSelect = 1,
     Range = 2
@@ -323,7 +323,49 @@ export type FacetSearchCriteria = TODO;
 
 export type Order = TODO;
 
-export type OrderItem = TODO;
+export type UserOrder = {
+    cart: Cart,
+    created: string,
+    createdBy: string,
+    customerId: string,
+    customerName: string,
+    entityVersion: string,
+    id: string,
+    itemCount: number,
+    lastModified: string,
+    lastModifiedBy: string,
+    orderNumber: string,
+    orderStatus: string,
+    scopeId: string,
+    source: string,
+    transactionOrderNumber: number
+};
+export type ShipmentItem = TODO;
+
+export type OrderItem = {
+    billingCurrency: string,
+    created: string,
+    customerEmail: string,
+    customerId: string,
+    customerName: string,
+    id: string,
+    messages: TODO,
+    orderNumber: string,
+    orderStatus: string,
+    postProcessingExecutionResult: string,
+    propertyBag: TODO,
+    scopeId: string
+    shipmentItems: ShipmentItem[],
+    source: string,
+    total: number
+};
+
+export type OrderQueryResult = {
+    totalCount: number;
+    results: OrderItem[];
+};
+
+export type LineItem = TODO;
 
 export type PasswordResetResult = {
     success: boolean;
@@ -413,7 +455,7 @@ export type ProductPrice = {
 }
 
 export type Product = {
-    id?:string,
+    id?: string,
     productId?: string,
     name: any,
     displayName?: any,
@@ -496,7 +538,7 @@ export type WishlistItem = {
     productDefinitionName: string;
     kvaValues: any;
     isGiftItem: false;
-    kvaDisplayValues:any;
+    kvaDisplayValues: any;
     productId: string;
     variantId: string;
     giftWrap: boolean;
@@ -579,7 +621,7 @@ export type InventoryItemIdentifier = {
 export type InventoryItemStatus = {
     quantity: number,
     // InStock, OutOfStock, PreOrder, BackOrder
-    status:	string
+    status: string
 }
 
 export type InventoryItemAvailability = {

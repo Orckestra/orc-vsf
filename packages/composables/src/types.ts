@@ -2,7 +2,8 @@ import {
   ProductsSearchParams,
   FactoryParams,
   Context,
-  ComputedProperty
+  ComputedProperty,
+  AgnosticPagination
 } from '@vue-storefront/core';
 import {
   AgnosticAttribute, AgnosticCoupon, AgnosticDiscount,
@@ -103,6 +104,21 @@ export const enum InventoryStatus {
 }
 
 /*
+ORDERSHISTORY
+*/
+
+export interface UseOrdersHistoryGetters<ORDERQUERYRESULT, ORDERITEM> {
+  getOrdersHistory(orders: ORDERQUERYRESULT): ORDERITEM[];
+  getOrdersTotal(orders: ORDERQUERYRESULT): number;
+  getDate(orderItem: ORDERITEM): string;
+  getId(orderItem: ORDERITEM): string ;
+  getStatus(orderItem: ORDERITEM): string;
+  getPrice(orderItem: ORDERITEM): number | null;
+  getNumber(orderItem: ORDERITEM): string;
+  getPagination(orders: ORDERQUERYRESULT, itemsPerPage: number, page: number): AgnosticPagination;
+}
+
+/*
 METADATDA
 */
 export interface UseMetadataErrors {
@@ -157,7 +173,7 @@ export interface useConfiguration<CONFIGURATION> {
 export interface UseConfigurationGetters<CONFIGURATION, MEMBERSHIPCONFIGURATION> {
   getMinRequiredPasswordLength(config: CONFIGURATION): number;
   getMinRequiredNonAlphanumericCharacters(config: CONFIGURATION): number;
-  getMembershipConfiguration(config: CONFIGURATION) : MEMBERSHIPCONFIGURATION;
+  getMembershipConfiguration(config: CONFIGURATION): MEMBERSHIPCONFIGURATION;
 }
 
 /*
@@ -313,6 +329,34 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends Pl
   loading: ComputedProperty<boolean>;
 }
 
+
+/*
+ORDER
+*/
+
+export interface UseOrderFactoryParams<ORDER> extends FactoryParams {
+  find(context: Context, orderNumber: string[]): Promise<ORDER>
+}
+
+export interface UseOrderErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface useOrderInterface<ORDER> {
+  find(orderNumber: string[]): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  response: ComputedProperty<ORDER>;
+  error: ComputedProperty<UseOrderErrors>;
+}
+
+export interface useOrder<ORDER> {
+  (): useOrderInterface<ORDER>;
+}
+
+export interface UseOrderGetters<ORDER, PRODUCTS> {
+  getOrderProducts(config: ORDER): PRODUCTS;
+}
 
 export interface CartGetters<CART, CART_ITEM> {
   getItems: (cart: CART) => CART_ITEM[];
