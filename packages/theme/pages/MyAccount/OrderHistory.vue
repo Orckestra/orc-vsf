@@ -204,7 +204,7 @@
           </LazyHydrate>
         </div>
        </Sftab>
-      </Sftabs> 
+      </Sftabs>
     </div>
   </div>
 </template>
@@ -220,7 +220,7 @@ import {
   SfImage,
   SfPrice,
   SfPagination,
-  SfSelect  
+  SfSelect
 } from '@storefront-ui/vue';
 import AddressPreview from '../../components/AddressPreview';
 import { computed, ref } from '@nuxtjs/composition-api';
@@ -258,7 +258,7 @@ export default {
 
     onSSR(async () => {
       await search({ page: facetsFromUrl.page, itemsPerPage: facetsFromUrl.itemsPerPage, filterMember: 'OrderStatus', filterValues: ['PendingProcess', 'InProgress', 'PartiallyFulfilled', 'New', 'Completed', 'Canceled', 'Shipped'] });
-    });    
+    });
 
     const getStatusTextClass = (order) => {
       const status = ordersHistoryGetters.getStatus(order);
@@ -271,29 +271,29 @@ export default {
           return 'text-danger';
         default:
           return 'text-info';
-     }
-   };
+      }
+    };
     const getLookupValue = (lookupName, value) => {
-      return metadataGetters.getLookupValueDisplayName(metadata?.value, lookupName , value, locale);
-    }
-    const getOrderDetails = async (order) => {      
-      await getOrderByNumber({orderNumber: ordersHistoryGetters.getNumber(order)});
+      return metadataGetters.getLookupValueDisplayName(metadata?.value, lookupName, value, locale);
+    };
+    const getOrderDetails = async (order) => {
+      await getOrderByNumber({ orderNumber: ordersHistoryGetters.getNumber(order) });
       isOrderSelected.value = true;
-    }
+    };
     const getOrderStatusLookup = (order) => {
       return getLookupValue('OrderStatus', orderGetters.getStatus(order));
-    }
+    };
     const getShipmentStatusLookup = (order) => {
       return getLookupValue('ShipmentStatus', orderGetters.getShipmentStatus(order));
-    }    
-    const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, facetsFromUrl.itemsPerPage, facetsFromUrl.page ));
+    };
+    const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, facetsFromUrl.itemsPerPage, facetsFromUrl.page));
 
     const getTotalDiscountsAmount = (order) => {
       const cart = orderGetters.getCart(order);
       const itemsDiscountsAmount = cartGetters.getItemsDiscountsAmount(cart);
       const totals = cartGetters.getTotals(cart);
       return totals.value?.discount + itemsDiscountsAmount.value;
-    }
+    };
     return {
       orders: computed(() => ordersHistoryGetters.getOrdersHistory(orderHistory?.value)),
       totalOrders: computed(() => ordersHistoryGetters.getOrdersTotal(orderHistory?.value)),
