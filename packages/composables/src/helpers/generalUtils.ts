@@ -10,7 +10,6 @@ export const isGuidEmpty = (guid: string): boolean => {
 export const getUserToken = (context: Context): any => {
   try {
     const app = context.$occ.config.app;
-    const appKey = app.$config.appKey;
     return app.$cookies.get('vsf-occ-data');
   } catch {
     // Ignore

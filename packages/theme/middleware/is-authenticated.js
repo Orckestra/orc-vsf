@@ -1,8 +1,7 @@
 import { Logger } from '@vue-storefront/core';
 
 export default (context) => {
-  const appKey = context.$config.appKey;
-  const token = context.$cookies.get(appKey + '-data');
+  const token = context.$cookies.get('vsf-occ-data');
 
   try {
     const { isGuest } = token;
