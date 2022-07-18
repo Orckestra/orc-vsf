@@ -1,5 +1,5 @@
 import { UserOrderGetters, AgnosticPrice } from '@vue-storefront/core';
-import type { UserOrder, OrderItem, CartItem, Tax, UserAddress, Cart, PaymentMethod} from '@vue-storefront/orc-vsf-api';
+import type { UserOrder, OrderItem, CartItem, Tax, UserAddress, Cart, PaymentMethod, FulfillmentMethod} from '@vue-storefront/orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: UserOrder): string {
@@ -95,8 +95,8 @@ function getProductTotal(item: CartItem): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getFulfillmentMethodName(order: UserOrder): string {
-  return order?.cart?.shipments[0]?.fulfillmentMethod?.displayName;
+function getFulfillmentMethod (order: UserOrder): FulfillmentMethod {
+  return order?.cart?.shipments[0]?.fulfillmentMethod;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -184,7 +184,7 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getProductSku,
   getProductName,
   getProductTotal,
-  getFulfillmentMethodName,
+  getFulfillmentMethod,
   getPaymentMethod,
   getSubTotal,
   getTaxes,
