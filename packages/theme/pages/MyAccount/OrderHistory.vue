@@ -1,5 +1,5 @@
 <template>
- 
+
     <SfTabs
       key="order-history"
       :open-tab="1"
@@ -65,8 +65,8 @@
                 </SfSelect>
               </LazyHydrate>
             </div>
-          </div>  
-        </template> 
+          </div>
+        </template>
         <template v-else>
           <div class="grid">
             <SfButton class="sf-button--text all-orders" @click="isOrderSelected = false">Back to all orders</SfButton>
@@ -76,7 +76,7 @@
                   class="sf-heading--left"
             />
           </div>
-   
+
           <div class="highlighted highlighted--total">
             <SfProperty
               name="Order Number"
@@ -302,7 +302,7 @@ export default {
       return getLookupValue('OrderStatus', orderGetters.getStatus(order));
     };
 
-const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, facetsFromUrl.itemsPerPage, facetsFromUrl.page));
+    const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, facetsFromUrl.itemsPerPage, facetsFromUrl.page));
 
     const getTotalDiscountsAmount = (order) => {
       const cart = orderGetters.getCart(order);
@@ -310,7 +310,7 @@ const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistor
       const totals = cartGetters.getTotals(cart);
       return totals?.discount + itemsDiscountsAmount;
     };
-    
+
     const currentOrder = computed(() => orderByNumber?.value);
     const shippingMethod = computed(() => orderGetters.getFulfillmentMethod(currentOrder.value));
     const currentOrderShipping = computed(() => ({
@@ -427,7 +427,6 @@ img.sf-image.sf-image-loaded{
     --property-color: var(--c-primary);
   }
 }
-
 
 .title {
   --heading-padding: var(--spacer-xl) 0 var(--spacer-base);
