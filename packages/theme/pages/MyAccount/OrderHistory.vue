@@ -1,148 +1,5 @@
 <template>
-  <div v-if="isOrderSelected">
-    <SfButton class="sf-button--text all-orders" @click="isOrderSelected = false">All Orders</SfButton>
-    <div class="highlighted highlighted--total">
-      <SfProperty
-        name="Order Number"
-        :value="orderGetters.getNumber(currentOrder)"
-        class="sf-property property"
-      />
-      <SfProperty
-        name="Date"
-        :value="orderGetters.getDate(currentOrder)"
-        class="sf-property property"
-      />
-      <SfProperty
-        name="Status"
-        :value="getOrderStatusLookup(currentOrder)"
-        class="sf-property property"
-      />
-      <SfProperty
-        name="Total"
-        :value="$n(orderGetters.getPrice(currentOrder), 'currency')"
-        class="sf-property property"
-      />
-    </div>
-    <SfTable class="sf-table--bordered table">
-      <SfTableHeading class="table__row">
-        <SfTableHeader class="table__header table__image">Item</SfTableHeader>
-        <SfTableHeader
-          v-for="tableHeader in tableHeaders"
-          :key="tableHeader"
-          class="table__header"
-          :class="{ table__description: tableHeader === 'Description' }"
-          >{{ tableHeader }}
-        </SfTableHeader>
-      </SfTableHeading>
-      <SfTableRow v-for="(item, i) in orderGetters.getProducts(currentOrder)" :key="i" class="table__row">
-       <SfTableData class="table__image">
-          <SfImage
-            :src="addBasePath(orderGetters.getProductImage(item))"
-            :alt="orderGetters.getProductName(item)"
-            data-testid="product-image-table-data"
-          />
-        </SfTableData>
-        <SfTableData class="table__description">
-          <nuxt-link :to="localePath(orderGetters.getProductLink(item))">
-            {{orderGetters.getProductName(item)}}
-          </nuxt-link>
-        </SfTableData>
-        <SfTableData class="table__data">
-          <SfPrice
-            class="product-price"
-            :regular="orderGetters.getProductPrice(item).regular && $n(orderGetters.getProductPrice(item).regular, 'currency')"
-            :special="orderGetters.getProductPrice(item).special && $n(orderGetters.getProductPrice(item).special, 'currency')"
-          />
-        </SfTableData>
-        <SfTableData class="table__data">{{orderGetters.getProductQty(item)}}</SfTableData>
-        <SfTableData class="table__data">{{$n(orderGetters.getProductTotal(item), 'currency')}}</SfTableData>
-      </SfTableRow>
-    </SfTable>
-    <div class="highlighted highlighted--total">
-      <SfHeading
-        :title="$t('Shipping')"
-        :level="3"
-        class="sf-heading--left sf-heading--no-underline title"
-      />
-      <SfProperty
-        name="Shipping method"
-        :value="th.getTranslation(orderGetters.getFulfillmentMethodName(currentOrder))"
-        class="sf-property property"
-      />
-      <SfProperty
-        name="Status"
-        :value="getShipmentStatusLookup(currentOrder)"
-        class="sf-property property"
-      />
-      <SfProperty
-        name="Shiping address"
-        class="sf-property">
-        <template #value>
-          <AddressPreview :address="orderGetters.getShippingAddress(currentOrder)" />
-        </template>
-      </SfProperty>
-    </div>
-    <div class="highlighted highlighted--total">
-      <SfHeading
-        :title="$t('Payment')"
-        :level="3"
-        class="sf-heading--left sf-heading--no-underline title"
-      />
-      <SfProperty
-        name="Payment method"
-        :value="orderGetters.getPaymentMethod(currentOrder)"
-        class="sf-property property"
-      />
-      <SfProperty
-        name="Billing address"
-        class="sf-property">
-        <template #value>
-          <AddressPreview :address="orderGetters.getPaymentAddress(currentOrder)" />
-        </template>
-      </SfProperty>
-    </div>
-    <div class="highlighted highlighted--total" v-if="orderGetters.getSubTotal(currentOrder) !== 0">
-      <SfHeading
-        :title="$t('Order Summary')"
-        :level="3"
-        class="sf-heading--left sf-heading--no-underline title"
-      />
-      <SfProperty
-        name="Subtotal"
-        :value="$n(orderGetters.getSubTotal(currentOrder), 'currency')"
-        class="sf-property property"
-      />
-      <div v-for="tax in orderGetters.getTaxes(currentOrder)">
-        <SfProperty
-          :name="th.getTranslation(orderGetters.getTaxName(tax))"
-          :value="$n(orderGetters.getTaxTotal(tax), 'currency')"
-          class="sf-property property"
-        />
-      </div>
-      <SfProperty
-        :name="$t('Shipping')"
-        :value="$n(orderGetters.getShippingPrice(currentOrder), 'currency')"
-        class="sf-property property"
-      />
-      <SfProperty
-        name="Total"
-        :value="$n(orderGetters.getTotal(currentOrder), 'currency')"
-        class="sf-property property"
-      />
-      <SfProperty
-            v-if="getTotalDiscountsAmount(currentOrder) > 0"
-            :name="$t('Total savings')"
-            :value="$n(getTotalDiscountsAmount(currentOrder), 'currency')"
-            class="sf-property property"
-          />
-    </div>
-  </div>
-  <div v-else>
-    <div v-if="totalOrders === 0" class="no-orders">
-      <p class="no-orders__title">{{ $t('You currently have no orders') }}</p>
-      <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
-    </div>
-    <div v-else>
+
     <SfTabs
       key="order-history"
       :open-tab="1"
@@ -150,59 +7,220 @@
     >
       <SfTab
         :title="`My  orders (${totalOrders})`">
-        <SfTable class="orders">
-          <SfTableHeading>
-            <SfTableHeader
-              v-for="historyTableHeader in historyTableHeaders"
-              :key="historyTableHeader"
-            >{{ historyTableHeader }}</SfTableHeader>
-            <SfTableHeader class="orders__element--right" />
-          </SfTableHeading>
-          <SfTableRow v-for="order in orders" :key="ordersHistoryGetters.getId(order)">
-            <SfTableData v-e2e="'order-number'">{{ ordersHistoryGetters.getNumber(order) }}</SfTableData>
-            <SfTableData>{{ ordersHistoryGetters.getDate(order) }}</SfTableData>
-            <SfTableData>{{ $n(ordersHistoryGetters.getPrice(order), 'currency') }}</SfTableData>
-            <SfTableData>
-              <span :class="getStatusTextClass(order)">{{ getOrderStatusLookup(order) }}</span>
-            </SfTableData>
-            <SfTableData class="orders__view orders__element--right">
-              <SfButton class="sf-button--text desktop-only" @click="getOrderDetails(order)">
-                {{ $t('View details') }}
-              </SfButton>
-            </SfTableData>
-          </SfTableRow>
-        </SfTable>
-        <LazyHydrate on-interaction>
-          <SfPagination
-            v-if="!loading"
-            class="orders__pagination"
-            v-show="pagination.totalPages > 1"
-            :current="pagination.currentPage"
-            :total="pagination.totalPages"
-            :visible="5"
+        <template v-if="!isOrderSelected">
+          <div v-if="totalOrders === 0" class="no-orders">
+            <p class="no-orders__title">{{ $t('You currently have no orders') }}</p>
+            <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
+         </div>
+         <div v-else>
+            <SfTable  class="orders">
+              <SfTableHeading>
+                <SfTableHeader
+                  v-for="historyTableHeader in historyTableHeaders"
+                  :key="historyTableHeader"
+                >{{ historyTableHeader }}</SfTableHeader>
+                <SfTableHeader class="orders__element--right" />
+              </SfTableHeading>
+              <SfTableRow v-for="order in orders" :key="ordersHistoryGetters.getId(order)">
+                <SfTableData v-e2e="'order-number'">{{ ordersHistoryGetters.getNumber(order) }}</SfTableData>
+                <SfTableData>{{ ordersHistoryGetters.getDate(order) }}</SfTableData>
+                <SfTableData>{{ $n(ordersHistoryGetters.getPrice(order), 'currency') }}</SfTableData>
+                <SfTableData>
+                  <span :class="getStatusTextClass(order)">{{ getOrderStatusLookup(order) }}</span>
+                </SfTableData>
+                <SfTableData class="orders__view orders__element--right">
+                  <SfButton class="sf-button--text" @click="getOrderDetails(order)">
+                    {{ $t('View details') }}
+                  </SfButton>
+                </SfTableData>
+              </SfTableRow>
+            </SfTable>
+            <LazyHydrate on-interaction>
+              <SfPagination
+                v-if="!loading"
+                class="orders__pagination"
+                v-show="pagination.totalPages > 1"
+                :current="pagination.currentPage"
+                :total="pagination.totalPages"
+                :visible="5"
+              />
+            </LazyHydrate>
+            <div v-show="pagination.totalPages > 1"
+              class="orders__show-on-page">
+              <span class="orders__show-on-page__label">{{ $t('Show on page') }}</span>
+              <LazyHydrate on-interaction>
+                <SfSelect
+                  :value="pagination && pagination.itemsPerPage ? pagination.itemsPerPage.toString() : ''"
+                  class="orders__items-per-page"
+                  @input="th.changeItemsPerPage"
+                >
+                  <SfSelectOption
+                    v-for="option in pagination.pageOptions"
+                    :key="option"
+                    :value="option"
+                    class="orders__items-per-page__option"
+                  >
+                    {{ option }}
+                  </SfSelectOption>
+                </SfSelect>
+              </LazyHydrate>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="grid">
+            <SfButton class="sf-button--text all-orders" @click="isOrderSelected = false">Back to all orders</SfButton>
+            <SfHeading
+                  title="Order Details"
+                  :level="2"
+                  class="sf-heading--left"
+            />
+          </div>
+
+          <div class="highlighted highlighted--total">
+            <SfProperty
+              name="Order Number"
+              :value="orderGetters.getNumber(currentOrder)"
+              class="sf-property sf-property--full-width"
+            />
+            <SfProperty
+              name="Date"
+              :value="orderGetters.getDate(currentOrder)"
+              class="sf-property sf-property--full-width"
+            />
+            <SfProperty
+              name="Status"
+              :value="getOrderStatusLookup(currentOrder)"
+              :class="getStatusTextClass(currentOrder)"
+              class="sf-property sf-property--full-width"
+            />
+            <SfProperty
+              name="Total"
+              :value="$n(orderGetters.getPrice(currentOrder), 'currency')"
+              class="sf-property sf-property--full-width property-large"
+            />
+          </div>
+          <SfHeading
+                :title="`Product items`"
+                :level="3"
+                class="sf-heading--left sf-heading--no-underline title"
           />
-        </LazyHydrate>
-        <div
-          v-show="pagination.totalPages > 1"
-          class="orders__show-on-page">
-          <span class="orders__show-on-page__label">{{ $t('Show on page') }}</span>
-          <LazyHydrate on-interaction>
-            <SfSelect
-              :value="pagination && pagination.itemsPerPage ? pagination.itemsPerPage.toString() : ''"
-              class="orders__items-per-page"
-              @input="th.changeItemsPerPage"
-            >
-              <SfSelectOption
-                v-for="option in pagination.pageOptions"
-                :key="option"
-                :value="option"
-                class="orders__items-per-page__option"
-              >
-                {{ option }}
-              </SfSelectOption>
-            </SfSelect>
-          </LazyHydrate>
-        </div>
+          <SfTable class="sf-table--bordered table">
+            <SfTableHeading class="table__row">
+              <SfTableHeader class="table__header table__image">Item</SfTableHeader>
+              <SfTableHeader
+                v-for="tableHeader in tableHeaders"
+                :key="tableHeader"
+                class="table__header"
+                :class="{ table__description: tableHeader === 'Description' }"
+                >{{ tableHeader }}
+              </SfTableHeader>
+            </SfTableHeading>
+            <SfTableRow v-for="(item, i) in orderGetters.getProducts(currentOrder)" :key="i" class="table__row">
+            <SfTableData class="table__image">
+                <SfImage
+                  :src="addBasePath(orderGetters.getProductImage(item))"
+                  :alt="orderGetters.getProductName(item)"
+                  data-testid="product-image-table-data"
+                />
+              </SfTableData>
+              <SfTableData class="table__description">
+                <nuxt-link :to="localePath(orderGetters.getProductLink(item))">
+                  {{orderGetters.getProductName(item)}}
+                </nuxt-link>
+              </SfTableData>
+              <SfTableData class="table__data">
+                <SfPrice
+                  class="product-price"
+                  :regular="orderGetters.getProductPrice(item).regular && $n(orderGetters.getProductPrice(item).regular, 'currency')"
+                  :special="orderGetters.getProductPrice(item).special && $n(orderGetters.getProductPrice(item).special, 'currency')"
+                />
+              </SfTableData>
+              <SfTableData class="table__data">{{orderGetters.getProductQty(item)}}</SfTableData>
+              <SfTableData class="table__data">{{$n(orderGetters.getProductTotal(item), 'currency')}}</SfTableData>
+            </SfTableRow>
+          </SfTable>
+          <div class="grid">
+            <div>
+                <SfHeading
+                  :title="$t('Shipping')"
+                  :level="3"
+                  class="sf-heading--left sf-heading--no-underline title"
+                />
+                <SfProperty
+                  name="Shipping method"
+                  :value="currentOrderShipping.method"
+                  class="sf-property property"
+                />
+                <SfProperty
+                  name="Status"
+                  :value="currentOrderShipping.status"
+                  class="sf-property property"
+                />
+                <SfProperty
+                  name="Shiping address"
+                  class="sf-property">
+                  <template #value>
+                    <AddressPreview :address="currentOrderShipping.address" />
+                  </template>
+                </SfProperty>
+            </div>
+            <div>
+              <SfHeading
+                  :title="$t('Payment')"
+                  :level="3"
+                  class="sf-heading--left sf-heading--no-underline title"
+                />
+                <SfProperty
+                  name="Payment method"
+                  :value="currentOrderPayment.method"
+                  class="sf-property property"
+                />
+                <SfProperty
+                  name="Billing address"
+                  class="sf-property">
+                  <template #value>
+                    <AddressPreview :address="orderGetters.getPaymentAddress(currentOrder)" />
+                  </template>
+                </SfProperty>
+            </div>
+          </div>
+          <div class="highlighted" v-if="orderGetters.getSubTotal(currentOrder) !== 0">
+            <SfHeading
+              :title="$t('Order Summary')"
+              :level="3"
+              class="sf-heading--left sf-heading--no-underline title"
+            />
+            <SfProperty
+              name="Subtotal"
+              :value="$n(orderGetters.getSubTotal(currentOrder), 'currency')"
+              class="sf-property sf-property--full-width"
+            />
+            <div v-for="(tax, index) in orderGetters.getTaxes(currentOrder)" :key="index">
+              <SfProperty
+                :name="th.getTranslation(orderGetters.getTaxName(tax))"
+                :value="$n(orderGetters.getTaxTotal(tax), 'currency')"
+                class="sf-property sf-property--full-width"
+              />
+            </div>
+            <SfProperty
+              :name="$t('Shipping')"
+              :value="$n(orderGetters.getShippingPrice(currentOrder), 'currency')"
+              class="sf-property sf-property--full-width"
+            />
+            <SfProperty
+              name="Total"
+              :value="$n(orderGetters.getTotal(currentOrder), 'currency')"
+              class="sf-property sf-property--full-width property-large"
+            />
+            <SfProperty
+                  v-if="getTotalDiscountsAmount(currentOrder) > 0"
+                  :name="$t('Total savings')"
+                  :value="$n(getTotalDiscountsAmount(currentOrder), 'currency')"
+                  class="sf-property sf-property--full-width property-saving"
+                />
+          </div>
+        </template>
        </Sftab>
       </Sftabs>
     </div>
@@ -283,9 +301,7 @@ export default {
     const getOrderStatusLookup = (order) => {
       return getLookupValue('OrderStatus', orderGetters.getStatus(order));
     };
-    const getShipmentStatusLookup = (order) => {
-      return getLookupValue('ShipmentStatus', orderGetters.getShipmentStatus(order));
-    };
+
     const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistory.value, facetsFromUrl.itemsPerPage, facetsFromUrl.page));
 
     const getTotalDiscountsAmount = (order) => {
@@ -294,19 +310,34 @@ export default {
       const totals = cartGetters.getTotals(cart);
       return totals?.discount + itemsDiscountsAmount;
     };
+
+    const currentOrder = computed(() => orderByNumber?.value);
+    const shippingMethod = computed(() => orderGetters.getFulfillmentMethod(currentOrder.value));
+    const currentOrderShipping = computed(() => ({
+      method: th.getTranslation(shippingMethod?.value?.displayName, shippingMethod?.value?.name),
+      address: orderGetters.getShippingAddress(currentOrder.value),
+      status: getLookupValue('OrderStatus', orderGetters.getStatus(currentOrder.value))
+    }));
+    const paymentMethod = computed(() => orderGetters.getPaymentMethod(currentOrder.value));
+    const currentOrderPayment = computed(() => ({
+      method: th.getTranslation(paymentMethod?.value?.displayName, paymentMethod?.value?.name),
+      address: orderGetters.getPaymentAddress(currentOrder.value)
+    }));
+
     return {
       orders: computed(() => ordersHistoryGetters.getOrdersHistory(orderHistory?.value)),
       totalOrders: computed(() => ordersHistoryGetters.getOrdersTotal(orderHistory?.value)),
       getStatusTextClass,
       orderGetters,
       ordersHistoryGetters,
-      currentOrder: computed(() => orderByNumber?.value),
+      currentOrder,
+      currentOrderShipping,
+      currentOrderPayment,
       getOrderDetails,
       isOrderSelected,
       th,
       getOrderStatusLookup,
       addBasePath,
-      getShipmentStatusLookup,
       tableHeaders: ['Description', 'Unit Price', 'Quantity', 'Subtotal'],
       historyTableHeaders: ['Order Number', 'Date', 'Total', 'Status'],
       pagination,
@@ -358,7 +389,14 @@ img.sf-image.sf-image-loaded{
   }
 }
 .all-orders {
-  --button-padding: var(--spacer-base) 0;
+  margin-bottom: var(--spacer-sm);
+}
+
+.grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .highlighted {
@@ -366,32 +404,37 @@ img.sf-image.sf-image-loaded{
   width: 100%;
   background-color: var(--c-light);
   padding: var(--spacer-sm);
-  --property-value-font-size: var(--font-size--base);
-  --property-name-font-size: var(--font-size--base);
+  margin-top: var(--spacer-sm);
   &:last-child {
     margin-bottom: 0;
   }
   ::v-deep .sf-property__name {
     white-space: nowrap;
   }
-  &--total {
-    margin-bottom: var(--spacer-sm);
-  }
   @include for-desktop {
-    padding: var(--spacer-xl);
-    --property-name-font-size: var(--font-size--lg);
-    --property-name-font-weight: var(--font-weight--medium);
+    padding: var(--spacer-base);
+  }
+
+  .property-large {
+    border-top: var(--c-white) 1px solid;
+    margin-top: var(--spacer-xs);
+    padding-top: var(--spacer-xs);
     --property-value-font-size: var(--font-size--lg);
-    --property-value-font-weight: var(--font-weight--semibold);
+    --property-name-font-size: var(--font-size--lg);
+    --property-name-font-weight: var(--font-weight--semibold);
+  }
+  .property-saving {
+    --property-color: var(--c-primary);
   }
 }
+
 .title {
   --heading-padding: var(--spacer-xl) 0 var(--spacer-base);
   --heading-title-font-weight: var(--font-weight--bold);
   @include for-desktop {
     --heading-title-font-size: var(--h3-font-size);
     --heading-title-font-weight: var(--font-weight--semibold);
-    --heading-padding: var(--spacer-xl) 0;
+    --heading-padding: var(--spacer-xs) 0;
   }
 }
 .table {

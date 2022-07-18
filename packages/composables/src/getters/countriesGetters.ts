@@ -9,7 +9,7 @@ function getCountry(countries: CountryItem[], isoCode: string): CountryItem {
 
 function getCountryName(countries: CountryItem[], isoCode: string): string {
   const country = getCountry(countries, isoCode);
-  return country?.name;
+  return country?.name ?? isoCode;
 }
 
 function getCountryRegion(countries: CountryItem[], countryIsoCode: string, regionIsoCode: string): RegionItem {
@@ -19,7 +19,7 @@ function getCountryRegion(countries: CountryItem[], countryIsoCode: string, regi
 
 function getCountryRegionName(countries: CountryItem[], countryIsoCode: string, regionIsoCode: string): string {
   const region = getCountryRegion(countries, countryIsoCode, regionIsoCode);
-  return region?.name;
+  return region?.name ?? regionIsoCode;
 }
 
 function getRegions(countries: CountryItem[], country: string): RegionItem[] {
