@@ -91,6 +91,7 @@
             <SfProperty
               name="Status"
               :value="getOrderStatusLookup(currentOrder)"
+              :class="getStatusTextClass(currentOrder)"
               class="sf-property sf-property--full-width"
             />
             <SfProperty
@@ -317,8 +318,9 @@ const pagination = computed(() => ordersHistoryGetters.getPagination(orderHistor
       address: orderGetters.getShippingAddress(currentOrder.value),
       status: getLookupValue('OrderStatus', orderGetters.getStatus(currentOrder.value))
     }));
+    const paymentMethod = computed(() => orderGetters.getPaymentMethod(currentOrder.value));
     const currentOrderPayment = computed(() => ({
-      method: th.getTranslation(orderGetters.getPaymentMethod(currentOrder.value)?.displayName),
+      method: th.getTranslation(paymentMethod?.value?.displayName, paymentMethod?.value?.name),
       address: orderGetters.getPaymentAddress(currentOrder.value)
     }));
 
