@@ -6,46 +6,12 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
         <template v-if="isAuthenticated">
-          <div class="form__radio-group" >
-            <SfRadio
-              v-for="item in addresses"
-              :key="item.id"
-              v-model="form.addressId"
-              :label="item.addressName"
-              :value="item.id"
-              name="billingAddress"
-              class="form__radio billing"
-              @input="updateAddress"
-            >
-              <template #label="{ label }">
-                <div class="sf-radio__label billing__label">
-                  <div>
-                   {{ label }}
-                  </div>
-                  <SfButton
-                    class="sf-button--text billing__action desktop-only"
-                    :class="{ 'shipping__action--is-active': isOpen[item.id] }"
-                    type="button"
-                    @click="(isOpen = { ...isOpen, [item.id]: !isOpen[item.id] })"
-                  ><SfIcon
-                    icon="more"
-                    size="22px"
-                    color="black"
-                  />
-                  </SfButton>
-                </div>
-              </template>
-              <template  #description>
-                <div class="sf-radio__description billing__description">
-                  <transition name="sf-fade">
-                    <div v-if="isOpen[item.id]" class="billing__info">
-                      <AddressPreview :address="item" />
-                    </div>
-                  </transition>
-                </div>
-              </template>
-            </SfRadio>
-          </div>
+
+          <AddressSelector 
+            :addresses="addresses" 
+            :selected="billingAddressId"
+            @input="updateAddress" />
+
           <template v-if="isOpen.addingAddress">
             <SfHeading
               :level="4"
@@ -59,7 +25,7 @@
 
                 <AddressForm :form="addressForm" />
 
-                <div class="form__action">
+                <div class="form__action-bar">
                   <SfButton
                     type="button"
                     class="form__action-button--secondary color-light sf-button"
@@ -67,7 +33,7 @@
                       {{ $t('Cancel') }}
                   </SfButton>
                   <SfButton
-                    class="form__action-button--primary sf-button sf-button--primary"
+                    class="form__action-button--primary sf-button color-primary"
                     :disabled="loadingAddresses">
                     Save address
                   </SfButton>
@@ -100,7 +66,7 @@
              <SfButton
                   class="sf-button--text"
                   @click="editGuestAddress">
-                Edit address
+                Edit billing address
             </SfButton>
            </template>
             <form
@@ -111,7 +77,7 @@
                 :form="addressForm"
                 :showName="false"
               />
-              <div class="form__action">
+              <div class="form__action-bar">
                 <SfButton
                   type="button"
                   v-if="isBilling"
@@ -126,7 +92,7 @@
                 </SfButton>
               </div>
             </form>
-          </ValidationObserver>
+         </ValidationObserver>
         </template>
 
     <div v-show="isBilling">
@@ -139,26 +105,24 @@
       <VsfPaymentProvider @status="isPaymentMethod = true"/>
 
     </div>
-    <div class="summary">
-        <div class="summary__group">
-          <div v-e2e="'payment-summary-buttons'" class="summary__action">
+    <div class="form">
+      <div v-e2e="'payment-summary-buttons'" class="form__action-bar">
             <SfButton
               type="button"
-              class="sf-button color-secondary summary__back-button"
+              class="form__action-button--secondary sf-button color-secondary"
               @click="goBack"
             >
               {{ $t('Go back') }}
             </SfButton>
             <SfButton
               :disabled="loadingCart || !isPaymentMethod || !isBilling"
-              class="summary__action-button"
+              class="form__action-button"
               @click="goNext"
             >
               {{ $t('Review order') }}
             </SfButton>
-          </div>
-        </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -173,10 +137,11 @@ import {
   SfLink
 } from '@storefront-ui/vue';
 import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
-import { useCart, useUser, useUserAddresses, cartGetters } from '@vue-storefront/orc-vsf';
+import { useCart, useUser, useUserAddresses, userAddressGetters, cartGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import AddressPreview from '~/components/AddressPreview';
 import AddressForm from '~/components/Checkout/AddressForm';
+import AddressSelector from '~/components/AddressSelector';
 import { ValidationObserver, extend } from 'vee-validate';
 
 export default {
@@ -192,6 +157,7 @@ export default {
     ValidationObserver,
     AddressPreview,
     AddressForm,
+    AddressSelector,
     VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
   },
   setup(props, context) {
@@ -201,13 +167,11 @@ export default {
     const { isAuthenticated } = useUser();
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
     const billingAddress = computed(() => activePayment.value?.billingAddress);
+    const billingAddressId = computed(() => billingAddress.value?.id);
     const isBilling = computed(() => cartGetters.isBillingReady(cart.value));
     const { addresses, load: loadAddresses, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
     const isOpen = ref({ addingAddress: false, editingAddress: !isAuthenticated.value && !isBilling.value });
   
-
-
-
     const onUpdate = async (updatedPayment, onComplete) => {
       const updatedCart = {
         ...cart.value,
@@ -256,7 +220,6 @@ export default {
         } else {
           const address = addresses.value.find(x => x.addressName === addressForm.value.addressName);
           if (address) {
-            form.value.addressId = address?.id;
             updateCartBillingAddress(address);
           }
 
@@ -298,18 +261,12 @@ export default {
       phoneNumber: address?.phoneNumber || ''
     });
 
-    const resetRadiosForm = (value) => ({
-       addressId: value
-    })
-
-    const form = ref(resetRadiosForm(activePayment.value?.billingAddress?.id));
     const addressForm = ref(resetForm(activePayment.value?.billingAddress));
     const isAddressFormReady = computed(() => cartGetters.isAddressReady(addressForm.value));
 
     const addNewAddress = () => {
       addressForm.value = resetForm();
       isOpen.value.addingAddress = true;
-      form.value.addressId = null;
     };
 
     const editGuestAddress = () => {
@@ -320,12 +277,20 @@ export default {
     const cancelEditing = () => {
       isOpen.value.editingAddress = false;
       isOpen.value.addingAddress = false;
-      form.value = resetRadiosForm(activePayment.value?.billingAddress?.id);
     }
 
-    onSSR(async () => Promise.allSettled([
-      loadAddresses()
-    ]));
+    onSSR(async () => {
+      if (isAuthenticated.value) {
+        await loadAddresses();
+      }
+
+      if(!isBilling.value) {
+        const address = userAddressGetters.getDefaultBilling(addresses.value) ?? cartGetters.getActiveShipment(cart.value)?.address;
+        if(address) {
+          await updateCartBillingAddress(address);
+        }
+      }
+    });
 
     watch(isAuthenticated, () => {
       if (isAuthenticated.value) {
@@ -335,12 +300,12 @@ export default {
 
     return {
       billingAddress,
+      billingAddressId,
       isAuthenticated,
       isBilling,
       goBack,
       goNext,
       router,
-      form,
       isOpen,
       isPaymentMethod,
       loadingCart,
@@ -361,47 +326,17 @@ export default {
 <style lang="scss" scoped>
 .form {
   --button-width: 100%;
-  &__radio {
-    margin: var(--spacer-xs) 0;
-    &:last-of-type {
-      margin: var(--spacer-xs) 0 var(--spacer-xl);
-    }
-    ::v-deep .sf-radio__container {
-      --radio-container-padding: var(--spacer-xs);
-      @include for-desktop {
-        --radio-container-padding: var(--spacer-xs) var(--spacer-xs)
-        var(--spacer-xs) var(--spacer-sm);
-      }
-    }
-  }
+
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     --button-width: auto;
+  }
 
-    &__radio-group {
-      flex: 0 0 calc(100% + var(--spacer-sm));
-      margin: 0 calc(-1 * var(--spacer-sm));
-    }
-  }
-  &__element {
-    margin: 0 0 var(--spacer-xl) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-xl);
-        }
-      }
-    }
-  }
-  &__action {
+  &__action-bar {
+    margin-top: var(--spacer-xs);
+    margin-bottom: var(--spacer-xl);
     @include for-desktop {
       flex: 0 0 100%;
       display: flex;
@@ -409,71 +344,25 @@ export default {
   }
   &__action-button {
     &--secondary {
-      margin: var(--spacer-xl) 0 var(--spacer-sm);
-      @include for-desktop {
-        order: -1;
-        text-align: left;
-        margin: 0 var(--spacer-xl) 0 0;
-      }
+        margin: 0 0 var(--spacer-sm) 0;
+        @include for-desktop {
+          order: -1;
+          text-align: left;
+          margin: 0 var(--spacer-xl) 0 0;
+        }
     }
     &--add-address {
       width: 100%;
       margin: 0;
       @include for-desktop {
-        margin: 0 0 var(--spacer-lg) 0;
+        margin: var(--spacer-sm) 0 var(--spacer-lg) 0;
         width: auto;
       }
     }
   }
 }
 
-.billing {
-  &__label {
-    display: flex;
-    justify-content: space-between;
-  }
-  &__description {
-    --radio-description-margin: 0;
-    --radio-description-font-size: var(--font-xs);
-  }
-}
-
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
-}
-
-.summary {
-  &__action {
-    @include for-desktop {
-      display: flex;
-      margin: var(--spacer-xl) 0 0 0;
-    }
-  }
-  &__action-button {
-    margin: 0;
-    width: 100%;
-    margin: var(--spacer-sm) 0 0 0;
-    @include for-desktop {
-      margin: 0 var(--spacer-xl) 0 0;
-      width: auto;
-    }
-    &--secondary {
-      @include for-desktop {
-        text-align: right;
-      }
-    }
-  }
-  &__back-button {
-    margin: var(--spacer-xl) 0 0 0;
-    width: 100%;
-    @include for-desktop {
-      margin: 0 var(--spacer-xl) 0 0;
-      width: auto;
-    }
-    color:  var(--c-white);
-    &:hover {
-      color:  var(--c-white);
-    }
-  }
 }
 </style>

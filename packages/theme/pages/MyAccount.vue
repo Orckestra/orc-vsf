@@ -24,9 +24,6 @@
           <BillingDetails />
         </SfContentPage>
 
-        <SfContentPage title="My newsletter">
-          <MyNewsletter />
-        </SfContentPage>
       </SfContentCategory>
 
       <SfContentCategory title="Order details">
@@ -46,7 +43,6 @@ import { useUser, useCart, useWishlist } from '@vue-storefront/orc-vsf';
 import MyProfile from './MyAccount/MyProfile';
 import ShippingDetails from './MyAccount/ShippingDetails';
 import BillingDetails from './MyAccount/BillingDetails';
-import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import {
   mapMobileObserver,
@@ -61,7 +57,6 @@ export default {
     MyProfile,
     ShippingDetails,
     BillingDetails,
-    MyNewsletter,
     OrderHistory
   },
   middleware: [

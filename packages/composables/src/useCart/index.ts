@@ -94,10 +94,14 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
     return context.$occ.api.updateCart({ ...params, userToken, cart, cartName: currentCart.name });
   },
 
-  updatePaymentMethod: (context: Context, { currentCart, paymentMethod }) => {
+  updatePaymentMethod: async (context: Context, { currentCart, paymentMethod }) => {
     const userToken = getUserToken(context);
     const payment: any = cartGetters.getActivePayment(currentCart);
-    return context.$occ.api.updatePaymentMethod({ userToken, paymentId: payment.id, ...paymentMethod, cartName: currentCart.name });
+    if (payment.paymentStatus !== 'New') {
+      await context.$occ.api.removePayment({ userToken, paymentId: payment.id, cartName: currentCart.name });
+      await context.$occ.api.addPayment({ userToken, cartName: currentCart.name });
+    }
+    return await context.$occ.api.updatePaymentMethod({ userToken, paymentId: payment.id, ...paymentMethod, cartName: currentCart.name });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

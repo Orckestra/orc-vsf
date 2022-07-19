@@ -1,6 +1,6 @@
 <template>
   <div class="address-preview" v-if="address">
-    <span v-if="address.addressName" class="sf-property__value">{{address.addressName}}</span>
+    <span v-if="address.addressName && showName" class="sf-property__value">{{address.addressName}}</span>
     <span v-if="address.firstName">{{`${address.firstName} ${address.lastName}`}}</span>
     <span v-if="address.city">{{`${address.city}, ${address.line1 ? address.line1 : ''} ${address.line2 ? address.line2 : ''}`}}</span>
     <span v-if="address.regionCode">{{`${countriesGetters.getCountryRegionName(countries, address.countryCode, address.regionCode)}, ${address.postalCode}`}}</span>
@@ -19,6 +19,10 @@ export default {
     address: {
       type: Object,
       default: null
+    },
+    showName: {
+      type: Boolean,
+      default: true
     }
   },
   setup() {

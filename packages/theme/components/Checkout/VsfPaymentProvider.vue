@@ -21,7 +21,7 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref, computed } from '@nuxtjs/composition-api';
+import { ref, computed, watch } from '@nuxtjs/composition-api';
 import { usePaymentMethods, useCart, cartGetters, paymentMethodGetters } from '@vue-storefront/orc-vsf'; 
 import { useUiHelpers } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
@@ -42,6 +42,7 @@ export default {
     const defaultMethod = computed(() => paymentMethodGetters.getDefaultMethod(onsiteMethods.value))
     const payment = computed(() => cartGetters.getActivePayment(cart.value));
     const selectedMethod = computed(() => payment.value?.paymentMethod?.id);
+    const isBilling = computed(() => cartGetters.isBillingReady(cart.value));
     const th = useUiHelpers();
 
     if(selectedMethod) {
@@ -58,12 +59,13 @@ export default {
       if (!onsiteMethods.value) {
         await load({providerName: 'Onsite payment'});
       }
-
-      if(payment && !payment.value?.paymentMethod) {
-        await updatePaymentMethod({paymentMethod: defaultMethod.value})
-      }
     });
 
+    watch(isBilling, () => {
+      if (isBilling.value && payment?.value && !payment.value.paymentMethod) {
+        updatePaymentMethod({paymentMethod: defaultMethod.value});
+      }
+    });
 
     return {
       methods: validMethods,

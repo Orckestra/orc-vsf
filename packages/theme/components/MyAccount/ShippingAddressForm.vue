@@ -179,17 +179,18 @@
 
       <div class="form__action-bar">
         <SfButton
-          class="action-button sf-button"
-          :disabled="loading"
-          >
-          {{ $t(isNew ? 'Add the address' : 'Update the address') }}
-        </SfButton>
-        <SfButton
-          class="action-button color-secondary cancel-button sf-button"
+          class="action-button color-light cancel-button sf-button"
           @click.prevent="cancelEdit"
         >
           {{ $t('Cancel') }}
         </SfButton>
+        <SfButton
+          class="action-button sf-button"
+          :disabled="loading"
+          >
+          {{ $t(isNew ? 'Add address' : 'Update address') }}
+        </SfButton>
+
       </div>
     </form>
   </ValidationObserver>
