@@ -194,6 +194,7 @@ import CartItemsTable from '../../components/Checkout/CartItemsTable';
 import AddressPreview from '../../components/AddressPreview';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
 import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/orc-vsf';
+import { useUiNotification } from '~/composables';
 
 export default {
   name: 'CartPreview',
@@ -211,8 +212,9 @@ export default {
   },
   setup(props, context) {
     const th = useUiHelpers();
+    const { send: sendNotification } = useUiNotification();
     const { cart, load: loadCart, loading: cartLoading, setCart } = useCart();
-    const { order, make, loading: makeOrderLoading } = useMakeOrder();
+    const { order, make, loading: makeOrderLoading, error: orderError } = useMakeOrder();
     const router = useRouter();
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const isActiveShippingTaxable = computed(() => cartGetters.isActiveShippingTaxable(cart.value));
@@ -249,10 +251,22 @@ export default {
 
     const processOrder = async () => {
       await make();
-      const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
-      router.push(context.root.localePath(thankYouPath));
-      setCart(null);
-      loadCart();
+      if(orderError.value.make) {
+        console.log(orderError.value.make);
+         sendNotification({
+          id: Symbol('complete-order_error'),
+          message: 'Cannot complete your order. Please check your payment and address informations, and try again.',
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'Checkout process'
+        });
+      } else {
+        const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
+        router.push(context.root.localePath(thankYouPath));
+        setCart(null);
+        loadCart();
+      }
     };
 
     onSSR(async () => {
