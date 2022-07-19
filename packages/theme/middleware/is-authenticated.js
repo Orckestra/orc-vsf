@@ -4,9 +4,7 @@ export default (context) => {
   const token = context.$cookies.get('vsf-occ-data');
 
   try {
-    const { isGuest } = token;
-
-    if (isGuest !== false) {
+    if (!token || token.isGuest !== false) {
       context.app.router.push('/');
       context.redirect('/en-CA');
     }

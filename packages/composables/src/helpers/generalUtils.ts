@@ -12,7 +12,7 @@ export const getUserToken = (context: Context): any => {
     const app = context.$occ.config.app;
     return app.$cookies.get('vsf-occ-data');
   } catch {
-    // Ignore
+    // ignore
   }
-  return {};
+  return { isGuest: true };
 };

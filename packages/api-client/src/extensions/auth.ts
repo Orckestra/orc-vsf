@@ -1,5 +1,6 @@
 import { ApiClientExtension } from '@vue-storefront/core';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 
 const AUTH_COOKIE_NAME: string = 'vsf-occ-token';
 const DATA_COOKIE_NAME: string = 'vsf-occ-data';
@@ -30,6 +31,7 @@ export const tokenExtension: ApiClientExtension = {
             } catch (ex) {
               console.log(ex);
             }
+            res.setHeader('Token-Expired', 'true');
             return {};
           },
           setCustomerToken: (tokenData) => {
@@ -64,7 +66,14 @@ export const tokenExtension: ApiClientExtension = {
               // reminder: data in JWT token can be decoded without a secure key, but can be verified only via a secure key.
               res.cookie(AUTH_COOKIE_NAME, token, authOptions);
               // customerId and IsGuest property is public
-              res.cookie(DATA_COOKIE_NAME, tokenData, publicDataOptions);
+              res.cookie(
+                DATA_COOKIE_NAME,
+                JSON.stringify(tokenData),
+                publicDataOptions
+              );
+
+              // remove header Token-Expired if someone asked before
+              delete req.headers['token-expired'];
             } catch (ex) {
               console.log(ex);
             }
