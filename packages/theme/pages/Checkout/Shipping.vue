@@ -20,11 +20,11 @@
         />
         <template v-if="isAuthenticated">
 
-          <AddressSelector 
+          <AddressSelector
             :addresses="addresses"
-            :selected="shipmentAddressId" 
+            :selected="shipmentAddressId"
             @input="updateAddress" />
-        
+
           <template v-if="isOpen.addingAddress">
             <SfHeading
               :level="4"
@@ -157,7 +157,7 @@ export default {
 
     const isOpen = ref({ addingAddress: false });
     const form = ref({
-      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId,
+      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId
     });
 
     const resetForm = (address) => ({
@@ -183,7 +183,7 @@ export default {
 
     const cancelEditing = () => {
       isOpen.value.addingAddress = false;
-    }
+    };
 
     const onUpdate = async (updatedShipment, onComplete) => {
       const updatedCart = {
@@ -217,7 +217,7 @@ export default {
       try {
         const address = addressForm.value;
 
-        if(!addresses.value || addresses.value.length === 0) {
+        if (!addresses.value || addresses.value.length === 0) {
           address.isPreferredBilling = true;
           address.isPreferredShipping = true;
         }
@@ -279,14 +279,14 @@ export default {
     const handleFormSubmit = () => {
       if (isShippingMethod.value && !isAuthenticated.value) {
         const updatedShipment = {
-        ...shipment.value,
+          ...shipment.value
         };
         updatedShipment.address = addressForm.value;
         onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
       } else {
-        router.push(context.root.localePath({ name: 'payment' }))
+        router.push(context.root.localePath({ name: 'payment' }));
       }
-     };
+    };
 
     onSSR(async () => Promise.allSettled([
       loadUserShipping(),

@@ -47,7 +47,7 @@
 <script>
 import { SfButton, SfRadio, SfIcon } from '@storefront-ui/vue';
 import AddressPreview from '~/components/AddressPreview';
-import { ref  } from '@nuxtjs/composition-api';
+import { ref } from '@nuxtjs/composition-api';
 export default {
   name: 'AddressSelector',
   components: {
@@ -68,18 +68,17 @@ export default {
   },
   methods: {
     changeHandler(value) {
-      this.$emit("change", value);
+      this.$emit('change', value);
     },
     inputHandler(value) {
-      this.$emit("input", value);
-    },
+      this.$emit('input', value);
+    }
   },
-  setup(props, { emit }) {
+  setup() {
     const isOpen = ref({});
-
     return {
       isOpen
-    }
+    };
   }
 };
 </script>

@@ -1,7 +1,5 @@
 import { Ref, computed } from '@nuxtjs/composition-api';
 import { sharedRef, configureFactoryParams, Logger } from '@vue-storefront/core';
-import { Context } from '@vue-storefront/core/lib/src/types';
-
 import { UsePaymentMethodsFactoryParams, UsePaymentMethods, UsePaymentMethodsErrors } from '../types';
 
 export function usePaymentMethodsFactory <PAYMENTMETHOD>(

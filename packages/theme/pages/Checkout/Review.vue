@@ -251,9 +251,9 @@ export default {
 
     const processOrder = async () => {
       await make();
-      if(orderError.value.make) {
+      if (orderError.value.make) {
         console.log(orderError.value.make);
-         sendNotification({
+        sendNotification({
           id: Symbol('complete-order_error'),
           message: 'Cannot complete your order. Please check your payment and address informations, and try again.',
           type: 'danger',

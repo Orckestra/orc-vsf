@@ -17,7 +17,7 @@ export default async function updatePaymentMethod(context, params) {
   const body = {
     paymentMethodId: id,
     paymentProviderName
-  }
+  };
   const { data } = await context.client.put(url.href, body);
 
   if (data && data.shipments && data.shipments.length) {

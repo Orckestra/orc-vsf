@@ -208,17 +208,17 @@ export type Coupon = {
 };
 
 export declare const enum PaymentMethodType {
-    CreditCard, 
-    SavedCreditCard, 
-    GiftCertificate, 
-    PurchaseOrder, 
-    CashCard, 
-    Cash, 
-    Debit, 
-    OnSiteCredit, 
-    OnSiteDebit, 
-    Cheque, 
-    OnSiteUnspecified, 
+    CreditCard,
+    SavedCreditCard,
+    GiftCertificate,
+    PurchaseOrder,
+    CashCard,
+    Cash,
+    Debit,
+    OnSiteCredit,
+    OnSiteDebit,
+    Cheque,
+    OnSiteUnspecified,
     Paypal
 }
 

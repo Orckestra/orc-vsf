@@ -7,8 +7,8 @@
     />
         <template v-if="isAuthenticated">
 
-          <AddressSelector 
-            :addresses="addresses" 
+          <AddressSelector
+            :addresses="addresses"
             :selected="billingAddressId"
             @input="updateAddress" />
 
@@ -60,7 +60,7 @@
           </template>
         </template>
         <template v-else>
-         <ValidationObserver v-slot="{ handleSubmit: hS }"> 
+         <ValidationObserver v-slot="{ handleSubmit: hS }">
            <template v-if="isBilling && !isOpen.editingAddress">
              <AddressPreview :address="billingAddress"/>
              <SfButton
@@ -142,7 +142,8 @@ import { onSSR } from '@vue-storefront/core';
 import AddressPreview from '~/components/AddressPreview';
 import AddressForm from '~/components/Checkout/AddressForm';
 import AddressSelector from '~/components/AddressSelector';
-import { ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver } from 'vee-validate';
+import { useUiNotification } from '~/composables';
 
 export default {
   name: 'ReviewOrder',
@@ -162,6 +163,7 @@ export default {
   },
   setup(props, context) {
     const router = useRouter();
+    const { send: sendNotification } = useUiNotification();
     const { cart, error, update, loading: loadingCart } = useCart();
     const isPaymentMethod = ref(false);
     const { isAuthenticated } = useUser();
@@ -171,7 +173,23 @@ export default {
     const isBilling = computed(() => cartGetters.isBillingReady(cart.value));
     const { addresses, load: loadAddresses, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
     const isOpen = ref({ addingAddress: false, editingAddress: !isAuthenticated.value && !isBilling.value });
-  
+
+    const resetForm = (address) => ({
+      addressName: address?.addressName || '',
+      firstName: address?.firstName || '',
+      lastName: address?.lastName || '',
+      line1: address?.line1 || '',
+      line2: address?.line2 || '',
+      city: address?.city || '',
+      regionCode: address?.regionCode || '',
+      postalCode: address?.postalCode || '',
+      countryCode: address?.countryCode || '',
+      phoneNumber: address?.phoneNumber || ''
+    });
+
+    const addressForm = ref(resetForm(activePayment.value?.billingAddress));
+    const isAddressFormReady = computed(() => cartGetters.isAddressReady(addressForm.value));
+
     const onUpdate = async (updatedPayment, onComplete) => {
       const updatedCart = {
         ...cart.value,
@@ -201,22 +219,21 @@ export default {
       onUpdate({ ...activePayment.value, billingAddress }, () => {});
     };
 
-  const updateAddress = (value) => updateCartBillingAddress(addresses.value.find(x => x.id === value));
+    const updateAddress = (value) => updateCartBillingAddress(addresses.value.find(x => x.id === value));
 
-  const saveAddress = async () => {
-      try {
-        if(isAuthenticated.value) {
+    const saveAddress = async () => {
+      if (isAuthenticated.value) {
 
-          await addAddress({ address: addressForm.value });
-          if (userAddressError.value.addAddress) {
-            sendNotification({
-              id: Symbol('user_updated_error'),
-              message: userAddressError.value.addAddress.message,
-              type: 'danger',
-              icon: 'error',
-              persist: false,
-              title: 'User Address'
-            });
+        await addAddress({ address: addressForm.value });
+        if (userAddressError.value.addAddress) {
+          sendNotification({
+            id: Symbol('user_updated_error'),
+            message: userAddressError.value.addAddress.message,
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'User Address'
+          });
         } else {
           const address = addresses.value.find(x => x.addressName === addressForm.value.addressName);
           if (address) {
@@ -232,11 +249,9 @@ export default {
             title: 'User Address'
           });
         }
+
       } else {
         updateCartBillingAddress(addressForm.value);
-      }
-    } catch (error) {
-        console.error(error);
       }
     };
 
@@ -247,22 +262,6 @@ export default {
     const goNext = () => {
       router.push(context.root.localePath({ name: 'review' }));
     };
-
-    const resetForm = (address) => ({
-      addressName: address?.addressName || '',
-      firstName: address?.firstName || '',
-      lastName: address?.lastName || '',
-      line1: address?.line1 || '',
-      line2: address?.line2 || '',
-      city: address?.city || '',
-      regionCode: address?.regionCode || '',
-      postalCode: address?.postalCode || '',
-      countryCode: address?.countryCode || '',
-      phoneNumber: address?.phoneNumber || ''
-    });
-
-    const addressForm = ref(resetForm(activePayment.value?.billingAddress));
-    const isAddressFormReady = computed(() => cartGetters.isAddressReady(addressForm.value));
 
     const addNewAddress = () => {
       addressForm.value = resetForm();
@@ -277,16 +276,16 @@ export default {
     const cancelEditing = () => {
       isOpen.value.editingAddress = false;
       isOpen.value.addingAddress = false;
-    }
+    };
 
     onSSR(async () => {
       if (isAuthenticated.value) {
         await loadAddresses();
       }
 
-      if(!isBilling.value) {
+      if (!isBilling.value) {
         const address = userAddressGetters.getDefaultBilling(addresses.value) ?? cartGetters.getActiveShipment(cart.value)?.address;
-        if(address) {
+        if (address) {
           await updateCartBillingAddress(address);
         }
       }

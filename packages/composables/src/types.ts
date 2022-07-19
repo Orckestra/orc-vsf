@@ -329,7 +329,6 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends Pl
   loading: ComputedProperty<boolean>;
 }
 
-
 /*
 ORDER
 */
