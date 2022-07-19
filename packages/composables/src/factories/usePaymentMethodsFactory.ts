@@ -6,15 +6,15 @@ export function usePaymentMethodsFactory <PAYMENTMETHOD>(
   factoryParams: UsePaymentMethodsFactoryParams<PAYMENTMETHOD>
 ): UsePaymentMethods<PAYMENTMETHOD> {
 
-  return function usePaymentMethods () {
+  return function usePaymentMethods (id: string) {
 
     /* @private */
     const _factoryParams = configureFactoryParams(factoryParams);
 
     /* @readonly */
-    const methods: Ref<PAYMENTMETHOD[] | null> = sharedRef(null, 'usePaymentMethods-methods');
-    const loading: Ref<boolean> = sharedRef(false, 'usePaymentMethods-loading');
-    const error: Ref<UsePaymentMethodsErrors> = sharedRef({ load: null}, 'usePaymentMethods-error');
+    const methods: Ref<PAYMENTMETHOD[] | null> = sharedRef(null, `usePaymentMethods-methods-${id}`);
+    const loading: Ref<boolean> = sharedRef(false, `usePaymentMethods-loading-${id}`);
+    const error: Ref<UsePaymentMethodsErrors> = sharedRef({ load: null}, `usePaymentMethods-error-${id}`);
 
     /* @public */
     async function load ({ providerName }): Promise<void> {

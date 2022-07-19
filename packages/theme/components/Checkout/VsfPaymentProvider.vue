@@ -36,10 +36,14 @@ export default {
 
   setup(props, { emit }) {
 
-    const { methods: onsiteMethods, load } = usePaymentMethods('Onsite');
+    const { methods: onsiteMethods, load: loadOnsiteMethods } = usePaymentMethods('OnsiteMethods');
+    const { methods: bamboraMethods, load: loadBamboraMethods } = usePaymentMethods('BamboraMethods');
     const { cart, updatePaymentMethod, loading } = useCart();
-    const validMethods = computed(() => paymentMethodGetters.getValidPaymentMethods(onsiteMethods.value));
-    const defaultMethod = computed(() => paymentMethodGetters.getDefaultMethod(onsiteMethods.value));
+    const validMethods = computed(() => { 
+      const allMethods = bamboraMethods.value.concat(onsiteMethods.value);
+      return paymentMethodGetters.getValidPaymentMethods(allMethods);
+    });
+    const defaultMethod = computed(() => paymentMethodGetters.getDefaultMethod(validMethods.value));
     const payment = computed(() => cartGetters.getActivePayment(cart.value));
     const selectedMethod = computed(() => payment.value?.paymentMethod?.id);
     const isBilling = computed(() => cartGetters.isBillingReady(cart.value));
@@ -57,7 +61,10 @@ export default {
 
     onSSR(async () => {
       if (!onsiteMethods.value) {
-        await load({providerName: 'Onsite payment'});
+        await loadOnsiteMethods({providerName: 'Onsite payment'});
+      }
+      if (!bamboraMethods.value) {
+        await loadBamboraMethods({providerName: 'Bambora'});
       }
     });
 

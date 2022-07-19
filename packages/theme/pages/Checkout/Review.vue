@@ -356,7 +356,7 @@ export default {
    margin: var(--spacer-sm) 0;
 }
 .cart-saving {
-   margin: 0 0 var(--spacer-sm) 0;
+   margin: 0 0 var(--spacer-lg) 0;
 }
 .summary {
   &__content {

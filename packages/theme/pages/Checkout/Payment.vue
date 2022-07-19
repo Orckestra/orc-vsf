@@ -140,7 +140,7 @@ import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
 import { useCart, useUser, useUserAddresses, userAddressGetters, cartGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import AddressPreview from '~/components/AddressPreview';
-import AddressForm from '~/components/Checkout/AddressForm';
+import AddressForm from '~/components/AddressForm';
 import AddressSelector from '~/components/AddressSelector';
 import { ValidationObserver } from 'vee-validate';
 import { useUiNotification } from '~/composables';

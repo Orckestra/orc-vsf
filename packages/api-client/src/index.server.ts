@@ -39,6 +39,7 @@ import completeCheckout from './api/carts/completeCheckout';
 import getPaymentProviders from './api/providers/getPaymentProviders';
 import addPayment from './api/carts/addPayment';
 import removePayment from './api/carts/removePayment';
+import initializePayment from './api/carts/initializePayment';
 import updatePaymentMethod from './api/carts/updatePaymentMethod';
 import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
 import findOrders from './api/orders/findOrders';
@@ -99,6 +100,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getPaymentMethods,
     addPayment,
     removePayment,
+    initializePayment,
     updatePaymentMethod,
     getFulfillmentMethods,
     completeCheckout,

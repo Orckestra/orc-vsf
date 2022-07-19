@@ -395,7 +395,7 @@ export interface UsePaymentMethodsInterface<PAYMENTMETHOD> {
 }
 
 export interface UsePaymentMethods<PAYMENTMETHOD> {
-  (): UsePaymentMethodsInterface<PAYMENTMETHOD>;
+  (id: string): UsePaymentMethodsInterface<PAYMENTMETHOD>;
 }
 
 export interface UsePaymentMethodsGetters<PAYMENTMETHOD> {
