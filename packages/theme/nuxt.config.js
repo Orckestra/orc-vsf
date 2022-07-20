@@ -182,25 +182,16 @@ module.exports = {
       theme_color: '#5ECE7B'
     },
     workbox: {
+      dev: false,
       enabled: true,
-      cachingExtensions: '@/plugins/workbox-range-request.js',
       config: {
         debug: true,
-      }
-      // runtimeCaching: [{
-      //   urlPattern: /\/api/,
-      //   method: "POST",
-      //   //handler: "StaleWhileRevalidate",
-      //   options: {
-      //     cacheName: "api",
-      //     expiration: {
-      //       maxEntries: 64,
-      //       maxAgeSeconds: 24 * 60 * 60, // 24 hours
-      //     },
-      //   },
-      // },]
+      },
+      cachingExtensions: '@/plugins/workbox-range-request.js',
+      offline: true,
+      offlineStrategy: 'NetworkFirst',
     }
   },
- 
+
   telemetry: false
 };
