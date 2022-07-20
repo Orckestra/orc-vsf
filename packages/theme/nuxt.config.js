@@ -187,6 +187,7 @@ module.exports = {
       config: {
         debug: true,
       },
+      // remove if you want to disable cache api
       cachingExtensions: '@/plugins/workbox-range-request.js',
       offline: true,
       offlineStrategy: 'NetworkFirst',
