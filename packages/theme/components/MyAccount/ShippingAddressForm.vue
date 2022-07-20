@@ -5,7 +5,7 @@
       @submit.prevent="handleSubmit(submitForm)"
     >
       <AddressForm :form="form" />
-     
+
       <SfCheckbox
         v-model="form.isPreferredShipping"
         name="isPreferredShipping"
@@ -37,7 +37,7 @@ import { ref } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { SfButton, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver } from 'vee-validate';
-import { useUserAddresses, countriesGetters, useCountries } from '@vue-storefront/orc-vsf';
+import { useUserAddresses } from '@vue-storefront/orc-vsf';
 import AddressForm from '~/components/AddressForm';
 
 export default {
@@ -75,7 +75,6 @@ export default {
       phoneNumber: '',
       isPreferredShipping: false
     });
-
 
     if (!props.isNew) {
       form.value = { ...props.address };

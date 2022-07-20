@@ -39,7 +39,7 @@ export default {
     const { methods: onsiteMethods, load: loadOnsiteMethods } = usePaymentMethods('OnsiteMethods');
     const { methods: bamboraMethods, load: loadBamboraMethods } = usePaymentMethods('BamboraMethods');
     const { cart, updatePaymentMethod, loading } = useCart();
-    const validMethods = computed(() => { 
+    const validMethods = computed(() => {
       const allMethods = bamboraMethods.value.concat(onsiteMethods.value);
       return paymentMethodGetters.getValidPaymentMethods(allMethods);
     });
