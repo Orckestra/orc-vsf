@@ -5,7 +5,7 @@ export default async function addUserAddress(context, params) {
 
   const { api, scope } = context.config;
   const { address } = params;
-  const { id, isGuest } = context.config.auth.getCustomerToken();;
+  const { id, isGuest } = context.config.auth.getCustomerToken();
 
   if (id && !isGuest) {
     const url = new URL(

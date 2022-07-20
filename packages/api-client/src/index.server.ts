@@ -46,13 +46,13 @@ function onCreate(settings) {
     baseURL: settings.api.url,
     headers: {
       'X-AUTH': settings.api.authToken,
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   });
 
   return {
     config: settings,
-    client,
+    client
   };
 }
 
@@ -95,8 +95,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     findOrders,
     getOrderByNumber,
     getOrderLookups
-  }
-  extensions: [tokenExtension],
+  },
+  extensions: [tokenExtension]
 });
 
 export { createApiClient };

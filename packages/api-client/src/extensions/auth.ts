@@ -1,9 +1,8 @@
 import { ApiClientExtension } from '@vue-storefront/core';
 import jwt from 'jsonwebtoken';
-import { v4 as uuidv4 } from 'uuid';
 
-const AUTH_COOKIE_NAME: string = 'vsf-occ-token';
-const DATA_COOKIE_NAME: string = 'vsf-occ-data';
+const AUTH_COOKIE_NAME = 'vsf-occ-token';
+const DATA_COOKIE_NAME = 'vsf-occ-data';
 
 export const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
@@ -43,23 +42,23 @@ export const tokenExtension: ApiClientExtension = {
               const { myAccount } = configuration;
               // 1 week
               const expireInSeconds: number = 60 * 60 * 24 * 7;
-              const cookieExpiration: any = Date.now() + expireInSeconds * 1000;
+              const cookieExpiration: any = Date.now() + (expireInSeconds * 1000);
 
               const token: string = jwt.sign(
                 tokenData,
                 myAccount.secretPassphrase,
                 {
-                  expiresIn: expireInSeconds,
+                  expiresIn: expireInSeconds
                 }
               );
 
               const authOptions = {
                 expires: new Date(cookieExpiration),
                 httpOnly: true,
-                secure: req.secure,
+                secure: req.secure
               };
               const publicDataOptions = {
-                expires: new Date(cookieExpiration),
+                expires: new Date(cookieExpiration)
               };
 
               // the JWT token is HTTP only to protect from XSS
@@ -77,9 +76,9 @@ export const tokenExtension: ApiClientExtension = {
             } catch (ex) {
               console.log(ex);
             }
-          },
-        },
+          }
+        }
       };
-    },
-  }),
+    }
+  })
 };

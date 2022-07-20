@@ -5,7 +5,7 @@ export default async function addCoupon(context, params) {
 
   const { api, scope, cdnDamProviderConfig } = context.config;
   const { cartName = 'Default', couponCode } = params;
-  const { id: customerId } = context.config.auth.getCustomerToken();;
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   const url = new URL(

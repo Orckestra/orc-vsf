@@ -3,7 +3,7 @@ export default async function updateUserAddress(context, params) {
 
   const { api } = context.config;
   const { address, addressId } = params;
-  const { id, isGuest } = context.config.auth.getCustomerToken();;
+  const { id, isGuest } = context.config.auth.getCustomerToken();
 
   if (id && !isGuest) {
     const url = new URL(

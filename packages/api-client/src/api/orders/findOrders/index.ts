@@ -1,4 +1,3 @@
-import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function findOrders(context, params) {
@@ -6,7 +5,7 @@ export default async function findOrders(context, params) {
   const { userToken, locale, page = 1, itemsPerPage = 12, filterValues, filterMember, sorting } = params;
   const maximumItems = itemsPerPage;
   const startingIndex = (page - 1) * maximumItems;
-  const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   const url = new URL(

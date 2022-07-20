@@ -1,12 +1,11 @@
 
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getFulfillmentMethods(context, params) {
   const { api, scope } = context.config;
   const { cartName = 'Default' } = params;
 
-  const { id: customerId } = context.config.auth.getCustomerToken();;
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   const url = new URL(

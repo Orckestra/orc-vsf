@@ -4,7 +4,7 @@
 export default async function deleteUserAddress(context, params) {
   const { api } = context.config;
   const { addressId } = params;
-  const { id, isGuest } = context.config.auth.getCustomerToken();;
+  const { id, isGuest } = context.config.auth.getCustomerToken();
 
   if (id && !isGuest) {
     const url = new URL(

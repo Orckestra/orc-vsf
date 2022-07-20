@@ -1,6 +1,4 @@
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types
 export default async function getUser(context, params) {
 
   const { api, scope, auth } = context.config;

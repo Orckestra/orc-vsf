@@ -5,7 +5,6 @@ import {
   UseWishlistFactoryParams
 } from '@vue-storefront/core';
 import { Wishlist, WishlistItem, Product } from '@vue-storefront/orc-vsf-api';
-import { getUserToken } from '../helpers/generalUtils';
 import { getVariantId } from '../helpers/productUtils';
 
 const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
