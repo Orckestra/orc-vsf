@@ -1,17 +1,5 @@
 <template>
   <div class="cart-saving" v-if="hasDiscounts">
-  <SfAccordion :multiple="false" transition="" showChevron>
-    <SfAccordionItem header="Total">
-      <template #header="{accordionClick}">
-        <div @click="accordionClick" :style="{cursor: 'pointer'}">
-          <SfProperty
-            v-if="hasDiscounts"
-            :name="$t('Total savings')"
-            :value="$n(totalDiscountsAmount, 'currency')"
-            class="sf-property--full-width sf-property--large property-saving-total"
-          />
-        </div>
-      </template>
       <SfProperty
         v-if="itemsDiscountsAmount > 0"
         :name="$t('Items savings')"
@@ -27,14 +15,17 @@
             :class="['sf-property--full-width', 'sf-property--small property']"
           />
       </div>
-    </SfAccordionItem>
-  </SfAccordion>
+      <SfProperty
+            v-if="hasDiscounts"
+            :name="$t('Total savings')"
+            :value="$n(totalDiscountsAmount, 'currency')"
+            class="sf-property--full-width sf-property--large property-saving-total"
+      />
   </div>
-
 </template>
 
 <script>
-import { SfHeading, SfProperty, SfAccordion } from '@storefront-ui/vue';
+import { SfHeading, SfProperty } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
 import { useCart, cartGetters} from '@vue-storefront/orc-vsf';
 
@@ -42,8 +33,7 @@ export default {
   name: 'CartSaving',
   components: {
     SfHeading,
-    SfProperty,
-    SfAccordion
+    SfProperty
   },
   setup() {
     const { cart } = useCart();

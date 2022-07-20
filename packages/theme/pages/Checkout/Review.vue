@@ -131,7 +131,7 @@
         >
         </SfProperty>
       </div>
-      <div class="smartphone-only">
+      <div>
         <CartSaving class="cart-saving"/>
       </div>
       <div class="smartphone-only">
@@ -339,6 +339,9 @@ export default {
 }
 .cart-coupon {
    margin: var(--spacer-sm) 0;
+}
+.cart-saving {
+   margin: 0 0 var(--spacer-sm) 0;
 }
 .summary {
   &__content {
