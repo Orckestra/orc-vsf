@@ -7,7 +7,6 @@ import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
 import getCart from './api/carts/getCart';
 import updateCart from './api/carts/updateCart';
-import mergeCarts from './api/carts/mergeCarts';
 import addCartItem from './api/carts/addCartItem';
 import removeCartItem from './api/carts/removeCartItem';
 import updateCartItem from './api/carts/updateCartItem';
@@ -46,6 +45,8 @@ import findOrders from './api/orders/findOrders';
 import getOrderByNumber from './api/orders/getOrderByNumber';
 import getOrderLookups from './api/metadata/getOrderLookups';
 
+import { tokenExtension } from './extensions/auth';
+
 function onCreate(settings) {
   const client = axios.create({
     baseURL: settings.api.url,
@@ -69,7 +70,6 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getCategory,
     getCart,
     updateCart,
-    mergeCarts,
     addCartItem,
     removeCartItem,
     updateCartItem,
@@ -107,9 +107,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     findOrders,
     getOrderByNumber,
     getOrderLookups
-  }
+  },
+  extensions: [tokenExtension]
 });
 
-export {
-  createApiClient
-};
+export { createApiClient };

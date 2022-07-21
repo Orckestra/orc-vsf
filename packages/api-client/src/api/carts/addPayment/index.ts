@@ -4,9 +4,9 @@ import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function addPayment(context, params) {
 
-  const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
-  const { userToken, cartName = 'Default' } = params;
-  const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
+  const { api, scope, cdnDamProviderConfig } = context.config;
+  const { cartName = 'Default' } = params;
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   const url = new URL(

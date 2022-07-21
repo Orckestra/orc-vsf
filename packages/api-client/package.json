@@ -20,6 +20,7 @@
     "@vue-storefront/core": "~2.5.12",
     "axios": "^0.26.1",
     "crypto-js": "^4.1.1",
+    "jsonwebtoken": "^8.5.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

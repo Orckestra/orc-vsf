@@ -1,12 +1,12 @@
 import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
-import { parseUserToken } from '../../../helpers/generalUtils';
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getCartLineItems(context, params) {
 
-  const { api, scope, myAccount, cdnDamProviderConfig } = context.config;
-  const { userToken, cartName = 'Default' } = params;
-  const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
+  const { api, scope, cdnDamProviderConfig } = context.config;
+  const { cartName = 'Default' } = params;
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   const url = new URL(
