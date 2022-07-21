@@ -190,17 +190,17 @@ export default {
 
     const areAddressEqual = (addr1, addr2) => {
 
-      if(!addr1 || !addr2) return false;
-      
-       return addr1.firstName === addr2.firstName &&
+      if (!addr1 || !addr2) return false;
+
+      return addr1.firstName === addr2.firstName &&
               addr1.lastName === addr2.lastName &&
               addr1.line1 === addr2.line1 &&
               addr1.line2 === addr2.line2 &&
               addr1.city === addr2.city &&
               addr1.countryCode === addr2.countryCode &&
               addr1.regionCode === addr2.regionCode &&
-              addr1.postalCode == addr2.postalCode
-    }
+              addr1.postalCode === addr2.postalCode;
+    };
     const sameAsShipping = ref(areAddressEqual(billingAddress.value, shipmentAddress.value));
 
     const resetForm = (address) => ({
@@ -310,14 +310,14 @@ export default {
       sameAsShipping.value = areAddressEqual(billingAddress.value, shipmentAddress.value);
     };
 
-    const useShippingAddress = (value) => {
-      if(!sameAsShipping.value) {
+    const useShippingAddress = () => {
+      if (!sameAsShipping.value) {
         addressForm.value = resetForm({});
         isOpen.value.editingAddress = true;
       } else {
         updateCartBillingAddress(shipmentAddress.value);
       }
-    }
+    };
 
     onSSR(async () => {
       if (isAuthenticated.value) {
