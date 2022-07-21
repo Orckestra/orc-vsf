@@ -16,7 +16,7 @@ export default async function addPayment(context, params) {
 
   const { data } = await context.client.post(url.href, {});
 
-  if (data && data.shipments && data.shipments.length) {
+  if (data?.shipments?.length) {
     setCartItemsCoverImages(data.shipments[0].lineItems, cdnDamProviderConfig);
   }
 

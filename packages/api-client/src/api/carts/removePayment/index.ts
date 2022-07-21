@@ -16,7 +16,7 @@ export default async function removePayment(context, params) {
 
   const { data } = await context.client.delete(url.href);
 
-  if (data && data.shipments && data.shipments.length) {
+  if (data?.shipments?.length) {
     setCartItemsCoverImages(data.shipments[0].lineItems, cdnDamProviderConfig);
   }
 

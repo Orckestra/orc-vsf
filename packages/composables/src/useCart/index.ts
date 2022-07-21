@@ -30,14 +30,14 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
 
     let cart = await context.$occ.api.getCart({ ...params, locale, userToken });
 
-    const shipment = cart.shipments && cart.shipments.length ? cart.shipments[0] : {};
+    const shipment = cart.shipments?.[0] || {};
     const payment = cartGetters.getActivePayment(cart);
 
     if (cart && (!shipment.fulfillmentLocationId ||
       isGuidEmpty(shipment.fulfillmentLocationId))) {
       // Need to setup fulfilment location for the cart for the items inventory status
       const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
-      const location = locations && locations.length ? locations[0] : undefined;
+      const location = locations?.[0];
 
       if (location) {
         const { id, fulfillmentScheduleMode, fulfillmentScheduledTimeBeginDate, fulfillmentScheduledTimeEndDate, propertyBag, pickUpLocationId } = shipment;
