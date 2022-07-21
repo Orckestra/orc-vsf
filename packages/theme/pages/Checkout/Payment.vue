@@ -60,7 +60,18 @@
           </template>
         </template>
         <template v-else>
-         <ValidationObserver v-slot="{ handleSubmit: hS }">
+        <ValidationObserver v-slot="{ handleSubmit: hS }">
+          <div class="sameAsShipping">
+            <SfCheckbox
+              v-model="sameAsShipping"
+              :value="sameAsShipping"
+              label="Use my shipping address"
+              name="copyShippingAddress"
+              class="form__element form__checkbox"
+              @change="useShippingAddress"
+            />
+          </div>
+
            <template v-if="isBilling && !isOpen.editingAddress">
              <AddressPreview :address="billingAddress"/>
              <SfButton
@@ -134,7 +145,8 @@ import {
   SfDivider,
   SfIcon,
   SfProperty,
-  SfLink
+  SfLink,
+  SfCheckbox
 } from '@storefront-ui/vue';
 import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
 import { useCart, useUser, useUserAddresses, userAddressGetters, cartGetters } from '@vue-storefront/orc-vsf';
@@ -150,6 +162,7 @@ export default {
   components: {
     SfHeading,
     SfRadio,
+    SfCheckbox,
     SfButton,
     SfDivider,
     SfIcon,
@@ -173,6 +186,22 @@ export default {
     const isBilling = computed(() => cartGetters.isBillingReady(cart.value));
     const { addresses, load: loadAddresses, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
     const isOpen = ref({ addingAddress: false, editingAddress: !isAuthenticated.value && !isBilling.value });
+    const shipmentAddress = computed(() => cartGetters.getActiveShipment(cart.value)?.address);
+
+    const areAddressEqual = (addr1, addr2) => {
+
+      if(!addr1 || !addr2) return false;
+      
+       return addr1.firstName === addr2.firstName &&
+              addr1.lastName === addr2.lastName &&
+              addr1.line1 === addr2.line1 &&
+              addr1.line2 === addr2.line2 &&
+              addr1.city === addr2.city &&
+              addr1.countryCode === addr2.countryCode &&
+              addr1.regionCode === addr2.regionCode &&
+              addr1.postalCode == addr2.postalCode
+    }
+    const sameAsShipping = ref(areAddressEqual(billingAddress.value, shipmentAddress.value));
 
     const resetForm = (address) => ({
       addressName: address?.addressName || '',
@@ -217,6 +246,7 @@ export default {
       isOpen.value.addingAddress = false;
       isOpen.value.editingAddress = false;
       onUpdate({ ...activePayment.value, billingAddress }, () => {});
+      sameAsShipping.value = areAddressEqual(billingAddress, shipmentAddress.value);
     };
 
     const updateAddress = (value) => updateCartBillingAddress(addresses.value.find(x => x.id === value));
@@ -271,12 +301,23 @@ export default {
     const editGuestAddress = () => {
       addressForm.value = resetForm(activePayment.value?.billingAddress);
       isOpen.value.editingAddress = true;
+      sameAsShipping.value = false;
     };
 
     const cancelEditing = () => {
       isOpen.value.editingAddress = false;
       isOpen.value.addingAddress = false;
+      sameAsShipping.value = areAddressEqual(billingAddress.value, shipmentAddress.value);
     };
+
+    const useShippingAddress = (value) => {
+      if(!sameAsShipping.value) {
+        addressForm.value = resetForm({});
+        isOpen.value.editingAddress = true;
+      } else {
+        updateCartBillingAddress(shipmentAddress.value);
+      }
+    }
 
     onSSR(async () => {
       if (isAuthenticated.value) {
@@ -298,6 +339,8 @@ export default {
     });
 
     return {
+      sameAsShipping,
+      useShippingAddress,
       billingAddress,
       billingAddressId,
       isAuthenticated,
@@ -359,6 +402,10 @@ export default {
       }
     }
   }
+}
+
+.sameAsShipping {
+  margin-bottom: var(--spacer-sm);
 }
 
 .title {
