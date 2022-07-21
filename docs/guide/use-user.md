@@ -104,3 +104,21 @@ export default {
   }
 }
 ```
+
+## Authentication
+We use [JWT](https://jwt.io/) for authentication
+Token saved in cookie 'vsf-occ-token' with "HttpOnly" without access from javascript
+Data saved in cookie 'vsf-occ-data' and available from 
+
+
+### `api-client`
+Get the user with verifying in api Client use 
+```cs
+context.config.auth.getCustomerToken();
+```
+If the token is not valid, then getCustomerToken returns an empty object and sets a header "Token-Expired"
+### `theme`
+The plugin `token-expired.client.ts`
+
+If the client received the "Token-Expired," then it will reload the page, the server should generate a new guest token and return it.
+

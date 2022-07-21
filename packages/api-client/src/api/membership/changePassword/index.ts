@@ -1,10 +1,10 @@
-import { parseUserToken } from '../../../helpers/generalUtils';
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function changePassword(context, params) {
-  const { userToken, currentPassword, newPassword } = params;
-  const { api, scope, myAccount } = context.config;
-  const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
+  const { currentPassword, newPassword } = params;
+  const { api, scope } = context.config;
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   let url = new URL(`/api/customers/${scope}/${customerId}`, api.url);

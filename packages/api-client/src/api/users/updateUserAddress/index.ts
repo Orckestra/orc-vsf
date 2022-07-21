@@ -1,10 +1,9 @@
-import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function updateUserAddress(context, params) {
 
-  const { api, myAccount } = context.config;
-  const { userToken, address, addressId } = params;
-  const { id, isGuest } = parseUserToken(userToken, myAccount.secretPassphrase);
+  const { api } = context.config;
+  const { address, addressId } = params;
+  const { id, isGuest } = context.config.auth.getCustomerToken();
 
   if (id && !isGuest) {
     const url = new URL(

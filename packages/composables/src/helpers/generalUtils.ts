@@ -1,21 +1,18 @@
-import {
-  Context
-} from '@vue-storefront/core';
+import { Context } from '@vue-storefront/core';
 export const isGuidEmpty = (guid: string): boolean => {
-  return (!guid ||
+  return (
+    !guid ||
     guid === '00000000-0000-0000-0000-000000000000' ||
-    guid === '00000000000000000000000000000000');
+    guid === '00000000000000000000000000000000'
+  );
 };
 
-export const getUserToken = (context: Context): string => {
-  const app = context.$occ.config.app;
-  const appKey = app.$config.appKey;
-  return app.$cookies.get(appKey + '_token');
+export const getUserToken = (context: Context): any => {
+  try {
+    const app = context.$occ.config.app;
+    return app.$cookies.get('vsf-occ-data');
+  } catch {
+    // ignore
+  }
+  return { isGuest: true };
 };
-
-export const setUserToken = (context: Context, userToken: string, opts: any = {}): void => {
-  const app = context.$occ.config.app;
-  const appKey = app.$config.appKey;
-  app.$cookies.set(appKey + '_token', userToken, opts);
-};
-

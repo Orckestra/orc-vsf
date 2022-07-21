@@ -1,4 +1,3 @@
-import { parseUserToken } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function updateUser(context, params) {
@@ -15,10 +14,9 @@ export default async function updateUser(context, params) {
     phoneExtensionWork,
     phoneNumber,
     phoneNumberWork,
-    username,
-    userToken } = params;
-  const { api, scope, myAccount } = context.config;
-  const { id: customerId } = parseUserToken(userToken, myAccount.secretPassphrase);
+    username } = params;
+  const { api, scope } = context.config;
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   const url = new URL(
