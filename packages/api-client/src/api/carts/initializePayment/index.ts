@@ -3,7 +3,7 @@ import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function initializePayment(context, params) {
 
-  const { api, scope, cdnDamProviderConfig, myAccount } = context.config;
+  const { api, scope, cdnDamProviderConfig } = context.config;
   const { cartName = 'Default', paymentId, body } = params;
   const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
