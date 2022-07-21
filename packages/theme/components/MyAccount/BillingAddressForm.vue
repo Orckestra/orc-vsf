@@ -7,9 +7,9 @@
       <AddressForm :form="form" />
 
       <SfCheckbox
-        v-model="form.isPreferredShipping"
-        name="isPreferredShipping"
-        label="Set as preferred shipping address"
+        v-model="form.isPreferredBilling"
+        name="isPreferredBilling"
+        label="Set as preferred billing address"
         class="form__element form__checkbox"
       />
 
@@ -41,7 +41,7 @@ import { useUserAddresses } from '@vue-storefront/orc-vsf';
 import AddressForm from '~/components/AddressForm';
 
 export default {
-  name: 'ShippingAddressForm',
+  name: 'BillingAddressForm',
   components: {
     SfButton,
     SfCheckbox,
@@ -73,7 +73,7 @@ export default {
       postalCode: '',
       countryCode: '',
       phoneNumber: '',
-      isPreferredShipping: false
+      isPreferredBilling: false
     });
 
     if (!props.isNew) {

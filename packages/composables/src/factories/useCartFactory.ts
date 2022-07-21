@@ -3,7 +3,7 @@ import { Ref, computed } from '@nuxtjs/composition-api';
 import { sharedRef, Logger, configureFactoryParams } from '@vue-storefront/core';
 import { UseCart, UseCartErrors } from '../types';
 
-export interface UseCartFactoryParams<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any> extends FactoryParams<API> {
+export interface UseCartFactoryParams<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends PlatformApi = any> extends FactoryParams<API> {
   load: (context: Context, params: {
     customQuery?: any;
   }) => Promise<CART>;
@@ -27,6 +27,10 @@ export interface UseCartFactoryParams<CART, CART_ITEM, PRODUCT, API extends Plat
   update: (context: Context, params: {
     currentCart: CART;
     cart: CART;
+  }) => Promise<CART>;
+  updatePaymentMethod: (context: Context, params: {
+    currentCart: CART;
+    paymentMethod: PAYMENTMETHOD;
   }) => Promise<CART>;
   clear: (context: Context, params: {
     currentCart: CART;
@@ -132,6 +136,25 @@ export const useCartFactory = <CART, CART_ITEM, PRODUCT, API extends PlatformApi
       } catch (err) {
         error.value.update = err;
         Logger.error('useCart/update', err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const updatePaymentMethod = async ({ paymentMethod }) => {
+      Logger.debug('useCart.updatePaymentMethod', { cart });
+
+      try {
+        loading.value = true;
+        const updatedCart = await _factoryParams.updatePaymentMethod({
+          currentCart: cart.value,
+          paymentMethod
+        });
+        error.value.update = null;
+        cart.value = updatedCart;
+      } catch (err) {
+        error.value.update = err;
+        Logger.error('useCart/updatePaymentMethod', err);
       } finally {
         loading.value = false;
       }
@@ -260,6 +283,7 @@ export const useCartFactory = <CART, CART_ITEM, PRODUCT, API extends PlatformApi
       removeItem,
       clear,
       update,
+      updatePaymentMethod,
       updateItemQty,
       applyCoupon,
       removeCoupon,

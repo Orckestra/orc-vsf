@@ -12,7 +12,7 @@
           {{ $t('Contact details updated') }}
         </p>
 
-        <ShippingAddressForm
+        <BillingAddressForm
           :address="activeAddress"
           :isNew="isNewAddress"
           @submit="saveAddress"
@@ -26,30 +26,30 @@
       :open-tab="1"
       key="address-list"
       class="tab-orphan">
-      <SfTab title="Shipping details">
+      <SfTab title="Billing details">
         <p class="message">
-          {{ $t('Manage shipping addresses') }}
+          {{ $t('Manage billing addresses') }}
         </p>
-        <transition-group tag="div" name="fade" class="shipping-list">
+        <transition-group tag="div" name="fade" class="billing-list">
           <div
             v-for="address in addresses"
             :key="userAddressGetters.getId(address)"
-            class="shipping" :class="{'shipping__preferred': address.isPreferredShipping }">
-            <div class="shipping__content">
-              <div class="shipping__address">
+            class="billing" :class="{'billing__preferred': address.isPreferredBilling }">
+            <div class="billing__content">
+              <div class="billing__address">
                 <AddressPreview :address="address" :showName="true" />
                 <SfButton
-                  v-if="!address.isPreferredShipping"
+                  v-if="!address.isPreferredBilling"
                   class="sf-button--text sf-button"
                   @click="setDefault(address)">
                   {{'Set as default'}}
                 </SfButton>
-                 <span v-else class="shipping__preferred-label">
-                    (preferred shipping address)
+                 <span v-else class="billing__preferred-label">
+                    (preferred billing address)
                 </span>
               </div>
             </div>
-            <div class="shipping__actions">
+            <div class="billing__actions">
               <SfIcon
                 icon="cross"
                 color="gray"
@@ -88,22 +88,22 @@ import {
   SfIcon
 } from '@storefront-ui/vue';
 import AddressPreview from '~/components/AddressPreview';
-import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
+import BillingAddressForm from '~/components/MyAccount/BillingAddressForm';
 import { useUserAddresses, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 
 export default {
-  name: 'ShippingDetails',
+  name: 'BillingDetails',
   components: {
     SfTabs,
     SfButton,
     SfIcon,
-    ShippingAddressForm,
+    BillingAddressForm,
     AddressPreview
   },
   setup() {
-    const { addresses, load: loadUserAddresses, addAddress, deleteAddress, updateAddress, setDefaultShipping } = useUserAddresses();
+    const { addresses, load: loadUserAddresses, addAddress, deleteAddress, updateAddress, setDefaultBilling } = useUserAddresses();
     const edittingAddress = ref(false);
     const activeAddress = ref(undefined);
     const isNewAddress = computed(() => !activeAddress.value);
@@ -120,7 +120,7 @@ export default {
 
     const removeAddress = address => deleteAddress({ address });
 
-    const setDefault = address => setDefaultShipping({ address });
+    const setDefault = address => setDefaultBilling({ address });
 
     const saveAddress = async ({ form, onComplete, onError }) => {
       try {
@@ -164,10 +164,10 @@ export default {
   font-size: var(--font-size--base);
   margin: 0 0 var(--spacer-base);
 }
-.shipping-list {
+.billing-list {
   margin-bottom: var(--spacer-base);
 }
-.shipping {
+.billing {
   display: flex;
   padding: var(--spacer-xs) var(--spacer-xs);
   border-top: 1px solid var(--c-light);

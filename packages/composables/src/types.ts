@@ -12,7 +12,7 @@ import {
   CustomQuery,
   PlatformApi
 } from '@vue-storefront/core/lib/src/types';
-import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
+import { FulfillmentMethodType, Payment } from '@vue-storefront/orc-vsf-api';
 
 export type TODO = any;
 
@@ -286,7 +286,7 @@ export interface UseCartErrors {
   applyCoupon: Error;
   removeCoupon: Error;
 }
-export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any> extends Composable<API> {
+export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends PlatformApi = any> extends Composable<API> {
   cart: ComputedProperty<CART>;
   setCart(cart: CART): void;
   addItem(params: {
@@ -303,6 +303,9 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, API extends PlatformApi = any
   }): Promise<void>;
   update: (params: {
     cart: CART;
+  }) => Promise<void>;
+  updatePaymentMethod: (params: {
+    paymentMethod: PAYMENTMETHOD;
   }) => Promise<void>;
   updateItemQty(params: {
     product: CART_ITEM;
@@ -368,7 +371,40 @@ export interface CartGetters<CART, CART_ITEM> {
   getFormattedPrice: (price: number) => string;
   getCoupons: (cart: CART) => AgnosticCoupon[];
   getDiscounts: (cart: CART) => AgnosticDiscount[];
+  getActivePayment: (cart: CART) => Payment;
   [getterName: string]: (element: any, options?: any) => unknown;
+}
+
+/*
+UsePaymentMethods
+*/
+export interface UsePaymentMethodsErrors {
+  load: Error | null;
+  change: Error | null;
+}
+
+export interface UsePaymentMethodsFactoryParams<PAYMENTMETHOD> extends FactoryParams {
+  load(context: Context, { providerName }): Promise<PAYMENTMETHOD>
+}
+
+export interface UsePaymentMethodsInterface<PAYMENTMETHOD> {
+  load(context: any, { providerName }): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  methods: ComputedProperty<PAYMENTMETHOD[]>;
+  error: ComputedProperty<UsePaymentMethodsErrors>;
+}
+
+export interface UsePaymentMethods<PAYMENTMETHOD> {
+  (id: string): UsePaymentMethodsInterface<PAYMENTMETHOD>;
+}
+
+export interface UsePaymentMethodsGetters<PAYMENTMETHOD> {
+  getMethods(): PAYMENTMETHOD[];
+}
+
+export interface PaymentMethodGetters<PAYMENTMETHOD> {
+  getDefaultMethod(methods: PAYMENTMETHOD[]): PAYMENTMETHOD;
+  getValidPaymentMethods(methods: PAYMENTMETHOD[]): PAYMENTMETHOD[];
 }
 
 /*

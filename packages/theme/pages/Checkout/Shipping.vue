@@ -12,60 +12,26 @@
         :selected="form.shippingMethod"
         @change="updateShippingMethod"
       />
-      <template v-if="isShipping">
+      <template v-if="isShippingMethod">
         <SfHeading
           :level="4"
           :title="'Shipping address'"
           class="sf-heading--left sf-heading--no-underline title"
         />
         <template v-if="isAuthenticated">
-          <div class="form__radio-group" >
-            <SfRadio
-              v-for="item in addresses"
-              :key="item.id"
-              v-model="form.addressId"
-              :label="item.addressName"
-              :value="item.id"
-              name="shippingAddress"
-              class="form__radio shipping"
-              @input="updateAddress"
-            >
-              <template #label="{ label }">
-                <div class="sf-radio__label shipping__label">
-                  <div>
-                   {{ label }}
-                  </div>
-                  <SfButton
-                    class="sf-button--text shipping__action desktop-only"
-                    :class="{ 'shipping__action--is-active': isOpen[item.id] }"
-                    type="button"
-                    @click="(isOpen = { ...isOpen, [item.id]: !isOpen[item.id] })"
-                  ><SfIcon
-                    icon="more"
-                    size="22px"
-                    color="black"
-                  />
-                  </SfButton>
-                </div>
-              </template>
-              <template  #description="{ description }">
-                <div class="sf-radio__description shipping__description">
-                  <transition name="sf-fade">
-                    <div v-if="isOpen[item.id]" class="shipping__info">
-                      <AddressPreview :address="item" />
-                    </div>
-                  </transition>
-                </div>
-              </template>
-            </SfRadio>
-          </div>
+
+          <AddressSelector
+            :addresses="addresses"
+            :selected="shipmentAddressId"
+            @input="updateAddress" />
+
           <template v-if="isOpen.addingAddress">
             <SfHeading
               :level="4"
               :title="'Add shipping address'"
               class="sf-heading--left sf-heading--no-underline title"
             />
-            <ValidationObserver v-slot="{ handleSubmit: hS, reset }">
+            <ValidationObserver v-slot="{ handleSubmit: hS }">
               <form
                 class="form"
                 @submit.prevent="hS(saveAddress)"
@@ -73,24 +39,25 @@
                 <AddressForm :form="addressForm" />
                 <div class="form__action-bar">
                   <SfButton
-                    class="action-button sf-button form__action-button--add-address"
+                    type="button"
+                    class="form__action-button--secondary color-light sf-button"
+                    @click="cancelEditing">
+                      {{ $t('Cancel') }}
+                  </SfButton>
+                  <SfButton
+                    class="sf-button sf-button-primary"
                     :disabled="loadingFulfillmentMethods || loadingAddresses"
                   >
                     Save new address
                   </SfButton>
-    <!--              <SfButton
-                    class="action-button color-secondary cancel-button sf-button"
-                    @click.prevent="cancelEdit"
-                  >
-                    {{ $t('Cancel') }}
-                  </SfButton>-->
+
                 </div>
               </form>
             </ValidationObserver>
           </template>
           <template v-else>
             <SfButton
-              class="action-button sf-button form__action-button--add-address sf-button--pure"
+              class="sf-button form__action-button--add-address sf-button--pure"
               :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart"
               type="button"
               @click="addNewAddress"
@@ -113,20 +80,20 @@
         </template>
       </template>
       <div class="form">
-        <div class="form__action">
+        <div class="form__action-bar">
           <SfButton
-            class="sf-button color-secondary form__back-button"
+            class="form__action-button--secondary sf-button color-secondary form__back-button"
             type="button"
             @click="goBack"
           >
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShipping && !form.addressId) || !form.shippingMethod"
+            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShippingMethod && !shipmentAddressId) || !form.shippingMethod"
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Go to Payment') }}
+            {{ $t('Go to payment') }}
           </SfButton>
         </div>
       </div>
@@ -138,7 +105,6 @@
 import {
   SfHeading,
   SfButton,
-  SfRadio,
   SfIcon
 } from '@storefront-ui/vue';
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
@@ -147,8 +113,9 @@ import { onSSR } from '@vue-storefront/core';
 import { useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
-import AddressForm from '~/components/Checkout/AddressForm';
+import AddressForm from '~/components/AddressForm';
 import AddressPreview from '~/components/AddressPreview';
+import AddressSelector from '~/components/AddressSelector';
 import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
 import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api/src';
 
@@ -170,12 +137,12 @@ export default {
   components: {
     SfHeading,
     SfButton,
-    SfRadio,
+    SfIcon,
     ValidationObserver,
     AddressForm,
+    AddressSelector,
     AddressPreview,
-    VsfShippingProvider,
-    SfIcon
+    VsfShippingProvider
   },
   setup (props, context) {
     const router = useRouter();
@@ -186,11 +153,11 @@ export default {
     const { isAuthenticated } = useUser();
 
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
+    const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
     const isOpen = ref({ addingAddress: false });
     const form = ref({
-      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId,
-      addressId: shipment.value?.address?.id
+      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId
     });
 
     const resetForm = (address) => ({
@@ -207,12 +174,15 @@ export default {
     });
     const addressForm = ref(resetForm(shipment.value?.address));
 
-    const isShipping = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
+    const isShippingMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
 
     const addNewAddress = () => {
       addressForm.value = resetForm();
       isOpen.value.addingAddress = true;
-      form.value.addressId = null;
+    };
+
+    const cancelEditing = () => {
+      isOpen.value.addingAddress = false;
     };
 
     const onUpdate = async (updatedShipment, onComplete) => {
@@ -245,7 +215,13 @@ export default {
 
     const saveAddress = async () => {
       try {
-        await addAddress({ address: addressForm.value });
+        const address = addressForm.value;
+
+        if (!addresses.value || addresses.value.length === 0) {
+          address.isPreferredBilling = true;
+          address.isPreferredShipping = true;
+        }
+        await addAddress({ address });
 
         if (userAddressError.value.addAddress) {
           sendNotification({
@@ -259,7 +235,6 @@ export default {
         } else {
           const address = addresses.value.find(x => x.addressName === addressForm.value.addressName);
           if (address) {
-            form.value.addressId = address?.id;
             updateCartAddress(address);
           }
 
@@ -302,15 +277,15 @@ export default {
     const updateAddress = (value) => updateCartAddress(addresses.value.find(x => x.id === value));
 
     const handleFormSubmit = () => {
-      const updatedShipment = {
-        ...shipment.value
-      };
-
-      if (isShipping.value && !isAuthenticated.value) {
+      if (isShippingMethod.value && !isAuthenticated.value) {
+        const updatedShipment = {
+          ...shipment.value
+        };
         updatedShipment.address = addressForm.value;
+        onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
+      } else {
+        router.push(context.root.localePath({ name: 'payment' }));
       }
-
-      onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
     };
 
     onSSR(async () => Promise.allSettled([
@@ -333,12 +308,13 @@ export default {
       loadingFulfillmentMethods,
       loadingAddresses,
       loadingCart,
-      isShipping,
+      isShippingMethod,
       isOpen,
       form,
       addressForm,
       isAuthenticated,
       addNewAddress,
+      cancelEditing,
       saveAddress,
       handleFormSubmit,
       updateShippingMethod,
@@ -346,7 +322,8 @@ export default {
       goBack,
       fulfillmentMethods,
       addresses,
-      fulfillmentMethodsGetters
+      fulfillmentMethodsGetters,
+      shipmentAddressId
     };
   }
 };
@@ -355,56 +332,19 @@ export default {
 <style lang="scss" scoped>
 .form {
   --button-width: 100%;
-  &__select {
-    display: flex;
-    align-items: center;
-    --select-option-font-size: var(--font-size--lg);
-    ::v-deep .sf-select__dropdown {
-      font-size: var(--font-size--lg);
-      margin: 0;
-      color: var(--c-text);
-      font-family: var(--font-family--secondary);
-      font-weight: var(--font-weight--normal);
-    }
-  }
-  &__radio {
-    margin: var(--spacer-xs) 0;
-    &:last-of-type {
-      margin: var(--spacer-xs) 0 var(--spacer-xl);
-    }
-    ::v-deep .sf-radio__container {
-      --radio-container-padding: var(--spacer-xs);
-      @include for-desktop {
-        --radio-container-padding: var(--spacer-xs) var(--spacer-xs)
-        var(--spacer-xs) var(--spacer-sm);
-      }
-    }
-  }
+
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     --button-width: auto;
-
-    &__radio-group {
-      flex: 0 0 calc(100% + var(--spacer-sm));
-      margin: 0 calc(-1 * var(--spacer-sm));
-    }
   }
-  &__element {
-    margin: 0 0 var(--spacer-xl) 0;
+
+  &__action-bar {
+    margin-bottom: var(--spacer-xl);
     @include for-desktop {
       flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-xl);
-        }
-      }
+      display: flex;
     }
   }
   &__action {
@@ -413,41 +353,40 @@ export default {
       display: flex;
     }
   }
+
   &__action-button {
-    &--secondary {
-      @include for-desktop {
-        order: -1;
-        text-align: left;
-      }
-    }
-    &--add-address {
-      width: 100%;
       margin: 0;
+      width: 100%;
+      margin: var(--spacer-sm) 0 0 0;
       @include for-desktop {
-        margin: 0 0 var(--spacer-lg) 0;
+        margin: 0 var(--spacer-xl) 0 0;
         width: auto;
       }
-    }
-  }
-  &__back-button {
-    margin: var(--spacer-xl) 0 var(--spacer-sm);
-    &:hover {
-      color:  var(--c-white);
-    }
-    @include for-desktop {
-      margin: 0 var(--spacer-xl) 0 0;
-    }
-  }
-}
+      &--secondary {
+        margin: 0 0 var(--spacer-sm) 0;
+        @include for-desktop {
+          order: -1;
+          text-align: left;
+          margin: 0 var(--spacer-xl) 0 0;
+        }
+      }
 
-.shipping {
-  &__label {
-    display: flex;
-    justify-content: space-between;
-  }
-  &__description {
-    --radio-description-margin: 0;
-    --radio-description-font-size: var(--font-xs);
+      &--add-address {
+        width: 100%;
+        margin: var(--spacer-sm) 0 var(--spacer-xl) 0;
+        @include for-desktop {
+          width: auto;
+        }
+      }
+      &__back-button {
+        margin: var(--spacer-xl) 0 var(--spacer-sm);
+        &:hover {
+          color:  var(--c-white);
+        }
+        @include for-desktop {
+          margin: 0 var(--spacer-xl) 0 0;
+        }
+    }
   }
 }
 

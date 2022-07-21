@@ -231,6 +231,12 @@ function isShippingReady(cart: Cart): boolean {
   return isAddressReady(activeShipment.address);
 }
 
+function isBillingReady(cart: Cart): boolean {
+  const activePayment = getActivePayment(cart);
+  if (!activePayment) return false;
+  return isAddressReady(activePayment.billingAddress);
+}
+
 function isPaymentReady(cart: Cart): boolean {
   const activePayment = getActivePayment(cart);
   if (!activePayment) return false;
@@ -288,6 +294,8 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getActivePayment,
   isPersonalDetailsReady,
   isShippingReady,
+  isBillingReady,
+  isAddressReady,
   isPaymentReady,
   isReadyForOrder,
   getCustomer

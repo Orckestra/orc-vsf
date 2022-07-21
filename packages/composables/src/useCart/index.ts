@@ -5,13 +5,15 @@ import {
 import type {
   Cart,
   CartItem,
-  Product
+  Product,
+  PaymentMethod
 } from '@vue-storefront/orc-vsf-api';
 import { getVariantId } from '../helpers/productUtils';
 import { isGuidEmpty, getUserToken } from '../helpers/generalUtils';
 import { useCartFactory, UseCartFactoryParams } from '../factories/useCartFactory';
+import { cartGetters } from '../getters/cartGetters';
 
-const params: UseCartFactoryParams<Cart, CartItem, Product> = {
+const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
     const app = context.$occ.config.app;
@@ -23,50 +25,53 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
       Logger.debug('[OCC Storefront]: Initialize Guest User to be used for Cart');
       userToken = await context.$occ.api.initializeGuestToken();
     }
+    if (!userToken) return null;
 
-    if (userToken) {
+    let cart = await context.$occ.api.getCart({ ...params, locale });
 
-      let cart = await context.$occ.api.getCart({ ...params, locale, userToken });
+    const shipment = cart.shipments?.[0] || {};
+    const payment = cartGetters.getActivePayment(cart);
 
-      const shipment = cart.shipments && cart.shipments.length ? cart.shipments[0] : {};
+    if (cart && (!shipment.fulfillmentLocationId ||
+      isGuidEmpty(shipment.fulfillmentLocationId))) {
+      // Need to setup fulfilment location for the cart for the items inventory status
+      const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
+      const location = locations?.[0];
 
-      if (cart && (!shipment.fulfillmentLocationId ||
-        isGuidEmpty(shipment.fulfillmentLocationId))) {
-        // Need to setup fulfilment location for the cart for the items inventory status
-        const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
-        const location = locations && locations.length ? locations[0] : undefined;
+      if (location) {
+        const { id, fulfillmentScheduleMode, fulfillmentScheduledTimeBeginDate, fulfillmentScheduledTimeEndDate, propertyBag, pickUpLocationId } = shipment;
+        const updateShipmentRequest = {
+          id,
+          pickUpLocationId,
+          fulfillmentLocationId: location.id,
+          fulfillmentMethodName: shipment.fulfillmentMethod?.name,
+          shippingAddress: shipment.address,
+          fulfillmentScheduleMode,
+          fulfillmentScheduledTimeBeginDate,
+          fulfillmentScheduledTimeEndDate,
+          shippingProviderId: shipment.FulfillmentMethod?.ShippingProviderId,
+          propertyBag,
+          CultureName: locale
+        };
 
-        if (location) {
-          const { id, fulfillmentScheduleMode, fulfillmentScheduledTimeBeginDate, fulfillmentScheduledTimeEndDate, propertyBag, pickUpLocationId } = shipment;
-          const updateShipmentRequest = {
-            id,
-            pickUpLocationId,
-            fulfillmentLocationId: location.id,
-            fulfillmentMethodName: shipment.fulfillmentMethod?.name,
-            shippingAddress: shipment.address,
-            fulfillmentScheduleMode,
-            fulfillmentScheduledTimeBeginDate,
-            fulfillmentScheduledTimeEndDate,
-            shippingProviderId: shipment.FulfillmentMethod?.ShippingProviderId,
-            propertyBag,
-            CultureName: locale
-          };
-
-          cart = await context.$occ.api.updateCartShipment({ cartName: cart.name, updateShipmentRequest });
-        }
+        cart = await context.$occ.api.updateCartShipment({ cartName: cart.name, updateShipmentRequest });
       }
-      Logger.debug('[Result]:', { cart });
-      return cart;
     }
 
-    return null;
+    if (cart && !payment) {
+      cart = await context.$occ.api.addPayment({ cartName: cart.name });
+    }
+
+    Logger.debug('[Result]:', { cart });
+    return cart;
+
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
     const variantId = getVariantId(product);
     const productId = product.productId ?? product.propertyBag?.ProductId ?? product.id;
-    return await context.$occ.api.addCartItem({ ...params, productId, variantId, quantity });
+    return await context.$occ.api.addCartItem({...params, productId, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -81,8 +86,16 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update: (context: Context, { currentCart, cart }) => {
-    const userToken = getUserToken(context);
-    return context.$occ.api.updateCart({ ...params, userToken, cart, cartName: currentCart.name });
+    return context.$occ.api.updateCart({ ...params, cart, cartName: currentCart.name });
+  },
+
+  updatePaymentMethod: async (context: Context, { currentCart, paymentMethod }) => {
+    const payment: any = cartGetters.getActivePayment(currentCart);
+    if (payment.paymentStatus !== 'New') {
+      await context.$occ.api.removePayment({ paymentId: payment.id, cartName: currentCart.name });
+      await context.$occ.api.addPayment({ cartName: currentCart.name });
+    }
+    return await context.$occ.api.updatePaymentMethod({ paymentId: payment.id, ...paymentMethod, cartName: currentCart.name });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -92,15 +105,13 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   applyCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    const userToken = getUserToken(context);
-    const updatedCart = await context.$occ.api.addCoupon({ ...params, userToken, couponCode, cartName: currentCart.name });
+    const updatedCart = await context.$occ.api.addCoupon({ ...params, couponCode, cartName: currentCart.name });
     return { updatedCart };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    const userToken = getUserToken(context);
-    const updatedCart = await context.$occ.api.removeCoupon({ ...params, userToken, couponCode, cartName: currentCart.name });
+    const updatedCart = await context.$occ.api.removeCoupon({ ...params, couponCode, cartName: currentCart.name });
     return { updatedCart };
   },
 

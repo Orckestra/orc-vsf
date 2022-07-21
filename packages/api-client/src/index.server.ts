@@ -28,12 +28,18 @@ import updateUser from './api/users/updateUser';
 import getCartLineItems from './api/carts/getCartLineItems';
 import changePassword from './api/membership/changePassword';
 import clearCart from './api/carts/clearCart';
+import getPaymentMethods from './api/carts/getPaymentMethods';
 import getUserAddresses from './api/users/getUserAddresses';
 import getCountries from './api/countries/getCountries';
 import updateUserAddress from './api/users/updateUserAddress';
 import addUserAddress from './api/users/addUserAddress';
 import deleteUserAddress from './api/users/deleteUserAddress';
 import completeCheckout from './api/carts/completeCheckout';
+import getPaymentProviders from './api/providers/getPaymentProviders';
+import addPayment from './api/carts/addPayment';
+import removePayment from './api/carts/removePayment';
+import initializePayment from './api/carts/initializePayment';
+import updatePaymentMethod from './api/carts/updatePaymentMethod';
 import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
 import findOrders from './api/orders/findOrders';
 import getOrderByNumber from './api/orders/getOrderByNumber';
@@ -90,8 +96,14 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     updateUserAddress,
     addUserAddress,
     deleteUserAddress,
-    completeCheckout,
+    getPaymentProviders,
+    getPaymentMethods,
+    addPayment,
+    removePayment,
+    initializePayment,
+    updatePaymentMethod,
     getFulfillmentMethods,
+    completeCheckout,
     findOrders,
     getOrderByNumber,
     getOrderLookups

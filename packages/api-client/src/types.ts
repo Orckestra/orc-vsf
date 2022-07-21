@@ -159,12 +159,6 @@ export type Shipment = {
     propertyBag?: any,
     rewards?: Reward[]
 }
-export type PaymentMethod = {
-    id: string,
-    paymentProviderName: string,
-    propertyBag: any,
-    type: string
-}
 
 export const enum CustomerType {
     Registered = 'Registered',
@@ -213,14 +207,40 @@ export type Coupon = {
     usedCount: number
 };
 
+export declare const enum PaymentMethodType {
+    CreditCard,
+    SavedCreditCard,
+    GiftCertificate,
+    PurchaseOrder,
+    CashCard,
+    Cash,
+    Debit,
+    OnSiteCredit,
+    OnSiteDebit,
+    Cheque,
+    OnSiteUnspecified,
+    Paypal
+}
+
+export declare type PaymentMethod = {
+    id: string,
+    name: string,
+    paymentProviderName: string,
+    default: boolean,
+    enabled: boolean,
+    displayName: any,
+    type: PaymentMethodType
+}
+
 export type Payment = {
     amount: number,
     billingAddress: UserAddress,
     billingAddressId: string,
     id: string,
     paymentStatus: string,
-    propertyBag?: any;
-    paymentMethod: PaymentMethod
+    propertyBag?: any,
+    paymentMethod: PaymentMethod,
+    paymentDate: string
 }
 
 export type Cart = {
@@ -648,3 +668,4 @@ export type CountryItem = {
     phoneRegex: string,
     postalCodeRegex: string
 }
+
