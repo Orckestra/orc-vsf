@@ -10,8 +10,6 @@ export default async function addCartItem(context, params) {
 
   if (!customerId) return null;
 
-  if (!customerId) return null;
-
   const url = new URL(
     `/api/carts/${scope}/${customerId}/${cartName}/lineItems`,
     api.url

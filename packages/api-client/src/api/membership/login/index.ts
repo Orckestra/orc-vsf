@@ -2,8 +2,12 @@ const mergeCarts = async (context, params) => {
   const { api, scope } = context.config;
   const { customerIdFrom, customerIdTo, cartName = 'Default' } = params;
 
-  if (!customerIdFrom || !customerIdTo) {
-    return null;
+  if (!customerIdFrom) {
+    throw new Error('customerIdFrom is empty');
+  }
+
+  if (!customerIdTo) {
+    throw new Error('customerIdTo is empty');
   }
 
   const urlFrom = new URL(
@@ -77,10 +81,12 @@ export default async function login(context, params) {
 
       context.config.auth.setCustomerToken(tokenData);
 
-      await mergeCarts(context, {
-        customerIdFrom,
-        customerIdTo: tokenData.id
-      });
+      if (customerIdFrom && tokenData.id) {
+        await mergeCarts(context, {
+          customerIdFrom,
+          customerIdTo: tokenData.id
+        });
+      }
 
       return tokenData;
     }
