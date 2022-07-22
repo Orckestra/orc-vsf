@@ -93,7 +93,7 @@
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Go to payment') }}
+            {{ $t('Go to billing') }}
           </SfButton>
         </div>
       </div>
@@ -284,7 +284,7 @@ export default {
         updatedShipment.address = addressForm.value;
         onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
       } else {
-        router.push(context.root.localePath({ name: 'payment' }));
+        router.push(context.root.localePath({ name: 'billing' }));
       }
     };
 
