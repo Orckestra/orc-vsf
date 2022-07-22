@@ -240,7 +240,7 @@ function isBillingReady(cart: Cart): boolean {
 function isPaymentReady(cart: Cart): boolean {
   const activePayment = getActivePayment(cart);
   if (!activePayment) return false;
-  if(!activePayment.paymentMethod) return false;
+  if (!activePayment.paymentMethod) return false;
   return isAddressReady(activePayment.billingAddress);
 }
 

@@ -226,7 +226,7 @@ export default {
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const activeShipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
-     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));;
+    const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));
 
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
