@@ -38,7 +38,7 @@ import { computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 const STEPS = {
   personalDetails: 'Details',
   shipping: 'Shipping',
-  payment: 'Payment',
+  billing: 'Billing',
   review: 'Review'
 };
 

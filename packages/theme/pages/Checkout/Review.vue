@@ -46,17 +46,11 @@
 
       </SfProperty>
     </div>
-    <div class="payment">
+    <div class="billing">
       <SfHeading
-        title="Payment"
+        title="Billing"
         :level="3"
         class="sf-heading--left sf-heading--no-underline title"
-      />
-
-      <SfProperty
-        name="Payment method"
-        :value="payment.method"
-        class="sf-property"
       />
 
       <SfProperty
@@ -137,6 +131,14 @@
       <div class="smartphone-only">
         <CouponCode class="cart-coupon" />
       </div>
+      <div class="payment">
+        <SfHeading
+          title="Payment"
+          :level="3"
+          class="sf-heading--left sf-heading--no-underline title"
+        />
+        <VsfPaymentProvider />
+      </div>
       <div>
         <SfCheckbox v-e2e="'terms'" v-model="terms" name="terms" class="summary__terms">
           <template #label>
@@ -208,7 +210,8 @@ export default {
     SfDivider,
     SfLink,
     AddressPreview,
-    CouponCode
+    CouponCode,
+    VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
   },
   setup(props, context) {
     const th = useUiHelpers();
@@ -223,6 +226,7 @@ export default {
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const activeShipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
+     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));;
 
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
@@ -246,7 +250,7 @@ export default {
     const isOrderReady = computed(() => cartGetters.isReadyForOrder(cart.value));
 
     const goBack = () => {
-      router.push(context.root.localePath({ name: 'payment' }));
+      router.push(context.root.localePath({ name: 'billing' }));
     };
 
     const processOrder = async () => {
@@ -275,6 +279,7 @@ export default {
 
     return {
       terms,
+      isPaymentMethod,
       isOrderReady,
       goBack,
       personalDetails,
@@ -366,7 +371,7 @@ export default {
     padding: var(--spacer-xl) 0;
   }
   &__terms {
-    margin: 0 0 0 var(--spacer-xs);
+    margin: var(--spacer-lg) 0 0 var(--spacer-xs);
   }
 }
 .content {
