@@ -10,8 +10,8 @@ import { getVariantId } from '../helpers/productUtils';
 const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    const items = await context.$occ.api.getCartLineItems({ cartName: 'Wishlist' });
-    return { items: items || [] };
+    const wishlist = await context.$occ.api.getCart({ cartName: 'Wishlist' });
+    return { items: wishlist?.items || [] };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
