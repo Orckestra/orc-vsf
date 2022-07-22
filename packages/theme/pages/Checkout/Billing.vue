@@ -135,9 +135,9 @@ import {
   SfIcon,
   SfProperty,
   SfLink,
-  SfCheckbox,
-  ValidationObserver
+  SfCheckbox
 } from '@storefront-ui/vue';
+import { ValidationObserver } from 'vee-validate';
 import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
 import { useCart, useUser, useUserAddresses, userAddressGetters, cartGetters } from '@vue-storefront/orc-vsf';
 import { onSSR } from '@vue-storefront/core';
