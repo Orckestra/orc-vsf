@@ -6,26 +6,31 @@ const isValid = (response) => {
   return fetched && (parseFloat(fetched) + TWO_HOUR) > Date.now();
 };
 
-const handlerCb = async ({url, request, event, params}) => {
-  const body = await request.clone().text();
+const postRequestHandler = async ({url, request, event, params}) => {
+  let appendKey = '';
+
+  if (request.url.includes('getProducts')) {
+    const body = await request.clone().text();
+    appendKey = JSON.stringify(JSON.parse(body).map(x => x.categorySlug));
+  }
 
   try {
     const response = await fetch(request);
-    const cache = await caches.open('v1');
+    const cache = await caches.open('apiCache');
 
     const copy = response.clone();
     const headers = new Headers(copy.headers);
     headers.append('sw-fetched-on', Date.now().toString());
     const responseBody = await copy.blob();
 
-    await cache.put(request.url + body, new Response(responseBody, {
+    await cache.put(request.url + appendKey, new Response(responseBody, {
       status: copy.status,
       statusText: copy.statusText,
       headers: headers
     }));
     return response;
   } catch (e) {
-    const response = await caches.match(request.url + body);
+    const response = await caches.match(request.url + appendKey);
 
     if (isValid(response)) {
       return response;
@@ -33,19 +38,4 @@ const handlerCb = async ({url, request, event, params}) => {
   }
 };
 
-// Cache first strategy
-/* async function() {
-  var cache = await caches.open(cacheName);
-  var cachedFiles = await cache.match(event.request);
-  if(cachedFiles) {
-    return cachedFiles;
-  } else {
-    try {
-      var response = await fetch(event.request);
-      await cache.put(event.request, response.clone());
-      return response;
-    } catch(e) { /!* ... *!/ }
-  }
-} */
-
-workbox.routing.registerRoute(new RegExp('/api/(.*)'), handlerCb, 'POST');
+workbox.routing.registerRoute(new RegExp('/api/(.*)'), postRequestHandler, 'POST');
