@@ -100,14 +100,18 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 
+## Force NPM Version
+NPM_CMD="node /opt/nodejs/16.16.0/bin/npm"
+
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
+# disable selectNodeVersion
 # 2. Select node version
-selectNodeVersion
+#selectNodeVersion
 
 # 3. Install npm packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
