@@ -116,28 +116,28 @@
                 >{{ tableHeader }}
               </SfTableHeader>
             </SfTableHeading>
-            <SfTableRow v-for="(item, i) in orderGetters.getProducts(currentOrder)" :key="i" class="table__row">
+            <SfTableRow v-for="(item, i) in orderGetters.getItems(currentOrder)" :key="i" class="table__row">
             <SfTableData class="table__image">
                 <SfImage
-                  :src="addBasePath(orderGetters.getProductImage(item))"
-                  :alt="orderGetters.getProductName(item)"
+                  :src="addBasePath(orderGetters.getItemImage(item))"
+                  :alt="orderGetters.getItemName(item)"
                   data-testid="product-image-table-data"
                 />
               </SfTableData>
               <SfTableData class="table__description">
-                <nuxt-link :to="localePath(orderGetters.getProductLink(item))">
-                  {{orderGetters.getProductName(item)}}
+                <nuxt-link :to="localePath(orderGetters.getItemLink(item))">
+                  {{orderGetters.getItemName(item)}}
                 </nuxt-link>
               </SfTableData>
               <SfTableData class="table__data">
                 <SfPrice
                   class="product-price"
-                  :regular="orderGetters.getProductPrice(item).regular && $n(orderGetters.getProductPrice(item).regular, 'currency')"
-                  :special="orderGetters.getProductPrice(item).special && $n(orderGetters.getProductPrice(item).special, 'currency')"
+                  :regular="orderGetters.getItemPrices(item).regular && $n(orderGetters.getItemPrices(item).regular, 'currency')"
+                  :special="orderGetters.getItemPrices(item).special && $n(orderGetters.getItemPrices(item).special, 'currency')"
                 />
               </SfTableData>
-              <SfTableData class="table__data">{{orderGetters.getProductQty(item)}}</SfTableData>
-              <SfTableData class="table__data">{{$n(orderGetters.getProductTotal(item), 'currency')}}</SfTableData>
+              <SfTableData class="table__data">{{orderGetters.getItemQty(item)}}</SfTableData>
+              <SfTableData class="table__data">{{$n(orderGetters.getItemTotal(item), 'currency')}}</SfTableData>
             </SfTableRow>
           </SfTable>
           <div class="grid">

@@ -30,29 +30,35 @@ function getPrice(order: UserOrder): number | null {
   return order?.cart?.total;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItems(order: UserOrder): OrderItem[] {
-  return [];
+function getItems(order: UserOrder): CartItem[] {
+  return order?.cart?.shipments[0]?.lineItems;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemSku(item: OrderItem): string {
-  return '';
+function getItemSku(item: CartItem): string {
+  return item?.sku;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemName(item: OrderItem): string {
-  return '';
+function getItemName(item: CartItem): string {
+  return item?.productSummary?.displayName;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemQty(item: OrderItem): number {
-  return 0;
+function getItemQty(item: CartItem): number {
+  return item?.quantity;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemPrice(item: OrderItem): number {
-  return 0;
+function getItemPrice(item: CartItem): number {
+  return item?.currentPrice;
+}
+
+function getItemPrices(item: CartItem): AgnosticPrice {
+  return {
+    regular: item?.regularPrice,
+    special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : null
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -66,35 +72,7 @@ function getOrdersTotal(orders: any): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProducts(order: UserOrder): CartItem[] {
-  return order?.cart?.shipments[0]?.lineItems;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductQty(item: CartItem): number {
-  return item?.quantity;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductPrice(item: CartItem): AgnosticPrice {
-  return {
-    regular: item?.regularPrice,
-    special: item?.currentPrice < item?.regularPrice ? item?.currentPrice : null
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductSku(item: CartItem): string {
-  return item?.sku;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductName(item: CartItem): string {
-  return item?.productSummary?.displayName;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductTotal(item: CartItem): number {
+function getItemTotal(item: CartItem): number {
   return item?.total;
 }
 
@@ -144,14 +122,14 @@ function getPaymentAddress(order: UserOrder): UserAddress {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductLink(item: CartItem): string {
+function getItemLink(item: CartItem): string {
   const variantId = item.variantId;
   const productId = item.productId;
   return `/p/${productId}/${item?.productSummary?.displayName}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProductImage(item: CartItem): string {
+function getItemImage(item: CartItem): string {
   return item?.coverImage;
 }
 
@@ -169,7 +147,7 @@ function getCart(order: UserOrder): Cart {
   return order?.cart;
 }
 
-export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
+export const orderGetters: UserOrderGetters<UserOrder, CartItem> = {
   getDate,
   getId,
   getCustomerName,
@@ -179,16 +157,13 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getItems,
   getItemSku,
   getItemName,
+  getItemImage,
   getItemQty,
   getItemPrice,
+  getItemPrices,
   getFormattedPrice,
   getOrdersTotal,
-  getProducts,
-  getProductQty,
-  getProductPrice,
-  getProductSku,
-  getProductName,
-  getProductTotal,
+  getItemTotal,
   getFulfillmentMethod,
   getPaymentMethod,
   getSubTotal,
@@ -198,9 +173,8 @@ export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getTotal,
   getShippingAddress,
   getPaymentAddress,
-  getProductLink,
+  getItemLink,
   getNumber,
-  getProductImage,
   getShipmentStatus,
   getShippingPrice,
   getCart
