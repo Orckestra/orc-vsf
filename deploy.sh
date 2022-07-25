@@ -103,6 +103,8 @@ echo Handling node.js deployment.
 ## Force NPM Version
 NPM_CMD="node /opt/nodejs/16.13.1/bin/npm"
 eval node -v
+echo NODE_EXE
+echo NPM_CMD
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
