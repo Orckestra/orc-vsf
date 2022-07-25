@@ -135,9 +135,7 @@ export default {
     };
 
     onSSR(() => {
-      if (!addresses.value || !addresses.value.length) {
-        loadUserAddresses();
-      }
+      loadUserAddresses();
     });
 
     return {

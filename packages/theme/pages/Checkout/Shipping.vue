@@ -127,7 +127,7 @@
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Go to payment') }}
+            {{ $t('Go to billing') }}
           </SfButton>
         </div>
       </div>
@@ -188,10 +188,6 @@ export default {
     const { load: loadFulfillmentMethods, fulfillmentMethods, loading: loadingFulfillmentMethods } = useFulfillmentMethods();
     const { isAuthenticated } = useUser();
     const { stores: storesList, search: loadStoresList } = useStores();
-
-
-
-      loadStoresList();
 
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
@@ -361,15 +357,14 @@ export default {
         onUpdate(shipment.value, () => router.push(context.root.localePath({ name: 'payment' })));
       } 
       else {
-        router.push(context.root.localePath({ name: 'payment' }));
+        router.push(context.root.localePath({ name: 'billing' }));
       }
     };
 
     onSSR(async () => Promise.allSettled([
       loadUserShipping(),
       loadFulfillmentMethods(),
-      
-     // loadStoresList()
+      loadStoresList()
     ]));
 
     watch(isAuthenticated, () => {

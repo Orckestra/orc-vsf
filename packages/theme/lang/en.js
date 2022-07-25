@@ -118,6 +118,7 @@ export default {
   'Your bag is empty': 'Your bag is empty',
   'Cancel': 'Cancel',
   'See all results': 'See all results',
+  'See all': 'See all',
   'We haven’t found any results for given phrase': 'We haven’t found any results for given phrase',
   'You haven’t searched for items yet': 'You haven’t searched for items yet.',
   'Let’s start now – we’ll help you': 'Let’s start now – we’ll help you.',
