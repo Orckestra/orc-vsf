@@ -103,8 +103,8 @@ echo Handling node.js deployment.
 ## Force NPM Version
 NPM_CMD="node /opt/nodejs/16.13.1/bin/npm"
 eval node -v
-echo NODE_EXE
-echo NPM_CMD
+echo $NODE_EXE
+echo $NPM_CMD
 
 # 1. KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
@@ -116,7 +116,11 @@ fi
 # 2. Select node version
 #selectNodeVersion
 
-# 3. Install npm packages
+# 3. Install Yarn
+echo Verifying Yarn Install.
+eval $NPM_CMD install yarn -g
+
+# 4. Install yarn packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
   echo "Running yarn install --network-timeout 30000 --production"
