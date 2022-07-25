@@ -264,17 +264,21 @@ export default {
     LazyHydrate,
     SfSelect
   },
-  setup() {
+  setup(props, context) {
     const th = useUiHelpers();
+    const { order: orderNumber } = context.root.$route.query;
     const { orders: orderHistory, search, loading } = useUserOrder('order-history');
     const { response: orderByNumber, find: getOrderByNumber } = useOrder();
     const { response: metadata } = useMetadata();
     const router = useRouter();
     const { locale } = router.app.$i18n;
-    const isOrderSelected = ref(false);
+    const isOrderSelected = ref(orderNumber ?? false);
     const facetsFromUrl = th.getFacetsFromURL();
 
     onSSR(async () => {
+      if (orderNumber) {
+        await getOrderByNumber({ orderNumber });
+      }
       await search({ page: facetsFromUrl.page, itemsPerPage: facetsFromUrl.itemsPerPage, filterMember: 'OrderStatus', filterValues: ['PendingProcess', 'InProgress', 'PartiallyFulfilled', 'New', 'Completed', 'Canceled', 'Shipped'] });
     });
 

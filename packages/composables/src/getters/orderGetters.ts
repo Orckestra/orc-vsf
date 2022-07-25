@@ -1,22 +1,26 @@
 import { UserOrderGetters, AgnosticPrice } from '@vue-storefront/core';
 import type { UserOrder, OrderItem, CartItem, Tax, UserAddress, Cart, PaymentMethod, FulfillmentMethod} from '@vue-storefront/orc-vsf-api';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: UserOrder): string {
   return new Date(order?.created).toLocaleDateString() || '';
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(order: UserOrder): string {
   return order?.id;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getNumber(order: UserOrder): string {
   return order?.orderNumber;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getCustomerName(order: UserOrder): string {
+  return order?.customerName;
+}
+
+function getCustomerEmail(order: UserOrder): string {
+  return order?.cart?.customer?.email;
+}
+
 function getStatus(order: UserOrder): string {
   return order?.orderStatus;
 }
@@ -161,7 +165,6 @@ function getShippingPrice(order: UserOrder): number {
   return order?.cart?.fulfillmentCost ?? 0;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCart(order: UserOrder): Cart {
   return order?.cart;
 }
@@ -169,6 +172,8 @@ function getCart(order: UserOrder): Cart {
 export const orderGetters: UserOrderGetters<UserOrder, OrderItem> = {
   getDate,
   getId,
+  getCustomerName,
+  getCustomerEmail,
   getStatus,
   getPrice,
   getItems,

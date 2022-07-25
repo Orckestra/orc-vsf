@@ -43,6 +43,7 @@ import updatePaymentMethod from './api/carts/updatePaymentMethod';
 import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
 import findOrders from './api/orders/findOrders';
 import getOrderByNumber from './api/orders/getOrderByNumber';
+import getOrderById from './api/orders/getOrderById';
 import getOrderLookups from './api/metadata/getOrderLookups';
 
 import { tokenExtension } from './extensions/auth';
@@ -106,6 +107,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     completeCheckout,
     findOrders,
     getOrderByNumber,
+    getOrderById,
     getOrderLookups
   },
   extensions: [tokenExtension]
