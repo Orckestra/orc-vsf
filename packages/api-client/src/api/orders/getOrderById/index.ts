@@ -11,8 +11,6 @@ export default async function getOrderById(context, params) {
   );
   const { id: customerId } = context.config.auth.getCustomerToken();
   const { data } = await context.client.get(url.href);
-  console.log(data.customerId);
-  console.log(customerId);
   if (!compareGuids(data.customerId, customerId)) {
     console.error('Order id does not match to current user id');
     return null;
