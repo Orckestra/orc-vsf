@@ -246,7 +246,7 @@ export default {
 
 .details-button {
   --button-width: calc(100% - var(--spacer-lg));
-  margin: 0 auto var(--spacer-sm) auto;
+  margin: var(--spacer-sm) auto var(--spacer-sm) auto;
   @include for-desktop {
     margin: var(--spacer-lg) auto 0 auto;
     --button-width: 25rem;
