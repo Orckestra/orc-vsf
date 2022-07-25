@@ -6,6 +6,8 @@ export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
 
+export type FulfillmentLocation = TODO;
+
 export type UserAddress = {
     addressName: string,
     city: string,
@@ -360,7 +362,7 @@ export type OrderItem = {
     total: number
 };
 
-export type OrderQueryResult = {
+export type SearchQueryResult = {
     totalCount: number;
     results: OrderItem[];
 };

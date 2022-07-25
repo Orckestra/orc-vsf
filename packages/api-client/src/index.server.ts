@@ -13,7 +13,7 @@ import updateCartItem from './api/carts/updateCartItem';
 import addCoupon from './api/carts/addCoupon';
 import removeCoupon from './api/carts/removeCoupon';
 import updateCartShipment from './api/carts/updateCartShipment';
-import getFulfillmentLocations from './api/getFulfillmentLocations';
+import getFulfillmentLocations from './api/fulfillmentLocations/getFulfillmentLocations';
 import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
@@ -42,6 +42,7 @@ import initializePayment from './api/carts/initializePayment';
 import updatePaymentMethod from './api/carts/updatePaymentMethod';
 import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
 import findOrders from './api/orders/findOrders';
+import findStores from './api/stores/findStores';
 import getOrderByNumber from './api/orders/getOrderByNumber';
 import getOrderLookups from './api/metadata/getOrderLookups';
 
@@ -106,7 +107,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     completeCheckout,
     findOrders,
     getOrderByNumber,
-    getOrderLookups
+    getOrderLookups,
+    findStores
   },
   extensions: [tokenExtension]
 });

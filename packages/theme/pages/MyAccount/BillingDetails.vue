@@ -37,7 +37,7 @@
             class="billing" :class="{'billing__preferred': address.isPreferredBilling }">
             <div class="billing__content">
               <div class="billing__address">
-                <AddressPreview :address="address" :showName="true" />
+                <AddressPreview :address="address" :showAddressName="true" />
                 <SfButton
                   v-if="!address.isPreferredBilling"
                   class="sf-button--text sf-button"

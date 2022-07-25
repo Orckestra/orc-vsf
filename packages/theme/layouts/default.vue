@@ -52,20 +52,20 @@ export default {
 
   setup() {
     const route = useRoute();
-    const { load: loadStores } = useStore();
+    //const { load: loadStores } = useStore();
     const { load: loadUser } = useUser();
     const { load: loadCart } = useCart();
-    const { load: loadWishlist } = useWishlist();
+    //const { load: loadWishlist } = useWishlist();
     const { load: loadMetadata} = useMetadata();
     const { load: loadConfiguration} = useConfiguration();
     const { load: loadCountries } = useCountries();
 
     onSSR(async () => {
       await Promise.all([
-        loadStores(),
+       // loadStores(),
         loadUser(),
         loadCart(),
-        loadWishlist(),
+       // loadWishlist(),
         loadMetadata(),
         loadConfiguration(),
         loadCountries()

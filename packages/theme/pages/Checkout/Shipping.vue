@@ -79,6 +79,40 @@
           />
         </template>
       </template>
+      <template v-if="isPickupMethod && isOpen.choosePickUpLocation">
+      
+        <SfHeading
+          :level="4"
+          :title="'Select PickUp location'"
+          class="sf-heading--left sf-heading--no-underline title"
+        />
+        <VsfStoresList
+        :stores="stores"
+        :selected="form.pickUpLocationId"
+        @change="updateSelectedStoreForPickup"
+      />
+      
+      </template>
+       <template v-if="isPickupMethod && !isOpen.choosePickUpLocation">
+         <SfHeading
+          :level="4"
+          :title="'Selected PickUp location'"
+          class="sf-heading--left sf-heading--no-underline title"
+        />
+        <div >
+        <span><b>{{form.selectedStore.name}}</b></span>
+              <br/>
+              <AddressPreview :address="form.selectedStoreAddress" :showAddressName="false" :showName="false"/>
+        </div>
+        <br/>
+          <button
+              type="link"
+              @click="changeSelectedPickupLocation"
+            >
+            Change Selected PickUp Location 
+            </button>
+            <br/>
+      </template>
       <div class="form">
         <div class="form__action-bar">
           <SfButton
@@ -110,13 +144,14 @@ import {
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
-import { useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
+import { useUser, useFulfillmentMethods, useUserAddresses, storesGetters, useStores, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/AddressForm';
 import AddressPreview from '~/components/AddressPreview';
 import AddressSelector from '~/components/AddressSelector';
 import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
+import VsfStoresList from '../../components/Checkout/VsfStoresList';
 import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api/src';
 
 extend('required', {
@@ -142,7 +177,8 @@ export default {
     AddressForm,
     AddressSelector,
     AddressPreview,
-    VsfShippingProvider
+    VsfShippingProvider,
+    VsfStoresList
   },
   setup (props, context) {
     const router = useRouter();
@@ -151,13 +187,22 @@ export default {
     const { addresses, load: loadUserShipping, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
     const { load: loadFulfillmentMethods, fulfillmentMethods, loading: loadingFulfillmentMethods } = useFulfillmentMethods();
     const { isAuthenticated } = useUser();
+    const { stores: storesList, search: loadStoresList } = useStores();
+
+
+
+      loadStoresList();
 
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
-    const isOpen = ref({ addingAddress: false });
+    const stores = computed(() => storesGetters.getStores(storesList.value));
+
     const form = ref({
-      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId
+      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId,
+      pickUpLocationId: null,
+      selectedStore: null,
+      selectedStoreAddress: null
     });
 
     const resetForm = (address) => ({
@@ -175,6 +220,9 @@ export default {
     const addressForm = ref(resetForm(shipment.value?.address));
 
     const isShippingMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
+    const isPickupMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'PickUp');
+
+    const isOpen = ref({ addingAddress: false, choosePickUpLocation: !form.value.pickUpLocationId });
 
     const addNewAddress = () => {
       addressForm.value = resetForm();
@@ -253,6 +301,29 @@ export default {
       }
     };
 
+    const updateSelectedStoreForPickup = (value) => {
+      form.value.pickUpLocationId = value;
+      const selectedStore = stores.value.find(x => x.id === value);
+      form.value.selectedStore = selectedStore;
+      form.value.selectedStoreAddress = selectedStore.fulfillmentLocation.addresses[0];
+       const updatedShipment = {
+        ...shipment.value,
+        pickUpLocationId: value,
+        address: selectedStore.fulfillmentLocation.addresses[0],
+        fulfillmentLocationId: selectedStore.fulfillmentLocation.id
+       }
+
+      isOpen.value.choosePickUpLocation = false;
+      onUpdate(updatedShipment, () => {});
+    }
+
+
+    const changeSelectedPickupLocation = () => {
+      isOpen.value.choosePickUpLocation = true;
+      onUpdate(shipment.value, () => {});
+    }
+
+
     const updateShippingMethod = (value) => {
       form.value.shippingMethod = value;
       const updatedShipment = {
@@ -271,6 +342,9 @@ export default {
         updatedShipment.address = preferredAddress;
       }
 
+      
+      isOpen.value.choosePickUpLocation = false;
+
       onUpdate(updatedShipment, () => {});
     };
 
@@ -283,14 +357,19 @@ export default {
         };
         updatedShipment.address = addressForm.value;
         onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
-      } else {
+      } else if(isPickupMethod.value) {
+        onUpdate(shipment.value, () => router.push(context.root.localePath({ name: 'payment' })));
+      } 
+      else {
         router.push(context.root.localePath({ name: 'payment' }));
       }
     };
 
     onSSR(async () => Promise.allSettled([
       loadUserShipping(),
-      loadFulfillmentMethods()
+      loadFulfillmentMethods(),
+      
+     // loadStoresList()
     ]));
 
     watch(isAuthenticated, () => {
@@ -323,7 +402,12 @@ export default {
       fulfillmentMethods,
       addresses,
       fulfillmentMethodsGetters,
-      shipmentAddressId
+      shipmentAddressId,
+      stores,
+      isPickupMethod,
+      updateSelectedStoreForPickup,
+      changeSelectedPickupLocation
+
     };
   }
 };

@@ -3,7 +3,8 @@ import {
   FactoryParams,
   Context,
   ComputedProperty,
-  AgnosticPagination
+  AgnosticPagination,
+  UseStoreGetters as VsfUseStoreGetters
 } from '@vue-storefront/core';
 import {
   AgnosticAttribute, AgnosticCoupon, AgnosticDiscount,
@@ -111,7 +112,7 @@ export interface UseOrdersHistoryGetters<ORDERQUERYRESULT, ORDERITEM> {
   getOrdersHistory(orders: ORDERQUERYRESULT): ORDERITEM[];
   getOrdersTotal(orders: ORDERQUERYRESULT): number;
   getDate(orderItem: ORDERITEM): string;
-  getId(orderItem: ORDERITEM): string ;
+  getId(orderItem: ORDERITEM): string;
   getStatus(orderItem: ORDERITEM): string;
   getPrice(orderItem: ORDERITEM): number | null;
   getNumber(orderItem: ORDERITEM): string;
@@ -328,6 +329,65 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends Pl
   error: ComputedProperty<UseCartErrors>;
   loading: ComputedProperty<boolean>;
 }
+
+/*
+STORES
+*/
+
+export type UseStoresSearchParams = {
+  locale: string,
+  page: number,
+  itemsPerPage: number
+};
+
+export interface UseStoresErrors {
+  search: Error;
+}
+
+export interface UseStores<STORES, STORES_SEARCH_PARAMS, API extends PlatformApi = any> extends Composable<API> {
+  stores: ComputedProperty<STORES>;
+  search(params: STORES_SEARCH_PARAMS): Promise<any>;
+  loading: ComputedProperty<boolean>;
+  error: ComputedProperty<UseStoresErrors>;
+}
+
+export interface UseStoresFactoryParams<STORES, STORES_SEARCH_PARAMS> extends FactoryParams {
+  search(context: Context, params: STORES_SEARCH_PARAMS): Promise<STORES>;
+}
+
+export interface UseStoresGetters<STORES> {
+  getStores(stores: STORES): STORES;
+}
+
+export interface UseStoreGetters<STORES, CRITERIA = any> extends VsfUseStoreGetters<STORES, CRITERIA> {
+  isStoreOpenedNow(store: STORES): boolean;
+  getStoreOpeningHours(store: STORES): {};
+}
+
+/*
+Fulfillment location
+*/
+
+export type UseGetFulfillmentLocationParams = {
+  locale: string,
+  locationId: number
+};
+
+export interface UseGetFulfillmentLocationErrors {
+  getLocation: Error;
+}
+
+export interface UseGetFulfillmentLocation<FULFILLMENTLOCATION, FULFILLMENTLOCATION_GET_PARAMS, API extends PlatformApi = any> extends Composable<API> {
+  response: ComputedProperty<FULFILLMENTLOCATION>;
+  getLocation(params: FULFILLMENTLOCATION_GET_PARAMS): Promise<any>;
+  loading: ComputedProperty<boolean>;
+  error: ComputedProperty<UseStoresErrors>;
+}
+
+export interface UseGetFulfillmentLocationFactoryParams<FULFILLMENTLOCATION, FULFILLMENTLOCATION_GET_PARAMS> extends FactoryParams {
+  getLocation(context: Context, params: FULFILLMENTLOCATION_GET_PARAMS): Promise<FULFILLMENTLOCATION>;
+}
+
 
 /*
 ORDER
