@@ -75,7 +75,7 @@
            <template v-if="isBilling && !isOpen.editingAddress">
              <AddressPreview :address="billingAddress"/>
              <SfButton
-                  class="sf-button--text"
+                  class="sf-button--text edit-button"
                   @click="editGuestAddress">
                 Edit billing address
             </SfButton>
@@ -388,6 +388,10 @@ export default {
       }
     }
   }
+}
+
+.edit-button {
+  margin-bottom: var(--spacer-lg);
 }
 
 .sameAsShipping {
