@@ -93,24 +93,24 @@
       />
       
       </template>
-       <template v-if="isPickupMethod && !isOpen.choosePickUpLocation">
+       <template v-if="isPickupMethod && !isOpen.choosePickUpLocation && selectedStore">
          <SfHeading
           :level="4"
           :title="'Selected PickUp location'"
           class="sf-heading--left sf-heading--no-underline title"
         />
         <div >
-        <span><b>{{form.selectedStore.name}}</b></span>
+        <span><b>{{selectedStore.name}}</b></span>
               <br/>
-              <AddressPreview :address="form.selectedStoreAddress" :showAddressName="false" :showName="false"/>
+              <AddressPreview :address="selectedStoreAddress" :showAddressName="false" :showName="false"/>
         </div>
         <br/>
-          <button
-              type="link"
+          <SfButton 
+              class="sf-button--text"
               @click="changeSelectedPickupLocation"
             >
-            Change Selected PickUp Location 
-            </button>
+            {{ $t('Change Selected PickUp Location') }}
+            </SfButton >
             <br/>
       </template>
       <div class="form">
@@ -123,7 +123,7 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShippingMethod && !shipmentAddressId) || !form.shippingMethod"
+            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShippingMethod && !shipmentAddressId) || !form.shippingMethod || (isPickupMethod && !shipmentPickUpLocationId)"
             class="form__action-button"
             type="submit"
           >
@@ -194,11 +194,14 @@ export default {
 
     const stores = computed(() => storesGetters.getStores(storesList.value));
 
+    const selectedStore = computed(() => stores.value?.find(x => x.id === shipment.value?.pickUpLocationId));
+    const selectedStoreAddress = computed(() => {return {...shipment.value?.address, addressName: selectedStore.value?.name}})
+    
+    const shipmentPickUpLocationId = computed(() => shipment.value?.pickUpLocationId);
+
     const form = ref({
       shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId,
-      pickUpLocationId: null,
-      selectedStore: null,
-      selectedStoreAddress: null
+      pickUpLocationId: shipment.value?.pickUpLocationId
     });
 
     const resetForm = (address) => ({
@@ -300,12 +303,10 @@ export default {
     const updateSelectedStoreForPickup = (value) => {
       form.value.pickUpLocationId = value;
       const selectedStore = stores.value.find(x => x.id === value);
-      form.value.selectedStore = selectedStore;
-      form.value.selectedStoreAddress = selectedStore.fulfillmentLocation.addresses[0];
        const updatedShipment = {
         ...shipment.value,
         pickUpLocationId: value,
-        address: selectedStore.fulfillmentLocation.addresses[0],
+        address: {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name },
         fulfillmentLocationId: selectedStore.fulfillmentLocation.id
        }
 
@@ -316,19 +317,15 @@ export default {
 
     const changeSelectedPickupLocation = () => {
       isOpen.value.choosePickUpLocation = true;
-      onUpdate(shipment.value, () => {});
     }
-
 
     const updateShippingMethod = (value) => {
       form.value.shippingMethod = value;
+      addressForm.value = resetForm();
       const updatedShipment = {
         ...shipment.value,
+        address: null,
         fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
-        // if PickUpLocationId
-        // pickUpLocationId: null,
-        // address: null,
-        // fulfillmentLocationId = fulfillmentLocation.Id;
       };
 
       if (isAuthenticated.value && !shipment.value?.address?.id && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.Shipping) {
@@ -338,8 +335,15 @@ export default {
         updatedShipment.address = preferredAddress;
       }
 
-      
-      isOpen.value.choosePickUpLocation = false;
+      if (!updatedShipment.pickUpLocationId && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.PickUp) {
+        isOpen.value.choosePickUpLocation = true;
+      }
+
+      if (updatedShipment.pickUpLocationId && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.PickUp) {
+        isOpen.value.choosePickUpLocation = false;
+        const selectedStore = stores.value?.find(x => x.id === updatedShipment.pickUpLocationId)
+        updatedShipment.address = {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name }
+      }
 
       onUpdate(updatedShipment, () => {});
     };
@@ -353,7 +357,16 @@ export default {
         };
         updatedShipment.address = addressForm.value;
         onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
-      } else {
+      }
+      if (!isPickupMethod.value) {
+        const updatedShipment = {
+          ...shipment.value
+        };
+        updatedShipment.pickUpLocationId = null;
+        updatedShipment.fulfillmentLocationId = null;
+        onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
+      }
+      else {
         router.push(context.root.localePath({ name: 'billing' }));
       }
     };
@@ -398,7 +411,10 @@ export default {
       stores,
       isPickupMethod,
       updateSelectedStoreForPickup,
-      changeSelectedPickupLocation
+      changeSelectedPickupLocation,
+      shipmentPickUpLocationId,
+      selectedStore,
+      selectedStoreAddress
 
     };
   }
