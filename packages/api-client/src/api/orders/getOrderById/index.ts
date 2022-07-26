@@ -1,5 +1,5 @@
 import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
-import { compareGuids } from '../../../helpers/generalUtils';
+import { isGuidEquals } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getOrderById(context, params) {
@@ -11,7 +11,7 @@ export default async function getOrderById(context, params) {
   );
   const { id: customerId } = context.config.auth.getCustomerToken();
   const { data } = await context.client.get(url.href);
-  if (!compareGuids(data.customerId, customerId)) {
+  if (!isGuidEquals(data.customerId, customerId)) {
     console.error('Order id does not match to current user id');
     return null;
   }
