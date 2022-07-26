@@ -81,14 +81,27 @@
       </template>
       <template v-if="isPickupMethod && isOpen.choosePickUpLocation">
       
-  <SfModal title="Select PickUp location" :visible="isOpen.choosePickUpLocation" cross overlay persistent class="locationSelection" @close="closePickUpLocationSelection">
-
+  <SfModal :title="$t('Select PickUp location')" :visible="isOpen.choosePickUpLocation" cross overlay persistent class="locationSelection" @close="closePickUpLocationSelection">
+<!--<template #modal-bar>
+<SfHeading
+          :level="4"
+          :title="$t('Select PickUp location')"
+          class="sf-heading--left sf-heading--no-underline title"
+        />
+</template>-->
           <SfScrollable
     maxContentHeight="50rem"
-    showText="View all"
-    hideText="Hide all"
   >
+  <!--<template #view-all>
+
         <VsfStoresList
+        :stores="stores"
+        :selected="form.pickUpLocationId"
+        @change="updateSelectedStoreForPickup"
+      />
+      
+  </template>-->
+  <VsfStoresList
         :stores="stores"
         :selected="form.pickUpLocationId"
         @change="updateSelectedStoreForPickup"
@@ -99,7 +112,7 @@
        <template v-if="isPickupMethod && !isOpen.choosePickUpLocation && selectedStore">
          <SfHeading
           :level="4"
-          :title="'Selected PickUp location'"
+          :title="$t('Selected PickUp location')"
           class="sf-heading--left sf-heading--no-underline title"
         />
         <div >

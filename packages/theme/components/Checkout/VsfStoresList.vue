@@ -111,6 +111,11 @@ export default {
 }
 
 .card {
+	flex: 1 0 100%;
+  
+  @include for-desktop {
+    
 	flex: 1 0 50%;
+  }
 }
 </style>
