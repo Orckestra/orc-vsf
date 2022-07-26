@@ -152,6 +152,7 @@ export type Shipment = {
     lineItems: CartItem[],
     fulfillmentLocationId: string,
     fulfillmentMethod: FulfillmentMethod,
+    pickUpLocationId: string,
     status: string,
     taxes?: Tax[],
     taxProviderId?: string,

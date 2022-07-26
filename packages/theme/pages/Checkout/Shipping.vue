@@ -353,10 +353,7 @@ export default {
         };
         updatedShipment.address = addressForm.value;
         onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
-      } else if(isPickupMethod.value) {
-        onUpdate(shipment.value, () => router.push(context.root.localePath({ name: 'billing' })));
-      } 
-      else {
+      } else {
         router.push(context.root.localePath({ name: 'billing' }));
       }
     };

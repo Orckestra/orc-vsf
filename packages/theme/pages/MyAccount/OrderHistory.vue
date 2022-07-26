@@ -116,28 +116,28 @@
                 >{{ tableHeader }}
               </SfTableHeader>
             </SfTableHeading>
-            <SfTableRow v-for="(item, i) in orderGetters.getProducts(currentOrder)" :key="i" class="table__row">
+            <SfTableRow v-for="(item, i) in orderGetters.getItems(currentOrder)" :key="i" class="table__row">
             <SfTableData class="table__image">
                 <SfImage
-                  :src="addBasePath(orderGetters.getProductImage(item))"
-                  :alt="orderGetters.getProductName(item)"
+                  :src="addBasePath(orderGetters.getItemImage(item))"
+                  :alt="orderGetters.getItemName(item)"
                   data-testid="product-image-table-data"
                 />
               </SfTableData>
               <SfTableData class="table__description">
-                <nuxt-link :to="localePath(orderGetters.getProductLink(item))">
-                  {{orderGetters.getProductName(item)}}
+                <nuxt-link :to="localePath(orderGetters.getItemLink(item))">
+                  {{orderGetters.getItemName(item)}}
                 </nuxt-link>
               </SfTableData>
               <SfTableData class="table__data">
                 <SfPrice
                   class="product-price"
-                  :regular="orderGetters.getProductPrice(item).regular && $n(orderGetters.getProductPrice(item).regular, 'currency')"
-                  :special="orderGetters.getProductPrice(item).special && $n(orderGetters.getProductPrice(item).special, 'currency')"
+                  :regular="orderGetters.getItemPrices(item).regular && $n(orderGetters.getItemPrices(item).regular, 'currency')"
+                  :special="orderGetters.getItemPrices(item).special && $n(orderGetters.getItemPrices(item).special, 'currency')"
                 />
               </SfTableData>
-              <SfTableData class="table__data">{{orderGetters.getProductQty(item)}}</SfTableData>
-              <SfTableData class="table__data">{{$n(orderGetters.getProductTotal(item), 'currency')}}</SfTableData>
+              <SfTableData class="table__data">{{orderGetters.getItemQty(item)}}</SfTableData>
+              <SfTableData class="table__data">{{$n(orderGetters.getItemTotal(item), 'currency')}}</SfTableData>
             </SfTableRow>
           </SfTable>
           <div class="grid">
@@ -152,13 +152,18 @@
                   :value="currentOrderShipping.method"
                   class="sf-property property"
                 />
+                 <SfProperty
+                  name="Type"
+                  :value="currentOrderShipping.type"
+                  class="sf-property property"
+                />
                 <SfProperty
                   name="Status"
                   :value="currentOrderShipping.status"
                   class="sf-property property"
                 />
                 <SfProperty
-                  name="Shiping address"
+                  :name="`${currentOrderShipping.type} address`"
                   class="sf-property">
                   <template #value>
                     <AddressPreview :address="currentOrderShipping.address" />
@@ -264,17 +269,21 @@ export default {
     LazyHydrate,
     SfSelect
   },
-  setup() {
+  setup(props, context) {
     const th = useUiHelpers();
+    const { order: orderNumber } = context.root.$route.query;
     const { orders: orderHistory, search, loading } = useUserOrder('order-history');
     const { response: orderByNumber, find: getOrderByNumber } = useOrder();
     const { response: metadata } = useMetadata();
     const router = useRouter();
     const { locale } = router.app.$i18n;
-    const isOrderSelected = ref(false);
+    const isOrderSelected = ref(orderNumber ?? false);
     const facetsFromUrl = th.getFacetsFromURL();
 
     onSSR(async () => {
+      if (orderNumber) {
+        await getOrderByNumber({ orderNumber });
+      }
       await search({ page: facetsFromUrl.page, itemsPerPage: facetsFromUrl.itemsPerPage, filterMember: 'OrderStatus', filterValues: ['PendingProcess', 'InProgress', 'PartiallyFulfilled', 'New', 'Completed', 'Canceled', 'Shipped'] });
     });
 
@@ -315,6 +324,7 @@ export default {
     const shippingMethod = computed(() => orderGetters.getFulfillmentMethod(currentOrder.value));
     const currentOrderShipping = computed(() => ({
       method: th.getTranslation(shippingMethod?.value?.displayName, shippingMethod?.value?.name),
+      type: shippingMethod?.value.fulfillmentMethodType,
       address: orderGetters.getShippingAddress(currentOrder.value),
       status: getLookupValue('OrderStatus', orderGetters.getStatus(currentOrder.value))
     }));
