@@ -6,7 +6,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress, FulfillmentMethod } from '@vue-storefront/orc-vsf-api';
+import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress, FulfillmentMethod, FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
 import { CustomerSummary } from '@vue-storefront/orc-vsf-api/src';
 
 function getItems(cart: Cart): CartItem[] {
@@ -96,12 +96,12 @@ function getFulfillmentMethod(cart: Cart): FulfillmentMethod {
 
 function isPickup(cart: Cart): boolean {
   const method = getFulfillmentMethod(cart);
-  return method?.fulfillmentMethodType === 'PickUp';
+  return method?.fulfillmentMethodType === FulfillmentMethodType.PickUp;
 }
 
 function isShipping(cart: Cart): boolean {
   const method = getFulfillmentMethod(cart);
-  return method?.fulfillmentMethodType === 'Shipping';
+  return method?.fulfillmentMethodType === FulfillmentMethodType.Shipping;
 }
 
 function isShippingTaxable(shipment: Shipment): boolean {
