@@ -81,17 +81,20 @@
       </template>
       <template v-if="isPickupMethod && isOpen.choosePickUpLocation">
       
-        <SfHeading
-          :level="4"
-          :title="'Select PickUp location'"
-          class="sf-heading--left sf-heading--no-underline title"
-        />
+  <SfModal title="Select PickUp location" :visible="isOpen.choosePickUpLocation" cross overlay persistent class="locationSelection" @close="closePickUpLocationSelection">
+
+          <SfScrollable
+    maxContentHeight="50rem"
+    showText="View all"
+    hideText="Hide all"
+  >
         <VsfStoresList
         :stores="stores"
         :selected="form.pickUpLocationId"
         @change="updateSelectedStoreForPickup"
       />
-      
+      </SfScrollable>
+      </SfModal >
       </template>
        <template v-if="isPickupMethod && !isOpen.choosePickUpLocation && selectedStore">
          <SfHeading
@@ -139,7 +142,9 @@
 import {
   SfHeading,
   SfButton,
-  SfIcon
+  SfIcon,
+  SfModal,
+  SfScrollable
 } from '@storefront-ui/vue';
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
@@ -178,7 +183,9 @@ export default {
     AddressSelector,
     AddressPreview,
     VsfShippingProvider,
-    VsfStoresList
+    VsfStoresList,
+    SfModal,
+    SfScrollable
   },
   setup (props, context) {
     const router = useRouter();
@@ -259,6 +266,10 @@ export default {
       isOpen.value.addingAddress = false;
       onUpdate({ ...shipment.value, address }, () => {});
     };
+
+    const closePickUpLocationSelection = () => {
+      isOpen.value.choosePickUpLocation = false;
+    }
 
     const saveAddress = async () => {
       try {
@@ -414,7 +425,8 @@ export default {
       changeSelectedPickupLocation,
       shipmentPickUpLocationId,
       selectedStore,
-      selectedStoreAddress
+      selectedStoreAddress,
+      closePickUpLocationSelection
 
     };
   }
@@ -484,5 +496,9 @@ export default {
 
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+}
+
+.locationSelection {
+  z-index: 1000;
 }
 </style>
