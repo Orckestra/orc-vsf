@@ -282,7 +282,7 @@ export default {
           ...shipment.value
         };
         updatedShipment.address = addressForm.value;
-        onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'payment' })));
+        onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
       } else {
         router.push(context.root.localePath({ name: 'billing' }));
       }
