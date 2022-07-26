@@ -307,18 +307,40 @@ export default {
       }
     };
 
+    const getDefaultBillingAddress = () => {
+      let address;
+       if(isAuthenticated.value) {
+            address = userAddressGetters.getDefaultBilling(addresses.value);
+            if(!address && isShippingMethod.value) {
+              address = cartGetters.getActiveShipment(cart.value)?.address;
+            }
+        } else {
+
+          if(isShippingMethod.value) 
+          {
+            address = cartGetters.getActiveShipment(cart.value)?.address;
+          }
+        }
+
+        return address;
+    }
+
     onSSR(async () => {
       if (isAuthenticated.value) {
         await loadAddresses();
       }
 
-      if (!isBilling.value && isShippingMethod.value) {
-        const address = userAddressGetters.getDefaultBilling(addresses.value) ?? cartGetters.getActiveShipment(cart.value)?.address;
-        if (address) {
-          await updateCartBillingAddress(address);
+     
+      if (!isBilling.value) {
+        const defaultAddress = getDefaultBillingAddress();
+
+        if (defaultAddress) {
+          await updateCartBillingAddress(defaultAddress);
         }
       }
     });
+
+
 
     watch(isAuthenticated, () => {
       if (isAuthenticated.value) {

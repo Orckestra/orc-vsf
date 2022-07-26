@@ -152,13 +152,18 @@
                   :value="currentOrderShipping.method"
                   class="sf-property property"
                 />
+                 <SfProperty
+                  name="Type"
+                  :value="currentOrderShipping.type"
+                  class="sf-property property"
+                />
                 <SfProperty
                   name="Status"
                   :value="currentOrderShipping.status"
                   class="sf-property property"
                 />
                 <SfProperty
-                  name="Shiping address"
+                  :name="`${currentOrderShipping.type} address`"
                   class="sf-property">
                   <template #value>
                     <AddressPreview :address="currentOrderShipping.address" />
@@ -319,6 +324,7 @@ export default {
     const shippingMethod = computed(() => orderGetters.getFulfillmentMethod(currentOrder.value));
     const currentOrderShipping = computed(() => ({
       method: th.getTranslation(shippingMethod?.value?.displayName, shippingMethod?.value?.name),
+      type: shippingMethod?.value.fulfillmentMethodType,
       address: orderGetters.getShippingAddress(currentOrder.value),
       status: getLookupValue('OrderStatus', orderGetters.getStatus(currentOrder.value))
     }));
