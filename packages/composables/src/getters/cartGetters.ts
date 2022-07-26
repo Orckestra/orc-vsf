@@ -243,7 +243,7 @@ function isShippingReady(cart: Cart): boolean {
   const activeShipment = getActiveShipment(cart);
   const fulfillemtnMethod = activeShipment?.fulfillmentMethod;
   if (!activeShipment || !fulfillemtnMethod) return false;
-  if (fulfillemtnMethod.fulfillmentMethodType === 'PickUp' && !activeShipment.pickUpLocationId) return false;
+  if (fulfillemtnMethod.fulfillmentMethodType === FulfillmentMethodType.PickUp && !activeShipment.pickUpLocationId) return false;
   return isAddressReady(activeShipment.address);
 }
 
