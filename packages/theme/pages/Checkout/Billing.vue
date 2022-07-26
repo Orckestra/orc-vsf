@@ -61,7 +61,7 @@
         </template>
         <template v-else>
         <ValidationObserver v-slot="{ handleSubmit: hS }">
-          <div class="sameAsShipping">
+          <div class="sameAsShipping" v-if="isShippingMethod">
             <SfCheckbox
               v-model="sameAsShipping"
               :value="sameAsShipping"
@@ -174,6 +174,7 @@ export default {
     const { addresses, load: loadAddresses, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
     const isOpen = ref({ addingAddress: false, editingAddress: !isAuthenticated.value && !isBilling.value });
     const shipmentAddress = computed(() => cartGetters.getActiveShipment(cart.value)?.address);
+    const isShippingMethod = computed(() => cartGetters.isShipping(cart.value));
 
     const areAddressEqual = (addr1, addr2) => {
 
@@ -311,7 +312,7 @@ export default {
         await loadAddresses();
       }
 
-      if (!isBilling.value) {
+      if (!isBilling.value && isShippingMethod.value) {
         const address = userAddressGetters.getDefaultBilling(addresses.value) ?? cartGetters.getActiveShipment(cart.value)?.address;
         if (address) {
           await updateCartBillingAddress(address);
@@ -327,6 +328,7 @@ export default {
 
     return {
       sameAsShipping,
+      isShippingMethod,
       useShippingAddress,
       billingAddress,
       billingAddressId,

@@ -6,7 +6,7 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress } from '@vue-storefront/orc-vsf-api';
+import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress, FulfillmentMethod } from '@vue-storefront/orc-vsf-api';
 import { CustomerSummary } from '@vue-storefront/orc-vsf-api/src';
 
 function getItems(cart: Cart): CartItem[] {
@@ -88,6 +88,20 @@ function getActiveShipment(cart: Cart): Shipment {
 
 function getActiveShipments(cart: Cart): Shipment[] {
   return cart?.shipments?.filter(s => s.status !== 'Canceled');
+}
+function getFulfillmentMethod(cart: Cart): FulfillmentMethod {
+  const shipment = getActiveShipment(cart);
+  return shipment?.fulfillmentMethod;
+}
+
+function isPickup(cart: Cart): boolean {
+  const method = getFulfillmentMethod(cart);
+  return method?.fulfillmentMethodType === 'PickUp';
+}
+
+function isShipping(cart: Cart): boolean {
+  const method = getFulfillmentMethod(cart);
+  return method?.fulfillmentMethodType === 'Shipping';
 }
 
 function isShippingTaxable(shipment: Shipment): boolean {
@@ -227,7 +241,9 @@ function isAddressReady(address: UserAddress): boolean {
 
 function isShippingReady(cart: Cart): boolean {
   const activeShipment = getActiveShipment(cart);
-  if (!activeShipment || !activeShipment.fulfillmentMethod) return false;
+  const fulfillemtnMethod = activeShipment?.fulfillmentMethod;
+  if (!activeShipment || !fulfillemtnMethod) return false;
+  if (fulfillemtnMethod.fulfillmentMethodType === 'PickUp' && !activeShipment.pickUpLocationId) return false;
   return isAddressReady(activeShipment.address);
 }
 
@@ -283,6 +299,9 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getItemsDiscountsAmount,
   getLink,
   getActiveShipment,
+  getFulfillmentMethod,
+  isPickup,
+  isShipping,
   getActiveShipments,
   isShippingTaxable,
   isShippingEstimated,

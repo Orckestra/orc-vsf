@@ -36,8 +36,12 @@
         class="sf-property"
       />
       <SfProperty
-        name="Shipping address"
-        value="TODO"
+        name="Shipping type"
+        :value="shipping.type"
+        class="sf-property"
+      />
+      <SfProperty
+        :name="`${shipping.type} address`"
         class="sf-property"
       >
       <template #value>
@@ -236,6 +240,7 @@ export default {
 
     const shipping = computed(() => ({
       method: th.getTranslation(activeShipment?.value?.fulfillmentMethod?.displayName, activeShipment?.value?.fulfillmentMethod?.name),
+      type: activeShipment?.value?.fulfillmentMethod?.fulfillmentMethodType,
       address: {
         ...activeShipment?.value?.address
       }
