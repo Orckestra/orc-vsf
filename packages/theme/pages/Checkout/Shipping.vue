@@ -80,54 +80,50 @@
         </template>
       </template>
       <template v-if="isPickupMethod && isOpen.choosePickUpLocation">
-      
-  <SfModal :title="$t('Select PickUp location')" :visible="isOpen.choosePickUpLocation" cross overlay persistent class="locationSelection" @close="closePickUpLocationSelection">
-<!--<template #modal-bar>
-<SfHeading
-          :level="4"
-          :title="$t('Select PickUp location')"
-          class="sf-heading--left sf-heading--no-underline title"
-        />
-</template>-->
-          <SfScrollable
-    maxContentHeight="50rem"
-  >
-  <!--<template #view-all>
+        <SfModal :title="$t('Select PickUp location')" :visible="isOpen.choosePickUpLocation" cross overlay persistent class="locationSelection" @close="closePickUpLocationSelection">
+          <!--<template #modal-bar>
+            <SfHeading
+              :level="4"
+              :title="$t('Select PickUp location')"
+              class="sf-heading--left sf-heading--no-underline title"
+            />
+          </template>-->
+          <SfScrollable maxContentHeight="50rem">
+          <!--<template #view-all>
 
-        <VsfStoresList
-        :stores="stores"
-        :selected="form.pickUpLocationId"
-        @change="updateSelectedStoreForPickup"
-      />
+            <VsfStoresList
+              :stores="stores"
+              :selected="form.pickUpLocationId"
+              @change="updateSelectedStoreForPickup"
+            />
       
-  </template>-->
-  <VsfStoresList
-        :stores="stores"
-        :selected="form.pickUpLocationId"
-        @change="updateSelectedStoreForPickup"
-      />
-      </SfScrollable>
-      </SfModal >
+          </template>-->
+            <VsfStoresList
+              :stores="stores"
+              :selected="form.pickUpLocationId"
+              @change="updateSelectedStoreForPickup"
+            />
+          </SfScrollable>
+        </SfModal >
       </template>
-       <template v-if="isPickupMethod && !isOpen.choosePickUpLocation && selectedStore">
-         <SfHeading
+      <template v-if="isPickupMethod && !isOpen.choosePickUpLocation && selectedStore">
+        <SfHeading
           :level="4"
           :title="$t('Selected PickUp location')"
           class="sf-heading--left sf-heading--no-underline title"
         />
-        <div >
-        <span><b>{{selectedStore.name}}</b></span>
-              <br/>
-              <AddressPreview :address="selectedStoreAddress" :showAddressName="false" :showName="false"/>
+        <div>
+          <span><b>{{selectedStore.name}}</b></span>
+          <br/>
+          <AddressPreview :address="selectedStoreAddress" :showAddressName="false" :showName="false"/>
         </div>
         <br/>
-          <SfButton 
-              class="sf-button--text"
-              @click="changeSelectedPickupLocation"
-            >
-            {{ $t('Change Selected PickUp Location') }}
-            </SfButton >
-            <br/>
+        <SfButton 
+          class="sf-button--text"
+          @click="changeSelectedPickupLocation">
+          {{ $t('Change Selected PickUp Location') }}
+        </SfButton >
+        <br/>
       </template>
       <div class="form">
         <div class="form__action-bar">
