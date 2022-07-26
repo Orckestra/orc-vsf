@@ -309,28 +309,23 @@ export default {
 
     const getDefaultBillingAddress = () => {
       let address;
-       if(isAuthenticated.value) {
-            address = userAddressGetters.getDefaultBilling(addresses.value);
-            if(!address && isShippingMethod.value) {
-              address = cartGetters.getActiveShipment(cart.value)?.address;
-            }
-        } else {
-
-          if(isShippingMethod.value) 
-          {
-            address = cartGetters.getActiveShipment(cart.value)?.address;
-          }
+      if (isAuthenticated.value) {
+        address = userAddressGetters.getDefaultBilling(addresses.value);
+        if (!address && isShippingMethod.value) {
+          address = cartGetters.getActiveShipment(cart.value)?.address;
         }
+      } else if (isShippingMethod.value) {
+        address = cartGetters.getActiveShipment(cart.value)?.address;
+      }
 
-        return address;
-    }
+      return address;
+    };
 
     onSSR(async () => {
       if (isAuthenticated.value) {
         await loadAddresses();
       }
 
-     
       if (!isBilling.value) {
         const defaultAddress = getDefaultBillingAddress();
 
@@ -339,8 +334,6 @@ export default {
         }
       }
     });
-
-
 
     watch(isAuthenticated, () => {
       if (isAuthenticated.value) {
