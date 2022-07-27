@@ -124,7 +124,7 @@
       class="stores-modal" transition="appear">
       <SfScrollable maxContentHeight="15rem">
         <template #view-all>{{''}}</template>
-            <VsfStoresList
+            <StoresList
               :stores="stores"
               :selected="form.pickUpLocationId"
               @change="updateSelectedStoreForPickup"
@@ -161,7 +161,7 @@ import AddressForm from '~/components/AddressForm';
 import AddressPreview from '~/components/AddressPreview';
 import AddressSelector from '~/components/AddressSelector';
 import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
-import VsfStoresList from '../../components/Checkout/VsfStoresList';
+import StoresList from '../../components/StoresList';
 import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api/src';
 
 extend('required', {
@@ -188,7 +188,7 @@ export default {
     AddressSelector,
     AddressPreview,
     VsfShippingProvider,
-    VsfStoresList,
+    StoresList,
     SfScrollable,
     SfBottomModal
   },
@@ -235,8 +235,8 @@ export default {
     });
     const addressForm = ref(resetForm(shipment.value?.address));
 
-    const isShippingMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
-    const isPickupMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'PickUp');
+    const isShippingMethod = computed(() => cartGetters.isShipping(cart.value));
+    const isPickupMethod = computed(() => cartGetters.isPickup(cart.value));
 
     const isOpen = ref({ addingAddress: false });
 
