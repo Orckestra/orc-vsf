@@ -17,8 +17,7 @@
   },
   "dependencies": {
     "@vue-storefront/core": "~2.5.12",
-    "@vue-storefront/orc-vsf-api": "0.0.1",
-    "moment": "^2.29.4"
+    "@vue-storefront/orc-vsf-api": "0.0.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.6",
