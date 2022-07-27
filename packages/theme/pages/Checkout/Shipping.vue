@@ -12,6 +12,7 @@
         :selected="form.shippingMethod"
         @change="updateShippingMethod"
       />
+   
       <template v-if="isShippingMethod">
         <SfHeading
           :level="4"
@@ -79,52 +80,29 @@
           />
         </template>
       </template>
-      <template v-if="isPickupMethod && isOpen.choosePickUpLocation">
-        <SfModal :title="$t('Select PickUp location')" :visible="isOpen.choosePickUpLocation" cross overlay persistent class="locationSelection" @close="closePickUpLocationSelection">
-          <!--<template #modal-bar>
-            <SfHeading
-              :level="4"
-              :title="$t('Select PickUp location')"
-              class="sf-heading--left sf-heading--no-underline title"
-            />
-          </template>-->
-          <SfScrollable maxContentHeight="50rem">
-          <!--<template #view-all>
 
-            <VsfStoresList
-              :stores="stores"
-              :selected="form.pickUpLocationId"
-              @change="updateSelectedStoreForPickup"
-            />
-      
-          </template>-->
-            <VsfStoresList
-              :stores="stores"
-              :selected="form.pickUpLocationId"
-              @change="updateSelectedStoreForPickup"
-            />
-          </SfScrollable>
-        </SfModal >
-      </template>
-      <template v-if="isPickupMethod && !isOpen.choosePickUpLocation && selectedStore">
+     <template v-if="isPickupMethod">
         <SfHeading
-          :level="4"
-          :title="$t('Selected PickUp location')"
+          :level="3"
+          :title="$t('Pickup location')"
           class="sf-heading--left sf-heading--no-underline title"
         />
-        <div>
-          <span><b>{{selectedStore.name}}</b></span>
-          <br/>
-          <AddressPreview :address="selectedStoreAddress" :showAddressName="false" :showName="false"/>
+        <div v-if="selectedStore">
+          <AddressPreview :address="selectedStoreAddress" :showAddressName="true" :showName="false"/>
         </div>
-        <br/>
         <SfButton 
-          class="sf-button--text"
-          @click="changeSelectedPickupLocation">
-          {{ $t('Change Selected PickUp Location') }}
+          class="sf-button--text edit-location-button"
+          @click.prevent="toggleStoresModal">
+          <span v-if="selectedStore">
+            {{ $t('Edit pickup location') }}
+          </span>
+          <span v-else>
+             {{ $t('Select pickup location') }}
+          </span>
+         
         </SfButton >
-        <br/>
       </template>
+     
       <div class="form">
         <div class="form__action-bar">
           <SfButton
@@ -143,7 +121,20 @@
           </SfButton>
         </div>
       </div>
-    </form>
+ </form>
+    <SfBottomModal @click:close="toggleStoresModal" 
+      :isOpen="isStoresModalOpen" 
+      title="Select pickup location" 
+      class="stores-modal" transition="appear">
+      <SfScrollable maxContentHeight="15rem">
+        <template #view-all>{{''}}</template>
+            <VsfStoresList
+              :stores="stores"
+              :selected="form.pickUpLocationId"
+              @change="updateSelectedStoreForPickup"
+            />
+        </SfScrollable>
+    </SfBottomModal>
   </ValidationObserver>
 </template>
 
@@ -152,11 +143,12 @@ import {
   SfHeading,
   SfButton,
   SfIcon,
-  SfModal,
+  SfBottomModal,
   SfScrollable
 } from '@storefront-ui/vue';
+import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
-import { useUiNotification } from '~/composables';
+import { useUiNotification, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import { useUser, useFulfillmentMethods, useUserAddresses, storesGetters, useStores, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
@@ -193,8 +185,8 @@ export default {
     AddressPreview,
     VsfShippingProvider,
     VsfStoresList,
-    SfModal,
-    SfScrollable
+    SfScrollable,
+    SfBottomModal
   },
   setup (props, context) {
     const router = useRouter();
@@ -204,11 +196,14 @@ export default {
     const { load: loadFulfillmentMethods, fulfillmentMethods, loading: loadingFulfillmentMethods } = useFulfillmentMethods();
     const { isAuthenticated } = useUser();
     const { stores: storesList, search: loadStoresList } = useStores();
+    const { isStoresModalOpen, toggleStoresModal } = useUiState();
 
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
-    const stores = computed(() => storesGetters.getStores(storesList.value));
+    const stores = computed(() => { 
+      return storesGetters.getStores(storesList.value);
+    });
 
     const selectedStore = computed(() => stores.value?.find(x => x.id === shipment.value?.pickUpLocationId));
     const selectedStoreAddress = computed(() => {return {...shipment.value?.address, addressName: selectedStore.value?.name}})
@@ -237,7 +232,7 @@ export default {
     const isShippingMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
     const isPickupMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'PickUp');
 
-    const isOpen = ref({ addingAddress: false, choosePickUpLocation: !form.value.pickUpLocationId });
+    const isOpen = ref({ addingAddress: false });
 
     const addNewAddress = () => {
       addressForm.value = resetForm();
@@ -276,9 +271,6 @@ export default {
       onUpdate({ ...shipment.value, address }, () => {});
     };
 
-    const closePickUpLocationSelection = () => {
-      isOpen.value.choosePickUpLocation = false;
-    }
 
     const saveAddress = async () => {
       try {
@@ -329,9 +321,8 @@ export default {
         address: {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name },
         fulfillmentLocationId: selectedStore.fulfillmentLocation.id
        }
-
-      isOpen.value.choosePickUpLocation = false;
       onUpdate(updatedShipment, () => {});
+      toggleStoresModal();
     }
 
 
@@ -403,6 +394,17 @@ export default {
       }
     });
 
+    watch(isStoresModalOpen, ()=> {
+      if(isStoresModalOpen.value) {
+        const modalContent = document.getElementsByClassName(
+              "sf-bottom-modal__container"
+        )[0];
+        disableBodyScroll(modalContent);
+      } else {
+        clearAllBodyScrollLocks();
+      }
+    })
+
     const goBack = () => {
       router.push(context.root.localePath({ name: 'personalDetails' }));
     };
@@ -435,7 +437,8 @@ export default {
       shipmentPickUpLocationId,
       selectedStore,
       selectedStoreAddress,
-      closePickUpLocationSelection
+      isStoresModalOpen,
+      toggleStoresModal
 
     };
   }
@@ -508,6 +511,14 @@ export default {
 }
 
 .locationSelection {
+  z-index: 1000;
+}
+.edit-location-button {
+  display: block;
+  margin: var(--spacer-xs) 0 var(--spacer-lg) 0;
+}
+.stores-modal {
+  background: #fff;
   z-index: 1000;
 }
 </style>

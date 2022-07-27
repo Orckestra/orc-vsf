@@ -1,19 +1,13 @@
 <template>
   <div class="form__radio-group" data-testid="pickup-location">
-  <!-- <SfScrollable
-    maxContentHeight="30rem"
-  >-->
-  <div class="cards">
-  <div 
-      v-for="(item, index) in stores" class="card">
-    <SfRadio
-      :key="index"
+  <div class="stores">
+    <SfRadio 
+        v-for="(item, index) in stores" class="form__radio store" :key="index"
       :selected="selected"
       :label="th.getTranslation(item.displayName) || item.name"
       :value="item.id"
       name="storeSelector"
       :description="item.fulfillmentLocation.addresses[0].city"
-      class="form__radio pickupLocation"
       @input="updateSelectedStoreForPickup"
     >
       <template #label="{ label }">
@@ -26,8 +20,6 @@
       </template>
     </SfRadio>
     </div>
-    </div>
-    <!--</SfScrollable>-->
   </div>
   
 </template>
@@ -88,34 +80,18 @@ export default {
       }
     }
   }
-
-  @include for-desktop {
-    &__radio-group {
-      flex: 0 0 calc(100% + var(--spacer-sm));
-      margin: 0 calc(-1 * var(--spacer-sm));
-    }
-  }
 }
 
-.pickupLocation {
-  &__label {
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
-.cards {
+.stores {
    display: flex;
    flex-wrap: wrap;
-   justify-content: space-between;
+   justify-content: flex-start;
 }
 
-.card {
-	flex: 1 0 100%;
-  
-  @include for-desktop {
-    
-	flex: 1 0 50%;
-  }
+.store {
+    flex: 1 1 100%;
+    @include for-desktop {
+      flex: 0 1 25%;
+    }
 }
 </style>
