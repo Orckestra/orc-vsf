@@ -6,6 +6,11 @@ function getStores(searchResults: StoresSearchResults): Store {
   return searchResults?.results;
 }
 
+function getStoresForPickUp(searchResults: StoresSearchResults): Store {
+  return searchResults?.results.filter(el => el.fulfillmentLocation.supportPickUp)
+}
+
 export const storesGetters: UseStoresGetters<Store> = {
-  getStores
+  getStores,
+  getStoresForPickUp
 };

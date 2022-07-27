@@ -128,6 +128,8 @@
               :stores="stores"
               :selected="form.pickUpLocationId"
               @change="selectStoreForPickup"
+              @loadStores="loadMoreStores"
+              :showLoadButton="showLoadMoreStoresButton"
             />
         </SfScrollable>
     </SfBottomModal>
@@ -144,7 +146,7 @@ import {
 } from '@storefront-ui/vue';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
-import { useUiNotification, useUiState } from '~/composables';
+import { useUiNotification, useUiState, useUiHelpers } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import { useUser,
   useFulfillmentMethods,
@@ -201,13 +203,20 @@ export default {
     const { isAuthenticated } = useUser();
     const { stores: storesList, search: loadStoresList } = useStores();
     const { isStoresModalOpen, toggleStoresModal } = useUiState();
+    const th = useUiHelpers();
+    const facetsFromUrl = th.getFacetsFromURL();
+
+    const loadStoresCounter = ref({ count: facetsFromUrl.itemsPerPage });
+    const loadMoreStores = async () => {
+      loadStoresCounter.value.count += facetsFromUrl.itemsPerPage;
+      await loadStoresList({itemsPerPage: loadStoresCounter.value.count});
+    }
 
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
-    const stores = computed(() => {
-      return storesGetters.getStores(storesList.value);
-    });
+    const stores = computed(() => storesGetters.getStoresForPickUp(storesList.value));
+    const showLoadMoreStoresButton = computed(() => stores.value.length === loadStoresCounter.value.count);
 
     const selectedStore = computed(() => stores.value?.find(x => x.id === shipment.value?.pickUpLocationId));
     const selectedStoreAddress = computed(() => {
@@ -368,7 +377,7 @@ export default {
     onSSR(async () => Promise.allSettled([
       loadUserShipping(),
       loadFulfillmentMethods(),
-      loadStoresList()
+      loadStoresList({itemsPerPage: facetsFromUrl.itemsPerPage })
     ]));
 
     watch(isAuthenticated, () => {
@@ -420,7 +429,9 @@ export default {
       selectedStore,
       selectedStoreAddress,
       isStoresModalOpen,
-      toggleStoresModal
+      toggleStoresModal,
+      loadMoreStores,
+      showLoadMoreStoresButton
     };
   }
 };

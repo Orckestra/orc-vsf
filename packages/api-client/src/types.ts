@@ -365,7 +365,7 @@ export type OrderItem = {
 
 export type SearchQueryResult = {
     totalCount: number;
-    results: OrderItem[];
+    results: any[];
 };
 
 export type LineItem = TODO;

@@ -5,10 +5,10 @@ import type { SearchQueryResult as StoresSearchResults } from '@vue-storefront/o
 
 const params: UseStoresFactoryParams<StoresSearchResults, UseStoresSearchParams> = {
 
-  search: async (context: Context) => {
+  search: async (context: Context, params: UseStoresSearchParams) => {
     const app = context.$occ.config.app;
     const locale: any = app.i18n.locale;
-    const res = await context.$occ.api.findStores({ locale });
+    const res = await context.$occ.api.findStores({ locale, page: params.page, itemsPerPage: params.itemsPerPage });
 
     const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true, includeSchedules: true });
 

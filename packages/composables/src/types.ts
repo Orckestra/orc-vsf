@@ -355,7 +355,8 @@ export interface UseStoresFactoryParams<STORES, STORES_SEARCH_PARAMS> extends Fa
 }
 
 export interface UseStoresGetters<STORES> {
-  getStores(stores: STORES): STORES;
+  getStores(stores: any): STORES;
+  getStoresForPickUp(stores: any): STORES;
 }
 
 /*
