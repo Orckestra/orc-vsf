@@ -4,6 +4,7 @@ const useBamboraHelpers = () => ({
   isCVVComplete: false,
   isExpiryComplete: false,
   customCheckout: null,
+  isComplete: false,
 
   init: function(customCheckout: any) {
     this.customCheckout = customCheckout;
@@ -24,16 +25,14 @@ const useBamboraHelpers = () => ({
     this.customCheckout.create('expiry', { placeholder: 'MM / YY' }).mount('#card-expiry');
   },
   addListeners: function() {
-    const self = this;
-
     // listen for submit button
     if (document.getElementById('checkout-form') !== null) {
       document
         .getElementById('checkout-form')
-        .addEventListener('submit', self.onSubmit.bind(self));
+        .addEventListener('submit', () => this.onSubmit);
     }
 
-    this.customCheckout.on('brand', function(event) {
+    this.customCheckout.on('brand', (event) => {
       console.log('brand: ' + JSON.stringify(event));
 
       let cardLogo = 'none';
@@ -55,7 +54,7 @@ const useBamboraHelpers = () => ({
       console.log('focus: ' + JSON.stringify(event));
     });
 
-    this.customCheckout.on('empty', function(event) {
+    this.customCheckout.on('empty', (event) => {
       console.log('empty: ' + JSON.stringify(event));
 
       if (event.empty) {
@@ -66,66 +65,69 @@ const useBamboraHelpers = () => ({
         } else if (event.field === 'expiry') {
           this.isExpiryComplete = false;
         }
-        self.setPayButton(false);
+        this.setPayButton(false);
       }
     });
 
-    this.customCheckout.on('complete', function(event) {
+    this.customCheckout.on('complete', (event) => {
       console.log('complete: ' + JSON.stringify(event));
 
       if (event.field === 'card-number') {
         this.isCardNumberComplete = true;
-        self.hideErrorForId('card-number');
+        this.hideErrorForId('card-number');
       } else if (event.field === 'cvv') {
         this.isCVVComplete = true;
-        self.hideErrorForId('card-cvv');
+        this.hideErrorForId('card-cvv');
       } else if (event.field === 'expiry') {
         this.isExpiryComplete = true;
-        self.hideErrorForId('card-expiry');
+        this.hideErrorForId('card-expiry');
       }
 
-      self.setPayButton(
+      this.setPayButton(
         this.isCardNumberComplete && this.isCVVComplete && this.isExpiryComplete
       );
+
+      if (this.isComplete) {
+        this.createToken();
+      }
     });
 
-    this.customCheckout.on('error', function(event) {
+    this.customCheckout.on('error', (event) => {
       console.log('error: ' + JSON.stringify(event));
 
       if (event.field === 'card-number') {
         this.isCardNumberComplete = false;
-        self.showErrorForId('card-number', event.message);
+        this.showErrorForId('card-number', event.message);
       } else if (event.field === 'cvv') {
         this.isCVVComplete = false;
-        self.showErrorForId('card-cvv', event.message);
+        this.showErrorForId('card-cvv', event.message);
       } else if (event.field === 'expiry') {
         this.isExpiryComplete = false;
-        self.showErrorForId('card-expiry', event.message);
+        this.showErrorForId('card-expiry', event.message);
       }
-      self.setPayButton(false);
+      this.setPayButton(false);
     });
   },
   onSubmit: function(event) {
-    const self = this;
-
     console.log('checkout.onSubmit()');
 
     event.preventDefault();
-    self.setPayButton(false);
-    self.toggleProcessingScreen();
+    this.setPayButton(false);
+    this.toggleProcessingScreen();
 
-    const callback = function(result) {
+    this.createToken();
+  },
+  createToken: function() {
+    console.log('checkout.createToken()');
+    this.customCheckout.createToken((result) => {
       console.log('token result : ' + JSON.stringify(result));
 
       if (result.error) {
-        self.processTokenError(result.error);
+        this.processTokenError(result.error);
       } else {
-        self.processTokenSuccess(result.token);
+        this.processTokenSuccess(result.token);
       }
-    };
-
-    console.log('checkout.createToken()');
-    this.customCheckout.createToken(callback);
+    });
   },
   hideErrorForId: function(id) {
     console.log('hideErrorForId: ' + id);
@@ -167,18 +169,8 @@ const useBamboraHelpers = () => ({
       console.log('showErrorForId: Could not find ' + id);
     }
   },
-  setPayButton: function(enabled) {
-
-    /* console.log('checkout.setPayButton() disabled: ' + !enabled);
-
-    const payButton = document.getElementById('pay-button');
-    if (enabled) {
-      payButton.disabled = false;
-      payButton.className = 'btn btn-primary';
-    } else {
-      payButton.disabled = true;
-      payButton.className = 'btn btn-primary disabled';
-    } */
+  setPayButton: function (enabled) {
+    this.isComplete = enabled;
   },
   toggleProcessingScreen: function() {
     const processingScreen = document.getElementById('processing-screen');

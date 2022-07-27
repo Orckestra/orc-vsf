@@ -68,8 +68,8 @@ export default {
     recaptchaScript.setAttribute('src', 'https://libs.na.bambora.com/customcheckout/1/customcheckout.js');
     recaptchaScript.onload = () => {
       const customCheckout = window.customcheckout();
-      const bamboraController = useBamboraHelpers();
-      bamboraController.init(customCheckout);
+      this.bamboraController = useBamboraHelpers();
+      this.bamboraController.init(customCheckout);
     };
     document.head.appendChild(recaptchaScript);
   },
