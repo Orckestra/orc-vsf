@@ -33,7 +33,8 @@ export const tokenExtension: ApiClientExtension = {
             // if the token is expired or broken, then we remove the data cookie, it should force to generate a guest token
             if (data) {
               res.cookie(DATA_COOKIE_NAME, '', {
-                expires: new Date(0), // 1 January 1970 UTC.
+                // 1 January 1970 UTC.
+                expires: new Date(0)
               });
             }
             res.setHeader('Token-Expired', 'true');
@@ -54,17 +55,17 @@ export const tokenExtension: ApiClientExtension = {
                 tokenData,
                 myAccount.secretPassphrase,
                 {
-                  expiresIn: expireInSeconds,
+                  expiresIn: expireInSeconds
                 }
               );
 
               const authOptions = {
                 expires: new Date(cookieExpiration),
                 httpOnly: true,
-                secure: req.secure,
+                secure: req.secure
               };
               const publicDataOptions = {
-                expires: new Date(cookieExpiration),
+                expires: new Date(cookieExpiration)
               };
 
               // the JWT token is HTTP only to protect from XSS
@@ -82,9 +83,9 @@ export const tokenExtension: ApiClientExtension = {
             } catch (ex) {
               console.log(ex);
             }
-          },
-        },
+          }
+        }
       };
-    },
-  }),
+    }
+  })
 };

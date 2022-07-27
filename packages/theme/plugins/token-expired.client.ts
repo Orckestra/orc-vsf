@@ -7,7 +7,7 @@ const plugin: Plugin = ({ app }) => {
       if (tokenExpired === 'true') {
         app.$vsf.$occ.api.initializeGuestToken().then(() =>{
           window.location.reload(true);
-        })
+        });
         return false;
       }
     }
