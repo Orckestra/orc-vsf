@@ -110,7 +110,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getOrderByNumber,
     getOrderById,
     getOrderLookups,
-	findStores
+    findStores
   },
   extensions: [tokenExtension]
 });

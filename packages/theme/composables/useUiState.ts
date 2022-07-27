@@ -11,7 +11,7 @@ const state = reactive({
   isStoresModalOpen: false
 });
 
-const useUiState = () => {
+const useUiState = (): any => {
   const isMobileMenuOpen = computed(() => state.isMobileMenuOpen);
   const toggleMobileMenu = () => {
     state.isMobileMenuOpen = !state.isMobileMenuOpen;

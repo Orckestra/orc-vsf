@@ -19,7 +19,7 @@ export default async function findStores(context, params) {
       Direction: 1,
       PropertyName: 'Created'
     }
-  ]
+  ];
 
   const filters = [
     {
@@ -36,7 +36,7 @@ export default async function findStores(context, params) {
       Value: true,
       CustomExpression: null
     }
-  ]
+  ];
 
   const query = {
     filter: {

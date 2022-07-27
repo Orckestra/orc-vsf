@@ -30,7 +30,7 @@ export default {
     showPhone: {
       type: Boolean,
       default: true
-    },
+    }
   },
   setup() {
     const { countries } = useCountries();

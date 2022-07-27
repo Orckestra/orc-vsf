@@ -12,7 +12,6 @@
         :selected="form.shippingMethod"
         @change="updateShippingMethod"
       />
-   
       <template v-if="isShippingMethod">
         <SfHeading
           :level="4"
@@ -80,7 +79,6 @@
           />
         </template>
       </template>
-
      <template v-if="isPickupMethod">
         <SfHeading
           :level="3"
@@ -90,7 +88,7 @@
         <div v-if="selectedStore">
           <AddressPreview :address="selectedStoreAddress" :showAddressName="true" :showName="false"/>
         </div>
-        <SfButton 
+        <SfButton
           class="sf-button--text edit-location-button"
           @click.prevent="toggleStoresModal">
           <span v-if="selectedStore">
@@ -99,10 +97,8 @@
           <span v-else>
              {{ $t('Select pickup location') }}
           </span>
-         
         </SfButton >
       </template>
-     
       <div class="form">
         <div class="form__action-bar">
           <SfButton
@@ -121,10 +117,10 @@
           </SfButton>
         </div>
       </div>
- </form>
-    <SfBottomModal @click:close="toggleStoresModal" 
-      :isOpen="isStoresModalOpen" 
-      title="Select pickup location" 
+    </form>
+    <SfBottomModal @click:close="toggleStoresModal"
+      :isOpen="isStoresModalOpen"
+      title="Select pickup location"
       class="stores-modal" transition="appear">
       <SfScrollable maxContentHeight="15rem">
         <template #view-all>{{''}}</template>
@@ -146,11 +142,19 @@ import {
   SfBottomModal,
   SfScrollable
 } from '@storefront-ui/vue';
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { useUiNotification, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
-import { useUser, useFulfillmentMethods, useUserAddresses, storesGetters, useStores, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
+import { useUser,
+  useFulfillmentMethods,
+  useUserAddresses,
+  storesGetters,
+  useStores,
+  useCart,
+  cartGetters,
+  fulfillmentMethodsGetters,
+  userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/AddressForm';
@@ -201,13 +205,15 @@ export default {
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
-    const stores = computed(() => { 
+    const stores = computed(() => {
       return storesGetters.getStores(storesList.value);
     });
 
     const selectedStore = computed(() => stores.value?.find(x => x.id === shipment.value?.pickUpLocationId));
-    const selectedStoreAddress = computed(() => {return {...shipment.value?.address, addressName: selectedStore.value?.name}})
-    
+    const selectedStoreAddress = computed(() => {
+      return {...shipment.value?.address, addressName: selectedStore.value?.name};
+    });
+
     const shipmentPickUpLocationId = computed(() => shipment.value?.pickUpLocationId);
 
     const form = ref({
@@ -271,7 +277,6 @@ export default {
       onUpdate({ ...shipment.value, address }, () => {});
     };
 
-
     const saveAddress = async () => {
       try {
         const address = addressForm.value;
@@ -315,20 +320,19 @@ export default {
     const updateSelectedStoreForPickup = (value) => {
       form.value.pickUpLocationId = value;
       const selectedStore = stores.value.find(x => x.id === value);
-       const updatedShipment = {
+      const updatedShipment = {
         ...shipment.value,
         pickUpLocationId: value,
         address: {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name },
         fulfillmentLocationId: selectedStore.fulfillmentLocation.id
-       }
+      };
       onUpdate(updatedShipment, () => {});
       toggleStoresModal();
-    }
-
+    };
 
     const changeSelectedPickupLocation = () => {
       isOpen.value.choosePickUpLocation = true;
-    }
+    };
 
     const updateShippingMethod = (value) => {
       form.value.shippingMethod = value;
@@ -352,8 +356,8 @@ export default {
 
       if (updatedShipment.pickUpLocationId && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.PickUp) {
         isOpen.value.choosePickUpLocation = false;
-        const selectedStore = stores.value?.find(x => x.id === updatedShipment.pickUpLocationId)
-        updatedShipment.address = {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name }
+        const selectedStore = stores.value?.find(x => x.id === updatedShipment.pickUpLocationId);
+        updatedShipment.address = {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name };
       }
 
       onUpdate(updatedShipment, () => {});
@@ -376,8 +380,7 @@ export default {
         updatedShipment.pickUpLocationId = null;
         updatedShipment.fulfillmentLocationId = null;
         onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
-      }
-      else {
+      } else {
         router.push(context.root.localePath({ name: 'billing' }));
       }
     };
@@ -395,15 +398,15 @@ export default {
     });
 
     watch(isStoresModalOpen, ()=> {
-      if(isStoresModalOpen.value) {
+      if (isStoresModalOpen.value) {
         const modalContent = document.getElementsByClassName(
-              "sf-bottom-modal__container"
+          'sf-bottom-modal__container'
         )[0];
         disableBodyScroll(modalContent);
       } else {
         clearAllBodyScrollLocks();
       }
-    })
+    });
 
     const goBack = () => {
       router.push(context.root.localePath({ name: 'personalDetails' }));

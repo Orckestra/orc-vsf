@@ -3,8 +3,7 @@ import {
   FactoryParams,
   Context,
   ComputedProperty,
-  AgnosticPagination,
-  UseStoreGetters as VsfUseStoreGetters
+  AgnosticPagination
 } from '@vue-storefront/core';
 import {
   AgnosticAttribute, AgnosticCoupon, AgnosticDiscount,
@@ -359,11 +358,6 @@ export interface UseStoresGetters<STORES> {
   getStores(stores: STORES): STORES;
 }
 
-export interface UseStoreGetters<STORES, CRITERIA = any> extends VsfUseStoreGetters<STORES, CRITERIA> {
-  isStoreOpenedNow(store: STORES): boolean;
-  getStoreOpeningHours(store: STORES): {};
-}
-
 /*
 Fulfillment location
 */
@@ -387,7 +381,6 @@ export interface UseGetFulfillmentLocation<FULFILLMENTLOCATION, FULFILLMENTLOCAT
 export interface UseGetFulfillmentLocationFactoryParams<FULFILLMENTLOCATION, FULFILLMENTLOCATION_GET_PARAMS> extends FactoryParams {
   getLocation(context: Context, params: FULFILLMENTLOCATION_GET_PARAMS): Promise<FULFILLMENTLOCATION>;
 }
-
 
 /*
 ORDER

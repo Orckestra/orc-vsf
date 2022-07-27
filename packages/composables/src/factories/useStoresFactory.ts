@@ -46,7 +46,7 @@ export function useStoresFactory<STORES, STORES_SEARCH_PARAMS, API extends Platf
       search,
       loading: computed(() => loading.value),
       error: computed(() => error.value)
-    }
-  }
-};
+    };
+  };
+}
 

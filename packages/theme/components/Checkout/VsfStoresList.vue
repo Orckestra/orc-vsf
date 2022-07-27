@@ -1,7 +1,7 @@
 <template>
   <div class="form__radio-group" data-testid="pickup-location">
   <div class="stores">
-    <SfRadio 
+    <SfRadio
         v-for="(item, index) in stores" class="form__radio store" :key="index"
       :selected="selected"
       :label="th.getTranslation(item.displayName) || item.name"
@@ -21,7 +21,6 @@
     </SfRadio>
     </div>
   </div>
-  
 </template>
 
 <script>
