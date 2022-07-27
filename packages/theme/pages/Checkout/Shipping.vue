@@ -127,7 +127,7 @@
             <StoresList
               :stores="stores"
               :selected="form.pickUpLocationId"
-              @change="updateSelectedStoreForPickup"
+              @change="selectStoreForPickup"
             />
         </SfScrollable>
     </SfBottomModal>
@@ -317,7 +317,7 @@ export default {
       }
     };
 
-    const updateSelectedStoreForPickup = (value) => {
+    const selectStoreForPickup = (value) => {
       form.value.pickUpLocationId = value;
       const selectedStore = stores.value.find(x => x.id === value);
       const updatedShipment = {
@@ -415,7 +415,7 @@ export default {
       shipmentAddressId,
       stores,
       isPickupMethod,
-      updateSelectedStoreForPickup,
+      selectStoreForPickup,
       shipmentPickUpLocationId,
       selectedStore,
       selectedStoreAddress,

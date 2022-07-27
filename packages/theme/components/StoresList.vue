@@ -8,7 +8,7 @@
       :value="item.id"
       name="storeSelector"
       :description="item.fulfillmentLocation.addresses[0].city"
-      @input="updateSelectedStoreForPickup"
+      @input="selectStore"
     >
       <template #label="{ label }">
         <div class="sf-radio__label pickupLocation__label">
@@ -51,11 +51,11 @@ export default {
   emits: ['change'],
   setup(props, { emit }) {
     const th = useUiHelpers();
-    const updateSelectedStoreForPickup = value => emit('change', value);
+    const selectStore = value => emit('change', value);
 
     return {
       th,
-      updateSelectedStoreForPickup
+      selectStore
     };
   }
 };
