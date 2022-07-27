@@ -330,16 +330,14 @@ export default {
       toggleStoresModal();
     };
 
-    const changeSelectedPickupLocation = () => {
-      isOpen.value.choosePickUpLocation = true;
-    };
-
     const updateShippingMethod = (value) => {
       form.value.shippingMethod = value;
       addressForm.value = resetForm();
       const updatedShipment = {
         ...shipment.value,
         address: null,
+        pickUpLocationId: null,
+        fulfillmentLocationId: null,
         fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
       };
 
@@ -348,16 +346,6 @@ export default {
 
         form.value.addressId = preferredAddress?.id;
         updatedShipment.address = preferredAddress;
-      }
-
-      if (!updatedShipment.pickUpLocationId && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.PickUp) {
-        isOpen.value.choosePickUpLocation = true;
-      }
-
-      if (updatedShipment.pickUpLocationId && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.PickUp) {
-        isOpen.value.choosePickUpLocation = false;
-        const selectedStore = stores.value?.find(x => x.id === updatedShipment.pickUpLocationId);
-        updatedShipment.address = {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name };
       }
 
       onUpdate(updatedShipment, () => {});
@@ -371,14 +359,6 @@ export default {
           ...shipment.value
         };
         updatedShipment.address = addressForm.value;
-        onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
-      }
-      if (!isPickupMethod.value) {
-        const updatedShipment = {
-          ...shipment.value
-        };
-        updatedShipment.pickUpLocationId = null;
-        updatedShipment.fulfillmentLocationId = null;
         onUpdate(updatedShipment, () => router.push(context.root.localePath({ name: 'billing' })));
       } else {
         router.push(context.root.localePath({ name: 'billing' }));
@@ -436,13 +416,11 @@ export default {
       stores,
       isPickupMethod,
       updateSelectedStoreForPickup,
-      changeSelectedPickupLocation,
       shipmentPickUpLocationId,
       selectedStore,
       selectedStoreAddress,
       isStoresModalOpen,
       toggleStoresModal
-
     };
   }
 };
