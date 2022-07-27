@@ -144,7 +144,7 @@ import {
 } from '@storefront-ui/vue';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
-import { useUiNotification, useUiState, useUiHelpers } from '~/composables';
+import { useUiNotification, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import { useUser,
   useFulfillmentMethods,
@@ -206,7 +206,6 @@ export default {
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
     const stores = computed(() => storesGetters.getStoresForPickUp(storesList.value));
-    const showLoadMoreStoresButton = computed(() => stores.value.length === loadStoresCounter.value.count);
 
     const selectedStore = computed(() => stores.value?.find(x => x.id === shipment.value?.pickUpLocationId));
     const selectedStoreAddress = computed(() => {

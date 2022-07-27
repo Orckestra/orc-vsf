@@ -387,11 +387,6 @@ export type OrderQueryResult = {
     results: OrderItem[];
 };
 
-export type StoreQueryResult = {
-    totalCount: number;
-    results: Store[];
-};
-
 export type LineItem = TODO;
 
 export type PasswordResetResult = {
@@ -556,6 +551,11 @@ export type Store = {
     phoneExtension: string,
     phoneNumber: string,
     storeType: string
+};
+
+export type StoreQueryResult = {
+    totalCount: number;
+    results: Store[];
 };
 
 export type WishlistItem = {

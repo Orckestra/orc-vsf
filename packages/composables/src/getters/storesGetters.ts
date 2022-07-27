@@ -7,7 +7,7 @@ function getStores(searchResults: StoreQueryResult): Store[] {
 }
 
 function getStoresForPickUp(searchResults: StoreQueryResult): Store[] {
-  return searchResults?.results.filter(el => el.fulfillmentLocation.supportPickUp)
+  return searchResults?.results.filter(el => el.fulfillmentLocation.supportPickUp);
 }
 
 export const storesGetters: UseStoresGetters<Store> = {

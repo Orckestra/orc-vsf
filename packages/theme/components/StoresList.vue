@@ -25,8 +25,6 @@
 import { SfRadio } from '@storefront-ui/vue';
 import { useUiHelpers } from '~/composables';
 import AddressPreview from '~/components/AddressPreview';
-import { useStores } from '@vue-storefront/orc-vsf';
-import { computed } from '@nuxtjs/composition-api';
 
 export default {
   name: 'StoresList',
