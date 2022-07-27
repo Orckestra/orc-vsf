@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { SfButton, SfRadio, SfScrollable } from '@storefront-ui/vue';
+import { SfRadio } from '@storefront-ui/vue';
 import { useUiHelpers } from '~/composables';
 import AddressPreview from '~/components/AddressPreview';
 
@@ -45,10 +45,8 @@ export default {
     }
   },
   components: {
-    SfButton,
     SfRadio,
-    AddressPreview,
-    SfScrollable
+    AddressPreview
   },
   emits: ['change'],
   setup(props, { emit }) {
