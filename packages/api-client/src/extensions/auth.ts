@@ -12,10 +12,10 @@ export const tokenExtension: ApiClientExtension = {
         ...configuration,
         auth: {
           getCustomerToken: () => {
+            const token = req.cookies[AUTH_COOKIE_NAME];
+            const data = req.cookies[DATA_COOKIE_NAME];
+            const { myAccount } = configuration;
             try {
-              const token = req.cookies[AUTH_COOKIE_NAME];
-              const { myAccount } = configuration;
-
               if (token) {
                 try {
                   const decoded: string = jwt.verify(
@@ -29,6 +29,13 @@ export const tokenExtension: ApiClientExtension = {
               }
             } catch (ex) {
               console.log(ex);
+            }
+            // if the token is expired or broken, then we remove the data cookie, it should force to generate a guest token
+            if (data) {
+              res.cookie(DATA_COOKIE_NAME, '', {
+                // 1 January 1970 UTC.
+                expires: new Date(0)
+              });
             }
             res.setHeader('Token-Expired', 'true');
             return {};
@@ -72,7 +79,7 @@ export const tokenExtension: ApiClientExtension = {
               );
 
               // remove header Token-Expired if someone asked before
-              delete req.headers['token-expired'];
+              res.removeHeader('Token-Expired');
             } catch (ex) {
               console.log(ex);
             }
