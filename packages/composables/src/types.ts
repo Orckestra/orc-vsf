@@ -361,30 +361,6 @@ export interface UseStoresGetters<STORES> {
 }
 
 /*
-Fulfillment location
-*/
-
-export type UseGetFulfillmentLocationParams = {
-  locale: string,
-  locationId: number
-};
-
-export interface UseGetFulfillmentLocationErrors {
-  getLocation: Error;
-}
-
-export interface UseGetFulfillmentLocation<FULFILLMENTLOCATION, FULFILLMENTLOCATION_GET_PARAMS, API extends PlatformApi = any> extends Composable<API> {
-  response: ComputedProperty<FULFILLMENTLOCATION>;
-  getLocation(params: FULFILLMENTLOCATION_GET_PARAMS): Promise<any>;
-  loading: ComputedProperty<boolean>;
-  error: ComputedProperty<UseStoresErrors>;
-}
-
-export interface UseGetFulfillmentLocationFactoryParams<FULFILLMENTLOCATION, FULFILLMENTLOCATION_GET_PARAMS> extends FactoryParams {
-  getLocation(context: Context, params: FULFILLMENTLOCATION_GET_PARAMS): Promise<FULFILLMENTLOCATION>;
-}
-
-/*
 ORDER
 */
 
