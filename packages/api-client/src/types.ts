@@ -6,7 +6,26 @@ export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
 
-export type FulfillmentLocation = TODO;
+export type FulfillmentLocation = {
+    addresses: any[]
+    addressIds: any[]
+    displayName: any,
+    id: string,
+    inventoryLocationId: string,
+    inventoryProviderId: string,
+    isActive: boolean,
+    isInventoryEnabled: boolean,
+    isPickUpLocation: boolean,
+    name: string,
+    number: string,
+    schedules: any[],
+    supportDelivery: boolean,
+    supportPickUp: boolean,
+    supportShipping: boolean,
+    supportShipToStore: boolean,
+    timeZone: string,
+    type: string
+};
 
 export type UserAddress = {
     addressName: string,
@@ -363,9 +382,14 @@ export type OrderItem = {
     total: number
 };
 
-export type SearchQueryResult = {
+export type OrderQueryResult = {
     totalCount: number;
-    results: any[];
+    results: OrderItem[];
+};
+
+export type StoreQueryResult = {
+    totalCount: number;
+    results: Store[];
 };
 
 export type LineItem = TODO;
@@ -518,7 +542,21 @@ export type ShippingMethod = TODO;
 
 export type ShippingProvider = TODO;
 
-export type Store = TODO;
+export type Store = {
+    displayName: any,
+    email: string,
+    faxExtension: string,
+    faxNumber: string,
+    fulfillmentLocation: FulfillmentLocation,
+    id: string,
+    isActive: boolean,
+    manager: string,
+    name: string,
+    number: string,
+    phoneExtension: string,
+    phoneNumber: string,
+    storeType: string
+};
 
 export type WishlistItem = {
     productSummary: any;

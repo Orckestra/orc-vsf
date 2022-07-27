@@ -336,7 +336,8 @@ STORES
 export type UseStoresSearchParams = {
   locale: string,
   page: number,
-  itemsPerPage: number
+  itemsPerPage: number,
+  sorting: any[]
 };
 
 export interface UseStoresErrors {
@@ -355,8 +356,8 @@ export interface UseStoresFactoryParams<STORES, STORES_SEARCH_PARAMS> extends Fa
 }
 
 export interface UseStoresGetters<STORES> {
-  getStores(stores: any): STORES;
-  getStoresForPickUp(stores: any): STORES;
+  getStores(stores: any): STORES[];
+  getStoresForPickUp(stores: any): STORES[];
 }
 
 /*

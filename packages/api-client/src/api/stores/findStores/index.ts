@@ -5,7 +5,7 @@
 export default async function findStores(context, params) {
 
   const { api, scope } = context.config;
-  const { locale, page = 1, itemsPerPage = 12 } = params;
+  const { locale, page = 1, itemsPerPage = 1000, sorting } = params;
   const maximumItems = itemsPerPage;
   const startingIndex = (page - 1) * maximumItems;
 
@@ -14,12 +14,12 @@ export default async function findStores(context, params) {
     api.url
   );
 
-  const sortings = [
+  const sortings = !sorting ? [
     {
       Direction: 1,
-      PropertyName: 'Created'
+      PropertyName: 'Name'
     }
-  ];
+  ] : sorting;
 
   const filters = [
     {

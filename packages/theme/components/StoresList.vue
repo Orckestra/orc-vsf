@@ -1,5 +1,5 @@
 <template>
-  <div class="form__radio-group" data-testid="pickup-location">
+  <div class="form__radio-group" data-testid="stores-list">
     <div class="stores">
       <SfRadio
         v-for="(item, index) in stores" class="form__radio store" :key="index"
@@ -7,32 +7,22 @@
         :label="th.getTranslation(item.displayName) || item.name"
         :value="item.id"
         name="storeSelector"
-        :description="item.fulfillmentLocation.addresses[0].city"
         @input="selectStore">
         <template #label="{ label }">
-          <div class="sf-radio__label pickupLocation__label">
-            <span><b>{{ label }}</b></span>
+          <div class="sf-radio__label store__label">
+            <strong>{{ label }}</strong>
           </div>
         </template>
         <template #description>
-          <AddressPreview :address="item.fulfillmentLocation.addresses[0]" :showName="false" :showAddressName="false" :showPhone="false"/>
+          <AddressPreview :address="item.fulfillmentLocation.addresses[0]" :showName="false" :showAddressName="false"/>
         </template>
       </SfRadio>
-    </div>
-    <div class="form__load-button">
-      <SfButton
-        v-if="showLoadButton"
-        class="form__action-button--secondary sf-button color-secondary form__back-button"
-        type="button"
-        @click="loadStores">
-          {{ $t('Load more stores') }}
-      </SfButton>
     </div>
   </div>
 </template>
 
 <script>
-import { SfRadio, SfButton } from '@storefront-ui/vue';
+import { SfRadio } from '@storefront-ui/vue';
 import { useUiHelpers } from '~/composables';
 import AddressPreview from '~/components/AddressPreview';
 import { useStores } from '@vue-storefront/orc-vsf';
@@ -60,19 +50,16 @@ export default {
   },
   components: {
     SfRadio,
-    AddressPreview,
-    SfButton
+    AddressPreview
   },
   emits: ['change'],
   setup(props, { emit }) {
     const th = useUiHelpers();
     const selectStore = value => emit('change', value);
-    const loadStores = () => emit('loadStores');
 
     return {
       th,
-      selectStore,
-      loadStores
+      selectStore
     };
   }
 };
@@ -93,11 +80,6 @@ export default {
         --radio-container-padding: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) var(--spacer-sm);
       }
     }
-  }
-  &__load-button {
-    display: flex;
-    justify-content: center;
-    
   }
 }
 

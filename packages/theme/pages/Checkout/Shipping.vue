@@ -128,8 +128,6 @@
               :stores="stores"
               :selected="form.pickUpLocationId"
               @change="selectStoreForPickup"
-              @loadStores="loadMoreStores"
-              :showLoadButton="showLoadMoreStoresButton"
             />
         </SfScrollable>
     </SfBottomModal>
@@ -203,14 +201,6 @@ export default {
     const { isAuthenticated } = useUser();
     const { stores: storesList, search: loadStoresList } = useStores();
     const { isStoresModalOpen, toggleStoresModal } = useUiState();
-    const th = useUiHelpers();
-    const facetsFromUrl = th.getFacetsFromURL();
-
-    const loadStoresCounter = ref({ count: facetsFromUrl.itemsPerPage });
-    const loadMoreStores = async () => {
-      loadStoresCounter.value.count += facetsFromUrl.itemsPerPage;
-      await loadStoresList({itemsPerPage: loadStoresCounter.value.count});
-    }
 
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
@@ -377,7 +367,7 @@ export default {
     onSSR(async () => Promise.allSettled([
       loadUserShipping(),
       loadFulfillmentMethods(),
-      loadStoresList({itemsPerPage: facetsFromUrl.itemsPerPage })
+      loadStoresList({})
     ]));
 
     watch(isAuthenticated, () => {
@@ -429,9 +419,7 @@ export default {
       selectedStore,
       selectedStoreAddress,
       isStoresModalOpen,
-      toggleStoresModal,
-      loadMoreStores,
-      showLoadMoreStoresButton
+      toggleStoresModal
     };
   }
 };
