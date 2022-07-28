@@ -50,6 +50,7 @@ module.exports = {
     '@nuxtjs/composition-api/module',
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
+    '@nuxtjs/pwa',
     ['@vue-storefront/nuxt', {
       // @core-development-only-start
       coreDevelopment: true,
@@ -190,7 +191,19 @@ module.exports = {
   pwa: {
     meta: {
       theme_color: '#5ECE7B'
+    },
+    workbox: {
+      dev: false,
+      enabled: true,
+      config: {
+        debug: true,
+      },
+      // remove if you want to disable cache api
+      cachingExtensions: '@/plugins/workbox-request.js',
+      offline: true,
+      offlineStrategy: 'NetworkFirst',
     }
   },
+
   telemetry: false
 };
