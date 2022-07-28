@@ -111,7 +111,7 @@ export interface UseOrdersHistoryGetters<ORDERQUERYRESULT, ORDERITEM> {
   getOrdersHistory(orders: ORDERQUERYRESULT): ORDERITEM[];
   getOrdersTotal(orders: ORDERQUERYRESULT): number;
   getDate(orderItem: ORDERITEM): string;
-  getId(orderItem: ORDERITEM): string ;
+  getId(orderItem: ORDERITEM): string;
   getStatus(orderItem: ORDERITEM): string;
   getPrice(orderItem: ORDERITEM): number | null;
   getNumber(orderItem: ORDERITEM): string;
@@ -327,6 +327,37 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends Pl
   }): Promise<void>;
   error: ComputedProperty<UseCartErrors>;
   loading: ComputedProperty<boolean>;
+}
+
+/*
+STORES
+*/
+
+export type UseStoresSearchParams = {
+  locale: string,
+  page: number,
+  itemsPerPage: number,
+  sorting: any[]
+};
+
+export interface UseStoresErrors {
+  search: Error;
+}
+
+export interface UseStores<STORES, STORES_SEARCH_PARAMS, API extends PlatformApi = any> extends Composable<API> {
+  stores: ComputedProperty<STORES>;
+  search(params: STORES_SEARCH_PARAMS): Promise<void>;
+  loading: ComputedProperty<boolean>;
+  error: ComputedProperty<UseStoresErrors>;
+}
+
+export interface UseStoresFactoryParams<STORES, STORES_SEARCH_PARAMS> extends FactoryParams {
+  search(context: Context, params: STORES_SEARCH_PARAMS): Promise<STORES>;
+}
+
+export interface UseStoresGetters<STORES> {
+  getStores(stores: any): STORES[];
+  getStoresForPickUp(stores: any): STORES[];
 }
 
 /*

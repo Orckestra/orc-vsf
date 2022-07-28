@@ -16,8 +16,8 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/orc-vsf-api": "0.0.1",
-    "@vue-storefront/core": "~2.5.12"
+    "@vue-storefront/core": "~2.5.12",
+    "@vue-storefront/orc-vsf-api": "0.0.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.6",

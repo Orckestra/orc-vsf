@@ -35,7 +35,7 @@
         <div class="sf-radio__description address-selector__description">
           <transition name="sf-fade">
             <div v-if="isOpen[item.id]" class="address-selector__info">
-              <AddressPreview :address="item" :showName="false"/>
+              <AddressPreview :address="item" :showAddressName="false"/>
             </div>
           </transition>
         </div>

@@ -10,6 +10,7 @@ export { useProduct } from './useProduct';
 export { useReview } from './useReview';
 export { useShipping } from './useShipping';
 export { useShippingProvider } from './useShippingProvider';
+export { useStores } from './useStores';
 export { useStore } from './useStore';
 export { useUser } from './useUser';
 export { useUserBilling } from './useUserBilling';
@@ -22,7 +23,7 @@ export { useInventory } from './useInventory';
 export { useConfiguration } from './useConfiguration';
 export { useCountries } from './useCountries';
 export { useUserAddresses } from './useUserAddresses';
-export { usePaymentMethods} from './usePaymentMethods';
+export { usePaymentMethods } from './usePaymentMethods';
 export { useFulfillmentMethods } from './useFulfillmentMethods';
 export { useOrder } from './useOrder';
 
@@ -49,5 +50,6 @@ export { paymentMethodGetters } from './getters/paymentMethodGetters';
 export { fulfillmentMethodsGetters } from './getters/fulfillmentMethodsGetters';
 
 export { ordersHistoryGetters } from './getters/ordersHistoryGetters';
+export { storesGetters } from './getters/storesGetters';
 // Types
 export * from './types';

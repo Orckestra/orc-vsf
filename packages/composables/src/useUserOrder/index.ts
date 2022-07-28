@@ -10,7 +10,7 @@ import type {
 import { getUserToken } from '../helpers/generalUtils';
 
 const params: UseUserOrderFactoryParams<OrderQueryResult, SearchParams> = {
-  searchOrders: async (context: Context, {page, itemsPerPage, filterMember, filterValues }) => {
+  searchOrders: async (context: Context, { page, itemsPerPage, filterMember, filterValues }) => {
     const app = context.$occ.config.app;
     const userToken = getUserToken(context);
     if ((userToken === undefined || userToken === '')) {

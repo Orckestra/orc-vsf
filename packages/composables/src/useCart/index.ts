@@ -35,7 +35,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
     if (cart && (!shipment.fulfillmentLocationId ||
       isGuidEmpty(shipment.fulfillmentLocationId))) {
       // Need to setup fulfilment location for the cart for the items inventory status
-      const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true });
+      const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true, isInventoryLocation: true });
       const location = locations?.[0];
 
       if (location) {
@@ -71,7 +71,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
     const variantId = getVariantId(product);
     const productId = product.productId ?? product.propertyBag?.ProductId ?? product.id;
-    return await context.$occ.api.addCartItem({...params, productId, variantId, quantity });
+    return await context.$occ.api.addCartItem({ ...params, productId, variantId, quantity });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
