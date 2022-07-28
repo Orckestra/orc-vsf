@@ -346,7 +346,7 @@ export interface UseStoresErrors {
 
 export interface UseStores<STORES, STORES_SEARCH_PARAMS, API extends PlatformApi = any> extends Composable<API> {
   stores: ComputedProperty<STORES>;
-  search(params: STORES_SEARCH_PARAMS): Promise<any>;
+  search(params: STORES_SEARCH_PARAMS): Promise<STORES>;
   loading: ComputedProperty<boolean>;
   error: ComputedProperty<UseStoresErrors>;
 }
