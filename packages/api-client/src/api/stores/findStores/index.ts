@@ -16,7 +16,7 @@ export default async function findStores(context, params) {
 
   const sortings = !sorting ? [
     {
-      Direction: 1,
+      Direction: 0,
       PropertyName: 'Name'
     }
   ] : sorting;
