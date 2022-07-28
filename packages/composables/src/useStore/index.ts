@@ -6,13 +6,13 @@ export const useStore = useStoreFactory<Store>({
   load(context: Context, params) {
     console.log('Mocked: useStore.load');
 
-    return Promise.resolve({});
+    return Promise.resolve(null);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   change(context: Context, params) {
     console.log('Mocked: useStore.change');
 
-    return Promise.resolve({});
+    return Promise.resolve(null);
   }
 });
