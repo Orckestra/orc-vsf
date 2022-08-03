@@ -10,11 +10,12 @@
         @input="selectStore">
         <template #label="{ label }">
           <div class="sf-radio__label store__label">
-            <strong>{{ label }}</strong>
+            <strong>{{ label }}</strong>123
           </div>
         </template>
         <template #description>
           <AddressPreview :address="item.fulfillmentLocation.addresses[0]" :showName="false" :showAddressName="false"/>
+          <StoreSchedule :schedule="item.storeSchedule" :timezoneName="item.fulfillmentLocation.timeZone" />
         </template>
       </SfRadio>
     </div>
@@ -25,6 +26,7 @@
 import { SfRadio } from '@storefront-ui/vue';
 import { useUiHelpers } from '~/composables';
 import AddressPreview from '~/components/AddressPreview';
+import StoreSchedule from '~/components/Store/StoreSchedule.vue';
 
 export default {
   name: 'StoresList',
@@ -48,8 +50,9 @@ export default {
   },
   components: {
     SfRadio,
-    AddressPreview
-  },
+    AddressPreview,
+    StoreSchedule
+},
   emits: ['change'],
   setup(props, { emit }) {
     const th = useUiHelpers();

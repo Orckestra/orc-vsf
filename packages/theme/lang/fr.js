@@ -153,6 +153,8 @@ export default {
   'You can unsubscribe at any time': 'You can unsubscribe at any time',
   'show more': 'show more',
   'hide': 'hide',
+  'Open': 'Open',
+  'Closed': 'Closed',
   'Change to grid view': 'Change to grid view',
   'Change to list view': 'Change to list view'
 };
