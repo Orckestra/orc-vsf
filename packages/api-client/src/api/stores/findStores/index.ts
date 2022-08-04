@@ -29,11 +29,11 @@ export default async function findStores(context, params) {
 
   const sortings = !sorting
     ? [
-        {
-          Direction: 0,
-          PropertyName: 'Name'
-        }
-      ]
+      {
+        Direction: 0,
+        PropertyName: 'Name'
+      }
+    ]
     : sorting;
 
   const filters = [

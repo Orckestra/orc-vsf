@@ -1,5 +1,5 @@
 import { getTodaySchedule } from './scheduleUtils';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect } from '@jest/globals';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -153,7 +153,6 @@ describe('Schedule', () => {
     expect(todaySchedule.isOpen).toBe(false);
   });
 
-
   test('Check ends at 24:00 time', () => {
     // Arrange
     // Thursday
@@ -191,7 +190,4 @@ describe('Schedule', () => {
     expect(todaySchedule.isOpen).toBe(true);
   });
 
-
-
-  
 });

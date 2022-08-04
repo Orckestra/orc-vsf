@@ -52,7 +52,7 @@ export default {
     SfRadio,
     AddressPreview,
     StoreSchedule
-},
+  },
   emits: ['change'],
   setup(props, { emit }) {
     const th = useUiHelpers();
