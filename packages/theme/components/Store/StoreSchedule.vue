@@ -10,15 +10,7 @@
 </template>
 
 <script>
-import * as dayjs from 'dayjs';
-import * as utc from 'dayjs/plugin/utc';
-import * as timezone from 'dayjs/plugin/timezone';
-import * as duration from 'dayjs/plugin/duration';
-import { getTimeZoneByName, daysOfWeek } from '~/utils/daytimeHelper';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(duration);
+import {getTodaySchedule} from '~/helpers/scheduleUtils';
 
 export default {
   name: 'StoreSchedule',
@@ -33,29 +25,10 @@ export default {
     }
   },
   setup({schedule, timezoneName}) {
-    const timezone = getTimeZoneByName(timezoneName);
-    const now = dayjs().tz(timezone);
-    const today = now.startOf('day');
-    const dayOfWeek = daysOfWeek[now.day()];
-    const openingHours = schedule?.openingHours?.find(o => o.day === dayOfWeek);
 
-    const openingTimes = openingHours.openingTimes?.map(time => {
-      const beginingTime = today.add(dayjs.duration(time.beginingTime));
-      const endingTime = today.add(dayjs.duration(time.endingTime));
-      return {
-        beginingTime,
-        endingTime
-      };
-    });
-    const isOpen = openingHours.isOpenedAllDay || (!openingHours.isClosed && openingTimes?.some(
-      time => now.isAfter(time.beginingTime) && now.isBefore(time.endingTime)
-    ));
-
-    return {
-      isOpen,
-      isOpenedAllDay: openingHours.isOpenedAllDay,
-      openingTimes
-    };
+    const now = new Date();
+    const todayShedule = getTodaySchedule(now, schedule, timezoneName);
+    return {...todayShedule};
   }
 };
 </script>

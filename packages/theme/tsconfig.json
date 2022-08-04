@@ -38,6 +38,7 @@
     "node_modules",
     ".nuxt",
     "dist",
-    "_theme"
+    "_theme",
+    "**/*.spec.ts"
   ]
 }

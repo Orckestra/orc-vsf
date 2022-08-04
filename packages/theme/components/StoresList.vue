@@ -10,7 +10,7 @@
         @input="selectStore">
         <template #label="{ label }">
           <div class="sf-radio__label store__label">
-            <strong>{{ label }}</strong>123
+            <strong>{{ label }}</strong>
           </div>
         </template>
         <template #description>
