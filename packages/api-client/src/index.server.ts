@@ -1,7 +1,7 @@
 import { apiClientFactory } from '@vue-storefront/core';
 import type { Setttings, Endpoints } from './types';
 import axios from 'axios';
-
+import NodeCache from 'node-cache';
 import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
@@ -58,9 +58,12 @@ function onCreate(settings) {
     }
   });
 
+  const cache = new NodeCache({ stdTTL: 300 });
+
   return {
     config: settings,
-    client
+    client,
+    cache
   };
 }
 

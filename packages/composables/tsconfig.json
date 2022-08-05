@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"],
+  "include": ["src", "../theme/utils/scheduleUtils.ts"],
   "exclude": ["node_modules", "lib"],
   "compilerOptions": {
     "lib": ["DOM", "ESNext"],

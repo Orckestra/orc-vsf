@@ -15,6 +15,7 @@
         </template>
         <template #description>
           <AddressPreview :address="item.fulfillmentLocation.addresses[0]" :showName="false" :showAddressName="false"/>
+          <TodayScheduleStatus :schedule="item.storeSchedule" :timezoneName="item.fulfillmentLocation.timeZone" />
         </template>
       </SfRadio>
     </div>
@@ -25,6 +26,7 @@
 import { SfRadio } from '@storefront-ui/vue';
 import { useUiHelpers } from '~/composables';
 import AddressPreview from '~/components/AddressPreview';
+import TodayScheduleStatus from '~/components/Store/TodayScheduleStatus.vue';
 
 export default {
   name: 'StoresList',
@@ -48,7 +50,8 @@ export default {
   },
   components: {
     SfRadio,
-    AddressPreview
+    AddressPreview,
+    TodayScheduleStatus
   },
   emits: ['change'],
   setup(props, { emit }) {
