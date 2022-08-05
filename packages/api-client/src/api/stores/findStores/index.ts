@@ -1,7 +1,9 @@
+import { ScheduleType } from 'packages/api-client/lib';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-const getCachedShedules = async (context, params) => {
+const getCachedSсhedules = async (context, params) => {
   const { api, scope } = context.config;
-  const cacheKey = `Shedules|${scope}`;
+  const cacheKey = `Sсhedules|${scope}`;
   const value = context.cache?.get(cacheKey);
   if (value !== undefined) {
     return value;
@@ -12,7 +14,7 @@ const getCachedShedules = async (context, params) => {
 
   const schedules = data.reduce((acc, rec) => ({ ...acc, [rec.id]: rec.schedules }), {});
 
-  context.cache?.set(cacheKey, schedules, 300);
+  context.cache?.set(cacheKey, schedules, 10800);
 
   return schedules;
 };
@@ -77,7 +79,7 @@ export default async function findStores(context, params) {
 
   const { data } = await context.client.post(url.href, body);
 
-  const schedules = await getCachedShedules(context, {});
+  const schedules = await getCachedSсhedules(context, {});
 
   const getSchedule = (fullfillmentId, scheduleType) => schedules[fullfillmentId]?.find((d) => d.scheduleType === scheduleType);
 
@@ -85,9 +87,9 @@ export default async function findStores(context, params) {
     ...data,
     results: data.results?.map((result) => ({
       ...result,
-      deliverySchedule: getSchedule(result.id, 'Delivery'),
-      pickUpSchedule: getSchedule(result.id, 'Pickup'),
-      storeSchedule: getSchedule(result.id, 'OpeningHours')
+      deliverySchedule: getSchedule(result.id, ScheduleType.Delivery),
+      pickUpSchedule: getSchedule(result.id, ScheduleType.Pickup),
+      storeSchedule: getSchedule(result.id, ScheduleType.OpeningHours)
     }))
   };
 }

@@ -6,6 +6,40 @@ export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
 
+export const enum ScheduleType {
+    OpeningHours = 'OpeningHours',
+    Delivery = 'Delivery',
+    Pickup = 'Pickup'
+}
+export type ScheduleInterval = {
+    beginingTime: string,
+    endingTime: string
+}
+
+export type DailyScheduleException = {
+    id: string,
+    name: string,
+    isClosed: boolean,
+    isRecurren: boolean,
+    startDate: string,
+    endDate: string,
+    openingTime: ScheduleInterval
+}
+export type DailySchedule = {
+    day: string,
+    isClosed: boolean,
+    isOpenedAllDay: boolean,
+    openingTimes: ScheduleInterval[]
+}
+
+export type FulfillmentSchedule = {
+    fulfillmentLocationId: string,
+    openingHourExceptions: DailyScheduleException[],
+    openingHours: DailySchedule[],
+    propertyBag: any,
+    scheduleType: ScheduleType
+}
+
 export type FulfillmentLocation = {
     addresses: any[]
     addressIds: any[]
@@ -18,7 +52,7 @@ export type FulfillmentLocation = {
     isPickUpLocation: boolean,
     name: string,
     number: string,
-    schedules: any[],
+    schedules: FulfillmentSchedule[],
     supportDelivery: boolean,
     supportPickUp: boolean,
     supportShipping: boolean,
@@ -550,7 +584,10 @@ export type Store = {
     number: string,
     phoneExtension: string,
     phoneNumber: string,
-    storeType: string
+    storeType: string,
+    deliverySchedule: FulfillmentSchedule,
+    pickUpSchedule: FulfillmentSchedule,
+    storeSchedule: FulfillmentSchedule
 };
 
 export type StoreQueryResult = {
