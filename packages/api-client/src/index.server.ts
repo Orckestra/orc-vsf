@@ -1,7 +1,7 @@
 import { apiClientFactory } from '@vue-storefront/core';
 import type { Setttings, Endpoints } from './types';
 import axios from 'axios';
-
+import NodeCache from 'node-cache';
 import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
@@ -13,7 +13,7 @@ import updateCartItem from './api/carts/updateCartItem';
 import addCoupon from './api/carts/addCoupon';
 import removeCoupon from './api/carts/removeCoupon';
 import updateCartShipment from './api/carts/updateCartShipment';
-import getFulfillmentLocations from './api/getFulfillmentLocations';
+import getFulfillmentLocations from './api/fulfillmentLocations/getFulfillmentLocations';
 import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
@@ -42,7 +42,9 @@ import initializePayment from './api/carts/initializePayment';
 import updatePaymentMethod from './api/carts/updatePaymentMethod';
 import getFulfillmentMethods from './api/fulfillmentMethods/getFulfillmentMethods';
 import findOrders from './api/orders/findOrders';
+import findStores from './api/stores/findStores';
 import getOrderByNumber from './api/orders/getOrderByNumber';
+import getOrderById from './api/orders/getOrderById';
 import getOrderLookups from './api/metadata/getOrderLookups';
 
 import { tokenExtension } from './extensions/auth';
@@ -56,9 +58,12 @@ function onCreate(settings) {
     }
   });
 
+  const cache = new NodeCache({ stdTTL: 300 });
+
   return {
     config: settings,
-    client
+    client,
+    cache
   };
 }
 
@@ -106,7 +111,9 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     completeCheckout,
     findOrders,
     getOrderByNumber,
-    getOrderLookups
+    getOrderById,
+    getOrderLookups,
+    findStores
   },
   extensions: [tokenExtension]
 });

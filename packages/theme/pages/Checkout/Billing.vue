@@ -61,7 +61,7 @@
         </template>
         <template v-else>
         <ValidationObserver v-slot="{ handleSubmit: hS }">
-          <div class="sameAsShipping">
+          <div class="sameAsShipping" v-if="isShippingMethod">
             <SfCheckbox
               v-model="sameAsShipping"
               :value="sameAsShipping"
@@ -75,7 +75,7 @@
            <template v-if="isBilling && !isOpen.editingAddress">
              <AddressPreview :address="billingAddress"/>
              <SfButton
-                  class="sf-button--text"
+                  class="sf-button--text edit-button"
                   @click="editGuestAddress">
                 Edit billing address
             </SfButton>
@@ -174,6 +174,7 @@ export default {
     const { addresses, load: loadAddresses, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
     const isOpen = ref({ addingAddress: false, editingAddress: !isAuthenticated.value && !isBilling.value });
     const shipmentAddress = computed(() => cartGetters.getActiveShipment(cart.value)?.address);
+    const isShippingMethod = computed(() => cartGetters.isShipping(cart.value));
 
     const areAddressEqual = (addr1, addr2) => {
 
@@ -306,15 +307,30 @@ export default {
       }
     };
 
+    const getDefaultBillingAddress = () => {
+      let address;
+      if (isAuthenticated.value) {
+        address = userAddressGetters.getDefaultBilling(addresses.value);
+        if (!address && isShippingMethod.value) {
+          address = cartGetters.getActiveShipment(cart.value)?.address;
+        }
+      } else if (isShippingMethod.value) {
+        address = cartGetters.getActiveShipment(cart.value)?.address;
+      }
+
+      return address;
+    };
+
     onSSR(async () => {
       if (isAuthenticated.value) {
         await loadAddresses();
       }
 
       if (!isBilling.value) {
-        const address = userAddressGetters.getDefaultBilling(addresses.value) ?? cartGetters.getActiveShipment(cart.value)?.address;
-        if (address) {
-          await updateCartBillingAddress(address);
+        const defaultAddress = getDefaultBillingAddress();
+
+        if (defaultAddress) {
+          await updateCartBillingAddress(defaultAddress);
         }
       }
     });
@@ -327,6 +343,7 @@ export default {
 
     return {
       sameAsShipping,
+      isShippingMethod,
       useShippingAddress,
       billingAddress,
       billingAddressId,
@@ -388,6 +405,10 @@ export default {
       }
     }
   }
+}
+
+.edit-button {
+  margin-bottom: var(--spacer-lg);
 }
 
 .sameAsShipping {

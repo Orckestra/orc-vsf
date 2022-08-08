@@ -1,11 +1,11 @@
 <template>
   <div class="address-preview" v-if="address">
-    <span v-if="address.addressName && showName" class="sf-property__value address-preview-name">{{address.addressName}}</span>
-    <span v-if="address.firstName">{{`${address.firstName} ${address.lastName}`}}</span>
+    <span v-if="address.addressName && showAddressName" class="sf-property__value address-preview-name">{{address.addressName}}</span>
+    <span v-if="address.firstName && showName">{{`${address.firstName} ${address.lastName}`}}</span>
     <span v-if="address.city">{{`${address.city}, ${address.line1 ? address.line1 : ''} ${address.line2 ? address.line2 : ''}`}}</span>
     <span v-if="address.regionCode">{{`${countriesGetters.getCountryRegionName(countries, address.countryCode, address.regionCode)}, ${address.postalCode}`}}</span>
     <span v-if="address.countryCode">{{`${countriesGetters.getCountryName(countries, address.countryCode)}`}}</span>
-    <span v-if="address.phoneNumber">{{address.phoneNumber}}</span>
+    <span v-if="address.phoneNumber && showPhone">{{address.phoneNumber}}</span>
   </div>
 </template>
 
@@ -19,7 +19,15 @@ export default {
       type: Object,
       default: null
     },
+    showAddressName: {
+      type: Boolean,
+      default: true
+    },
     showName: {
+      type: Boolean,
+      default: true
+    },
+    showPhone: {
       type: Boolean,
       default: true
     }

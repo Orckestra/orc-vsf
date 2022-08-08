@@ -5,8 +5,8 @@ import { UseOrderFactoryParams } from '../types';
 
 const factoryParams: UseOrderFactoryParams<UserOrder> = {
   find: async (context: Context, params: any) => {
-    const { orderNumber } = params;
-    const data = await context.$occ.api.getOrderByNumber({ orderNumber });
+    const { orderNumber, orderId } = params;
+    const data = orderNumber ? await context.$occ.api.getOrderByNumber({ orderNumber }) : await context.$occ.api.getOrderById({ orderId });
     return data;
   }
 };

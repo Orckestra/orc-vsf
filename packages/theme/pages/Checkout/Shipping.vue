@@ -79,6 +79,26 @@
           />
         </template>
       </template>
+     <template v-if="isPickupMethod">
+        <SfHeading
+          :level="3"
+          :title="$t('Pickup location')"
+          class="sf-heading--left sf-heading--no-underline title"
+        />
+        <div v-if="selectedStore">
+          <AddressPreview :address="selectedStoreAddress" :showAddressName="true" :showName="false"/>
+        </div>
+        <SfButton
+          class="sf-button--text edit-location-button"
+          @click.prevent="toggleStoresModal">
+          <span v-if="selectedStore">
+            {{ $t('Edit pickup location') }}
+          </span>
+          <span v-else>
+             {{ $t('Select pickup location') }}
+          </span>
+        </SfButton >
+      </template>
       <div class="form">
         <div class="form__action-bar">
           <SfButton
@@ -89,7 +109,7 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShippingMethod && !shipmentAddressId) || !form.shippingMethod"
+            :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShippingMethod && !shipmentAddressId) || !form.shippingMethod || (isPickupMethod && !shipmentPickUpLocationId)"
             class="form__action-button"
             type="submit"
           >
@@ -98,6 +118,19 @@
         </div>
       </div>
     </form>
+    <SfBottomModal @click:close="toggleStoresModal"
+      :isOpen="isStoresModalOpen"
+      title="Select pickup location"
+      class="stores-modal" transition="appear">
+      <SfScrollable maxContentHeight="15rem">
+        <template #view-all>{{''}}</template>
+            <StoresList
+              :stores="stores"
+              :selected="form.pickUpLocationId"
+              @change="selectStoreForPickup"
+            />
+        </SfScrollable>
+    </SfBottomModal>
   </ValidationObserver>
 </template>
 
@@ -105,18 +138,30 @@
 import {
   SfHeading,
   SfButton,
-  SfIcon
+  SfIcon,
+  SfBottomModal,
+  SfScrollable
 } from '@storefront-ui/vue';
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
-import { useUiNotification } from '~/composables';
+import { useUiNotification, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
-import { useUser, useFulfillmentMethods, useUserAddresses, useCart, cartGetters, fulfillmentMethodsGetters, userAddressGetters } from '@vue-storefront/orc-vsf';
+import { useUser,
+  useFulfillmentMethods,
+  useUserAddresses,
+  storesGetters,
+  useStores,
+  useCart,
+  cartGetters,
+  fulfillmentMethodsGetters,
+  userAddressGetters } from '@vue-storefront/orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/AddressForm';
 import AddressPreview from '~/components/AddressPreview';
 import AddressSelector from '~/components/AddressSelector';
 import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
+import StoresList from '../../components/StoresList';
 import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api/src';
 
 extend('required', {
@@ -142,7 +187,10 @@ export default {
     AddressForm,
     AddressSelector,
     AddressPreview,
-    VsfShippingProvider
+    VsfShippingProvider,
+    StoresList,
+    SfScrollable,
+    SfBottomModal
   },
   setup (props, context) {
     const router = useRouter();
@@ -151,13 +199,24 @@ export default {
     const { addresses, load: loadUserShipping, addAddress, loading: loadingAddresses, error: userAddressError } = useUserAddresses();
     const { load: loadFulfillmentMethods, fulfillmentMethods, loading: loadingFulfillmentMethods } = useFulfillmentMethods();
     const { isAuthenticated } = useUser();
+    const { stores: storesList, search: loadStoresList } = useStores();
+    const { isStoresModalOpen, toggleStoresModal } = useUiState();
 
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
-    const isOpen = ref({ addingAddress: false });
+    const stores = computed(() => storesGetters.getStoresForPickUp(storesList.value));
+
+    const selectedStore = computed(() => stores.value?.find(x => x.id === shipment.value?.pickUpLocationId));
+    const selectedStoreAddress = computed(() => {
+      return {...shipment.value?.address, addressName: selectedStore.value?.name};
+    });
+
+    const shipmentPickUpLocationId = computed(() => shipment.value?.pickUpLocationId);
+
     const form = ref({
-      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId
+      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId,
+      pickUpLocationId: shipment.value?.pickUpLocationId
     });
 
     const resetForm = (address) => ({
@@ -174,7 +233,10 @@ export default {
     });
     const addressForm = ref(resetForm(shipment.value?.address));
 
-    const isShippingMethod = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodType(fulfillmentMethods.value, form.value.shippingMethod) === 'Shipping');
+    const isShippingMethod = computed(() => cartGetters.isShipping(cart.value));
+    const isPickupMethod = computed(() => cartGetters.isPickup(cart.value));
+
+    const isOpen = ref({ addingAddress: false });
 
     const addNewAddress = () => {
       addressForm.value = resetForm();
@@ -253,15 +315,28 @@ export default {
       }
     };
 
-    const updateShippingMethod = (value) => {
-      form.value.shippingMethod = value;
+    const selectStoreForPickup = (value) => {
+      form.value.pickUpLocationId = value;
+      const selectedStore = stores.value.find(x => x.id === value);
       const updatedShipment = {
         ...shipment.value,
+        pickUpLocationId: value,
+        address: {...selectedStore.fulfillmentLocation.addresses[0], addressName: selectedStore.name },
+        fulfillmentLocationId: selectedStore.fulfillmentLocation.id
+      };
+      onUpdate(updatedShipment, () => {});
+      toggleStoresModal();
+    };
+
+    const updateShippingMethod = (value) => {
+      form.value.shippingMethod = value;
+      addressForm.value = resetForm();
+      const updatedShipment = {
+        ...shipment.value,
+        address: null,
+        pickUpLocationId: null,
+        fulfillmentLocationId: null,
         fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
-        // if PickUpLocationId
-        // pickUpLocationId: null,
-        // address: null,
-        // fulfillmentLocationId = fulfillmentLocation.Id;
       };
 
       if (isAuthenticated.value && !shipment.value?.address?.id && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.Shipping) {
@@ -290,12 +365,24 @@ export default {
 
     onSSR(async () => Promise.allSettled([
       loadUserShipping(),
-      loadFulfillmentMethods()
+      loadFulfillmentMethods(),
+      loadStoresList({})
     ]));
 
     watch(isAuthenticated, () => {
       if (isAuthenticated.value) {
         loadUserShipping();
+      }
+    });
+
+    watch(isStoresModalOpen, ()=> {
+      if (isStoresModalOpen.value) {
+        const modalContent = document.getElementsByClassName(
+          'sf-bottom-modal__container'
+        )[0];
+        disableBodyScroll(modalContent);
+      } else {
+        clearAllBodyScrollLocks();
       }
     });
 
@@ -323,7 +410,15 @@ export default {
       fulfillmentMethods,
       addresses,
       fulfillmentMethodsGetters,
-      shipmentAddressId
+      shipmentAddressId,
+      stores,
+      isPickupMethod,
+      selectStoreForPickup,
+      shipmentPickUpLocationId,
+      selectedStore,
+      selectedStoreAddress,
+      isStoresModalOpen,
+      toggleStoresModal
     };
   }
 };
@@ -392,5 +487,17 @@ export default {
 
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+}
+
+.locationSelection {
+  z-index: 1000;
+}
+.edit-location-button {
+  display: block;
+  margin: var(--spacer-xs) 0 var(--spacer-lg) 0;
+}
+.stores-modal {
+  background: #fff;
+  z-index: 1000;
 }
 </style>

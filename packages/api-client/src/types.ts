@@ -6,6 +6,61 @@ export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
 
+export const enum ScheduleType {
+    OpeningHours = 'OpeningHours',
+    Delivery = 'Delivery',
+    Pickup = 'Pickup'
+}
+export type ScheduleInterval = {
+    beginingTime: string,
+    endingTime: string
+}
+
+export type DailyScheduleException = {
+    id: string,
+    name: string,
+    isClosed: boolean,
+    isRecurren: boolean,
+    startDate: string,
+    endDate: string,
+    openingTime: ScheduleInterval
+}
+export type DailySchedule = {
+    day: string,
+    isClosed: boolean,
+    isOpenedAllDay: boolean,
+    openingTimes: ScheduleInterval[]
+}
+
+export type FulfillmentSchedule = {
+    fulfillmentLocationId: string,
+    openingHourExceptions: DailyScheduleException[],
+    openingHours: DailySchedule[],
+    propertyBag: any,
+    scheduleType: ScheduleType
+}
+
+export type FulfillmentLocation = {
+    addresses: any[]
+    addressIds: any[]
+    displayName: any,
+    id: string,
+    inventoryLocationId: string,
+    inventoryProviderId: string,
+    isActive: boolean,
+    isInventoryEnabled: boolean,
+    isPickUpLocation: boolean,
+    name: string,
+    number: string,
+    schedules: FulfillmentSchedule[],
+    supportDelivery: boolean,
+    supportPickUp: boolean,
+    supportShipping: boolean,
+    supportShipToStore: boolean,
+    timeZone: string,
+    type: string
+};
+
 export type UserAddress = {
     addressName: string,
     city: string,
@@ -150,6 +205,7 @@ export type Shipment = {
     lineItems: CartItem[],
     fulfillmentLocationId: string,
     fulfillmentMethod: FulfillmentMethod,
+    pickUpLocationId: string,
     status: string,
     taxes?: Tax[],
     taxProviderId?: string,
@@ -515,7 +571,29 @@ export type ShippingMethod = TODO;
 
 export type ShippingProvider = TODO;
 
-export type Store = TODO;
+export type Store = {
+    displayName: any,
+    email: string,
+    faxExtension: string,
+    faxNumber: string,
+    fulfillmentLocation: FulfillmentLocation,
+    id: string,
+    isActive: boolean,
+    manager: string,
+    name: string,
+    number: string,
+    phoneExtension: string,
+    phoneNumber: string,
+    storeType: string,
+    deliverySchedule: FulfillmentSchedule,
+    pickUpSchedule: FulfillmentSchedule,
+    storeSchedule: FulfillmentSchedule
+};
+
+export type StoreQueryResult = {
+    totalCount: number;
+    results: Store[];
+};
 
 export type WishlistItem = {
     productSummary: any;
