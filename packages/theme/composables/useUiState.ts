@@ -25,7 +25,7 @@ const useUiState = (): any => {
 
   const isStoresModalOpen = computed(() => state.isStoresModalOpen);
   const toggleStoresModal = () => {
-    if (state.isStoresModalOpen) toggleMobileMenu();
+    if (state.isMobileMenuOpen) toggleMobileMenu();
     state.isStoresModalOpen = !state.isStoresModalOpen;
   };
 
