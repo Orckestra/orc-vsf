@@ -1,6 +1,7 @@
-<template>
-  <div class="offline-warning" v-if="$nuxt.isOffline">
-    You are offline. Some features might not be available.
+<template >
+  <div v-if="$nuxt.isOffline">
+    <div class="offline-warning-placeholder"></div>
+    <div class="offline-warning">You are offline. Some features might not be available.</div>
   </div>
 </template>
 
@@ -9,9 +10,12 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+.offline-warning-placeholder {
+  height: 2.5em;
+}
 .offline-warning {
   position: fixed;
-  bottom: 0;
+  top: 0;
   right: 0;
   left: 0;
   background: #eb5757;
