@@ -7,7 +7,6 @@ const plugin: Plugin = ({ app }) => {
       const tokenExpired = response.headers['token-expired'];
       if (tokenExpired === 'true') {
         const { send: sendNotification } = useUiNotification();
-        const x = 
         sendNotification({
           id: Symbol('token-expired_error'),
           message: app.i18n.t('The authentication session has expired').toString(),
