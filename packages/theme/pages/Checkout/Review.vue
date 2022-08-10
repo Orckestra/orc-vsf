@@ -174,7 +174,7 @@
           <div v-if="unavailableProducts.length">
             <p class="message">
               {{ $t('Your cart contains unavailable products. Please review the cart or click') }}
-              <SfLink href="#" @click="removeUnavailable"> {{ $t('Clear the cart') }} </SfLink> 
+              <SfLink href="#" @click="removeUnavailable">{{ $t('Clear the cart') }}</SfLink>
               {{ $t(' to remove unavailable items automatically.') }}
             </p>
           </div>
@@ -287,18 +287,17 @@ export default {
     };
 
     const removeUnavailable = async () => {
-      const filteredShipments = cart.value.shipments.map(
-        function(el){ 
-          if(el.lineItems.length) {
-            el.lineItems = el.lineItems.filter(item => !unavailableProducts.value.includes(item));
-            return el;
-          }
-        });
+      const filteredShipments = cart.value.shipments.map((el) => {
+        if (el.lineItems.length) {
+          el.lineItems = el.lineItems.filter(item => !unavailableProducts.value.includes(item));
+          return el;
+        }
+      });
       const updatedCart = {
         ...cart.value,
         shipments: filteredShipments
       };
-      
+
       if (!cart.value.shipments?.length) return;
       await update({ cart: updatedCart });
 
