@@ -278,6 +278,10 @@ function getCustomer(cart: Cart): CustomerSummary | any {
   return cart?.customer || {};
 }
 
+function getUnavailableItems(cart: Cart): CartItem[]{
+  return cart.shipments[0].lineItems.filter(item => item.status === 'OutOfStock');
+}
+
 export const cartGetters: CartGetters<Cart, CartItem> = {
   getTotals,
   getShippingPrice,
@@ -318,5 +322,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   isAddressReady,
   isPaymentReady,
   isReadyForOrder,
-  getCustomer
+  getCustomer,
+  getUnavailableItems
 };

@@ -163,13 +163,20 @@
               {{ $t('Go back') }}
             </SfButton>
             <SfButton
-              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms"
+              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || unavailableProducts.length"
               class="form__action-button"
               type="submit"
               @click="processOrder"
             >
               Submit Order
             </SfButton>
+          </div>
+          <div v-if="unavailableProducts.length">
+            <p class="message">
+              {{ $t('Your cart contains unavailable products. Please review the cart or click') }}
+              <SfLink href="#" @click="removeUnavailable"> {{ $t('Clear the cart') }} </SfLink> 
+              {{ $t(' to remove unavailable items automatically.') }}
+            </p>
           </div>
         </div>
     </div>
@@ -220,7 +227,7 @@ export default {
   setup(props, context) {
     const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
-    const { cart, load: loadCart, loading: cartLoading, setCart } = useCart();
+    const { cart, update, load: loadCart, loading: cartLoading, setCart, error } = useCart();
     const { order, make, loading: makeOrderLoading, error: orderError } = useMakeOrder();
     const router = useRouter();
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -231,6 +238,7 @@ export default {
     const activeShipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));
+    const unavailableProducts = computed(() => cartGetters.getUnavailableItems(cart.value));
 
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
@@ -278,6 +286,34 @@ export default {
       }
     };
 
+    const removeUnavailable = async () => {
+      const filteredShipments = cart.value.shipments.map(
+        function(el){ 
+          if(el.lineItems.length) {
+            el.lineItems = el.lineItems.filter(item => !unavailableProducts.value.includes(item));
+            return el;
+          }
+        });
+      const updatedCart = {
+        ...cart.value,
+        shipments: filteredShipments
+      };
+      
+      if (!cart.value.shipments?.length) return;
+      await update({ cart: updatedCart });
+
+      if (error.value.update) {
+        sendNotification({
+          id: Symbol('cart_updated_error'),
+          message: error.value.update.message,
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'Checkout process'
+        });
+      }
+    };
+
     onSSR(async () => {
       await loadCart();
     });
@@ -300,7 +336,9 @@ export default {
       th,
       cartLoading,
       makeOrderLoading,
-      processOrder
+      processOrder,
+      unavailableProducts,
+      removeUnavailable
     };
   }
 };
