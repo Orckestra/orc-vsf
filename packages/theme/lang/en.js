@@ -162,7 +162,7 @@ export default {
   'Closed': 'Closed',
   'Open all day': 'Open all day',
   'Open hours': 'Open hours',
-  'The authentication session has expired': 'The authentication session has expired',
+  'Your authentication session has expired. Please log in again.': 'Your authentication session has expired. Please log in again.',
   'Change to grid view': 'Change to grid view',
   'Change to list view': 'Change to list view'
 };

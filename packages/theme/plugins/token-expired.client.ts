@@ -9,7 +9,7 @@ const plugin: Plugin = ({ app }) => {
         const { send: sendNotification } = useUiNotification();
         sendNotification({
           id: Symbol('token-expired_error'),
-          message: app.i18n.t('The authentication session has expired').toString(),
+          message: app.i18n.t('Your authentication session has expired. Please log in again.').toString(),
           type: 'danger',
           icon: 'warning',
           persist: false,
