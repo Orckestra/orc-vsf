@@ -291,7 +291,6 @@ export default {
     };
 
     const removeUnavailable = async () => {
-      console.log("removeUnavailable")
       const unavailableProductIds = unavailableProducts.value.map(item => item.id);
       await removeCartItems({ lineItemIds: unavailableProductIds });
 
