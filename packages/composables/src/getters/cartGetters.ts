@@ -280,7 +280,8 @@ function getCustomer(cart: Cart): CustomerSummary | any {
 }
 
 function getUnavailableItems(cart: Cart): CartItem[] {
-  return cart.shipments[0].lineItems.filter(item => validateLineItem(cart, item));
+  const shipment = getActiveShipment(cart);
+  return shipment.lineItems.filter(item => !validateLineItem(cart, item));
 }
 
 export const cartGetters: CartGetters<Cart, CartItem> = {

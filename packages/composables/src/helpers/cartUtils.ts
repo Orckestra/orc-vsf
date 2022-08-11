@@ -25,5 +25,5 @@ export const validateLineItem = (cart: Cart, cartItem: CartItem): boolean => {
     value: erronousLineItems[key]
   }));
   const group = groups.find(item => item.key.replace(/-/g, '') === cartItem.id);
-  return group && cartItem.status && cartItem.status !== 'InStock';
+  return !(group && cartItem.status && cartItem.status !== 'InStock');
 };
