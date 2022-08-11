@@ -163,5 +163,7 @@ export default {
   'Open all day': 'Open all day',
   'Open hours': 'Open hours',
   'Change to grid view': 'Change to grid view',
-  'Change to list view': 'Change to list view'
+  'Change to list view': 'Change to list view',
+  'Unavailable items in cart': 'Your cart contains unavailable products. Please review the cart or clean the cart automatically.',
+  'Clean cart': 'Clean cart'
 };

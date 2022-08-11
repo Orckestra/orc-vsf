@@ -171,20 +171,14 @@
               Submit Order
             </SfButton>
           </div>
-          <div v-if="unavailableProducts.length" class="form">
-            <template>
-              <SfNotification
-                visible
-                persistent=""
-                title=""
-                action=""
-                type="warning">
-                <template #message>
-                  {{ $t('Your cart contains unavailable products. Please review the cart or click') }}
-                  <SfLink href="#" @click="removeUnavailable">{{ $t('Clear the cart') }}</SfLink>
-                  {{ $t(' to remove unavailable items automatically.') }}</template>
-                </SfNotification>
-            </template>
+          <div v-if="unavailableProducts.length"  class="form">
+            <SfNotification
+              visible
+              :message="$t('Unavailable items in cart')"
+              :action="$t('Clean cart')"
+              @click:action="removeUnavailable"
+              type="warning"
+            />
           </div>
         </div>
     </div>
@@ -297,6 +291,7 @@ export default {
     };
 
     const removeUnavailable = async () => {
+      console.log("removeUnavailable")
       const unavailableProductIds = unavailableProducts.value.map(item => item.id);
       await removeCartItems({ lineItemIds: unavailableProductIds });
 
