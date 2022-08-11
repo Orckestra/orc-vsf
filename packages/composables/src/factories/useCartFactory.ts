@@ -53,6 +53,9 @@ export interface UseCartFactoryParams<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, A
     currentCart: CART;
     product: PRODUCT;
   }) => boolean;
+  removeCartItems: (context: Context, params: { lineItemIds: string[]})=> Promise<{
+    updatedCart: CART;
+  }>;
 }
 export const useCartFactory = <CART, CART_ITEM, PRODUCT, API extends PlatformApi = any>(
   factoryParams: UseCartFactoryParams<CART, CART_ITEM, PRODUCT, API>
@@ -273,6 +276,25 @@ export const useCartFactory = <CART, CART_ITEM, PRODUCT, API extends PlatformApi
       }
     };
 
+    const removeCartItems = async ({ lineItemIds }) => {
+      Logger.debug('useCart.removeCartItems');
+
+      try {
+        loading.value = true;
+        const { updatedCart } = await _factoryParams.removeCartItems({
+          lineItemIds
+        });
+        error.value.removeCartItems = null;
+        cart.value = updatedCart;
+        loading.value = false;
+      } catch (err) {
+        error.value.removeCartItems = err;
+        Logger.error('useCart/removeCartItems', err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
     return {
       api: _factoryParams.api,
       setCart,
@@ -287,6 +309,7 @@ export const useCartFactory = <CART, CART_ITEM, PRODUCT, API extends PlatformApi
       updateItemQty,
       applyCoupon,
       removeCoupon,
+      removeCartItems,
       loading: computed(() => loading.value),
       error: computed(() => error.value)
     };

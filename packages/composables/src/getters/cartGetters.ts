@@ -8,6 +8,7 @@ import {
 } from '@vue-storefront/core';
 import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress, FulfillmentMethod, FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
 import { CustomerSummary } from '@vue-storefront/orc-vsf-api/src';
+import { validateLineItem } from '../helpers/cartUtils';
 
 function getItems(cart: Cart): CartItem[] {
   const shipment = getActiveShipment(cart);
@@ -279,7 +280,7 @@ function getCustomer(cart: Cart): CustomerSummary | any {
 }
 
 function getUnavailableItems(cart: Cart): CartItem[] {
-  return cart.shipments[0].lineItems.filter(item => item.status === 'OutOfStock');
+  return cart.shipments[0].lineItems.filter(item => validateLineItem(cart, item));
 }
 
 export const cartGetters: CartGetters<Cart, CartItem> = {

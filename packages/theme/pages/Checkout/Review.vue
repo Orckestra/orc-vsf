@@ -171,12 +171,20 @@
               Submit Order
             </SfButton>
           </div>
-          <div v-if="unavailableProducts.length">
-            <p class="message">
-              {{ $t('Your cart contains unavailable products. Please review the cart or click') }}
-              <SfLink href="#" @click="removeUnavailable">{{ $t('Clear the cart') }}</SfLink>
-              {{ $t(' to remove unavailable items automatically.') }}
-            </p>
+          <div v-if="unavailableProducts.length" class="form">
+            <template>
+              <SfNotification
+                visible
+                persistent=""
+                title=""
+                action=""
+                type="warning">
+                <template #message>
+                  {{ $t('Your cart contains unavailable products. Please review the cart or click') }}
+                  <SfLink href="#" @click="removeUnavailable">{{ $t('Clear the cart') }}</SfLink>
+                  {{ $t(' to remove unavailable items automatically.') }}</template>
+                </SfNotification>
+            </template>
           </div>
         </div>
     </div>
@@ -200,6 +208,7 @@ import {
   SfCheckbox,
   SfDivider,
   SfProperty,
+  SfNotification,
   SfLink } from '@storefront-ui/vue';
 import CartSaving from '../../components/Checkout/CartSaving';
 import CouponCode from '../../components/Checkout/CouponCode';
@@ -217,6 +226,7 @@ export default {
     SfCheckbox,
     SfHeading,
     SfProperty,
+    SfNotification,
     CartSaving,
     SfDivider,
     SfLink,
@@ -227,7 +237,7 @@ export default {
   setup(props, context) {
     const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
-    const { cart, update, load: loadCart, loading: cartLoading, setCart, error } = useCart();
+    const { cart, removeCartItems, load: loadCart, loading: cartLoading, setCart, error } = useCart();
     const { order, make, loading: makeOrderLoading, error: orderError } = useMakeOrder();
     const router = useRouter();
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -287,24 +297,13 @@ export default {
     };
 
     const removeUnavailable = async () => {
-      const filteredShipments = cart.value.shipments.map((el) => {
-        if (el.lineItems.length) {
-          el.lineItems = el.lineItems.filter(item => !unavailableProducts.value.includes(item));
-          return el;
-        }
-      });
-      const updatedCart = {
-        ...cart.value,
-        shipments: filteredShipments
-      };
+      const unavailableProductIds = unavailableProducts.value.map(item => item.id);
+      await removeCartItems({ lineItemIds: unavailableProductIds });
 
-      if (!cart.value.shipments?.length) return;
-      await update({ cart: updatedCart });
-
-      if (error.value.update) {
+      if (error.value.removeCartItems) {
         sendNotification({
           id: Symbol('cart_updated_error'),
-          message: error.value.update.message,
+          message: error.value.removeCartItems.message,
           type: 'danger',
           icon: 'error',
           persist: false,
