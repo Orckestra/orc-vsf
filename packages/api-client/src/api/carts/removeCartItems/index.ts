@@ -4,8 +4,8 @@ import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
 export default async function removeCartItems(context, params) {
 
   const { api, scope, cdnDamProviderConfig } = context.config;
-  const { cartName = 'Default', lineItemIds  } = params;
-  const { id: customerId } = context.config.auth.getCustomerToken(); 
+  const { cartName = 'Default', lineItemIds } = params;
+  const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
   const url = new URL(
