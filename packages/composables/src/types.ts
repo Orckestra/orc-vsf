@@ -472,6 +472,9 @@ export interface FulfillmentMethodsGetters<METHOD> {
 
 export interface UseCreditCardFormErrors {
   init: Error | null;
+  cardNumber: Error | null;
+  cvv: Error | null;
+  expiry: Error | null;
 }
 
 export type CreaditCardCustomController = {
