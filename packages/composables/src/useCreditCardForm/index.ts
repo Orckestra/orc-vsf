@@ -8,10 +8,10 @@ import bamboraCustomCheckoutUtils from './bamboraCustomCheckoutUtils';
 
 const params: UseCreditCardFormParams<CreaditCardCustomController> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  init: async (context: Context, { currentController, updateControllerCallback }) => {
+  init: async (context: Context, { currentController, updateControllerCallback, updateErrorCallback }) => {
     Logger.debug('[OCC Storefront]: Init  Credit Card form');
     bamboraCustomCheckoutUtils.createInputs(currentController.controller);
-    bamboraCustomCheckoutUtils.addListeners(currentController.controller, updateControllerCallback);
+    bamboraCustomCheckoutUtils.addListeners(currentController.controller, updateControllerCallback, updateErrorCallback);
   },
   createTokenData: async (context: Context, { currentController, cardholderName }) => {
 

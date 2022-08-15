@@ -5,7 +5,7 @@ import { UseCreditCardForm, UseCreditCardFormErrors } from '../types';
 
 export interface UseCreditCardFormParams<CUSTOMFORMCONTROLLER, API extends PlatformApi = any> extends FactoryParams<API> {
   init: (context: Context, params: {
-    currentController?: CUSTOMFORMCONTROLLER; updateControllerCallback: any;
+    currentController?: CUSTOMFORMCONTROLLER; updateControllerCallback: any; updateErrorCallback: any;
   }) => Promise<void>;
   createTokenData: (context: Context, params: { currentController, cardholderName }) => Promise<any>;
 }
@@ -20,7 +20,10 @@ export const useCreditCardFormFactory = <CUSTOMFORMCONTROLLER, API extends Platf
     const cardholderName: Ref<string> = sharedRef(null, 'useCreditCardForm-cardholderName');
     const tokenData: Ref<any> = sharedRef(false, 'useCreditCardForm-tokendata');
     const error: Ref<UseCreditCardFormErrors> = sharedRef({
-      init: null
+      init: null,
+      cardNumber: null,
+      cvv: null,
+      expiry: null
     }, 'useCreditCardForm-error');
 
     const _factoryParams = configureFactoryParams(
@@ -42,6 +45,10 @@ export const useCreditCardFormFactory = <CUSTOMFORMCONTROLLER, API extends Platf
       };
     };
 
+    const updateErrorCallback = (key, value) => {
+      error.value[key] = value;
+    };
+
     const updateCardholderName = (name: string) => {
       cardholderName.value = name;
     };
@@ -55,7 +62,7 @@ export const useCreditCardFormFactory = <CUSTOMFORMCONTROLLER, API extends Platf
 
       try {
         loading.value = true;
-        await _factoryParams.init({ currentController: customController.value, updateControllerCallback });
+        await _factoryParams.init({ currentController: customController.value, updateControllerCallback, updateErrorCallback });
         error.value.init = null;
         initialized.value = true;
       } catch (err) {

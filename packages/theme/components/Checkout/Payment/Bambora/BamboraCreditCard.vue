@@ -9,7 +9,7 @@
 
     <div class="form-group has-feedback">
       <div id="card-number" class="form-control card-number"></div>
-        <label class="sf-input__error-message" for="card-number" id="card-number-error"></label>
+        <label class="sf-input__error-message" for="card-number" id="card-number-error">{{error.cardNumber}}</label>
     </div>
 
     <div class="form-group">
@@ -17,12 +17,12 @@
 
         <div class="has-feedback">
           <div id="card-cvv" class="form-control"></div>
-          <label class="sf-input__error-message" for="card-cvv" id="card-cvv-error"></label>
+          <label class="sf-input__error-message" for="card-cvv" id="card-cvv-error">{{error.cvv}}</label>
         </div>
 
         <div class="has-feedback">
           <div id="card-expiry" class="form-control"></div>
-          <label class="sf-input__error-message" for="card-expiry" id="card-expiry-error"></label>
+          <label class="sf-input__error-message" for="card-expiry" id="card-expiry-error">{{error.expiry}}</label>
         </div>
 
       </div>
@@ -37,7 +37,7 @@ import { useCreditCardForm } from '@vue-storefront/orc-vsf';
 export default {
   name: 'BamboraCreditCard',
   setup() {
-    const { init: initCreditCardForm, setCustomController, updateCardholderName, cardholderName } = useCreditCardForm();
+    const { init: initCreditCardForm, setCustomController, updateCardholderName, cardholderName, error } = useCreditCardForm();
     const cardholderNameInput = ref(cardholderName?.value);
     watch(cardholderNameInput, () => {
       updateCardholderName(cardholderNameInput.value);
@@ -46,7 +46,8 @@ export default {
     return {
       setCustomController,
       initCreditCardForm,
-      cardholderNameInput
+      cardholderNameInput,
+      error
     };
   },
   mounted() {

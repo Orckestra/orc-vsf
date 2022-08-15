@@ -12,7 +12,7 @@ export default class bamboraCustomCheckoutUtils {
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  static addListeners(controller: any, updateControllerCallback) {
+  static addListeners(controller: any, updateControllerCallback, updateErrorCallback) {
     controller.on('brand', (event) => {
       let cardLogo = 'none';
       if (event.brand && event.brand !== 'unknown') {
@@ -30,62 +30,27 @@ export default class bamboraCustomCheckoutUtils {
 
       if (event.field === 'card-number') {
         updateControllerCallback('isCardNumberComplete', false);
-        this.showErrorForId('card-number', event.message);
+        updateErrorCallback('cardNumber', event.message);
       } else if (event.field === 'cvv') {
         updateControllerCallback('isCVVComplete', false);
-        this.showErrorForId('card-cvv', event.message);
+        updateErrorCallback('cvv', event.message);
       } else if (event.field === 'expiry') {
+        updateErrorCallback('expiry', event.message);
         updateControllerCallback('isExpiryComplete', false);
-        this.showErrorForId('card-expiry', event.message);
       }
     });
 
     controller.on('complete', (event) => {
       if (event.field === 'card-number') {
         updateControllerCallback('isCardNumberComplete', true);
-        this.hideErrorForId('card-number');
+        updateErrorCallback('cardNumber', null);
       } else if (event.field === 'cvv') {
         updateControllerCallback('isCVVComplete', true);
-        this.hideErrorForId('card-cvv');
+        updateErrorCallback('cvv', null);
       } else if (event.field === 'expiry') {
         updateControllerCallback('isExpiryComplete', true);
-        this.hideErrorForId('card-expiry');
+        updateErrorCallback('expiry', null);
       }
     });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  static showErrorForId(id, message) {
-    const element = document.getElementById(id);
-    if (element !== null) {
-      const errorElement = document.getElementById(id + '-error');
-      if (errorElement !== null) {
-        errorElement.innerHTML = message;
-      }
-
-      const bootStrapParent = document.getElementById(id + '-bootstrap');
-      if (bootStrapParent !== null) {
-        bootStrapParent.classList.add('has-error');
-        bootStrapParent.classList.remove('has-success');
-      }
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  static hideErrorForId(id) {
-    const element = document.getElementById(id);
-
-    if (element !== null) {
-      const errorElement = document.getElementById(id + '-error');
-      if (errorElement !== null) {
-        errorElement.innerHTML = '';
-      }
-
-      const bootStrapParent = document.getElementById(id + '-bootstrap');
-      if (bootStrapParent !== null) {
-        bootStrapParent.classList.remove('has-error');
-        bootStrapParent.classList.add('has-success');
-      }
-    }
   }
 }
