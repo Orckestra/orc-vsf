@@ -86,6 +86,10 @@ function getPaymentMethod(order: UserOrder): PaymentMethod {
   return order?.cart?.payments[0]?.paymentMethod;
 }
 
+function getPaymentCreditCardNumberLastDigits(order: UserOrder): string {
+  return order?.cart?.payments[0]?.propertyBag?.CreditCardNumberLastDigits;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSubTotal(order: UserOrder): number {
   return order?.cart?.subTotal;
@@ -177,5 +181,6 @@ export const orderGetters: UserOrderGetters<UserOrder, CartItem> = {
   getNumber,
   getShipmentStatus,
   getShippingPrice,
-  getCart
+  getCart,
+  getPaymentCreditCardNumberLastDigits
 };

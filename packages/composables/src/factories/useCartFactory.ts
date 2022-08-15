@@ -32,6 +32,11 @@ export interface UseCartFactoryParams<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, A
     currentCart: CART;
     paymentMethod: PAYMENTMETHOD;
   }) => Promise<CART>;
+  initializePayment: (context: Context, params: {
+    currentCart: CART;
+    paymentId: string;
+    body: any;
+  }) => Promise<CART>;
   clear: (context: Context, params: {
     currentCart: CART;
   }) => Promise<CART>;
@@ -136,6 +141,25 @@ export const useCartFactory = <CART, CART_ITEM, PRODUCT, API extends PlatformApi
       } catch (err) {
         error.value.update = err;
         Logger.error('useCart/update', err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const initializePayment = async ({ body }) => {
+      Logger.debug('useCart.initializePayment', { cart });
+
+      try {
+        loading.value = true;
+        const updatedCart = await _factoryParams.initializePayment({
+          currentCart: cart.value,
+          body
+        });
+        error.value.payment = null;
+        cart.value = updatedCart;
+      } catch (err) {
+        error.value.payment = err;
+        Logger.error('useCart.initializePayment', err);
       } finally {
         loading.value = false;
       }
@@ -284,6 +308,7 @@ export const useCartFactory = <CART, CART_ITEM, PRODUCT, API extends PlatformApi
       clear,
       update,
       updatePaymentMethod,
+      initializePayment,
       updateItemQty,
       applyCoupon,
       removeCoupon,

@@ -4,7 +4,7 @@ import { setCartItemsCoverImages } from '../../../helpers/mediaUtils';
 export default async function addPayment(context, params) {
 
   const { api, scope, cdnDamProviderConfig } = context.config;
-  const { cartName = 'Default' } = params;
+  const { cartName = 'Default', billingAddress } = params;
   const { id: customerId } = context.config.auth.getCustomerToken();
   if (!customerId) return null;
 
@@ -13,7 +13,7 @@ export default async function addPayment(context, params) {
     api.url
   );
 
-  const { data } = await context.client.post(url.href, {});
+  const { data } = await context.client.post(url.href, { billingAddress });
 
   if (data?.shipments?.length) {
     setCartItemsCoverImages(data.shipments[0].lineItems, cdnDamProviderConfig);

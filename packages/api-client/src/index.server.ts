@@ -14,6 +14,7 @@ import addCoupon from './api/carts/addCoupon';
 import removeCoupon from './api/carts/removeCoupon';
 import updateCartShipment from './api/carts/updateCartShipment';
 import getFulfillmentLocations from './api/fulfillmentLocations/getFulfillmentLocations';
+import getInventoryLocations from './api/fulfillmentLocations/getInventoryLocations';
 import getProductLookups from './api/metadata/getProductLookups';
 import getProductDefinitions from './api/metadata/getProductDefinitions';
 import findInventoryItemStatus from './api/inventoryItems/findInventoryItemStatus';
@@ -81,6 +82,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     addCoupon,
     removeCoupon,
     getFulfillmentLocations,
+    getInventoryLocations,
     updateCartShipment,
     getProductLookups,
     getProductDefinitions,

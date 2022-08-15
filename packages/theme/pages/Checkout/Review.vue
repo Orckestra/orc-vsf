@@ -163,7 +163,7 @@
               {{ $t('Go back') }}
             </SfButton>
             <SfButton
-              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms"
+              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || (isCreditCard && !isCreditCardComplete)"
               class="form__action-button"
               type="submit"
               @click="processOrder"
@@ -201,6 +201,7 @@ import AddressPreview from '../../components/AddressPreview';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
 import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/orc-vsf';
 import { useUiNotification } from '~/composables';
+import { useCreditCardForm } from '@vue-storefront/orc-vsf';
 
 export default {
   name: 'CartPreview',
@@ -220,7 +221,13 @@ export default {
   setup(props, context) {
     const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
-    const { cart, load: loadCart, loading: cartLoading, setCart } = useCart();
+    const { cart, load: loadCart, loading: cartLoading, setCart, initializePayment, error: cartError } = useCart();
+    const { createTokenData: createCreditCardTokenData, customController: creditCardController, cardholderName } = useCreditCardForm();
+    const isCreditCardComplete = computed(() => creditCardController.value.isCardNumberComplete &&
+      creditCardController.value.isCVVComplete &&
+      creditCardController.value.isExpiryComplete &&
+      cardholderName.value);
+
     const { order, make, loading: makeOrderLoading, error: orderError } = useMakeOrder();
     const router = useRouter();
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -231,6 +238,7 @@ export default {
     const activeShipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));
+    const isCreditCard = computed(() => activePayment.value?.paymentMethod?.type === 'CreditCard');
 
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
@@ -259,22 +267,39 @@ export default {
     };
 
     const processOrder = async () => {
-      await make();
-      if (orderError.value.make) {
-        console.log(orderError.value.make);
+      if (isCreditCard.value) {
+        if (!isCreditCardComplete.value) return;
+        const tokenData = await createCreditCardTokenData();
+        await initializePayment({ body: {
+          AdditionalData: tokenData }});
+      }
+
+      if (cartError.value.payment) {
         sendNotification({
-          id: Symbol('complete-order_error'),
-          message: 'Cannot complete your order. Please check your payment and address informations, and try again.',
+          id: Symbol('payment_error'),
+          message: 'Please check your payment and try again.',
           type: 'danger',
           icon: 'error',
           persist: false,
           title: 'Checkout process'
         });
       } else {
-        const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
-        router.push(context.root.localePath(thankYouPath));
-        setCart(null);
-        loadCart();
+        await make();
+        if (orderError.value.make) {
+          sendNotification({
+            id: Symbol('complete-order_error'),
+            message: 'Cannot complete your order. Please check your payment and address informations, and try again.',
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'Checkout process'
+          });
+        } else {
+          const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
+          router.push(context.root.localePath(thankYouPath));
+          setCart(null);
+          loadCart();
+        }
       }
     };
 
@@ -298,6 +323,8 @@ export default {
       isActiveShippingTaxable,
       isActiveShippingEstimated,
       th,
+      isCreditCard,
+      isCreditCardComplete,
       cartLoading,
       makeOrderLoading,
       processOrder
