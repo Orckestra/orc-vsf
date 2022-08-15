@@ -48,8 +48,8 @@ export default {
   },
   setup() {
     const bamboraApplePayMethodId = '084dbf29e00d4709ad4ec8c7562cfefd';
-    const { methods: onsiteMethods, load: loadOnsiteMethods, loading: loadingOnSiteMethods} = usePaymentMethods('OnsiteMethods');
-    const { methods: bamboraMethods, load: loadBamboraMethods, loading: loadingCreditCartMethods } = usePaymentMethods('BamboraMethods');
+    const { methods: onsiteMethods, load: loadOnsiteMethods, loading: loadingOnSiteMethods} = usePaymentMethods('Onsite payment');
+    const { methods: bamboraMethods, load: loadBamboraMethods, loading: loadingCreditCartMethods } = usePaymentMethods('Bambora');
     const { cart, updatePaymentMethod, loading } = useCart();
     const { loading: makeOrderLoading } = useMakeOrder();
     const validMethods = computed(() => {

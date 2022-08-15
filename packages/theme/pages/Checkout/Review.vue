@@ -199,7 +199,7 @@ import CouponCode from '../../components/Checkout/CouponCode';
 import CartItemsTable from '../../components/Checkout/CartItemsTable';
 import AddressPreview from '../../components/AddressPreview';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
-import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/orc-vsf';
+import { useMakeOrder, useCart, cartGetters, orderGetters, usePaymentMethods } from '@vue-storefront/orc-vsf';
 import { useUiNotification } from '~/composables';
 import { useCreditCardForm } from '@vue-storefront/orc-vsf';
 
@@ -221,7 +221,7 @@ export default {
   setup(props, context) {
     const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
-    const { cart, load: loadCart, loading: cartLoading, setCart, initializePayment, error: cartError } = useCart();
+    const { cart, load: loadCart, loading: cartLoading, setCart, initializePayment, error: cartError, updatePaymentMethod } = useCart();
     const { createTokenData: createCreditCardTokenData, customController: creditCardController, cardholderName } = useCreditCardForm();
     const isCreditCardComplete = computed(() => creditCardController.value.isCardNumberComplete &&
       creditCardController.value.isCVVComplete &&
@@ -239,7 +239,7 @@ export default {
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));
     const isCreditCard = computed(() => activePayment.value?.paymentMethod?.type === 'CreditCard');
-
+    const { methods: paymentMethods, load: loadPaymentMethods } = usePaymentMethods('PaymentMethods');
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
       lastName: cart.value?.customer?.lastName,
@@ -270,6 +270,7 @@ export default {
       if (isCreditCard.value) {
         if (!isCreditCardComplete.value) return;
         const tokenData = await createCreditCardTokenData();
+
         await initializePayment({ body: {
           AdditionalData: tokenData }});
       }
@@ -294,6 +295,13 @@ export default {
             persist: false,
             title: 'Checkout process'
           });
+
+          if (isCreditCard.value && activePayment.value.paymentStatus !== 'Authorized') {
+            await loadPaymentMethods({ providerName: activePayment.value.paymentMethod.paymentProviderName });
+            const paymentMethod = paymentMethods.value?.find(pm => pm.id === activePayment.value.paymentMethod.id);
+            // update will execute remove and add new payment with current billing to be able to authorize again
+            await updatePaymentMethod({paymentMethod});
+          }
         } else {
           const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
           router.push(context.root.localePath(thankYouPath));
