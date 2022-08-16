@@ -507,7 +507,7 @@ export default {
     --heading-title-margin: 0 0 var(--spacer-sm) 0;
   }
 }
-.unavailable-products-notification { 
+.unavailable-products-notification {
   --notification-action-display: inline-block !important;
 }
 </style>
