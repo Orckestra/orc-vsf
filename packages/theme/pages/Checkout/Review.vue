@@ -163,7 +163,7 @@
               {{ $t('Go back') }}
             </SfButton>
             <SfButton
-              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || unavailableProducts.length"
+              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || unavailableProducts.length || (isCreditCard && !isCreditCardComplete)"
               class="form__action-button"
               type="submit"
               @click="processOrder"
@@ -211,8 +211,9 @@ import CouponCode from '../../components/Checkout/CouponCode';
 import CartItemsTable from '../../components/Checkout/CartItemsTable';
 import AddressPreview from '../../components/AddressPreview';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
-import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/orc-vsf';
+import { useMakeOrder, useCart, cartGetters, orderGetters, usePaymentMethods } from '@vue-storefront/orc-vsf';
 import { useUiNotification } from '~/composables';
+import { useCreditCardForm } from '@vue-storefront/orc-vsf';
 
 export default {
   name: 'CartPreview',
@@ -233,7 +234,13 @@ export default {
   setup(props, context) {
     const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
-    const { cart, removeCartItems, load: loadCart, loading: cartLoading, setCart, error } = useCart();
+    const { cart, removeCartItems, load: loadCart, loading: cartLoading, setCart, initializePayment, error: cartError, updatePaymentMethod } = useCart();
+    const { createTokenData: createCreditCardTokenData, customController: creditCardController, cardholderName } = useCreditCardForm();
+    const isCreditCardComplete = computed(() => creditCardController.value.isCardNumberComplete &&
+      creditCardController.value.isCVVComplete &&
+      creditCardController.value.isExpiryComplete &&
+      cardholderName.value);
+
     const { order, make, loading: makeOrderLoading, error: orderError } = useMakeOrder();
     const router = useRouter();
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -245,7 +252,9 @@ export default {
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));
     const unavailableProducts = computed(() => cartGetters.getUnavailableItems(cart.value));
+    const isCreditCard = computed(() => activePayment.value?.paymentMethod?.type === 'CreditCard');
 
+    const { methods: paymentMethods, load: loadPaymentMethods } = usePaymentMethods('PaymentMethods');
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
       lastName: cart.value?.customer?.lastName,
@@ -273,22 +282,47 @@ export default {
     };
 
     const processOrder = async () => {
-      await make();
-      if (orderError.value.make) {
-        console.log(orderError.value.make);
+      if (isCreditCard.value) {
+        if (!isCreditCardComplete.value) return;
+        const tokenData = await createCreditCardTokenData();
+
+        await initializePayment({ body: {
+          AdditionalData: tokenData }});
+      }
+
+      if (cartError.value.payment) {
         sendNotification({
-          id: Symbol('complete-order_error'),
-          message: 'Cannot complete your order. Please check your payment and address informations, and try again.',
+          id: Symbol('payment_error'),
+          message: 'Please check your payment and try again.',
           type: 'danger',
           icon: 'error',
           persist: false,
           title: 'Checkout process'
         });
       } else {
-        const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
-        router.push(context.root.localePath(thankYouPath));
-        setCart(null);
-        loadCart();
+        await make();
+        if (orderError.value.make) {
+          sendNotification({
+            id: Symbol('complete-order_error'),
+            message: 'Cannot complete your order. Please check your payment and address informations, and try again.',
+            type: 'danger',
+            icon: 'error',
+            persist: false,
+            title: 'Checkout process'
+          });
+
+          if (isCreditCard.value && activePayment.value.paymentStatus !== 'Authorized') {
+            await loadPaymentMethods({ providerName: activePayment.value.paymentMethod.paymentProviderName });
+            const paymentMethod = paymentMethods.value?.find(pm => pm.id === activePayment.value.paymentMethod.id);
+            // update will execute remove and add new payment with current billing to be able to authorize again
+            await updatePaymentMethod({paymentMethod});
+          }
+        } else {
+          const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
+          router.push(context.root.localePath(thankYouPath));
+          setCart(null);
+          loadCart();
+        }
       }
     };
 
@@ -296,10 +330,10 @@ export default {
       const unavailableProductIds = unavailableProducts.value.map(item => item.id);
       await removeCartItems({ lineItemIds: unavailableProductIds });
 
-      if (error.value.removeCartItems) {
+      if (cartError.value.removeCartItems) {
         sendNotification({
           id: Symbol('cart_updated_error'),
-          message: error.value.removeCartItems.message,
+          message: cartError.value.removeCartItems.message,
           type: 'danger',
           icon: 'error',
           persist: false,
@@ -328,6 +362,8 @@ export default {
       isActiveShippingTaxable,
       isActiveShippingEstimated,
       th,
+      isCreditCard,
+      isCreditCardComplete,
       cartLoading,
       makeOrderLoading,
       processOrder,

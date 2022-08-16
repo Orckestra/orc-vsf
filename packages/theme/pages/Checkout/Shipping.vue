@@ -10,6 +10,7 @@
       <VsfShippingProvider
         :fulfillmentMethods="fulfillmentMethods"
         :selected="form.shippingMethod"
+        :disabled="loadingCart"
         @change="updateShippingMethod"
       />
       <template v-if="isShippingMethod">
@@ -23,6 +24,7 @@
           <AddressSelector
             :addresses="addresses"
             :selected="shipmentAddressId"
+            :disabled="loadingCart"
             @input="updateAddress" />
 
           <template v-if="isOpen.addingAddress">
@@ -330,10 +332,9 @@ export default {
 
     const updateShippingMethod = (value) => {
       form.value.shippingMethod = value;
-      addressForm.value = resetForm();
+
       const updatedShipment = {
         ...shipment.value,
-        address: null,
         pickUpLocationId: null,
         fulfillmentLocationId: null,
         fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
@@ -344,6 +345,11 @@ export default {
 
         form.value.addressId = preferredAddress?.id;
         updatedShipment.address = preferredAddress;
+      }
+
+      if (shipment.value?.fulfillmentMethod && updatedShipment.fulfillmentMethod.fulfillmentMethodType !== shipment.value.fulfillmentMethod.fulfillmentMethodType) {
+        addressForm.value = resetForm();
+        updatedShipment.address = null;
       }
 
       onUpdate(updatedShipment, () => {});

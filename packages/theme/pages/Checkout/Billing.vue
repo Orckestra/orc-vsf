@@ -10,6 +10,7 @@
           <AddressSelector
             :addresses="addresses"
             :selected="billingAddressId"
+            :disabled="loadingCart"
             @input="updateAddress" />
 
           <template v-if="isOpen.addingAddress">

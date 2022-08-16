@@ -4,6 +4,7 @@
       v-for="(item, index) in fulfillmentMethods"
       :key="index"
       :selected="selected"
+      :disabled="disabled"
       :label="th.getTranslation(item.displayName) || item.name"
       :value="item.shippingProviderId"
       name="shippingMethod"
@@ -46,6 +47,10 @@ export default {
     selected: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     fulfillmentMethods: {
       type: Array,

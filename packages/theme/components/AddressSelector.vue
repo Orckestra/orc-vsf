@@ -4,6 +4,7 @@
       v-for="item in addresses"
       :key="item.id"
       :selected="selected"
+      :disabled="disabled"
       :label="item.addressName"
       :value="item.id"
       name="addressSelector"
@@ -60,6 +61,10 @@ export default {
     addresses: {
       type: Array,
       default: null
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     selected: {
       type: String,

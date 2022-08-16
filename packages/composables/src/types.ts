@@ -280,6 +280,7 @@ export interface UseCartErrors {
   addItem: Error;
   removeItem: Error;
   update: Error;
+  payment: Error;
   updateItemQty: Error;
   load: Error;
   clear: Error;
@@ -307,6 +308,10 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends Pl
   }) => Promise<void>;
   updatePaymentMethod: (params: {
     paymentMethod: PAYMENTMETHOD;
+  }) => Promise<void>;
+  initializePayment: (params: {
+    paymentId: string;
+    body: any;
   }) => Promise<void>;
   updateItemQty(params: {
     product: CART_ITEM;
@@ -467,4 +472,31 @@ export interface UseFulfillmentMethods<METHOD> {
 export interface FulfillmentMethodsGetters<METHOD> {
   getFulfillmentMethod(fulfillmentMethods: METHOD[], shippingProviderId: string): METHOD;
   getFulfillmentMethodType(fulfillmentMethods: METHOD[], shippingProviderId: string): FulfillmentMethodType
+}
+
+export interface UseCreditCardFormErrors {
+  init: Error | null;
+  cardNumber: Error | null;
+  cvv: Error | null;
+  expiry: Error | null;
+}
+
+export type CreaditCardCustomController = {
+  controller: any,
+  isCardNumberComplete: boolean,
+  isCVVComplete: boolean,
+  isExpiryComplete: boolean
+}
+
+export interface UseCreditCardForm<CUSTOMFORMCONTROLLER, API extends PlatformApi = any> extends Composable<API> {
+  customController: ComputedProperty<CUSTOMFORMCONTROLLER>;
+  tokenData: any;
+  cardholderName: ComputedProperty<string>;
+  setCustomController(controller: CUSTOMFORMCONTROLLER): void;
+  updateCardholderName(name: string): void;
+  init(): Promise<void>;
+  initialized: ComputedProperty<boolean>;
+  createTokenData(): Promise<any>;
+  error: ComputedProperty<UseCreditCardFormErrors>;
+  loading: ComputedProperty<boolean>;
 }

@@ -1,4 +1,5 @@
 <template>
+<SfLoader :loading="loadingCreditCartMethods || loadingOnSiteMethods">
   <div>
     <div class="payment-methods">
       <SfRadio
@@ -7,7 +8,7 @@
         :key="method.id"
         :label="th.getTranslation(method.displayName)"
         :value="method.id"
-        :disabled="loading"
+        :disabled="loading || makeOrderLoading"
         :selected ="selectedMethod"
         name="spaymentMethod"
         class="form__radio payment-method"
@@ -21,17 +22,19 @@
     </div>
     <transition name="sf-fade">
         <div v-if="isCreditCard" class="credit-card-form">
-          <p>TODO Credit Card form</p>
+           <BamboraCreditCard />
         </div>
     </transition>
   </div>
+</SfLoader>
 </template>
 
 <script>
-import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { computed, watch } from '@nuxtjs/composition-api';
-import { usePaymentMethods, useCart, cartGetters, paymentMethodGetters } from '@vue-storefront/orc-vsf';
+import { SfButton, SfRadio, SfLoader } from '@storefront-ui/vue';
+import { computed } from '@nuxtjs/composition-api';
+import { usePaymentMethods, useCart, cartGetters, paymentMethodGetters, useMakeOrder } from '@vue-storefront/orc-vsf';
 import { useUiHelpers } from '~/composables';
+import BamboraCreditCard from '../Checkout/Payment/Bambora/BamboraCreditCard';
 import { onSSR } from '@vue-storefront/core';
 
 export default {
@@ -39,35 +42,29 @@ export default {
 
   components: {
     SfButton,
-    SfRadio
+    SfRadio,
+    SfLoader,
+    BamboraCreditCard
   },
-
-  setup(props, { emit }) {
+  setup() {
     const bamboraApplePayMethodId = '084dbf29e00d4709ad4ec8c7562cfefd';
-    const { methods: onsiteMethods, load: loadOnsiteMethods } = usePaymentMethods('OnsiteMethods');
-    const { methods: bamboraMethods, load: loadBamboraMethods } = usePaymentMethods('BamboraMethods');
+    const { methods: onsiteMethods, load: loadOnsiteMethods, loading: loadingOnSiteMethods} = usePaymentMethods('Onsite payment');
+    const { methods: bamboraMethods, load: loadBamboraMethods, loading: loadingCreditCartMethods } = usePaymentMethods('Bambora');
     const { cart, updatePaymentMethod, loading } = useCart();
+    const { loading: makeOrderLoading } = useMakeOrder();
     const validMethods = computed(() => {
       if (!bamboraMethods.value || !onsiteMethods.value) return [];
       const allMethods = bamboraMethods.value.concat(onsiteMethods.value);
       return paymentMethodGetters.getValidPaymentMethods(allMethods);
     });
-    const defaultMethod = computed(() => paymentMethodGetters.getDefaultMethod(validMethods.value));
     const payment = computed(() => cartGetters.getActivePayment(cart.value));
     const selectedMethod = computed(() => payment.value?.paymentMethod?.id);
     const isCreditCard = computed(() => payment.value?.paymentMethod?.type === 'CreditCard');
-    const isBilling = computed(() => cartGetters.isBillingReady(cart.value));
     const th = useUiHelpers();
-
-    if (selectedMethod.value) {
-      emit('status');
-    }
 
     const selectMethod = async (id) => {
       const paymentMethod = validMethods.value?.find(p => p.id === id);
       await updatePaymentMethod({paymentMethod});
-      emit('status');
-
     };
 
     onSSR(async () => {
@@ -79,15 +76,12 @@ export default {
       }
     });
 
-    watch(isBilling, () => {
-      if (isBilling.value && payment?.value && !payment.value.paymentMethod) {
-        updatePaymentMethod({paymentMethod: defaultMethod.value});
-      }
-    });
-
     return {
       bamboraApplePayMethodId,
       methods: validMethods,
+      loadingCreditCartMethods,
+      loadingOnSiteMethods,
+      makeOrderLoading,
       selectedMethod,
       selectMethod,
       loading,

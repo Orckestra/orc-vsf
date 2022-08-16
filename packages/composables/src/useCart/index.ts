@@ -35,7 +35,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
     if (cart && (!shipment.fulfillmentLocationId ||
       isGuidEmpty(shipment.fulfillmentLocationId))) {
       // Need to setup fulfilment location for the cart for the items inventory status
-      const locations = await context.$occ.api.getFulfillmentLocations({ includeChildScopes: true, onlyActive: true, isInventoryLocation: true });
+      const locations = await context.$occ.api.getInventoryLocations({ includeChildScopes: true });
       const location = locations?.[0];
 
       if (location) {
@@ -49,7 +49,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
           fulfillmentScheduleMode,
           fulfillmentScheduledTimeBeginDate,
           fulfillmentScheduledTimeEndDate,
-          shippingProviderId: shipment.FulfillmentMethod?.ShippingProviderId,
+          shippingProviderId: shipment.fulfillmentMethod?.shippingProviderId,
           propertyBag,
           CultureName: locale
         };
@@ -85,17 +85,30 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update: (context: Context, { currentCart, cart }) => {
+  update: async (context: Context, { currentCart, cart }) => {
+    const shipment = cart?.shipments?.[0];
+    if (!shipment.fulfillmentLocationId ||
+      isGuidEmpty(shipment.fulfillmentLocationId)) {
+      const locations = await context.$occ.api.getInventoryLocations({ includeChildScopes: true });
+      const location = locations?.[0];
+      shipment.fulfillmentLocationId = location.id;
+    }
     return context.$occ.api.updateCart({ ...params, cart, cartName: currentCart.name });
   },
 
   updatePaymentMethod: async (context: Context, { currentCart, paymentMethod }) => {
-    const payment: any = cartGetters.getActivePayment(currentCart);
+    let payment: any = cartGetters.getActivePayment(currentCart);
     if (payment.paymentStatus !== 'New') {
       await context.$occ.api.removePayment({ paymentId: payment.id, cartName: currentCart.name });
-      await context.$occ.api.addPayment({ cartName: currentCart.name });
+      const cart = await context.$occ.api.addPayment({ cartName: currentCart.name, billingAddress: payment.billingAddress });
+      payment = cartGetters.getActivePayment(cart);
     }
     return await context.$occ.api.updatePaymentMethod({ paymentId: payment.id, ...paymentMethod, cartName: currentCart.name });
+  },
+
+  initializePayment: async (context: Context, { currentCart, body }) => {
+    const payment: any = cartGetters.getActivePayment(currentCart);
+    return await context.$occ.api.initializePayment({ paymentId: payment.id, body, cartName: currentCart.name });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

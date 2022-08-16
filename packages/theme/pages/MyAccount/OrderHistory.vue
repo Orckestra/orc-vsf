@@ -178,7 +178,7 @@
                 />
                 <SfProperty
                   name="Payment method"
-                  :value="currentOrderPayment.method"
+                  :value="`${currentOrderPayment.method} ${currentOrderPayment.creditCardInfo ? `(.... ${currentOrderPayment.creditCardInfo})`: ''}`"
                   class="sf-property property"
                 />
                 <SfProperty
@@ -331,6 +331,7 @@ export default {
     const paymentMethod = computed(() => orderGetters.getPaymentMethod(currentOrder.value));
     const currentOrderPayment = computed(() => ({
       method: th.getTranslation(paymentMethod?.value?.displayName, paymentMethod?.value?.name),
+      creditCardInfo: orderGetters.getPaymentCreditCardNumberLastDigits(currentOrder.value) ?? '',
       address: orderGetters.getPaymentAddress(currentOrder.value)
     }));
 

@@ -26,6 +26,7 @@ export { useUserAddresses } from './useUserAddresses';
 export { usePaymentMethods } from './usePaymentMethods';
 export { useFulfillmentMethods } from './useFulfillmentMethods';
 export { useOrder } from './useOrder';
+export { useCreditCardForm } from './useCreditCardForm';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
