@@ -163,13 +163,24 @@
               {{ $t('Go back') }}
             </SfButton>
             <SfButton
-              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms"
+              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || unavailableProducts.length"
               class="form__action-button"
               type="submit"
               @click="processOrder"
             >
               Submit Order
             </SfButton>
+          </div>
+          <div v-if="unavailableProducts.length"  class="form">
+            <SfNotification
+              visible
+              :message="$t('Unavailable items in cart')"
+              :action="$t('Clean cart')"
+              @click:action="removeUnavailable"
+              type="warning"
+            >
+              <template #close>{{''}}</template>
+            </SfNotification>
           </div>
         </div>
     </div>
@@ -193,6 +204,7 @@ import {
   SfCheckbox,
   SfDivider,
   SfProperty,
+  SfNotification,
   SfLink } from '@storefront-ui/vue';
 import CartSaving from '../../components/Checkout/CartSaving';
 import CouponCode from '../../components/Checkout/CouponCode';
@@ -210,6 +222,7 @@ export default {
     SfCheckbox,
     SfHeading,
     SfProperty,
+    SfNotification,
     CartSaving,
     SfDivider,
     SfLink,
@@ -220,7 +233,7 @@ export default {
   setup(props, context) {
     const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
-    const { cart, load: loadCart, loading: cartLoading, setCart } = useCart();
+    const { cart, removeCartItems, load: loadCart, loading: cartLoading, setCart, error } = useCart();
     const { order, make, loading: makeOrderLoading, error: orderError } = useMakeOrder();
     const router = useRouter();
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -231,6 +244,7 @@ export default {
     const activeShipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));
+    const unavailableProducts = computed(() => cartGetters.getUnavailableItems(cart.value));
 
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
@@ -278,6 +292,22 @@ export default {
       }
     };
 
+    const removeUnavailable = async () => {
+      const unavailableProductIds = unavailableProducts.value.map(item => item.id);
+      await removeCartItems({ lineItemIds: unavailableProductIds });
+
+      if (error.value.removeCartItems) {
+        sendNotification({
+          id: Symbol('cart_updated_error'),
+          message: error.value.removeCartItems.message,
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'Checkout process'
+        });
+      }
+    };
+
     onSSR(async () => {
       await loadCart();
     });
@@ -300,7 +330,9 @@ export default {
       th,
       cartLoading,
       makeOrderLoading,
-      processOrder
+      processOrder,
+      unavailableProducts,
+      removeUnavailable
     };
   }
 };

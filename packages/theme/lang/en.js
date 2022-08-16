@@ -164,5 +164,7 @@ export default {
   'Open hours': 'Open hours',
   'Your authentication session has expired. Please log in again.': 'Your authentication session has expired. Please log in again.',
   'Change to grid view': 'Change to grid view',
-  'Change to list view': 'Change to list view'
+  'Change to list view': 'Change to list view',
+  'Unavailable items in cart': 'Your cart contains unavailable products. Please review the cart or clean the cart automatically.',
+  'Clean cart': 'Clean cart'
 };
