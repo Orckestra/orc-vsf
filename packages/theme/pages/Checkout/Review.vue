@@ -178,7 +178,9 @@
               :action="$t('Clean cart')"
               @click:action="removeUnavailable"
               type="warning"
-            />
+            >
+              <template #close>{{''}}</template>
+            </SfNotification>
           </div>
         </div>
     </div>
