@@ -164,5 +164,6 @@ export default {
   'Open hours': 'Open hours',
   'Change to grid view': 'Change to grid view',
   'Change to list view': 'Change to list view',
-  'Go to billing': 'Go to billing'
+  'Go to billing': 'Go to billing',
+  'Go to shipping': 'Go to shipping'
 };
