@@ -166,7 +166,7 @@
                   :name="`${currentOrderShipping.type} address`"
                   class="sf-property">
                   <template #value>
-                    <AddressPreview :address="currentOrderShipping.address" />
+                    <AddressPreview :address="currentOrderShipping.address" :showAddressName="false"/>
                   </template>
                 </SfProperty>
             </div>
@@ -185,7 +185,7 @@
                   name="Billing address"
                   class="sf-property">
                   <template #value>
-                    <AddressPreview :address="orderGetters.getPaymentAddress(currentOrder)" />
+                    <AddressPreview :address="orderGetters.getPaymentAddress(currentOrder)" :showAddressName="false"/>
                   </template>
                 </SfProperty>
             </div>
