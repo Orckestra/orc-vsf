@@ -47,6 +47,7 @@ import findStores from './api/stores/findStores';
 import getOrderByNumber from './api/orders/getOrderByNumber';
 import getOrderById from './api/orders/getOrderById';
 import getOrderLookups from './api/metadata/getOrderLookups';
+import removeCartItems from './api/carts/removeCartItems';
 
 import { tokenExtension } from './extensions/auth';
 
@@ -115,7 +116,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
     getOrderByNumber,
     getOrderById,
     getOrderLookups,
-    findStores
+    findStores,
+    removeCartItems
   },
   extensions: [tokenExtension]
 });

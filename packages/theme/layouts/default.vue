@@ -1,5 +1,6 @@
 <template>
   <div>
+    <OfflineWarning />
     <LazyHydrate when-visible>
       <TopBar class="desktop-only" />
     </LazyHydrate>
@@ -31,6 +32,7 @@ import WishlistSidebar from '~/components/WishlistSidebar.vue';
 import LoginModal from '~/components/LoginModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
+import OfflineWarning from '~/components/Layout/OfflineWarning.vue';
 import { onSSR } from '@vue-storefront/core';
 import { useRoute } from '@nuxtjs/composition-api';
 import { useCart, useStore, useUser, useWishlist, useMetadata, useConfiguration, useCountries } from '@vue-storefront/orc-vsf';
@@ -47,7 +49,8 @@ export default {
     CartSidebar,
     WishlistSidebar,
     LoginModal,
-    Notification
+    Notification,
+    OfflineWarning
   },
 
   setup() {

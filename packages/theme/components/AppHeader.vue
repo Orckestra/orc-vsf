@@ -101,13 +101,11 @@
       @removeSearchResults="removeSearchResults"
     />
     <SfOverlay :visible="isSearchOpen" />
-    <OfflineWarning />
   </div>
 </template>
 
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
-import OfflineWarning from './Layout/OfflineWarning.vue';
 import { useUiState } from '~/composables';
 import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch, wishlistGetters, useWishlist } from '@vue-storefront/orc-vsf';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
@@ -133,8 +131,7 @@ export default {
     SfSearchBar,
     SearchResults,
     SfOverlay,
-    HeaderNavigation,
-    OfflineWarning
+    HeaderNavigation
   },
   directives: { clickOutside },
   setup(props, { root }) {

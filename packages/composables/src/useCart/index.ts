@@ -145,6 +145,11 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, PaymentMethod> = {
     };
 
     return Boolean(currentCart && getLineItemByProduct({ currentCart, product }));
+  },
+
+  removeCartItems: async (context: Context, { lineItemIds }) => {
+    const updatedCart = await context.$occ.api.removeCartItems({ ...params, lineItemIds });
+    return { updatedCart };
   }
 };
 

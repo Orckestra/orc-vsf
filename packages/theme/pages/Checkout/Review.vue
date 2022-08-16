@@ -163,13 +163,24 @@
               {{ $t('Go back') }}
             </SfButton>
             <SfButton
-              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || (isCreditCard && !isCreditCardComplete)"
+              :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || unavailableProducts.length || (isCreditCard && !isCreditCardComplete)"
               class="form__action-button"
               type="submit"
               @click="processOrder"
             >
               Submit Order
             </SfButton>
+          </div>
+          <div v-if="unavailableProducts.length"  class="form">
+            <SfNotification
+              visible
+              :message="$t('Unavailable items in cart')"
+              :action="$t('Clean cart')"
+              @click:action="removeUnavailable"
+              type="warning"
+            >
+              <template #close>{{''}}</template>
+            </SfNotification>
           </div>
         </div>
     </div>
@@ -193,6 +204,7 @@ import {
   SfCheckbox,
   SfDivider,
   SfProperty,
+  SfNotification,
   SfLink } from '@storefront-ui/vue';
 import CartSaving from '../../components/Checkout/CartSaving';
 import CouponCode from '../../components/Checkout/CouponCode';
@@ -211,6 +223,7 @@ export default {
     SfCheckbox,
     SfHeading,
     SfProperty,
+    SfNotification,
     CartSaving,
     SfDivider,
     SfLink,
@@ -221,7 +234,7 @@ export default {
   setup(props, context) {
     const th = useUiHelpers();
     const { send: sendNotification } = useUiNotification();
-    const { cart, load: loadCart, loading: cartLoading, setCart, initializePayment, error: cartError, updatePaymentMethod } = useCart();
+    const { cart, removeCartItems, load: loadCart, loading: cartLoading, setCart, initializePayment, error: cartError, updatePaymentMethod } = useCart();
     const { createTokenData: createCreditCardTokenData, customController: creditCardController, cardholderName } = useCreditCardForm();
     const isCreditCardComplete = computed(() => creditCardController.value.isCardNumberComplete &&
       creditCardController.value.isCVVComplete &&
@@ -238,7 +251,9 @@ export default {
     const activeShipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const activePayment = computed(() => cartGetters.getActivePayment(cart.value));
     const isPaymentMethod = computed(() => Boolean(activePayment.value.paymentMethod));
+    const unavailableProducts = computed(() => cartGetters.getUnavailableItems(cart.value));
     const isCreditCard = computed(() => activePayment.value?.paymentMethod?.type === 'CreditCard');
+
     const { methods: paymentMethods, load: loadPaymentMethods } = usePaymentMethods('PaymentMethods');
     const personalDetails = computed(() => ({
       firstName: cart.value?.customer?.firstName,
@@ -311,6 +326,22 @@ export default {
       }
     };
 
+    const removeUnavailable = async () => {
+      const unavailableProductIds = unavailableProducts.value.map(item => item.id);
+      await removeCartItems({ lineItemIds: unavailableProductIds });
+
+      if (cartError.value.removeCartItems) {
+        sendNotification({
+          id: Symbol('cart_updated_error'),
+          message: cartError.value.removeCartItems.message,
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'Checkout process'
+        });
+      }
+    };
+
     onSSR(async () => {
       await loadCart();
     });
@@ -335,7 +366,9 @@ export default {
       isCreditCardComplete,
       cartLoading,
       makeOrderLoading,
-      processOrder
+      processOrder,
+      unavailableProducts,
+      removeUnavailable
     };
   }
 };

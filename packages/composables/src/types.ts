@@ -286,6 +286,7 @@ export interface UseCartErrors {
   clear: Error;
   applyCoupon: Error;
   removeCoupon: Error;
+  removeCartItems: Error;
 }
 export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends PlatformApi = any> extends Composable<API> {
   cart: ComputedProperty<CART>;
@@ -325,6 +326,9 @@ export interface UseCart<CART, CART_ITEM, PRODUCT, PAYMENTMETHOD, API extends Pl
   removeCoupon(params: {
     couponCode: string;
     customQuery?: CustomQuery;
+  }): Promise<void>;
+  removeCartItems(params: {
+    lineItemIds: string[];
   }): Promise<void>;
   load(): Promise<void>;
   load(params: {

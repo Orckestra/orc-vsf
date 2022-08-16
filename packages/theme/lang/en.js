@@ -162,8 +162,11 @@ export default {
   'Closed': 'Closed',
   'Open all day': 'Open all day',
   'Open hours': 'Open hours',
+  'Your authentication session has expired. Please log in again.': 'Your authentication session has expired. Please log in again.',
   'Change to grid view': 'Change to grid view',
   'Change to list view': 'Change to list view',
   'Go to billing': 'Go to billing',
-  'Go to shipping': 'Go to shipping'
+  'Go to shipping': 'Go to shipping',
+  'Unavailable items in cart': 'Your cart contains unavailable products. Please review the cart or clean the cart automatically.',
+  'Clean cart': 'Clean cart'
 };

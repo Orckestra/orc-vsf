@@ -299,8 +299,15 @@ export type Payment = {
     paymentDate: string
 }
 
+export type Message = {
+    messageId: string,
+    displayName: any,
+    severity: any,
+    propertyBag?: any
+}
+
 export type Cart = {
-    messages?: any,
+    messages?: Message[],
     customerId: any,
     name: string,
     cartType?: string,
