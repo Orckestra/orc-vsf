@@ -14,7 +14,6 @@ export default async function getFulfillmentLocations(context, params) {
   if (data && inventoryLocationIds) {
     const locationIds = inventoryLocationIds.split(',');
     data = data.filter(d => locationIds.includes(d.inventoryLocationId));
-
   }
   return data;
 }
