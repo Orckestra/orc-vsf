@@ -2,16 +2,8 @@ import type { Cart, CartItem, Message } from '@vue-storefront/orc-vsf-api';
 
 export const validateLineItem = (cart: Cart, cartItem: CartItem): boolean => {
 
-  const isMessageForLineItem = (message: Message): boolean => {
-    return message.propertyBag &&
-      message.propertyBag.LineItemId &&
-      message.propertyBag.EntityType &&
-      message.propertyBag.EntityType === 'LineItem';
-  };
-
-  const isErrorMessage = (message: Message): boolean => {
-    return message.severity === 'Error';
-  };
+  const isMessageForLineItem = (message: Message): boolean => (message.propertyBag?.EntityType === 'LineItem' && message.propertyBag.LineItemId);
+  const isErrorMessage = (message: Message): boolean => message.severity === 'Error';
 
   const hasErrorMassage = cart.messages?.some(message =>
     isErrorMessage(message) &&
