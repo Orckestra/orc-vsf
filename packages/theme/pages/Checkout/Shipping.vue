@@ -41,18 +41,17 @@
                 <AddressForm :form="addressForm" />
                 <div class="form__action-bar">
                   <SfButton
+                    class="form__action-button sf-button sf-button-primary"
+                    :disabled="loadingFulfillmentMethods || loadingAddresses"
+                  >
+                    Save new address
+                  </SfButton>
+                  <SfButton
                     type="button"
                     class="form__action-button--secondary color-light sf-button"
                     @click="cancelEditing">
                       {{ $t('Cancel') }}
                   </SfButton>
-                  <SfButton
-                    class="sf-button sf-button-primary"
-                    :disabled="loadingFulfillmentMethods || loadingAddresses"
-                  >
-                    Save new address
-                  </SfButton>
-
                 </div>
               </form>
             </ValidationObserver>
@@ -104,18 +103,18 @@
       <div class="form">
         <div class="form__action-bar">
           <SfButton
-            class="form__action-button--secondary sf-button color-secondary form__back-button"
-            type="button"
-            @click="goBack"
-          >
-            {{ $t('Go back') }}
-          </SfButton>
-          <SfButton
             :disabled="loadingFulfillmentMethods || loadingAddresses || loadingCart || (isAuthenticated && isShippingMethod && !shipmentAddressId) || !form.shippingMethod || (isPickupMethod && !shipmentPickUpLocationId)"
             class="form__action-button"
             type="submit"
           >
             {{ $t('Go to billing') }}
+          </SfButton>
+          <SfButton
+            class="form__action-button--secondary sf-button color-secondary"
+            type="button"
+            @click="goBack"
+          >
+            {{ $t('Go back') }}
           </SfButton>
         </div>
       </div>
@@ -458,7 +457,7 @@ export default {
   &__action-button {
       margin: 0;
       width: 100%;
-      margin: var(--spacer-sm) 0 0 0;
+      margin: var(--spacer-sm) 0 var(--spacer-sm) 0;
       @include for-desktop {
         margin: 0 var(--spacer-xl) 0 0;
         width: auto;
@@ -480,12 +479,8 @@ export default {
         }
       }
       &__back-button {
-        margin: var(--spacer-xl) 0 var(--spacer-sm);
-        &:hover {
+         &:hover {
           color:  var(--c-white);
-        }
-        @include for-desktop {
-          margin: 0 var(--spacer-xl) 0 0;
         }
     }
   }
