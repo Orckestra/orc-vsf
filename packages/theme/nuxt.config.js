@@ -196,7 +196,7 @@ module.exports = {
       dev: false,
       enabled: true,
       config: {
-        debug: true,
+        debug: false,
       },
       // remove if you want to disable cache api
       cachingExtensions: '@/plugins/workbox-request.js',
