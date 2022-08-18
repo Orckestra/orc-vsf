@@ -478,11 +478,6 @@ export default {
           width: auto;
         }
       }
-      &__back-button {
-         &:hover {
-          color:  var(--c-white);
-        }
-    }
   }
 }
 
