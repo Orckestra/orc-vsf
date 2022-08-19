@@ -28,18 +28,17 @@
 
                 <div class="form__action-bar">
                   <SfButton
+                    class="form__action-button sf-button color-primary"
+                    :disabled="loadingAddresses">
+                    Save address
+                  </SfButton>
+                  <SfButton
                     type="button"
                     class="form__action-button--secondary color-light sf-button"
                     @click="cancelEditing">
                       {{ $t('Cancel') }}
                   </SfButton>
-                  <SfButton
-                    class="form__action-button--primary sf-button color-primary"
-                    :disabled="loadingAddresses">
-                    Save address
-                  </SfButton>
                 </div>
-
               </form>
             </ValidationObserver>
           </template>
@@ -91,16 +90,16 @@
               />
               <div class="form__action-bar">
                 <SfButton
+                  class="form__action-button sf-button sf-button--primary"
+                  :disabled="loadingCart || !isAddressFormReady">
+                   {{ $t('Save address') }}
+                </SfButton>
+                <SfButton
                   type="button"
                   v-if="isBilling"
                   class="form__action-button--secondary color-light sf-button"
                   @click="cancelEditing">
                   {{ $t('Cancel') }}
-                </SfButton>
-                <SfButton
-                  class="form__action-button--primary sf-button sf-button--primary"
-                  :disabled="loadingCart || !isAddressFormReady">
-                   {{ $t('Save address') }}
                 </SfButton>
               </div>
             </form>
@@ -109,18 +108,18 @@
     <div class="form">
       <div v-e2e="'payment-summary-buttons'" class="form__action-bar">
             <SfButton
-              type="button"
-              class="form__action-button--secondary sf-button color-secondary"
-              @click="goBack"
-            >
-              {{ $t('Go back') }}
-            </SfButton>
-            <SfButton
               :disabled="loadingCart || !isBilling"
               class="form__action-button"
               @click="goNext"
             >
               {{ $t('Review order') }}
+            </SfButton>
+            <SfButton
+              type="button"
+              class="form__action-button--secondary sf-button color-secondary"
+              @click="goBack"
+            >
+              {{ $t('Go back') }}
             </SfButton>
       </div>
     </div>
@@ -389,14 +388,21 @@ export default {
     }
   }
   &__action-button {
-    &--secondary {
+      margin: 0;
+      width: 100%;
+      margin: var(--spacer-sm) 0 var(--spacer-sm) 0;
+      @include for-desktop {
+        margin: 0 var(--spacer-xl) 0 0;
+        width: auto;
+      }
+      &--secondary {
         margin: 0 0 var(--spacer-sm) 0;
         @include for-desktop {
           order: -1;
           text-align: left;
           margin: 0 var(--spacer-xl) 0 0;
         }
-    }
+      }
     &--add-address {
       width: 100%;
       margin: 0;

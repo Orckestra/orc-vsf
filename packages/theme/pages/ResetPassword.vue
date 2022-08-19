@@ -84,7 +84,7 @@ import {
   defineComponent
 } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, password } from 'vee-validate/dist/rules';
+import { required } from 'vee-validate/dist/rules';
 import { useConfiguration, configurationGetters, forgotPasswordGetters, useForgotPassword } from '@vue-storefront/orc-vsf';
 import { useUiNotification } from '~/composables';
 
@@ -117,7 +117,6 @@ export default defineComponent({
     const { ticket } = context.root.$route.query;
     const { send: sendNotification } = useUiNotification();
     extend('password', {
-      ...password,
       validate(value) {
         const minRequiredPasswordLength = configurationGetters.getMinRequiredPasswordLength(configuration.value);
         const minRequiredNonAlphanumericCharacters = configurationGetters.getMinRequiredNonAlphanumericCharacters(configuration.value);

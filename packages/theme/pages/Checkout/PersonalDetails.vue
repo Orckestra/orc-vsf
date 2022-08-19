@@ -68,18 +68,19 @@
         <div class="form">
           <div class="form__action">
             <SfButton
-              :disabled="userLoading || cartLoading"
-              v-if='!isAuthenticated'
-              class="form__action-button--secondary color-secondary"
-              @click.prevent="toggleLoginModal"
-            >{{ "Log into your account" }}</SfButton>
-            <SfButton
               class="form__action-button"
               type="submit"
               :disabled="userLoading || cartLoading"
             >
               {{ $t('Go to shipping') }}
             </SfButton>
+            <SfButton
+              :disabled="userLoading || cartLoading"
+              v-if='!isAuthenticated'
+              class="form__action-button--secondary color-secondary"
+              @click.prevent="toggleLoginModal"
+            >{{ "Log into your account" }}</SfButton>
+
           </div>
         </div>
       </form>
@@ -224,6 +225,7 @@ export default {
     }
   }
   .form {
+    --button-width: 100%;
     &__element {
       --input-padding: var(--spacer-sm) 0 var(--spacer-2xs) 0;
       margin: 0 0 var(--spacer-base) 0;
@@ -240,17 +242,24 @@ export default {
       }
     }
     &__action-button {
+      margin: 0;
+      width: 100%;
+      margin: var(--spacer-sm) 0 var(--spacer-sm) 0;
+      @include for-desktop {
+        margin: 0 var(--spacer-xl) 0 0;
+        width: auto;
+      }
       &--secondary {
-        margin: var(--spacer-xl) var(--spacer-sm) var(--spacer-sm) 0;
-        &:hover {
-          color:  var(--c-white);
-        }
+        margin: 0 0 var(--spacer-sm) 0;
         @include for-desktop {
-          margin: 0 var(--spacer-xl) 0 0 ;
+          order: -1;
+          text-align: left;
+          margin: 0 var(--spacer-xl) 0 0;
         }
       }
     }
     @include for-desktop {
+      --button-width: auto;
       display: flex;
       flex-wrap: wrap;
       align-items: center;

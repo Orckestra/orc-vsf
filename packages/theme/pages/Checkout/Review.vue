@@ -155,14 +155,6 @@
       <div class="form">
           <div class="form__action">
             <SfButton
-              class="sf-button color-secondary form__back-button"
-              type="button"
-              @click="goBack"
-              :disabled="makeOrderLoading || cartLoading"
-            >
-              {{ $t('Go back') }}
-            </SfButton>
-            <SfButton
               :disabled="makeOrderLoading || cartLoading || !isOrderReady || !terms || unavailableProducts.length || (isCreditCard && !isCreditCardComplete)"
               class="form__action-button"
               type="submit"
@@ -170,6 +162,15 @@
             >
               Submit Order
             </SfButton>
+            <SfButton
+              class="form__action-button--secondary sf-button color-secondary"
+              type="button"
+              @click="goBack"
+              :disabled="makeOrderLoading || cartLoading"
+            >
+              {{ $t('Go back') }}
+            </SfButton>
+
           </div>
           <div v-if="unavailableProducts.length"  class="form">
             <SfNotification
@@ -458,39 +459,11 @@ export default {
 .form {
   margin-top: var(--spacer-base);
   --button-width: 100%;
-  &__select {
-    display: flex;
-    align-items: center;
-    --select-option-font-size: var(--font-size--lg);
-    ::v-deep .sf-select__dropdown {
-      font-size: var(--font-size--lg);
-      margin: 0;
-      color: var(--c-text);
-      font-family: var(--font-family--secondary);
-      font-weight: var(--font-weight--normal);
-    }
-  }
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     --button-width: auto;
-  }
-  &__element {
-    margin: 0 0 var(--spacer-xl) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-xl);
-        }
-      }
-    }
   }
   &__action {
     @include for-desktop {
@@ -499,29 +472,21 @@ export default {
     }
   }
   &__action-button {
-    &--secondary {
-      @include for-desktop {
-        order: -1;
-        text-align: left;
-      }
-    }
-    &--add-address {
-      width: 100%;
       margin: 0;
+      width: 100%;
+      margin: var(--spacer-sm) 0 var(--spacer-sm) 0;
       @include for-desktop {
-        margin: 0 0 var(--spacer-lg) 0;
+        margin: 0 var(--spacer-xl) 0 0;
         width: auto;
       }
-    }
-  }
-  &__back-button {
-    margin: var(--spacer-xl) 0 var(--spacer-sm);
-    &:hover {
-      color:  var(--c-white);
-    }
-    @include for-desktop {
-      margin: 0 var(--spacer-xl) 0 0;
-    }
+      &--secondary {
+        margin: 0 0 var(--spacer-sm) 0;
+        @include for-desktop {
+          order: -1;
+          text-align: left;
+          margin: 0 var(--spacer-xl) 0 0;
+        }
+      }
   }
 }
 
