@@ -475,10 +475,14 @@ img.sf-image.sf-image-loaded{
   &__data:last-child {
       text-align: right;
   }
+  &__image {
+    --image-width: 2.75rem;
+    text-align: left;
+  }
   @include for-desktop {
     margin: 0 0 var(--spacer-base) 0;
     --table-heading-padding: var(--spacer-sm) 0;
-      &__header {
+    &__header {
       &:last-of-type {
         margin-right: var(--spacer-xs);
       }
