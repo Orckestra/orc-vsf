@@ -10,21 +10,15 @@
     />
   </div>
   <SfModal v-else :visible="isMobileMenuOpen">
-    <SfHeaderNavigationItem
-      v-for="(menu, index) in menus"
-      :key="index"
-      class="nav-item"
-      v-e2e="`app-header-url_${menu.slug}`"
-    >
-      <template #mobile-navigation-item>
-        <SfMenuItem
+    <div class="sf-header-navigation-item__item sf-header-navigation-item__item--mobile"
+      v-for="(menu, index) in menus" :key="index">
+      <SfMenuItem
           :label="menu.label"
           class="sf-header-navigation-item__menu-item"
           :link="localePath(`/c/${menu.slug}`)"
           @click.native="toggleMobileMenu"
         />
-      </template>
-    </SfHeaderNavigationItem>
+    </div>
   </SfModal>
 </template>
 
