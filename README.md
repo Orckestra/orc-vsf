@@ -34,7 +34,7 @@ OVERTURE_INVENTORY_LOCATION_IDS=
 SECRET_PASSPHRASE=
 ```
 
-For security purpose, it is important to configure `SECRET_PASSPHRASE` which  it used to encrypt user tokens.
+For security purpose, it is important to configure `SECRET_PASSPHRASE` which  is used to encrypt user tokens.
 
 4. Build:
 
