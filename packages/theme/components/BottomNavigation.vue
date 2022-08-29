@@ -53,6 +53,9 @@ export default {
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
         const localeAccountPath = root.localePath({ name: 'my-account' });
+        if (isMobileMenuOpen.value) {
+          toggleMobileMenu();
+        }
         return router.push(localeAccountPath);
       }
       toggleLoginModal();

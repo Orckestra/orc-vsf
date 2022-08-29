@@ -136,7 +136,7 @@ export default {
   directives: { clickOutside },
   setup(props, { root }) {
     const router = useRouter();
-    const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
+    const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen, toggleMobileMenu } = useUiState();
     const { wishlist } = useWishlist();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
@@ -175,6 +175,9 @@ export default {
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
         const localeAccountPath = root.localePath({ name: 'my-account' });
+        if (isMobileMenuOpen.value) {
+          toggleMobileMenu();
+        }
         return router.push(localeAccountPath);
       }
 
