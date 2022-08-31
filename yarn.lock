@@ -1524,11 +1524,6 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@juggle/resize-observer@^3.3.1":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.3.1.tgz#b50a781709c81e10701004214340f25475a171a0"
-  integrity sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==
-
 "@lerna/add@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-4.0.0.tgz#c36f57d132502a57b9e7058d1548b7a565ef183f"
@@ -2844,28 +2839,26 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@storefront-ui/shared@0.11.4":
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/@storefront-ui/shared/-/shared-0.11.4.tgz#a56c1e7379b0398d9529ea316abe9581051e4c48"
-  integrity sha512-w7/Vng6YaNDJHMksdQc6tPOeCSuU7hgglXwvQzyekKbSSnObd+U31O1GzcdWS/bkmt1rzP87bX0pkNHs0Z5GTg==
+"@storefront-ui/shared@0.13.3":
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/@storefront-ui/shared/-/shared-0.13.3.tgz#2350d75649764dce90d8546af8ba18f2d7786ed2"
+  integrity sha512-lCfUEb5Cv7fvzNOKfFClwRj+ARTJukWDJyz6d8NIDzM0hEWImpNiy5Z32EFa0XZz22SFoMaUHhDyPSzhusTmag==
 
-"@storefront-ui/vue@0.11.4":
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/@storefront-ui/vue/-/vue-0.11.4.tgz#81cdbe947d13dfd67ceb7484c46b6d3e2d6cee87"
-  integrity sha512-sc3hOEgusyEH1AO8SOfD6m6t/38B6K8FKyYtYpIHdnxvC7fYPFWSsz8AUbGZvbaI2TQDUaZB23d6dQ2ROQOF/g==
+"@storefront-ui/vue@0.13.3", "@storefront-ui/vue@^0.13.3":
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/@storefront-ui/vue/-/vue-0.13.3.tgz#bd3219636c40cb4a5602e110cfb322e15ab03264"
+  integrity sha512-3iYiIL+760Atqt3v5iC2w8ger4QsUeATn/EQrWsID16ZAqC4bry8oph3aT7U3qsWDzZ+wIipSX7Opd3yRdpBOg==
   dependencies:
     "@glidejs/glide" "^3.3.0"
-    "@storefront-ui/shared" "0.11.4"
+    "@storefront-ui/shared" "0.13.3"
     body-scroll-lock "^3.0.1"
     cloudinary-build-url "^0.1.1"
     core-js "^3.6.5"
     glob "^7.1.4"
-    hammerjs "^2.0.8"
     leaflet "^1.5.1"
     nouislider "^15.2.0"
     sass "^1.32.13"
     sass-loader "^10.0.3"
-    simplebar-vue "^1.4.0"
     vue "^2.6.12"
     vue2-leaflet "^2.5.2"
 
@@ -4977,11 +4970,6 @@ camelcase@^6.0.0, camelcase@^6.2.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.2.1.tgz#250fd350cfd555d0d2160b1d51510eaf8326e86e"
   integrity sha512-tVI4q5jjFV5CavAU8DXfza/TJcZutVKo/5Foskmsqcm0MsL91moHvwiGNnqaa2o6PF/7yT5ikDRcVcl8Rj6LCA==
 
-can-use-dom@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/can-use-dom/-/can-use-dom-0.1.0.tgz#22cc4a34a0abc43950f42c6411024a3f6366b45a"
-  integrity sha1-IsxKNKCrxDlQ9CxkEQJKP2NmtFo=
-
 caniuse-api@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/caniuse-api/-/caniuse-api-3.0.0.tgz#5e4d90e2274961d46291997df599e3ed008ee4c0"
@@ -5802,7 +5790,7 @@ core-js@^2.6.5:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-core-js@^3.0.1, core-js@^3.19.0, core-js@^3.6.5:
+core-js@^3.19.0, core-js@^3.6.5:
   version "3.19.3"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.3.tgz#6df8142a996337503019ff3235a7022d7cdf4559"
   integrity sha512-LeLBMgEGSsG7giquSzvgBrTS7V5UL6ks3eQlUSbN8dJStlLFiRzUm5iqsRyzUB8carhfKjkJ2vzKqE6z1Vga9g==
@@ -8162,11 +8150,6 @@ hable@^3.0.0:
   resolved "https://registry.yarnpkg.com/hable/-/hable-3.0.0.tgz#6de089b2df946635cf8134b9e4859f1b62de255f"
   integrity sha512-7+G0/2/COR8pwteYFqHIVYfQpuEiO2HXwJrhCBJVgrNrl9O5eaUoJVDGXUJX+0RpGncNVTuestexjk1afj01wQ==
 
-hammerjs@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
-  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
-
 handlebars@^4.7.6:
   version "4.7.7"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.7.tgz#9ce33416aad02dbd6c8fafa8240d5d98004945a1"
@@ -10411,11 +10394,6 @@ lodash.templatesettings@^4.0.0:
   integrity sha512-stgLz+i3Aa9mZgnjr/O+v9ruKZsPsndy7qPZOchbqk2cnTU1ZaldKK+v7m54WoKIyxiuMZTKT2H81F8BeAc3ZQ==
   dependencies:
     lodash._reinterpolate "^3.0.0"
-
-lodash.throttle@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
-  integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
@@ -14082,26 +14060,6 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
-
-simplebar-vue@^1.4.0:
-  version "1.6.8"
-  resolved "https://registry.yarnpkg.com/simplebar-vue/-/simplebar-vue-1.6.8.tgz#ba6d6dc0e61d07f5bcb84f4bd8e3187c39452ff2"
-  integrity sha512-rykHqyDxeylI3z2NOAsiD+rhcx+cfiOrfnIotDJFC8FqoO4jyJMEN8Q+61PTMOfVJA0oSWFZySlagCH6lG+5qQ==
-  dependencies:
-    core-js "^3.0.1"
-    simplebar "^5.3.6"
-
-simplebar@^5.3.6:
-  version "5.3.6"
-  resolved "https://registry.yarnpkg.com/simplebar/-/simplebar-5.3.6.tgz#d9383576a09a6fd09e19543f8e9906a3e87c3896"
-  integrity sha512-FJUMbV+hNDd/m+1/fvD41TXKd5mSdlI5zgBygkaQIV3SffNbcLhSbJT6ufTs8ZNRLJ6i+qc/KCFMqWmvlGWMhA==
-  dependencies:
-    "@juggle/resize-observer" "^3.3.1"
-    can-use-dom "^0.1.0"
-    core-js "^3.0.1"
-    lodash.debounce "^4.0.8"
-    lodash.memoize "^4.1.2"
-    lodash.throttle "^4.1.1"
 
 sirv@^1.0.7:
   version "1.0.19"

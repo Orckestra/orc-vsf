@@ -46,6 +46,8 @@
                   :style="{ '--index': i }"
                   :title="cartGetters.getItemName(product)"
                   :image="addBasePath(cartGetters.getItemImage(product))"
+                  :image-height="326"
+                  :image-width="216"
                   :regular-price="$n(cartGetters.getItemPrice(product).regular, 'currency')"
                   :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
                   :show-add-to-cart-button="false"

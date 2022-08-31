@@ -8,11 +8,11 @@
       <!-- TODO: add mobile view buttons after SFUI team PR -->
       <template #logo>
         <nuxt-link :to="localePath({ name: 'home' })" class="sf-header__logo">
-          <SfImage :src="addBasePath('/icons/logo.svg')" alt="Vue Storefront Next" class="sf-header__logo-image"/>
+          <SfImage src="/icons/logo.svg" alt="Vue Storefront Next" class="sf-header__logo-image" width="35" height="34"/>
         </nuxt-link>
       </template>
       <template #navigation>
-        <HeaderNavigation :isMobile="isMobile" />
+        <HeaderNavigation />
       </template>
       <template #aside>
         <LocaleSelector class="smartphone-only" />
@@ -108,15 +108,11 @@
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useCart, useUser, cartGetters, searchGetters, useCategory, useSearch, wishlistGetters, useWishlist } from '@vue-storefront/orc-vsf';
-import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
+import { computed, ref, watch, useRouter } from '@nuxtjs/composition-api';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
 import HeaderNavigation from './HeaderNavigation';
 import { clickOutside } from '@storefront-ui/vue/src/utilities/directives/click-outside/click-outside-directive.js';
-import {
-  mapMobileObserver,
-  unMapMobileObserver
-} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 import debounce from 'lodash.debounce';
 import { addBasePath } from '@vue-storefront/core';
 
@@ -143,7 +139,6 @@ export default {
     const term = ref(null);
     const isSearchOpen = ref(false);
     const searchBarRef = ref(null);
-    const isMobile = ref(mapMobileObserver().isMobile.get());
     const { result, search } = useSearch('productSuggestions');
     const { search: categoryCountsSearch, result: categoryCounts } = useSearch('categoryCounts');
     const { categories } = useCategory('categories');
@@ -203,16 +198,12 @@ export default {
     }, 1000);
 
     const closeOrFocusSearchBar = () => {
-      if (isMobile.value) {
-        return closeSearch();
-      } else {
-        term.value = '';
-        return searchBarRef.value.$el.children[0].focus();
-      }
+      term.value = '';
+      return searchBarRef.value.$el.children[0].focus();
     };
 
     watch(() => term.value, (newVal, oldVal) => {
-      const shouldSearchBeOpened = (!isMobile.value && term.value?.length > 0) && ((!oldVal && newVal) || (newVal.length !== oldVal.length && isSearchOpen.value === false));
+      const shouldSearchBeOpened = (term.value?.length > 0) && ((!oldVal && newVal) || (newVal.length !== oldVal.length && isSearchOpen.value === false));
       if (shouldSearchBeOpened) {
         isSearchOpen.value = true;
       }
@@ -221,10 +212,6 @@ export default {
     const removeSearchResults = () => {
       term.value = null;
     };
-
-    onBeforeUnmount(() => {
-      unMapMobileObserver();
-    });
 
     return {
       accountIcon,
@@ -240,7 +227,6 @@ export default {
       result,
       closeOrFocusSearchBar,
       searchBarRef,
-      isMobile,
       isMobileMenuOpen,
       removeSearchResults,
       addBasePath,

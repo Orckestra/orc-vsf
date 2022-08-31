@@ -19,9 +19,11 @@
       >
         <SfTableData class="table__image">
           <SfImage
-            :src="addBasePath(cartGetters.getItemImage(product))"
+            :src="cartGetters.getItemImage(product)"
             :alt="cartGetters.getItemName(product)"
             data-testid="product-image-table-data"
+            width="200"
+            height="100"
           />
         </SfTableData>
 

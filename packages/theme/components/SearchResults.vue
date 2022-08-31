@@ -75,7 +75,7 @@
           </div>
         </div>
         <div v-else key="no-results" class="before-results">
-          <SfImage :src="addBasePath('/error/error.svg')" class="before-results__picture" alt="error" loading="lazy"/>
+          <SfImage src="/error/error.svg" class="before-results__picture" alt="error" loading="lazy" width="100" height="50"/>
           <template v-if="term">
             <p class="before-results__paragraph">{{ $t('We haven’t found any results for given phrase') }}</p>
           </template>
