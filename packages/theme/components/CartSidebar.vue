@@ -4,6 +4,7 @@
       v-e2e="'sidebar-cart'"
       :visible="isCartSidebarOpen"
       title="My Cart"
+      position="right"
       class="sf-sidebar--right"
       @close="toggleCartSidebar"
     >
@@ -23,7 +24,7 @@
                 v-for="(product, index) in products"
                 v-e2e="'collected-product'"
                 :key="`${cartGetters.getItemSku(product)}_${index}`"
-                :image="addBasePath(cartGetters.getItemImage(product))"
+                :image="cartGetters.getItemImage(product)"
                 :title="cartGetters.getItemName(product)"
                 :regular-price="cartGetters.getItemPrice(product).regular && $n(cartGetters.getItemPrice(product).regular, 'currency')"
                 :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
@@ -85,9 +86,11 @@
         <div v-else key="empty-cart" class="empty-cart">
           <div class="empty-cart__banner">
             <SfImage
-              alt="Empty bag"
+              :src="require('@storefront-ui/shared/icons/empty_cart.svg')"
+              alt="Empty cart"
               class="empty-cart__image"
-              :src="addBasePath('/icons/empty-cart.svg')"
+              :width="140"
+              :height="200"
             />
             <SfHeading
               title="Your cart is empty"
@@ -153,7 +156,6 @@ import { computed, useRouter} from '@nuxtjs/composition-api';
 import { useCart, cartGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
 import debounce from 'lodash.debounce';
-import { addBasePath } from '@vue-storefront/core';
 
 export default {
   name: 'Cart',
@@ -184,7 +186,6 @@ export default {
     }, 500);
 
     return {
-      addBasePath,
       updateQuantity,
       loading,
       products,

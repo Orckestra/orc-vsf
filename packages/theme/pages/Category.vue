@@ -105,6 +105,8 @@
               :style="{ '--index': i }"
               :title="productGetters.getName(product)"
               :image="addBasePath(productGetters.getCoverImage(product))"
+              :image-height="326"
+              :image-width="216"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
               :show-add-to-cart-button="true"
@@ -132,6 +134,8 @@
               :title="productGetters.getName(product)"
               :description="productGetters.getDescription(product)"
               :image="addBasePath(productGetters.getCoverImage(product))"
+              :image-height="200"
+              :image-width="140"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
               :qty="1"
@@ -161,6 +165,13 @@
                     size="1.25rem"
                   />
                </SfButton>
+                <SfAddToCart
+                  v-model="productsQuantity[product.id]"
+                  @input="productsQuantity[product.id] = $event"
+                  class="sf-product-card-horizontal__add-to-cart smartphone-only"
+                 @click="addToCart({ product, quantity: Number(productsQuantity[product.id] || 1) })"
+              />
+
               </template>
             </SfProductCardHorizontal>
           </transition-group>
@@ -221,7 +232,8 @@ import {
   SfBreadcrumbs,
   SfLoader,
   SfColor,
-  SfProperty
+  SfProperty,
+  SfAddToCart
 } from '@storefront-ui/vue';
 import { computed, ref } from '@nuxtjs/composition-api';
 import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/orc-vsf';
@@ -313,7 +325,8 @@ export default {
     SfColor,
     SfHeading,
     SfProperty,
-    LazyHydrate
+    LazyHydrate,
+    SfAddToCart
   }
 };
 </script>
@@ -407,10 +420,21 @@ export default {
       --product-card-add-button-bottom: var(--spacer-base);
       --product-card-title-margin: var(--spacer-sm) 0 0 0;
     }
+    @include for-mobile {
+    --product-card-add-button-opacity: 1;
+    --product-card-add-button-display: flex;
+    --product-card-add-button-bottom: 0.5rem;
+    }
   }
   &__product-card-horizontal {
     flex: 0 0 100%;
     @include for-mobile {
+      --product-card-add-button-opacity: 1;
+      --product-card-add-button-display: flex;
+      --product-card-add-button-bottom: 0.5rem;
+      padding-bottom: var(--spacer-sm);
+      padding-top: var(--spacer-sm);
+      border-bottom: solid 2px var(--c-light);
       ::v-deep .sf-image {
         --image-width: 5.3125rem;
         --image-height: 7.0625rem;

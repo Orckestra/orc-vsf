@@ -28,7 +28,11 @@
     </SfBreadcrumbs>
       <div class="product">
         <LazyHydrate when-idle>
-          <SfGallery :images="productGallery" class="product__gallery" />
+          <SfGallery :images="productGallery" class="product__gallery"
+          :image-width="422"
+          :image-height="664"
+          :thumb-width="160"
+          :thumb-height="160"/>
         </LazyHydrate>
 
         <div class="product__info">

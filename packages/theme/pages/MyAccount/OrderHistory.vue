@@ -119,9 +119,11 @@
             <SfTableRow v-for="(item, i) in orderGetters.getItems(currentOrder)" :key="i" class="table__row">
             <SfTableData class="table__image">
                 <SfImage
-                  :src="addBasePath(orderGetters.getItemImage(item))"
+                  :src="orderGetters.getItemImage(item)"
                   :alt="orderGetters.getItemName(item)"
                   data-testid="product-image-table-data"
+                  width="200"
+                height="auto"
                 />
               </SfTableData>
               <SfTableData class="table__description">
@@ -238,7 +240,6 @@ import {
   SfTable,
   SfButton,
   SfProperty,
-  SfLink,
   SfHeading,
   SfImage,
   SfPrice,
@@ -260,7 +261,6 @@ export default {
     SfTable,
     SfButton,
     SfProperty,
-    SfLink,
     AddressPreview,
     SfHeading,
     SfImage,

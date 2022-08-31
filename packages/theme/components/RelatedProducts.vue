@@ -9,6 +9,8 @@
           <SfProductCard
             :title="productGetters.getName(product)"
             :image="addBasePath(productGetters.getCoverImage(product))"
+            :image-height="326"
+            :image-width="216"
             :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
             :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
             :show-add-to-cart-button="true"

@@ -3,6 +3,7 @@
     <SfSidebar
       :visible="isWishlistSidebarOpen"
       :button="false"
+      position="right"
       title="My Wishlist"
       @close="toggleWishlistSidebar"
       class="sidebar sf-sidebar--right"
@@ -29,7 +30,7 @@
               <SfCollectedProduct
                 v-for="product in products"
                 :key="wishlistGetters.getItemSku(product)"
-                :image="addBasePath(wishlistGetters.getItemImage(product))"
+                :image="wishlistGetters.getItemImage(product)"
                 :title="wishlistGetters.getItemName(product)"
                 :regular-price="$n(wishlistGetters.getItemPrice(product).regular, 'currency')"
                 :special-price="wishlistGetters.getItemPrice(product).special && $n(wishlistGetters.getItemPrice(product).special, 'currency')"
@@ -64,7 +65,13 @@
         </div>
         <div v-else class="empty-wishlist" key="empty-wishlist">
           <div class="empty-wishlist__banner">
-            <SfImage :src="addBasePath('/icons/empty-cart.svg')" alt="Empty bag" class="empty-wishlist__icon" />
+            <SfImage
+              :src="require('@storefront-ui/shared/icons/empty_cart.svg')"
+              alt="Empty wishlist"
+              class="empty-wishlist__image"
+              :width="140"
+              :height="200"
+            />
             <SfHeading
               title="Your wishlist is empty"
               description="Looks like you haven’t added any items to the wishlist yet. Start
@@ -97,7 +104,6 @@ import {
 import { computed } from '@nuxtjs/composition-api';
 import { useWishlist, useUser, wishlistGetters } from '@vue-storefront/orc-vsf';
 import { useUiState } from '~/composables';
-import { addBasePath } from '@vue-storefront/core';
 
 export default {
   name: 'Wishlist',
@@ -120,7 +126,6 @@ export default {
     const totalItems = computed(() => wishlistGetters.getTotalItems(wishlist.value));
 
     return {
-      addBasePath,
       isAuthenticated,
       products,
       removeItem,
@@ -186,7 +191,7 @@ export default {
       --heading-title-margin: 0 0 var(--spacer-sm) 0;
   }
   }
-  &__icon {
+  &__image {
     --image-width: 16rem;
     margin: 0 0 var(--spacer-2xl) 7.5rem;
   }

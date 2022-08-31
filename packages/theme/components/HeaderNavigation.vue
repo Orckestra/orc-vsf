@@ -1,5 +1,6 @@
 <template>
-  <div class="sf-header__navigation desktop" v-if="!isMobile">
+<div>
+  <div class="sf-header__navigation desktop desktop-only">
     <SfHeaderNavigationItem
       v-for="(menu, index) in menus"
       :key="index"
@@ -9,7 +10,8 @@
       :link="localePath(`/c/${menu.slug}`)"
     />
   </div>
-  <SfModal v-else :visible="isMobileMenuOpen">
+  <div class="smartphone-only">
+  <SfModal :visible="isMobileMenuOpen">
     <div class="sf-header-navigation-item__item sf-header-navigation-item__item--mobile"
       v-for="(menu, index) in menus" :key="index">
       <SfMenuItem
@@ -20,6 +22,8 @@
         />
     </div>
   </SfModal>
+  </div>
+</div>
 </template>
 
 <script>
@@ -34,12 +38,6 @@ export default {
   components: {
     SfMenuItem,
     SfModal
-  },
-  props: {
-    isMobile: {
-      type: Boolean,
-      default: false
-    }
   },
   setup() {
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();

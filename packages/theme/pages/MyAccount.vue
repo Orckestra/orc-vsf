@@ -38,16 +38,12 @@
 </template>
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
-import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
+import { computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useUser, useCart, useWishlist } from '@vue-storefront/orc-vsf';
 import MyProfile from './MyAccount/MyProfile';
 import ShippingDetails from './MyAccount/ShippingDetails';
 import BillingDetails from './MyAccount/BillingDetails';
 import OrderHistory from './MyAccount/OrderHistory';
-import {
-  mapMobileObserver,
-  unMapMobileObserver
-} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 
 export default {
   name: 'MyAccount',
@@ -69,17 +65,15 @@ export default {
     const { logout } = useUser();
     const { setCart, load: reloadCart } = useCart();
     const { setWishlist } = useWishlist();
-    const isMobile = computed(() => mapMobileObserver().isMobile.get());
     const activePage = computed(() => {
       const { pageName } = route.value.params;
 
       if (pageName) {
         return (pageName.charAt(0).toUpperCase() + pageName.slice(1)).replace('-', ' ');
-      } else if (!isMobile.value) {
-        return 'My profile';
       } else {
         return '';
       }
+
     });
 
     const changeActivePage = async (title) => {
@@ -91,17 +85,12 @@ export default {
         router.push(context.root.localePath({ name: 'home' }));
         return;
       }
-
       const slugifiedTitle = (title || '').toLowerCase().replace(' ', '-');
       const transformedPath = `/my-account/${slugifiedTitle}`;
       const localeTransformedPath = context.root.localePath(transformedPath);
 
       router.push(localeTransformedPath);
     };
-
-    onBeforeUnmount(() => {
-      unMapMobileObserver();
-    });
 
     return { changeActivePage, activePage };
   },

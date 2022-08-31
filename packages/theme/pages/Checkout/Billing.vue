@@ -134,7 +134,6 @@ import {
   SfDivider,
   SfIcon,
   SfProperty,
-  SfLink,
   SfCheckbox
 } from '@storefront-ui/vue';
 import { ValidationObserver } from 'vee-validate';
@@ -156,7 +155,6 @@ export default {
     SfDivider,
     SfIcon,
     SfProperty,
-    SfLink,
     ValidationObserver,
     AddressPreview,
     AddressForm,
