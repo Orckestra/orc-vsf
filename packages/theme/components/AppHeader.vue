@@ -169,7 +169,8 @@ export default {
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
-        const localeAccountPath = root.localePath({ name: 'my-account' });
+        const url = { path: '/my-account/my-profile' };
+        const localeAccountPath = root.localePath(url);
         return router.push(localeAccountPath);
       }
 

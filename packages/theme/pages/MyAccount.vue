@@ -71,7 +71,7 @@ export default {
       if (pageName) {
         return (pageName.charAt(0).toUpperCase() + pageName.slice(1)).replace('-', ' ');
       } else {
-        return 'My profile';
+        return '';
       }
 
     });
@@ -85,7 +85,6 @@ export default {
         router.push(context.root.localePath({ name: 'home' }));
         return;
       }
-
       const slugifiedTitle = (title || '').toLowerCase().replace(' ', '-');
       const transformedPath = `/my-account/${slugifiedTitle}`;
       const localeTransformedPath = context.root.localePath(transformedPath);
