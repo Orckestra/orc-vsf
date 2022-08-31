@@ -61,6 +61,8 @@
           :placeholder="$t('Search for items')"
           aria-label="Search"
           class="sf-header__search"
+          :icon='{"icon":"search","size":"20px","color":"var(--c-text)"}'
+          @click:icon="isSearchOpen ? isSearchOpen = false : isSearchOpen = true"
           :value="term"
           @input="handleSearch"
           @keydown.enter="handleSearch($event)"
@@ -73,7 +75,7 @@
               v-if="!!term"
               aria-label="Close search"
               class="sf-search-bar__button sf-button--pure"
-              @click="closeOrFocusSearchBar"
+              @click="focusSearchBar"
             >
               <span class="sf-search-bar__icon">
                 <SfIcon color="var(--c-text)" size="18px" icon="cross" />
@@ -198,7 +200,7 @@ export default {
       await search({ qyeryType: 'List', term: term.value, includeFacets: false });
     }, 1000);
 
-    const closeOrFocusSearchBar = () => {
+    const focusSearchBar = () => {
       term.value = '';
       return searchBarRef.value.$el.children[0].focus();
     };
@@ -226,7 +228,7 @@ export default {
       closeSearch,
       handleSearch,
       result,
-      closeOrFocusSearchBar,
+      focusSearchBar,
       searchBarRef,
       isMobileMenuOpen,
       removeSearchResults,

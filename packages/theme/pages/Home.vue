@@ -150,8 +150,7 @@ import {
   SfBannerGrid,
   SfHeading,
   SfArrow,
-  SfButton,
-  SfLink
+  SfButton
 } from '@storefront-ui/vue';
 
 import { computed, useContext } from '@nuxtjs/composition-api';
@@ -175,7 +174,6 @@ export default {
     SfHeading,
     SfArrow,
     SfButton,
-    SfLink,
     NewsletterModal,
     LazyHydrate
   },

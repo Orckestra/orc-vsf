@@ -7,7 +7,7 @@
     >
       <transition name="sf-fade" mode="out-in">
         <div v-if="products && products.length > 0" class="search__wrapper-results" key="results">
-          <SfMegaMenuColumn :title="$t('Categories')" class="sf-mega-menu-column--pined-content-on-mobile search__categories">
+          <SfMegaMenuColumn v-if="categories && categories.length" :title="$t('Categories')" class="sf-mega-menu-column--pined-content-on-mobile search__categories">
             <template #title="{title}">
               <SfMenuItem :label="title" @click="megaMenu.changeActive(title)">
                 <template #mobile-nav-icon>
@@ -41,6 +41,8 @@
                   class="result-card"
                   :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
                   :image="addBasePath(productGetters.getCoverImage(product))"
+                  :image-height="326"
+                  :image-width="216"
                   :alt="productGetters.getName(product)"
                   :title="productGetters.getName(product)"
                   :link="localePath(productGetters.getLink(product))"
@@ -60,6 +62,8 @@
                 :score-rating="productGetters.getAverageRating(product)"
                 :reviews-count="7"
                 :image="addBasePath(productGetters.getCoverImage(product))"
+                :image-height="326"
+                :image-width="216"
                 :alt="productGetters.getName(product)"
                 :title="productGetters.getName(product)"
                 :link="localePath(productGetters.getLink(product))"
@@ -75,7 +79,7 @@
           </div>
         </div>
         <div v-else key="no-results" class="before-results">
-          <SfImage src="/error/error.svg" class="before-results__picture" alt="error" loading="lazy" width="100" height="50"/>
+          <SfImage src="/error/error.svg" class="before-results__picture" alt="error" loading="lazy" width="412" height="412" />
           <template v-if="term">
             <p class="before-results__paragraph">{{ $t('We haven’t found any results for given phrase') }}</p>
           </template>

@@ -145,7 +145,6 @@ import {
   SfDivider,
   SfIcon,
   SfProperty,
-  SfLink,
   SfCheckbox
 } from '@storefront-ui/vue';
 import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
@@ -167,7 +166,6 @@ export default {
     SfDivider,
     SfIcon,
     SfProperty,
-    SfLink,
     ValidationObserver,
     AddressPreview,
     AddressForm,
