@@ -144,4 +144,8 @@ h4 {
   line-height: 1.6;
   margin: 0;
 }
+
+.sf-bottom-modal__container > .sf-bottom-modal__close{
+  position: absolute;
+}
 </style>
