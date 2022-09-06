@@ -51,22 +51,50 @@ yarn dev
 Changing some parts of the code (notably the `api-client`) will trigger a re-build but the change will not be hot-reloaded. To ensure that the app sees you changes, re-run either `yarn build` or `yarn dev`.
 
 
-## Feature support
+## Supported features
 
 | Feature | Status | Notes |
 | --- | --- | --- |
-| Sign in | TODO | |
-| Sign up | TODO | |
-| Account | TODO | |
-| Product catalog with facets | Available | 
+| CMS Pages | Not Available |
+| CMS Components | Not Available
+| Simple menu | Available | with 1st category levels 
+| Mega menu | Not Available | with 1st/2nd category levels 
+| Quick search | Available
+| Category Landing Pages | Available
+| Query/Product Sets Landing Pages | Available
 | Product details page with variants | Available | |
 | Product details page - Related Products | Available | |
-| Cart | Available | |
-| Checkout | TODO | |
-| Checkout - Shipping methods | TODO | |
-| Checkout - Payment methods | TODO | |
-| Wishlists | TODO | Available only for logged in users.|
-
+| Sorting | Available
+| Facets | Available | Filters by brand and other factes
+| Categories Tree with Product Counts | Available |
+| Sign in/ Log out | Available | |
+| Sign up | Available | |
+| Forgot password | Available
+| My Account Page | Available | |
+| My Orders History | Available | |
+| My Order Details Page | Available | |
+| My Address Book | Available | |
+| Stored payment methods | Not Available |
+| Change Password | Available | |
+| Add/Remove/Update to/from Cart | Available | From list, detail pages, cart/wishlist, search suggestions |
+| Sidebar Cart | Available | |
+| Standalone cart page | Not Available
+| Add/Remove to/from Wishlist | Available | From list, detail pages, search suggestions |
+| Sidebar Wishlist | Available | |
+| Standalone wishlist page | Not Available
+| Checkout for Registered User | Available | |
+| Checkout for Guest User | Available | |
+| Checkout - Personal details | Available | |
+| Checkout - Shipping methods | Available | |
+| Checkout - Shipping address | Available | |
+| Checkout - Pickup location | Available | For Pickup shipping method type |
+| Checkout - Billing address | Available | |
+| Checkout - Payment methods | Available | |
+| Checkout - Bambora credit card | Available | |
+| Store Locator | Not Available | |
+| Store Details Page | Not Available | |
+| Change Store | Not Available | |
+| Internationalization | Available
 ------
 
 ## Resources
