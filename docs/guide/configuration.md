@@ -38,3 +38,12 @@ module.exports = {
 };
 
 ```
+
+# Configure environment variables
+After installation, the first step is configuring the integration using the environment variables.
+ 
+Go to the root folder of your theme project.
+ 
+Make a copy of the `.env.example` file and rename it to `.env`.
+
+Update values in the .env file.
