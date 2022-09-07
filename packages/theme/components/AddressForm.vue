@@ -203,7 +203,6 @@ export default {
     const { countries } = useCountries();
     const getRegions = (country) => countriesGetters.getRegions(countries.value, country);
 
-
     return {
       getRegions,
       countries
