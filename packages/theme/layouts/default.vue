@@ -148,4 +148,10 @@ h4 {
 .sf-bottom-modal__container > .sf-bottom-modal__close{
   position: absolute;
 }
+
+@include for-desktop {
+  .sf-header__search {
+    max-width: 20rem;
+  }
+}
 </style>
