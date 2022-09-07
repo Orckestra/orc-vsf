@@ -159,5 +159,17 @@ export default {
   'Open hours': 'Open hours',
   'Your authentication session has expired. Please log in again.': 'Your authentication session has expired. Please log in again.',
   'Change to grid view': 'Change to grid view',
-  'Change to list view': 'Change to list view'
+  'Change to list view': 'Change to list view',
+  'Add new address': 'Ajouter une nouvelle adresse',
+  'Address Name': 'Identifier votre adresse',
+  'First Name': 'Prénom',
+  'Last Name': 'Nom',
+  'Street Name': 'Adresse',
+  'House/Apartment number': 'Complément d\'adresse',
+  'Country': 'Pays',
+  'State/Province': 'Province',
+  'City': 'Ville',
+  'Zip-code': 'Code Postal',
+  'Phone number': 'Numéro de téléphone',
+  'Email': 'Email'
 };

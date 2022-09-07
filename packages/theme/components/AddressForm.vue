@@ -9,7 +9,7 @@
       <SfInput
         v-model="form.addressName"
         name="addressName"
-        :label="'Address Name'"
+        :label="$t('Address Name')"
         required
         :valid="!errors[0]"
         :error-message="errors[0]"
@@ -24,7 +24,7 @@
         <SfInput
           v-model="form.firstName"
           name="firstName"
-          :label="'First Name'"
+          :label="$t('First Name')"
           required
           :valid="!errors[0]"
           :error-message="errors[0]"
@@ -38,7 +38,7 @@
         <SfInput
           v-model="form.lastName"
           name="lastName"
-          :label="'Last Name'"
+          :label="$t('Last Name')"
           required
           :valid="!errors[0]"
           :error-message="errors[0]"
@@ -53,7 +53,7 @@
       <SfInput
         v-model="form.line1"
         name="line1"
-        :label="'Street Name'"
+        :label="$t('Street Name')"
         required
         :valid="!errors[0]"
         :error-message="errors[0]"
@@ -67,7 +67,7 @@
       <SfInput
         v-model="form.line2"
         name="line2"
-        :label="'House/Apartment number'"
+        :label="$t('House/Apartment number')"
         :valid="!errors[0]"
         :error-message="errors[0]"
       />
@@ -78,47 +78,54 @@
         rules="required"
         class="form__element"
       >
-        <SfSelect
+       <SfComponentSelect
           v-model="form.countryCode"
           name="countryCode"
-          :label="'Country'"
-          class=" form__select  sf-select--underlined"
+          @change="form.regionCode = ''"
+          :label="$t('Country')"
           required
           :valid="!errors[0]"
           :error-message="errors[0]"
-        >
-          <SfSelectOption
+          class="
+            sf-component-select--underlined
+            form__select
+            form__element
+            form__element--half
+            form__element--half-even">
+          <SfComponentSelectOption
             v-for="{isoCode, name} in countries"
             :key="isoCode"
-            :value="isoCode"
-          >
-            {{ name || isoCode }}
-          </SfSelectOption>
-        </SfSelect>
+            :value="isoCode">
+              {{ name || isoCode }}
+          </SfComponentSelectOption>
+        </SfComponentSelect>
       </ValidationProvider>
       <ValidationProvider
         v-slot="{ errors }"
         rules="required|min:2|max:36"
         class="form__element"
       >
-        <SfSelect
+        <SfComponentSelect
           v-model="form.regionCode"
           name="regionCode"
-          :label="'State/Province'"
-          class=" form__select  sf-select--underlined"
+          :label="$t('State/Province')"
           required
-          :disabled="!form.countryCode"
           :valid="!errors[0]"
           :error-message="errors[0]"
-        >
-          <SfSelectOption
-            v-for="{isoCode, name} in getRegions(form.countryCode)"
-            :key="isoCode"
-            :value="isoCode"
-          >
-            {{ name || isoCode }}
-          </SfSelectOption>
-        </SfSelect>
+          class="
+            sf-component-select--underlined
+            form__select
+            form__element
+            form__element--half
+            form__element--half-even">
+            <SfComponentSelectOption
+              v-for="{isoCode, name} in getRegions(form.countryCode)"
+              :key="isoCode"
+              :value="isoCode"
+                >
+              {{ name || isoCode }}
+            </SfComponentSelectOption>
+        </SfComponentSelect>
       </ValidationProvider>
     </div>
     <div class="form__horizontal">
@@ -130,7 +137,7 @@
         <SfInput
           v-model="form.city"
           name="city"
-          :label="'City'"
+          :label="$t('City')"
           required
           :valid="!errors[0]"
           :error-message="errors[0]"
@@ -144,7 +151,7 @@
         <SfInput
           v-model="form.postalCode"
           name="postalCode"
-          :label="'Zip-code'"
+          :label="$t('Zip-code')"
           required
           :valid="!errors[0]"
           :error-message="errors[0]"
@@ -159,7 +166,7 @@
       <SfInput
         v-model="form.phoneNumber"
         name="phoneNumber"
-        :label="'Phone number'"
+        :label="$t('Phone number')"
         required
         :valid="!errors[0]"
         :error-message="errors[0]"
@@ -169,7 +176,7 @@
 </template>
 
 <script>
-import { SfButton, SfInput, SfSelect, SfCheckbox } from '@storefront-ui/vue';
+import { SfButton, SfInput, SfSelect, SfComponentSelect, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import { countriesGetters, useCountries } from '@vue-storefront/orc-vsf';
 
@@ -180,6 +187,7 @@ export default {
     SfButton,
     SfSelect,
     SfCheckbox,
+    SfComponentSelect,
     ValidationProvider,
     ValidationObserver
   },
@@ -196,6 +204,7 @@ export default {
   setup() {
     const { countries } = useCountries();
     const getRegions = (country) => countriesGetters.getRegions(countries.value, country);
+
 
     return {
       getRegions,

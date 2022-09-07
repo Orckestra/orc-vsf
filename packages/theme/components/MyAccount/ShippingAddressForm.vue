@@ -24,7 +24,7 @@
           class="action-button sf-button"
           :disabled="loading"
           >
-          {{ $t(isNew ? 'Add address' : 'Update address') }}
+          {{ $t(isNew ? 'Add new address' : 'Update address') }}
         </SfButton>
 
       </div>
