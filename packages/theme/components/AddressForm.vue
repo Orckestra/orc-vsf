@@ -89,7 +89,6 @@
           class="
             sf-component-select--underlined
             form__select
-            form__element
             form__element--half
             form__element--half-even">
           <SfComponentSelectOption
@@ -115,7 +114,6 @@
           class="
             sf-component-select--underlined
             form__select
-            form__element
             form__element--half
             form__element--half-even">
             <SfComponentSelectOption

@@ -23,6 +23,7 @@
         <SfButton
           class="action-button sf-button"
           :disabled="loading"
+          type="submit"
           >
           {{ $t(isNew ? 'Add new address' : 'Update address') }}
         </SfButton>
