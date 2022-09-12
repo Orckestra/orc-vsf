@@ -43,7 +43,7 @@
           v-model="form.email"
           type="email"
           name="email"
-          :label="$t('Your e-mail')"
+          :label="$t('Email')"
           required
           :valid="!errors[0]"
           :error-message="$t(errors[0])"

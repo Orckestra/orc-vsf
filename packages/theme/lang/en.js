@@ -168,5 +168,17 @@ export default {
   'Go to billing': 'Go to billing',
   'Go to shipping': 'Go to shipping',
   'Unavailable items in cart': 'Your cart contains unavailable products. Please review the cart or clean the cart automatically.',
-  'Clean cart': 'Clean cart'
+  'Clean cart': 'Clean cart',
+  'Add new address': 'Add new address',
+  'Address Name': 'Address Name',
+  'First Name': 'First Name',
+  'Last Name': 'Last Name',
+  'Street Name': 'Street Name',
+  'House/Apartment number': 'House/Apartment number',
+  'Country': 'Country',
+  'State/Province': 'State/Province',
+  'City': 'City',
+  'Zip-code': 'Zip-code',
+  'Phone number': 'Phone number',
+  'Email': 'Email'
 };

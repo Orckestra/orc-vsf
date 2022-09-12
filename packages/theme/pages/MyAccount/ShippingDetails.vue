@@ -74,6 +74,7 @@
         </transition-group>
         <SfButton
           class="action-button"
+          :disabled="loading"
           @click="changeAddress()">
           {{ $t('Add new address') }}
         </SfButton>
@@ -103,7 +104,7 @@ export default {
     AddressPreview
   },
   setup() {
-    const { addresses, load: loadUserAddresses, addAddress, deleteAddress, updateAddress, setDefaultShipping } = useUserAddresses();
+    const { addresses, load: loadUserAddresses, addAddress, deleteAddress, updateAddress, setDefaultShipping, loading } = useUserAddresses();
     const edittingAddress = ref(false);
     const activeAddress = ref(undefined);
     const isNewAddress = computed(() => !activeAddress.value);
@@ -148,7 +149,8 @@ export default {
       addresses,
       edittingAddress,
       activeAddress,
-      isNewAddress
+      isNewAddress,
+      loading
     };
   }
 };
