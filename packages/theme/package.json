@@ -1,5 +1,5 @@
 {
-  "name": "@vue-storefront/orc-vsf-theme",
+  "name": "orc-vsf-theme",
   "version": "0.0.2",
   "private": true,
   "scripts": {
