@@ -84,7 +84,12 @@ export default {
 
 <style lang="scss">
 @import "~@storefront-ui/vue/styles";
-
+:root {
+  .sf-tabs__content__tab {
+    // workaround for issue https://github.com/vuestorefront/storefront-ui/issues/2491
+    transform: translate3d(0, 0, 0);
+  }
+}
 #layout {
   box-sizing: border-box;
   @include for-desktop {
