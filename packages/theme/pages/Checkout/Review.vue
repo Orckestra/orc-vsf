@@ -37,7 +37,7 @@
       />
       <SfProperty
         name="Shipping type"
-        :value="shipping.type"
+        :value="$t(`${shipping.type}_Label`)"
         class="sf-property"
       />
       <SfProperty

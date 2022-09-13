@@ -156,7 +156,7 @@
                 />
                  <SfProperty
                   name="Type"
-                  :value="currentOrderShipping.type"
+                  :value="$t(`${currentOrderShipping.type}_Label`)"
                   class="sf-property property"
                 />
                 <SfProperty
