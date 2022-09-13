@@ -6,8 +6,8 @@ import {
   AgnosticDiscount,
   AgnosticAttribute
 } from '@vue-storefront/core';
-import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress, FulfillmentMethod, FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
-import { CustomerSummary } from '@vue-storefront/orc-vsf-api/src';
+import { Cart, CartItem, Shipment, Tax, Reward, RewardLevel, ShipmentAdditionalFee, CouponState, Coupon, Payment, UserAddress, FulfillmentMethod, FulfillmentMethodType } from 'orc-vsf-api';
+import { CustomerSummary } from 'orc-vsf-api/src';
 import { validateLineItem } from '../helpers/cartUtils';
 
 function getItems(cart: Cart): CartItem[] {

@@ -1,5 +1,5 @@
 import { UseOrdersHistoryGetters } from '../types';
-import type { OrderQueryResult, OrderItem } from '@vue-storefront/orc-vsf-api';
+import type { OrderQueryResult, OrderItem } from 'orc-vsf-api';
 import { AgnosticPagination } from '@vue-storefront/core';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -4,7 +4,7 @@ import {
   AgnosticPrice,
   AgnosticTotals
 } from '@vue-storefront/core';
-import type { Wishlist, WishlistItem } from '@vue-storefront/orc-vsf-api';
+import type { Wishlist, WishlistItem } from 'orc-vsf-api';
 import { getTotalPrices } from '../helpers/wishlistUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -27,7 +27,7 @@
 <script>
 import { SfHeading, SfProperty } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
-import { useCart, cartGetters} from '@vue-storefront/orc-vsf';
+import { useCart, cartGetters} from 'orc-vsf';
 
 export default {
   name: 'CartSaving',

@@ -1,6 +1,6 @@
 import type {
   UserAddress as AddressItem
-} from '@vue-storefront/orc-vsf-api';
+} from 'orc-vsf-api';
 import { UserAddressGetters } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

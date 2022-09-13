@@ -12,7 +12,7 @@ import {
   CustomQuery,
   PlatformApi
 } from '@vue-storefront/core/lib/src/types';
-import { FulfillmentMethodType, Payment } from '@vue-storefront/orc-vsf-api';
+import { FulfillmentMethodType, Payment } from 'orc-vsf-api';
 
 export type TODO = any;
 

@@ -59,7 +59,7 @@ export interface UseInventoryGetters<InventoryItemAvailability> {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useInventory, inventoryGetters } from '@vue-storefront/orc-vsf';
+import { useInventory, inventoryGetters } from 'orc-vsf';
 
 export default {
   setup () {

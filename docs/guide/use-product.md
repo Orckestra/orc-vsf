@@ -174,7 +174,7 @@ export declare type KeyVariantAttributeItemValue = {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useProduct, productGetters } from '@vue-storefront/orc-vsf';
+import { useProduct, productGetters } from 'orc-vsf';
 
 export default {
   setup () {

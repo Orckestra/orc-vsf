@@ -1,7 +1,7 @@
 {
-  "name": "@vue-storefront/orc-vsf-api",
+  "name": "orc-vsf-api",
   "version": "0.0.2",
-  "private": true,
+  "private": false,
   "sideEffects": false,
   "server": "server/index.js",
   "main": "lib/index.cjs.js",

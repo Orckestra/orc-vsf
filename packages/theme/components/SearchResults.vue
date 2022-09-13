@@ -105,7 +105,7 @@ import {
   SfImage
 } from '@storefront-ui/vue';
 import { ref, watch, computed } from '@nuxtjs/composition-api';
-import { useWishlist, useCart, wishlistGetters, productGetters } from '@vue-storefront/orc-vsf';
+import { useWishlist, useCart, wishlistGetters, productGetters } from 'orc-vsf';
 import { addBasePath } from '@vue-storefront/core';
 
 export default {

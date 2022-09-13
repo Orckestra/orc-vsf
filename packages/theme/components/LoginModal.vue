@@ -189,7 +189,7 @@ import { ref, watch, reactive, computed } from '@nuxtjs/composition-api';
 import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert, SfBar } from '@storefront-ui/vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email, min, max } from 'vee-validate/dist/rules';
-import { useUser, useCart, useForgotPassword, useConfiguration, configurationGetters, useWishlist } from '@vue-storefront/orc-vsf';
+import { useUser, useCart, useForgotPassword, useConfiguration, configurationGetters, useWishlist } from 'orc-vsf';
 import { useUiState } from '~/composables';
 import { useUiNotification } from '~/composables';
 

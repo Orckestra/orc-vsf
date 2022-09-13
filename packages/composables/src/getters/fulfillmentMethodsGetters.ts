@@ -1,4 +1,4 @@
-import type { FulfillmentMethod, FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
+import type { FulfillmentMethod, FulfillmentMethodType } from 'orc-vsf-api';
 import { FulfillmentMethodsGetters } from '../types';
 
 function getFulfillmentMethod(fulfillmentMethods: FulfillmentMethod[], shippingProviderId: string): FulfillmentMethod {

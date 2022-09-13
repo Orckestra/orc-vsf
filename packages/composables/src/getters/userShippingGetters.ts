@@ -2,7 +2,7 @@ import { UserShippingGetters } from '@vue-storefront/core';
 import type {
   UserAddress as AddressItem,
   UserShippingAddressSearchCriteria
-} from '@vue-storefront/orc-vsf-api';
+} from 'orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAddresses(shipping: AddressItem[], criteria?: UserShippingAddressSearchCriteria): AddressItem[] {

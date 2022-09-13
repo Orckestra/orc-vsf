@@ -70,7 +70,7 @@ import { SfHeading, SfProperty, SfCharacteristic } from '@storefront-ui/vue';
 import CartSaving from './CartSaving';
 import CouponCode from './CouponCode';
 import { computed, useRouter } from '@nuxtjs/composition-api';
-import { useCart, cartGetters} from '@vue-storefront/orc-vsf';
+import { useCart, cartGetters} from 'orc-vsf';
 const CHARACTERISTICS = [
   {
     title: 'Safety',

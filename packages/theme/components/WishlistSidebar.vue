@@ -102,7 +102,7 @@ import {
   SfImage
 } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
-import { useWishlist, useUser, wishlistGetters } from '@vue-storefront/orc-vsf';
+import { useWishlist, useUser, wishlistGetters } from 'orc-vsf';
 import { useUiState } from '~/composables';
 
 export default {

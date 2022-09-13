@@ -29,7 +29,7 @@
 <script>
 import { SfMenuItem, SfModal } from '@storefront-ui/vue';
 import { useUiState, useUiHelpers } from '~/composables';
-import { useCategory, categoryGetters } from '@vue-storefront/orc-vsf';
+import { useCategory, categoryGetters } from 'orc-vsf';
 import { computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 

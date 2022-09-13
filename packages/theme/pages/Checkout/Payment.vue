@@ -148,7 +148,7 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
-import { useCart, useUser, useUserAddresses, userAddressGetters, cartGetters } from '@vue-storefront/orc-vsf';
+import { useCart, useUser, useUserAddresses, userAddressGetters, cartGetters } from 'orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import AddressPreview from '~/components/AddressPreview';
 import AddressForm from '~/components/AddressForm';

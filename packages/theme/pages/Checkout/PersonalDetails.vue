@@ -98,7 +98,7 @@ import {
 } from '@storefront-ui/vue';
 import { computed, ref, useRouter, watch } from '@nuxtjs/composition-api';
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate';
-import { configurationGetters, useCart, useConfiguration, useUser, cartGetters } from '@vue-storefront/orc-vsf';
+import { configurationGetters, useCart, useConfiguration, useUser, cartGetters } from 'orc-vsf';
 import { useUiState, useUiNotification } from '~/composables';
 export default {
   name: 'PersonalDetails',

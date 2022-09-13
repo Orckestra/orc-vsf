@@ -32,7 +32,7 @@
 <script>
 import { SfButton, SfRadio, SfLoader } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
-import { usePaymentMethods, useCart, cartGetters, paymentMethodGetters, useMakeOrder } from '@vue-storefront/orc-vsf';
+import { usePaymentMethods, useCart, cartGetters, paymentMethodGetters, useMakeOrder } from 'orc-vsf';
 import { useUiHelpers } from '~/composables';
 import BamboraCreditCard from '../Checkout/Payment/Bambora/BamboraCreditCard';
 import { onSSR } from '@vue-storefront/core';

@@ -34,7 +34,7 @@ Reactive object containing the error message, if card inputs have errors.
 ```javascript
 import { watch } from 'vue'
 import { onSSR } from '@vue-storefront/core';
-import { useCreditCardForm } from '@vue-storefront/orc-vsf';
+import { useCreditCardForm } from 'orc-vsf';
 
 export default {
   setup () {

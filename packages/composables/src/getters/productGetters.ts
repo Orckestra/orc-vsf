@@ -4,7 +4,7 @@ import {
   AgnosticPrice,
   ProductGetters
 } from '@vue-storefront/core';
-import type { Product, ProductPrice, ProductFilter, Metadata, KeyVariantAttributeItem, KeyVariantAttributeItemValue } from '@vue-storefront/orc-vsf-api';
+import type { Product, ProductPrice, ProductFilter, Metadata, KeyVariantAttributeItem, KeyVariantAttributeItemValue } from 'orc-vsf-api';
 
 function getProductWithVariant(product: Product, variantId: string): Product {
   if (variantId) {

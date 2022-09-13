@@ -4,8 +4,8 @@ import {
   ProductsSearchParams,
   UseProductFactoryParams
 } from '@vue-storefront/core';
-import { ProductsQueryType } from '@vue-storefront/orc-vsf-api';
-import type { Product } from '@vue-storefront/orc-vsf-api';
+import { ProductsQueryType } from 'orc-vsf-api';
+import type { Product } from 'orc-vsf-api';
 import type { UseProductSearchParams as SearchParams } from '../types';
 
 const params: UseProductFactoryParams<Product, SearchParams> = {

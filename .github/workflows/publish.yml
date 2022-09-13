@@ -19,10 +19,9 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
           registry-url: "https://registry.npmjs.org/"
-          scope: "@vue-storefront"
-      - run: echo "" >> .npmrc && echo "@vue-storefront:registry=https://registry.npmjs.org/" >> .npmrc
+      - run: echo "" >> .npmrc && echo "registry=https://registry.npmjs.org/" >> .npmrc
       - run: yarn
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

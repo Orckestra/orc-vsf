@@ -33,7 +33,7 @@ import { email, required, min, confirmed } from 'vee-validate/dist/rules';
 import ProfileUpdateForm from '~/components/MyAccount/ProfileUpdateForm';
 import PasswordResetForm from '~/components/MyAccount/PasswordResetForm';
 import { SfTabs, SfInput, SfButton } from '@storefront-ui/vue';
-import { useUser, userGetters, useConfiguration, configurationGetters } from '@vue-storefront/orc-vsf';
+import { useUser, userGetters, useConfiguration, configurationGetters } from 'orc-vsf';
 import { computed } from '@nuxtjs/composition-api';
 
 extend('email', {

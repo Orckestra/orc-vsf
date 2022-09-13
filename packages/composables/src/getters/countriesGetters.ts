@@ -1,6 +1,6 @@
 import type {
   CountryItem, RegionItem
-} from '@vue-storefront/orc-vsf-api';
+} from 'orc-vsf-api';
 import { CountriesGetters } from '../types';
 
 function getCountry(countries: CountryItem[], isoCode: string): CountryItem {

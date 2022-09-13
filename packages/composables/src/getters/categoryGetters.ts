@@ -1,5 +1,5 @@
 import { CategoryGetters, AgnosticCategoryTree, AgnosticBreadcrumb } from '@vue-storefront/core';
-import type { Category } from '@vue-storefront/orc-vsf-api';
+import type { Category } from 'orc-vsf-api';
 import { buildCategoryTree } from '../helpers/buildCategoryTree';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

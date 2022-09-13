@@ -1,4 +1,4 @@
-import type { Category } from '@vue-storefront/orc-vsf-api';
+import type { Category } from 'orc-vsf-api';
 import { AgnosticCategoryTree } from '@vue-storefront/core';
 
 export const buildCategoryTree = (categories: Category[], rootCategory: string, currentCategory: string, level = -1, withProducts = false): AgnosticCategoryTree => {

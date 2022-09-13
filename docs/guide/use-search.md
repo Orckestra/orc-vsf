@@ -82,7 +82,7 @@ interface SearchGetters<SearchResults, any> {
 ```javascript
 import { watch } from 'vue'
 import { onSSR } from '@vue-storefront/core';
-import { useSearch, searchGetters } from '@vue-storefront/orc-vsf';
+import { useSearch, searchGetters } from 'orc-vsf';
 
 export default {
   setup () {

@@ -1,4 +1,4 @@
-import type { Product } from '@vue-storefront/orc-vsf-api';
+import type { Product } from 'orc-vsf-api';
 
 export const withVariants = (product: Product): boolean => {
   return Boolean((product.variants && product.variants.length) || product.propertyBag?.VariantId);

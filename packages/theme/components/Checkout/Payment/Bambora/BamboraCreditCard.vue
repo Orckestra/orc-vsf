@@ -33,7 +33,7 @@
 
 <script>
 import { ref, watch } from '@nuxtjs/composition-api';
-import { useCreditCardForm } from '@vue-storefront/orc-vsf';
+import { useCreditCardForm } from 'orc-vsf';
 export default {
   name: 'BamboraCreditCard',
   setup() {

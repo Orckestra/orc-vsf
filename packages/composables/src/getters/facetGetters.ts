@@ -8,7 +8,7 @@ import {
   AgnosticBreadcrumb,
   AgnosticFacet
 } from '@vue-storefront/core';
-import type { SearchResults, FacetSearchCriteria, Facet, FacetValue } from '@vue-storefront/orc-vsf-api';
+import type { SearchResults, FacetSearchCriteria, Facet, FacetValue } from 'orc-vsf-api';
 import { buildCategoryTree } from '../helpers/buildCategoryTree';
 import { setProductCounts } from '../helpers/categoriesUtils';
 

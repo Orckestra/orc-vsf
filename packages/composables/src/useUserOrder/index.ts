@@ -3,7 +3,7 @@ import {
   useUserOrderFactory,
   UseUserOrderFactoryParams
 } from '@vue-storefront/core';
-import type { OrderQueryResult } from '@vue-storefront/orc-vsf-api';
+import type { OrderQueryResult } from 'orc-vsf-api';
 import type {
   useUserOrderSearchParams as SearchParams
 } from '../types';

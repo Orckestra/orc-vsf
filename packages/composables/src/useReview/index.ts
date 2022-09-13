@@ -3,7 +3,7 @@ import {
   useReviewFactory,
   UseReviewFactoryParams
 } from '@vue-storefront/core';
-import type { Review } from '@vue-storefront/orc-vsf-api';
+import type { Review } from 'orc-vsf-api';
 import type {
   UseReviewSearchParams as SearchParams,
   UseReviewAddParams as AddParams

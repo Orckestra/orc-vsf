@@ -7,7 +7,7 @@ import type {
   CartItem,
   Product,
   PaymentMethod
-} from '@vue-storefront/orc-vsf-api';
+} from 'orc-vsf-api';
 import { getVariantId } from '../helpers/productUtils';
 import { isGuidEmpty, getUserToken } from '../helpers/generalUtils';
 import { useCartFactory, UseCartFactoryParams } from '../factories/useCartFactory';

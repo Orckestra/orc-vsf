@@ -35,7 +35,7 @@ import Notification from '~/components/Notification';
 import OfflineWarning from '~/components/Layout/OfflineWarning.vue';
 import { onSSR } from '@vue-storefront/core';
 import { useRoute } from '@nuxtjs/composition-api';
-import { useCart, useStore, useUser, useWishlist, useMetadata, useConfiguration, useCountries } from '@vue-storefront/orc-vsf';
+import { useCart, useStore, useUser, useWishlist, useMetadata, useConfiguration, useCountries } from 'orc-vsf';
 
 export default {
   name: 'DefaultLayout',

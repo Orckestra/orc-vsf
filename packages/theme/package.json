@@ -24,7 +24,7 @@
     "@vue-storefront/middleware": "~2.5.12",
     "@vue-storefront/nuxt": "~2.5.12",
     "@vue-storefront/nuxt-theme": "~2.5.12",
-    "@vue-storefront/orc-vsf": "^0.0.2",
+    "orc-vsf": "^0.0.2",
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.19.0",
     "dayjs": "^1.11.4",

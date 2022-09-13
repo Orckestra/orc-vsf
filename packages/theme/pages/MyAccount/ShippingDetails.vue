@@ -90,7 +90,7 @@ import {
 } from '@storefront-ui/vue';
 import AddressPreview from '~/components/AddressPreview';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
-import { useUserAddresses, userAddressGetters } from '@vue-storefront/orc-vsf';
+import { useUserAddresses, userAddressGetters } from 'orc-vsf';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 

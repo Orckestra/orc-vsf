@@ -1,4 +1,4 @@
-import type { Cart, CartItem, Message } from '@vue-storefront/orc-vsf-api';
+import type { Cart, CartItem, Message } from 'orc-vsf-api';
 
 export const validateLineItem = (cart: Cart, cartItem: CartItem): boolean => {
 

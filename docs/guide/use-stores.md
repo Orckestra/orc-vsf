@@ -125,7 +125,7 @@ interface UseStoresGetters<STORES> {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useStores, storesGetters } from '@vue-storefront/orc-vsf';
+import { useStores, storesGetters } from 'orc-vsf';
 
 export default {
   setup () {

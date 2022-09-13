@@ -1,4 +1,4 @@
-import type { Configuration } from '@vue-storefront/orc-vsf-api';
+import type { Configuration } from 'orc-vsf-api';
 import { Context } from '@vue-storefront/core';
 import { useConfigurationFactory } from '../factories/useConfigurationFactory';
 

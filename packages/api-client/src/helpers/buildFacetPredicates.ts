@@ -1,4 +1,4 @@
-import type { Category } from '@vue-storefront/orc-vsf-api';
+import type { Category } from 'orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const buildFacetPredicatesByFilters = (filters: any, config?: any): any => {

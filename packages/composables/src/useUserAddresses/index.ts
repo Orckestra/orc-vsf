@@ -3,7 +3,7 @@ import {
 } from '@vue-storefront/core';
 import type {
   UserAddress as AddressItem
-} from '@vue-storefront/orc-vsf-api';
+} from 'orc-vsf-api';
 import { getUserToken } from '../helpers/generalUtils';
 import { useUserAddressesFactory, UseUserAddressesFactoryParams } from '../factories/useUserAddressesFactory';
 

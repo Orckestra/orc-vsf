@@ -1,5 +1,5 @@
 import { ForgotPasswordGetters } from '@vue-storefront/core';
-import type { PasswordResetResult } from '@vue-storefront/orc-vsf-api';
+import type { PasswordResetResult } from 'orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getResetPasswordToken(result: PasswordResetResult): string {
