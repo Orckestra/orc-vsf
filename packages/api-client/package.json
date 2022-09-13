@@ -29,7 +29,8 @@
     "rollup-plugin-typescript2": "^0.30.0"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "server/**/*"
   ],
   "publishConfig": {
     "access": "public"

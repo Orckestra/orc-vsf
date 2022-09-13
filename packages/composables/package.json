@@ -27,7 +27,8 @@
     "@nuxtjs/composition-api": "^0.29.3"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "nuxt/**/*"
   ],
   "publishConfig": {
     "access": "public"
