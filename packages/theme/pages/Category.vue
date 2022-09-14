@@ -55,6 +55,7 @@
                         <template #label>
                           <nuxt-link
                             :to="localePath(th.getCatLink(cat))"
+                            class="sidebar--cat"
                             :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             All
@@ -73,6 +74,7 @@
                       >
                         <template #label="{ label }">
                           <nuxt-link
+                            class="sidebar--cat"
                             :to="localePath(th.getCatLink(subCat))"
                             :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
@@ -483,6 +485,10 @@ export default {
   padding: var(--spacer-sm);
   border: 1px solid var(--c-light);
   border-width: 0 1px 0 0;
+
+  &--cat {
+    text-align: left;
+  }
 }
 .loading {
   margin: var(--spacer-3xl) auto;
