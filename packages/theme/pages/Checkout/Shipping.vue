@@ -41,6 +41,7 @@
                 <AddressForm :form="addressForm" />
                 <div class="form__action-bar">
                   <SfButton
+                    type="submit"
                     class="form__action-button sf-button sf-button-primary"
                     :disabled="loadingFulfillmentMethods || loadingAddresses"
                   >
