@@ -188,5 +188,5 @@ export default {
   'Available shipping services': 'Available shipping services',
   'Shipping Method': 'Shipping method',
   'Menu': 'Menu',
-  "AllProductsFromCategory": "All {categoryName}",
+  "AllProductsFromCategory": "All {categoryName}"
 };
