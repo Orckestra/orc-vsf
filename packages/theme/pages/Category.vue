@@ -1,7 +1,7 @@
 <template>
   <div id="category">
     <SfBreadcrumbs
-      class="breadcrumbs desktop-only"
+      class="breadcrumbs"
       :breadcrumbs="breadcrumbs"
     >
       <template #link="{ breadcrumb }">
@@ -350,7 +350,13 @@ export default {
   }
 }
 .breadcrumbs {
-  margin: var(--spacer-base) auto var(--spacer-lg);
+  margin: var(--spacer-base) var(--spacer-base) var(--spacer-lg) var(--spacer-base);
+  .sf-breadcrumbs__list-item {
+    margin-top: var(--spacer-base);
+  }
+  @include for-desktop {
+    margin: 0 auto var(--spacer-lg);
+  }
 }
 .navbar {
   position: relative;

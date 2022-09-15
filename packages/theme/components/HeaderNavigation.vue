@@ -18,21 +18,51 @@
         @keydown.down.native.prevent="setCurrentCategory(menu)"
         :link="localePath(`/c/${menu.slug}`)"
       />
-      <HeaderNavigationSubcategories :currentCategory="currentCategory"
-          @hideSubcategories="hideSubcategories"  />
+      <HeaderNavigationSubcategories
+        :currentCategory="currentCategory"
+        @hideSubcategories="hideSubcategories"
+      />
     </div>
   </div>
   <div class="smartphone-only">
-  <SfModal :visible="isMobileMenuOpen">
-    <div class="sf-header-navigation-item__item sf-header-navigation-item__item--mobile"
-      v-for="(menu, index) in menus" :key="index">
-      <SfMenuItem
-          :label="menu.label"
+  <SfModal :visible="isMobileMenuOpen"
+    :title="currentCategory && currentCategory.label || $t('Menu')"
+    @close="toggleMobileMenu">
+    <template v-if="!currentCategory">
+      <div class="sf-header-navigation-item__item sf-header-navigation-item__item--mobile"
+        v-for="(menu, index) in menus" :key="index">
+        <SfMenuItem
+            :label="menu.label"
+            class="sf-header-navigation-item__menu-item"
+            @click="setCurrentCategory(menu)"
+          />
+      </div>
+    </template>
+     <template v-else>
+      <div class="sf-header-navigation-item__item sf-header-navigation-item__item--mobile">
+        <SfMenuItem
+          class="sf-header-navigation-item__menu-item go-back"
+          :label="$t('Go back')"
+          @click="setCurrentCategory(null)">
+        </SfMenuItem>
+
+        <SfMenuItem
           class="sf-header-navigation-item__menu-item"
-          :link="localePath(`/c/${menu.slug}`)"
+          :label="$t('AllProductsFromCategory', { categoryName: currentCategory.label })"
+          :link="localePath(`/c/${currentCategory.slug}`)"
+           @click.native="toggleMobileMenu"
+        />
+
+        <SfMenuItem
+          v-for="(item, index) in currentCategory.items" 
+          :key="index"
+          :label="item.label"
+          class="sf-header-navigation-item__menu-item"
+          :link="localePath(`/c/${item.slug}`)"
           @click.native="toggleMobileMenu"
         />
-    </div>
+        </div>
+      </template>
   </SfModal>
   </div>
 </div>
@@ -117,10 +147,10 @@ export default {
   }
 }
 .sf-modal {
-  ::v-deep &__bar {
-    display: none;
-  }
-  ::v-deep &__content {
+  .go-back {
+    --menu-item-mobile-nav-icon-display: none;
+   }
+    ::v-deep &__content {
     padding: var(--modal-content-padding, var(--spacer-base) 0);
   }
 }
