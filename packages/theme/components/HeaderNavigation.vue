@@ -54,7 +54,7 @@
         />
 
         <SfMenuItem
-          v-for="(item, index) in currentCategory.items" 
+          v-for="(item, index) in currentCategory.items"
           :key="index"
           :label="item.label"
           class="sf-header-navigation-item__menu-item"
