@@ -55,10 +55,9 @@ Changing some parts of the code (notably the `api-client`) will trigger a re-bui
 
 | Feature | Status | Notes |
 | --- | --- | --- |
-| CMS Pages | Not Available |
-| CMS Components | Not Available
+| CMS Intergation | Not Available |
 | Simple menu | Available | with 1st category levels 
-| Mega menu | Not Available | with 1st/2nd category levels 
+| Mega menu | Available | with 1st/2nd category levels 
 | Quick search | Available
 | Category Landing Pages | Available
 | Query/Product Sets Landing Pages | Available

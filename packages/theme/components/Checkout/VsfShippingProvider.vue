@@ -11,25 +11,30 @@
       @change="(type) => updateShippingMethod(fulfillmentMethodsByType[type][0].shippingProviderId)"
       class="form__radio" />
 
-    <SfComponentSelect v-if="selected.fulfillmentMethodType === type"
-      data-testid="shipping-method"
-      name="shippingMethod"
-      :label="$t('Shipping Method')"
-      :selected="selected.shippingProviderId"
-      @change="updateShippingMethod"
-      class="sf-component-select--underlined shipping__methods">
-      <SfComponentSelectOption
-          v-for="(item, index) in fulfillmentMethodsByType[type]"
-          :key="index"
-          :value="item.shippingProviderId">
-            <div class="shipping__label">
-              <div>{{ th.getTranslation(item.displayName) || item.name }}
-                <small class="desktop-only" v-if="item.expectedDeliveryDate"> ({{((new Date(item.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days)</small>
+    <div v-if="selected.fulfillmentMethodType === type">
+      <SfComponentSelect
+        data-testid="shipping-method"
+        name="shippingMethod"
+        :label="$t('Shipping Method')"
+        :selected="selected.shippingProviderId"
+        @change="updateShippingMethod"
+        class="sf-component-select--underlined shipping__methods">
+        <SfComponentSelectOption
+            v-for="(item, index) in fulfillmentMethodsByType[type]"
+            :key="index"
+            :value="item.shippingProviderId">
+              <div class="shipping__label">
+                <div>
+                  {{ th.getTranslation(item.displayName) || item.name }}
+                </div>
+                <div class="shipping__label-price">{{$n(Number(item.cost), 'currency')}}</div>
               </div>
-              <div class="shipping__label-price">{{$n(Number(item.cost), 'currency')}}</div>
-            </div>
-        </SfComponentSelectOption>
-    </SfComponentSelect>
+          </SfComponentSelectOption>
+      </SfComponentSelect>
+    </div>
+  </div>
+  <div v-if="selected.expectedDeliveryDate">
+    <small>Estimated shipping time {{((new Date(selected.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days</small>
   </div>
 </div>
 </template>

@@ -186,5 +186,7 @@ export default {
   'Pickup location': 'Pickup location',
   'Select pickup location': 'Select pickup location',
   'Available shipping services': 'Available shipping services',
-  'Shipping Method': 'Shipping method'
+  'Shipping Method': 'Shipping method',
+  'Menu': 'Menu',
+  "AllProductsFromCategory": "All {categoryName}"
 };

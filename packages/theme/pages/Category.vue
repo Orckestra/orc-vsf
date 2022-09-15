@@ -1,7 +1,7 @@
 <template>
   <div id="category">
     <SfBreadcrumbs
-      class="breadcrumbs desktop-only"
+      class="breadcrumbs"
       :breadcrumbs="breadcrumbs"
     >
       <template #link="{ breadcrumb }">
@@ -55,6 +55,7 @@
                         <template #label>
                           <nuxt-link
                             :to="localePath(th.getCatLink(cat))"
+                            class="sidebar--cat"
                             :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             All
@@ -73,6 +74,7 @@
                       >
                         <template #label="{ label }">
                           <nuxt-link
+                            class="sidebar--cat"
                             :to="localePath(th.getCatLink(subCat))"
                             :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
@@ -348,7 +350,13 @@ export default {
   }
 }
 .breadcrumbs {
-  margin: var(--spacer-base) auto var(--spacer-lg);
+  margin: var(--spacer-base) var(--spacer-base) var(--spacer-lg) var(--spacer-base);
+  .sf-breadcrumbs__list-item {
+    margin-top: var(--spacer-base);
+  }
+  @include for-desktop {
+    margin: 0 auto var(--spacer-lg);
+  }
 }
 .navbar {
   position: relative;
@@ -483,6 +491,10 @@ export default {
   padding: var(--spacer-sm);
   border: 1px solid var(--c-light);
   border-width: 0 1px 0 0;
+
+  &--cat {
+    text-align: left;
+  }
 }
 .loading {
   margin: var(--spacer-3xl) auto;
