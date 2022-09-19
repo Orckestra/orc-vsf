@@ -6,7 +6,7 @@ export default async function getProduct(
   params
 ) {
   const { id, locale } = params;
-  const { api, scope, cdnDamProviderConfig } = context.config;
+  const { api, scope, mediaProviderConfig } = context.config;
   const url = new URL(
     `/api/products/v2/${scope}/${id}?CultureName=${locale}&IncludeMedia=true&IncludeVariants=true&IncludeImageUrl=true&IncludeRelationships=true`,
     api.url
@@ -24,7 +24,7 @@ export default async function getProduct(
     });
   }
 
-  setProductImage(productData, cdnDamProviderConfig);
+  setProductImage(productData, mediaProviderConfig);
 
   return {
     ...productData,
