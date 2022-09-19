@@ -24,7 +24,7 @@ module.exports = {
             { name: 'CurrentPrice', type: 2 }],
           categoryCountFacets: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']
         },
-        cdnDamProviderConfig: {
+        mediaProviderConfig: {
           serverUrl: 'https://refapp.azureedge.net',
           imageFolderName: 'images',
           maxThumbnailImages: 1

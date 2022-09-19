@@ -91,6 +91,7 @@
               />
               <div class="form__action-bar">
                 <SfButton
+                  type="submit"
                   class="form__action-button sf-button sf-button--primary"
                   :disabled="loadingCart || !isAddressFormReady">
                    {{ $t('Save address') }}

@@ -101,7 +101,6 @@
           >
             <SfProductCard
               v-e2e="'category-product-card'"
-              :badgeLabel="`${productGetters.getVariantId(product) ? 'variants': ''}`"
               v-for="(product, i) in products"
               :key="productGetters.getSlug(product)"
               :style="{ '--index': i }"

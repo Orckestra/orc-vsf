@@ -11,7 +11,7 @@ export default async function getProducts(
   const { queryType, queryName, categorySlug, withFacetCounts,
     categories, filters, page = 1, itemsPerPage, locale, sort, term, includeFacets = true, facetCounts,
     merchandiseTypes, product } = params;
-  const { api, scope, inventoryLocationIds, searchConfig, cdnDamProviderConfig } = context.config;
+  const { api, scope, inventoryLocationIds, searchConfig, mediaProviderConfig } = context.config;
   const availableProductsUrl = new URL(`/api/search/${scope}/${locale}/availableProducts`, api.url);
   const maximumItems = itemsPerPage ?? searchConfig.defaultItemsPerPage;
   const startingIndex = (page - 1) * maximumItems;
@@ -28,7 +28,7 @@ export default async function getProducts(
       const query = getRelatedProductsQuery(merchandiseTypes, product, itemsPerPage, getSorting(sort));
       const { data } = await context.client.post(availableProductsUrl.href, { query });
       const products = data.documents ?? [];
-      setProductsCoverImages(products, cdnDamProviderConfig);
+      setProductsCoverImages(products, mediaProviderConfig);
       return products;
     }
     case ProductsQueryType.FacetCounts: {
@@ -60,7 +60,7 @@ export default async function getProducts(
         searchTerms: term
       });
       const products = data.result?.documents ?? [];
-      setProductsCoverImages(products, cdnDamProviderConfig);
+      setProductsCoverImages(products, mediaProviderConfig);
       return { products, total: data.result?.totalCount, facets: data.result?.facets, selectedFacets: data.selectedFacets };
     }
 
@@ -95,7 +95,7 @@ export default async function getProducts(
       }
 
       const products = data.documents ?? [];
-      setProductsCoverImages(products, cdnDamProviderConfig);
+      setProductsCoverImages(products, mediaProviderConfig);
       return { products, total: data.totalCount, facets: data.facets, facetCounts: facetCountsResult };
     }
     case ProductsQueryType.List:
@@ -109,7 +109,7 @@ export default async function getProducts(
       });
 
       const products = data.documents ?? [];
-      setProductsCoverImages(products, cdnDamProviderConfig);
+      setProductsCoverImages(products, mediaProviderConfig);
       return { products, total: data.totalCount, facets: data.facets };
     }
   }

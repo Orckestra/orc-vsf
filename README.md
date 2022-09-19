@@ -32,6 +32,8 @@ OVERTURE_AUTH_TOKEN=
 OVERTURE_SCOPE_NAME=
 OVERTURE_INVENTORY_LOCATION_IDS=
 SECRET_PASSPHRASE=
+MEDIA_SERVER_URL=
+MEDIA_FOLDER=
 ```
 
 For security purpose, it is important to configure `SECRET_PASSPHRASE` which  is used to encrypt user tokens.
