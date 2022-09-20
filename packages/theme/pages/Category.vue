@@ -49,6 +49,7 @@
                   <SfList class="list">
                     <SfListItem class="list__item">
                       <SfMenuItem
+                        v-if="cat.count"
                         :count="cat.count || ''"
                         :label="cat.label"
                       >
@@ -69,6 +70,7 @@
                       :key="j"
                     >
                       <SfMenuItem
+                        v-if="subCat.count"
                         :count="subCat.count || ''"
                         :label="subCat.label"
                       >

@@ -34,12 +34,9 @@ export default async function getProducts(
     case ProductsQueryType.FacetCounts: {
       const { data: facetCountsData } = await context.client.post(availableProductsUrl.href, {
         inventoryLocationIds,
-        includeFacets,
+        includeFacets: true,
         facets: facetCounts,
-        query: {
-          maximumItems: 0,
-          startingIndex: 0
-        }
+        query: getCatalogActiveProductsQuery(scope, 0, 0, [])
       });
       return { facetCounts: facetCountsData.facets };
     }

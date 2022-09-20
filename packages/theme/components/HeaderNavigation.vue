@@ -72,8 +72,7 @@
 import { computed, ref } from '@nuxtjs/composition-api';
 import { SfMenuItem, SfModal } from '@storefront-ui/vue';
 import { useUiState, useUiHelpers } from '~/composables';
-import { useCategory, categoryGetters } from '@vue-storefront/orc-vsf';
-import { onSSR } from '@vue-storefront/core';
+import { useCategory, categoryGetters, useSearch } from '@vue-storefront/orc-vsf';
 import HeaderNavigationSubcategories from './HeaderNavigationSubcategories.vue';
 
 export default {
@@ -85,17 +84,14 @@ export default {
   },
   setup() {
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
-    const { search: searchCategories, categories, loading } = useCategory('categories');
+    const { categories, loading } = useCategory('categories');
+    const { result: categoryCounts } = useSearch('categoryCounts');
     const th = useUiHelpers();
     const currentCategory = ref(null);
     const hasFocus = ref(false);
     let focusedElement = null;
 
-    onSSR(async () => {
-      await searchCategories({});
-    });
-
-    const menus = computed(() => categoryGetters.getCategoryTree(categories.value, th.getFacetsFromURL()?.categorySlug, 3)?.items.slice(0, 5));
+    const menus = computed(() => categoryGetters.getCategoryTree(categories.value, categoryCounts.value, th.getFacetsFromURL()?.categorySlug, 3)?.items.slice(0, 5));
 
     const setCurrentCategory = (category) => {
       currentCategory.value = category;
