@@ -54,7 +54,7 @@
 import {
   SfLink, SfList
 } from '@storefront-ui/vue';
-import { useCategory, categoryGetters } from '@vue-storefront/orc-vsf';
+import { useCategory, categoryGetters, useSearch } from '@vue-storefront/orc-vsf';
 import { useUiHelpers } from '~/composables';
 import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api';
 
@@ -78,6 +78,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { categories } = useCategory('categories');
+    const { result: categoryCounts } = useSearch('categoryCounts');
     const { getCatLink } = useUiHelpers();
     const lvl1CatRefs = ref();
     const lvl2CatRefs = ref();
@@ -98,7 +99,7 @@ export default defineComponent({
       return result;
     };
 
-    const subCategories = (current) => categoryGetters.getCategoryTree(categories.value, current, 2);
+    const subCategories = (current) => categoryGetters.getCategoryTree(categories.value, categoryCounts.value, current, 2);
 
     const hasChildren = (category) => Boolean(category?.items?.length > 0);
 
