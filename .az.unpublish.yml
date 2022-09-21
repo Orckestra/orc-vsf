@@ -32,7 +32,7 @@ steps:
   inputs:
     targetType: inline
     script: |
-      npm unpublish orc-vsf@${{parameters.packageVersion}}
-      npm unpublish orc-vsf-api@${{parameters.packageVersion}}
+      npm unpublish orc-vsf@${{parameters.packageVersion}} -f
+      npm unpublish orc-vsf-api@${{parameters.packageVersion}} -f
   env:
     NPM_TOKEN: $(NpmPublishToken)
