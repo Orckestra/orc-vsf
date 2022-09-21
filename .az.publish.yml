@@ -43,7 +43,7 @@ steps:
   inputs:
     targetType: inline
     script: |
-        yarn build:api-client && yarn publish:api-client $(npmTag) "${NPM_TOKEN}"
+        echo "yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}"
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
@@ -52,6 +52,6 @@ steps:
   inputs:
     targetType: inline
     script: |
-        yarn build:composables && yarn publish:composables $(npmTag) "${NPM_TOKEN}"
+        echo "yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}"
   env:
       NPM_TOKEN: $(NpmPublishToken)
