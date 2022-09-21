@@ -28,7 +28,7 @@ steps:
     NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
-  displayName: 'yarn install'
+  displayName: 'npm unpublish'
   inputs:
     targetType: inline
     script: |
