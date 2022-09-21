@@ -1,3 +1,11 @@
+parameters:
+- name: npmTag 
+  displayName: NPM Tag
+  type: string
+  default: latest
+
+trigger: none
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -35,7 +43,7 @@ steps:
   inputs:
     targetType: inline
     script: |
-        yarn build:api-client && yarn publish:api-client "${NPM_TOKEN}"
+        yarn build:api-client && yarn publish:api-client $(npmTag) "${NPM_TOKEN}"
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
@@ -44,6 +52,6 @@ steps:
   inputs:
     targetType: inline
     script: |
-        yarn build:composables && yarn publish:composables "${NPM_TOKEN}"
+        yarn build:composables && yarn publish:composables $(npmTag) "${NPM_TOKEN}"
   env:
       NPM_TOKEN: $(NpmPublishToken)
