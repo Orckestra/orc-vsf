@@ -10,28 +10,27 @@ steps:
   inputs:
     versionSpec: 16.x
 
- - task: Bash@3
-    displayName: 'yarn install'
-    inputs:
-      targetType: inline
-      script: |
-        yarn
+- task: Bash@3
+  displayName: 'yarn install'
+  inputs:
+    targetType: inline
+    script: |
+      yarn
 
- - task: Bash@3
-    displayName: 'yarn build & publish api-client'
-    inputs:
-      targetType: inline
-      script: |
-         yarn build:api-client && yarn publish:api-client "${NPM_TOKEN}"
-    env:
-        NPM_TOKEN: $(NpmPublishToken)
+- task: Bash@3
+  displayName: 'yarn build & publish api-client'
+  inputs:
+    targetType: inline
+    script: |
+        yarn build:api-client && yarn publish:api-client "${NPM_TOKEN}"
+  env:
+      NPM_TOKEN: $(NpmPublishToken)
 
- - task: Bash@3
-    displayName: 'yarn build & publish composables'
-    inputs:
-      targetType: inline
-      script: |
-         yarn build:composables && yarn publish:composables "${NPM_TOKEN}"
-
-    env:
-        NPM_TOKEN: $(NpmPublishToken)
+- task: Bash@3
+  displayName: 'yarn build & publish composables'
+  inputs:
+    targetType: inline
+    script: |
+        yarn build:composables && yarn publish:composables "${NPM_TOKEN}"
+  env:
+      NPM_TOKEN: $(NpmPublishToken)
