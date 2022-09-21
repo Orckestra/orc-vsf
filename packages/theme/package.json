@@ -1,6 +1,6 @@
 {
   "name": "orc-vsf-theme",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "build": "nuxt build -m",
@@ -24,12 +24,12 @@
     "@vue-storefront/middleware": "~2.5.12",
     "@vue-storefront/nuxt": "~2.5.12",
     "@vue-storefront/nuxt-theme": "~2.5.12",
-    "orc-vsf": "^0.0.2",
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.19.0",
     "dayjs": "^1.11.4",
     "nuxt": "^2.15.8",
     "nuxt-i18n": "^6.5.0",
+    "orc-vsf": "^0.0.3",
     "vee-validate": "^3.4.13",
     "vue-scrollto": "^2.20.0"
   },
