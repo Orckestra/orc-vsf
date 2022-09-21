@@ -1,6 +1,6 @@
 {
   "name": "orc-vsf",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "sideEffects": false,
   "main": "lib/index.cjs.js",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@vue-storefront/core": "~2.5.12",
-    "orc-vsf-api": "^0.0.3"
+    "orc-vsf-api": "^0.0.4"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.6",
