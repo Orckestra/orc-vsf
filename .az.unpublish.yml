@@ -1,0 +1,38 @@
+parameters:
+- name: packageVersion 
+  displayName: Package to unpublish
+  type: string
+
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: npm publish token
+
+steps:
+- task: NodeTool@0
+  displayName: 'Use Node 16.x'
+  inputs:
+    versionSpec: 16.x
+
+- task: Bash@3
+  displayName: 'Configure .npmrc and .yarnrc with NPM_TOKEN config'
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo -e "\r\n//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
+      echo -e "\r\nregistry \"//registry.npmjs.org/\"" >> .yarnrc
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
+
+- task: Bash@3
+  displayName: 'yarn install'
+  inputs:
+    targetType: inline
+    script: |
+      npm unpublish orc-vsf@$(version)
+      npm unpublish orc-vsf-api@$(version)
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
