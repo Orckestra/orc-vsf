@@ -12,11 +12,12 @@ steps:
 
 
 - task: Bash@3
-  displayName: 'Configure .npmrc with NPM_TOKEN config'
+  displayName: 'Configure .npmrc and .yarnrc with NPM_TOKEN config'
   inputs:
     targetType: 'inline'
     script: |
       echo -e "\r\n//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
+      echo -e "\r\nregistry "http://registry.npmjs.org/" >> .yarnrc
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
