@@ -10,6 +10,16 @@ steps:
   inputs:
     versionSpec: 16.x
 
+
+- task: Bash@3
+  displayName: 'Configure .npmrc with NPM_TOKEN config'
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo -e "\r\n//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
+  env:
+      NPM_TOKEN: $(NpmPublishToken)
+
 - task: Bash@3
   displayName: 'yarn install'
   inputs:
