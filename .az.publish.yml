@@ -26,6 +26,8 @@ steps:
     targetType: inline
     script: |
       yarn
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
   displayName: 'yarn build & publish api-client'
@@ -34,7 +36,7 @@ steps:
     script: |
         yarn build:api-client && yarn publish:api-client "${NPM_TOKEN}"
   env:
-      NPM_TOKEN: $(NpmPublishToken)
+    NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
   displayName: 'yarn build & publish composables'
