@@ -31,7 +31,9 @@ export default {
   props: {
     methods: {
       type: Array,
-      default: () => {null}
+      default: () => {
+        null;
+      }
     },
     disabledMethodsIds: {
       type: Array,
