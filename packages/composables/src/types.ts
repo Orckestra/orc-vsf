@@ -471,7 +471,8 @@ export interface UseFulfillmentMethods<METHOD> {
 
 export interface FulfillmentMethodsGetters<METHOD> {
   getFulfillmentMethod(fulfillmentMethods: METHOD[], shippingProviderId: string): METHOD;
-  getFulfillmentMethodType(fulfillmentMethods: METHOD[], shippingProviderId: string): FulfillmentMethodType
+  getFulfillmentMethodType(fulfillmentMethods: METHOD[], shippingProviderId: string): FulfillmentMethodType;
+  getFulfillmentMethodsGroupedByType(fulfillmentMethods: METHOD[]): Record<string, METHOD[]>
 }
 
 export interface UseCreditCardFormErrors {

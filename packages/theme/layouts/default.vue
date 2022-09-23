@@ -35,7 +35,7 @@ import Notification from '~/components/Notification';
 import OfflineWarning from '~/components/Layout/OfflineWarning.vue';
 import { onSSR } from '@vue-storefront/core';
 import { useRoute } from '@nuxtjs/composition-api';
-import { useCart, useStore, useUser, useWishlist, useMetadata, useConfiguration, useCountries } from 'orc-vsf';
+import { useCart, useStore, useUser, useWishlist, useMetadata, useConfiguration, useCountries, useCategory, useSearch } from 'orc-vsf';
 
 export default {
   name: 'DefaultLayout',
@@ -62,6 +62,8 @@ export default {
     const { load: loadMetadata} = useMetadata();
     const { load: loadConfiguration} = useConfiguration();
     const { load: loadCountries } = useCountries();
+    const { search: loadCategories } = useCategory('categories');
+    const { search: categoryCountsSearch } = useSearch('categoryCounts');
 
     onSSR(async () => {
       await Promise.all([
@@ -71,7 +73,9 @@ export default {
         loadWishlist(),
         loadMetadata(),
         loadConfiguration(),
-        loadCountries()
+        loadCountries(),
+        loadCategories({}),
+        categoryCountsSearch({ queryType: 'FacetCounts', facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']})
       ]);
     });
 
@@ -84,7 +88,12 @@ export default {
 
 <style lang="scss">
 @import "~@storefront-ui/vue/styles";
-
+:root {
+  .sf-tabs__content__tab {
+    // workaround for issue https://github.com/vuestorefront/storefront-ui/issues/2491
+    transform: translate3d(0, 0, 0);
+  }
+}
 #layout {
   box-sizing: border-box;
   @include for-desktop {

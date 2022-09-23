@@ -9,6 +9,7 @@ module.exports = {
         },
         scope: process.env.OVERTURE_SCOPE_NAME,
         inventoryLocationIds: process.env.OVERTURE_INVENTORY_LOCATION_IDS,
+        paymentProviders: ['Bambora','Onsite payment'],
         searchConfig: {
           defaultItemsPerPage: 12,
           availableFacets: [
@@ -20,9 +21,9 @@ module.exports = {
             { name: 'CurrentPrice', type: 2 }],
           categoryCountFacets: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']
         },
-        cdnDamProviderConfig: {
-          serverUrl: 'https://refapp.azureedge.net',
-          imageFolderName: 'images',
+       mediaProviderConfig: {
+          serverUrl: process.env.MEDIA_SERVER_URL ?? 'https://refapp.azureedge.net',
+          imageFolderName: process.env.MEDIA_FOLDER ?? 'images',
           fallbackImage: 'image_not_found.jpg',
           maxThumbnailImages: 1
         },

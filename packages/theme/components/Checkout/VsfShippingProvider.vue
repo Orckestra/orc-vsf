@@ -1,40 +1,46 @@
 <template>
-  <div class="form__radio-group" data-testid="shipping-method">
+  <div class="form__radio-group shipping__types">
+    <div v-for="type in Object.keys(fulfillmentMethodsByType)"
+    :key="type"
+    class="shipping__type">
     <SfRadio
-      v-for="(item, index) in fulfillmentMethods"
-      :key="index"
-      :selected="selected"
-      :disabled="disabled"
-      :label="th.getTranslation(item.displayName) || item.name"
-      :value="item.shippingProviderId"
-      name="shippingMethod"
-      :description="item.fulfillmentMethodType"
-      class="form__radio shipping"
-      @input="updateShippingMethod"
-    >
-      <template #label="{ label }">
-        <div class="sf-radio__label shipping__label">
-          <div>
-            {{ label }}
-          </div>
-          <div class="shipping__label-price">{{$n(Number(item.cost), 'currency')}}</div>
-        </div>
-      </template>
-      <template #description>
-        <div class="sf-radio__description shipping__description">
-              <span>{{item.fulfillmentMethodType}}</span>
-              <span v-if="item.expectedDeliveryDate">
-                 / Estimated ship time:
-                {{((new Date(item.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days
-              </span>
-        </div>
-      </template>
-    </SfRadio>
+      :selected="selected.fulfillmentMethodType"
+      :value="type"
+      :label="$t(`${type}_Label`)"
+      name="shippingMethodType"
+      @change="(type) => updateShippingMethod(fulfillmentMethodsByType[type][0].shippingProviderId)"
+      class="form__radio" />
+
+    <div v-if="selected.fulfillmentMethodType === type">
+      <SfComponentSelect
+        data-testid="shipping-method"
+        name="shippingMethod"
+        :label="$t('Shipping Method')"
+        :selected="selected.shippingProviderId"
+        @change="updateShippingMethod"
+        class="sf-component-select--underlined shipping__methods">
+        <SfComponentSelectOption
+            v-for="(item, index) in fulfillmentMethodsByType[type]"
+            :key="index"
+            :value="item.shippingProviderId">
+              <div class="shipping__label">
+                <div>
+                  {{ th.getTranslation(item.displayName) || item.name }}
+                </div>
+                <div class="shipping__label-price">{{$n(Number(item.cost), 'currency')}}</div>
+              </div>
+          </SfComponentSelectOption>
+      </SfComponentSelect>
+    </div>
   </div>
+  <div v-if="selected.expectedDeliveryDate">
+    <small>Estimated shipping time {{((new Date(selected.expectedDeliveryDate) - Date.now())/ (1000 * 60 * 60 * 24)).toFixed() }} days</small>
+  </div>
+</div>
 </template>
 
 <script>
-import { SfButton, SfRadio } from '@storefront-ui/vue';
+import { SfButton, SfRadio, SfComponentSelect } from '@storefront-ui/vue';
 import { useUiHelpers } from '~/composables';
 
 export default {
@@ -45,27 +51,31 @@ export default {
   },
   props: {
     selected: {
-      type: String,
-      default: ''
+      type: Object,
+      default() {
+        return {};
+      }
     },
     disabled: {
       type: Boolean,
       default: false
     },
-    fulfillmentMethods: {
-      type: Array,
-      default: []
+    fulfillmentMethodsByType: {
+      type: Object,
+      default() {
+        return {};
+      }
     }
   },
   components: {
     SfButton,
-    SfRadio
+    SfRadio,
+    SfComponentSelect
   },
   emits: ['change'],
   setup(props, { emit }) {
     const th = useUiHelpers();
     const updateShippingMethod = value => emit('change', value);
-
     return {
       th,
       updateShippingMethod
@@ -78,12 +88,7 @@ export default {
 .form {
   &__radio {
     margin: var(--spacer-xs) 0;
-
-    &:last-of-type {
-      margin: var(--spacer-xs) 0 var(--spacer-xl);
-    }
-
-    ::v-deep .sf-radio__container {
+     ::v-deep .sf-radio__container {
       --radio-container-padding: var(--spacer-xs);
       @include for-desktop {
         --radio-container-padding: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) var(--spacer-sm);
@@ -94,19 +99,30 @@ export default {
   @include for-desktop {
     &__radio-group {
       flex: 0 0 calc(100% + var(--spacer-sm));
-      margin: 0 calc(-1 * var(--spacer-sm));
     }
   }
 }
-
 .shipping {
+
+  &__types {
+    display: flex;
+   flex-wrap: wrap;
+   justify-content: flex-start;
+   margin-bottom: var(--spacer-base);
+  }
+  &__type {
+    flex: 1 1 100%;
+    @include for-desktop {
+      flex: 0 0 50%;
+    }
+  }
+  &__methods {
+    margin-top: var(--spacer-base);
+  }
   &__label {
+    width: 100%;
     display: flex;
     justify-content: space-between;
-  }
-  &__description {
-    --radio-description-margin: 0;
-    --radio-description-font-size: var(--font-xs);
   }
 }
 </style>

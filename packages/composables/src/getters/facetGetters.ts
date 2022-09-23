@@ -79,7 +79,7 @@ function getCategoryTree(params: FacetSearchResult<SearchResults>, root = 'Root'
     setProductCounts(categories, facetCounts);
   }
 
-  return buildCategoryTree(categories, root, categorySlug, level);
+  return buildCategoryTree(categories, root, categorySlug, level, true);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

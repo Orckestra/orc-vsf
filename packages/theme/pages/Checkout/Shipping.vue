@@ -1,14 +1,14 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
-    <SfHeading
-      v-e2e="'shipping-heading'"
-      :level="3"
-      :title="$t('Shipping method')"
-      class="sf-heading--left sf-heading--no-underline title"
-    />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
+      <SfHeading
+        v-e2e="'shipping-heading'"
+        :level="3"
+        :title="$t('Available shipping services')"
+        class="sf-heading--left sf-heading--no-underline title"
+      />
       <VsfShippingProvider
-        :fulfillmentMethods="fulfillmentMethods"
+        :fulfillmentMethodsByType="methodsByType"
         :selected="form.shippingMethod"
         :disabled="loadingCart"
         @change="updateShippingMethod"
@@ -41,6 +41,7 @@
                 <AddressForm :form="addressForm" />
                 <div class="form__action-bar">
                   <SfButton
+                    type="submit"
                     class="form__action-button sf-button sf-button-primary"
                     :disabled="loadingFulfillmentMethods || loadingAddresses"
                   >
@@ -203,6 +204,8 @@ export default {
     const { stores: storesList, search: loadStoresList } = useStores();
     const { isStoresModalOpen, toggleStoresModal } = useUiState();
 
+    const methodsByType = computed(() => fulfillmentMethodsGetters.getFulfillmentMethodsGroupedByType(fulfillmentMethods.value));
+
     const shipment = computed(() => cartGetters.getActiveShipment(cart.value));
     const shipmentAddressId = computed(() => shipment.value?.address?.id);
 
@@ -216,7 +219,7 @@ export default {
     const shipmentPickUpLocationId = computed(() => shipment.value?.pickUpLocationId);
 
     const form = ref({
-      shippingMethod: shipment.value?.fulfillmentMethod?.shippingProviderId,
+      shippingMethod: shipment.value?.fulfillmentMethod,
       pickUpLocationId: shipment.value?.pickUpLocationId
     });
 
@@ -330,13 +333,14 @@ export default {
     };
 
     const updateShippingMethod = (value) => {
-      form.value.shippingMethod = value;
+      const fulfillmentMethod = fulfillmentMethods.value.find(x => x.shippingProviderId === value);
+      form.value.shippingMethod = fulfillmentMethod;
 
       const updatedShipment = {
         ...shipment.value,
         pickUpLocationId: null,
         fulfillmentLocationId: null,
-        fulfillmentMethod: fulfillmentMethods.value.find(x => x.shippingProviderId === value)
+        fulfillmentMethod
       };
 
       if (isAuthenticated.value && !shipment.value?.address?.id && updatedShipment.fulfillmentMethod.fulfillmentMethodType === FulfillmentMethodType.Shipping) {
@@ -413,8 +417,8 @@ export default {
       updateAddress,
       goBack,
       fulfillmentMethods,
+      methodsByType,
       addresses,
-      fulfillmentMethodsGetters,
       shipmentAddressId,
       stores,
       isPickupMethod,

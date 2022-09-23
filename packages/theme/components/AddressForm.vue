@@ -86,11 +86,7 @@
           required
           :valid="!errors[0]"
           :error-message="errors[0]"
-          class="
-            sf-component-select--underlined
-            form__select
-            form__element--half
-            form__element--half-even">
+          class="sf-component-select--underlined">
           <SfComponentSelectOption
             v-for="{isoCode, name} in countries"
             :key="isoCode"
@@ -111,11 +107,7 @@
           required
           :valid="!errors[0]"
           :error-message="errors[0]"
-          class="
-            sf-component-select--underlined
-            form__select
-            form__element--half
-            form__element--half-even">
+          class="sf-component-select--underlined">
             <SfComponentSelectOption
               v-for="{isoCode, name} in getRegions(form.countryCode)"
               :key="isoCode"
@@ -211,6 +203,7 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+
 .form {
   &__element {
     flex: 1 0 100%;

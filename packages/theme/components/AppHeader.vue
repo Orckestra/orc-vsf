@@ -142,7 +142,7 @@ export default {
     const isSearchOpen = ref(false);
     const searchBarRef = ref(null);
     const { result, search } = useSearch('productSuggestions');
-    const { search: categoryCountsSearch, result: categoryCounts } = useSearch('categoryCounts');
+    const { result: categoryCounts } = useSearch('categoryCounts');
     const { categories } = useCategory('categories');
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -194,10 +194,7 @@ export default {
       } else {
         term.value = paramValue.target.value;
       }
-      if (categoryCounts.value.length === 0) {
-        await categoryCountsSearch({qyeryType: 'FacetCounts', facetCounts: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']});
-      }
-      await search({ qyeryType: 'List', term: term.value, includeFacets: false });
+      await search({ queryType: 'List', term: term.value, includeFacets: false });
     }, 1000);
 
     const focusSearchBar = () => {

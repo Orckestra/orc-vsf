@@ -3,7 +3,7 @@ import { isGuidEquals } from '../../../helpers/generalUtils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getOrderByNumber(context, params) {
-  const { api, scope, cdnDamProviderConfig } = context.config;
+  const { api, scope, mediaProviderConfig } = context.config;
   const { orderNumber, includeLineItems = true, includeShipment = true, includePayment = true } = params;
   const url = new URL(
     `/api/orders/${scope}/byNumber/${orderNumber}?IncludeLineItems=${includeLineItems}&IncludeShipment=${includeShipment}&IncludePayment=${includePayment}`,
@@ -16,7 +16,7 @@ export default async function getOrderByNumber(context, params) {
     return null;
   }
   if (data && data.cart.shipments && data.cart.shipments.length) {
-    setCartItemsCoverImages(data.cart.shipments[0].lineItems, cdnDamProviderConfig);
+    setCartItemsCoverImages(data.cart.shipments[0].lineItems, mediaProviderConfig);
   }
   return data;
 }

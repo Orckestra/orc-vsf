@@ -1,6 +1,7 @@
 import { CategoryGetters, AgnosticCategoryTree, AgnosticBreadcrumb } from '@vue-storefront/core';
 import type { Category } from 'orc-vsf-api';
 import { buildCategoryTree } from '../helpers/buildCategoryTree';
+import { setProductCounts } from '../helpers/categoriesUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTree(categories: Category[]): AgnosticCategoryTree {
@@ -12,11 +13,16 @@ function getTree(categories: Category[]): AgnosticCategoryTree {
 
 function getCategoryTree(
   categories: Category[],
+  categoryCounts = null,
   currentCategory = '',
   level: -1
 ): AgnosticCategoryTree | null {
+  const counts = categoryCounts?.facetCounts;
+  if (counts) {
+    setProductCounts(categories, counts);
+  }
   return categories
-    ? buildCategoryTree(categories, 'Root', currentCategory, level)
+    ? buildCategoryTree(categories, 'Root', currentCategory, level, counts !== null)
     : null;
 }
 

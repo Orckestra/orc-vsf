@@ -171,5 +171,13 @@ export default {
   'City': 'Ville',
   'Zip-code': 'Code Postal',
   'Phone number': 'Numéro de téléphone',
-  'Email': 'Email'
+  'Email': 'Email',
+  'Shipping_Label': 'Ship to home',
+  'PickUp_Label': 'Pick up in the store',
+  'Pickup location': 'Pickup location',
+  'Select pickup location': 'Select pickup location',
+  'Available shipping services': 'Available shipping services',
+  'Shipping Method': 'Shipping method',
+  'Menu': 'Menu',
+  "AllProductsFromCategory": "All {categoryName}"
 };

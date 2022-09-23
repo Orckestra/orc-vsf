@@ -6,7 +6,8 @@ function getDefaultMethod(methods: PaymentMethod[]): PaymentMethod {
 }
 
 function getValidPaymentMethods(methods: PaymentMethod[]): PaymentMethod[] {
-  return methods?.filter(m => m.enabled);
+  if (!methods || !Array.isArray(methods)) return [];
+  return methods.filter(m => m.enabled);
 }
 
 export const paymentMethodGetters: PaymentMethodGetters<PaymentMethod> = {

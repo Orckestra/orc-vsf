@@ -13,6 +13,7 @@ module.exports = {
         },
         scope: process.env.OVERTURE_SCOPE_NAME,
         inventoryLocationIds: process.env.OVERTURE_INVENTORY_LOCATION_IDS,
+        paymentProviders: ['Onsite payment'],
         searchConfig: {
           defaultItemsPerPage: 12,
           availableFacets: [
@@ -24,7 +25,7 @@ module.exports = {
             { name: 'CurrentPrice', type: 2 }],
           categoryCountFacets: ['CategoryLevel1', 'CategoryLevel2', 'CategoryLevel3']
         },
-        cdnDamProviderConfig: {
+        mediaProviderConfig: {
           serverUrl: 'https://refapp.azureedge.net',
           imageFolderName: 'images',
           maxThumbnailImages: 1
