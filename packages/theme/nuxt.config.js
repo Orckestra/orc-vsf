@@ -57,11 +57,11 @@ module.exports = {
       // @core-development-only-end
       useRawSource: {
         dev: [
-          '@vue-storefront/orc-vsf',
+          'orc-vsf',
           '@vue-storefront/core'
         ],
         prod: [
-          '@vue-storefront/orc-vsf',
+          'orc-vsf',
           '@vue-storefront/core'
         ]
       }
@@ -70,8 +70,8 @@ module.exports = {
     ['@vue-storefront/nuxt-theme', {
       generate: {
         replace: {
-          apiClient: '@vue-storefront/orc-vsf-api',
-          composables: '@vue-storefront/orc-vsf'
+          apiClient: 'orc-vsf-api',
+          composables: 'orc-vsf'
         }
       }
     }],
@@ -79,7 +79,7 @@ module.exports = {
     /* project-only-start
     ['@vue-storefront/nuxt-theme'],
     project-only-end */
-    ['@vue-storefront/orc-vsf/nuxt', {}]
+    ['orc-vsf/nuxt', {}]
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

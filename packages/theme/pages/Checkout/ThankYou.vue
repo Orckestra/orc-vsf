@@ -76,7 +76,7 @@
 import { SfHeading, SfButton, SfCallToAction, SfProperty, SfProductCard } from '@storefront-ui/vue';
 import { computed, useRouter } from '@nuxtjs/composition-api';
 import { addBasePath } from '@vue-storefront/core';
-import { orderGetters, cartGetters, useOrder, useUser } from '@vue-storefront/orc-vsf';
+import { orderGetters, cartGetters, useOrder, useUser } from 'orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 export default {
   components: {

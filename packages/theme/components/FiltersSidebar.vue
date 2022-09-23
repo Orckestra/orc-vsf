@@ -93,7 +93,7 @@ import {
 } from '@storefront-ui/vue';
 
 import { ref, computed, onMounted } from '@nuxtjs/composition-api';
-import { useFacet, facetGetters } from '@vue-storefront/orc-vsf';
+import { useFacet, facetGetters } from 'orc-vsf';
 import { useUiHelpers, useUiState } from '~/composables';
 import Vue from 'vue';
 

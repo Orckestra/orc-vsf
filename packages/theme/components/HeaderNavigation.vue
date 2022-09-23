@@ -72,7 +72,7 @@
 import { computed, ref } from '@nuxtjs/composition-api';
 import { SfMenuItem, SfModal } from '@storefront-ui/vue';
 import { useUiState, useUiHelpers } from '~/composables';
-import { useCategory, categoryGetters, useSearch } from '@vue-storefront/orc-vsf';
+import { useCategory, categoryGetters, useSearch } from 'orc-vsf';
 import HeaderNavigationSubcategories from './HeaderNavigationSubcategories.vue';
 
 export default {

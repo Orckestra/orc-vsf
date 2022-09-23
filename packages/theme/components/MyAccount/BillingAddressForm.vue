@@ -38,7 +38,7 @@ import { ref } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 import { SfButton, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver } from 'vee-validate';
-import { useUserAddresses } from '@vue-storefront/orc-vsf';
+import { useUserAddresses } from 'orc-vsf';
 import AddressForm from '~/components/AddressForm';
 
 export default {

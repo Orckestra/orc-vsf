@@ -3,7 +3,7 @@ import {
   useUserFactory,
   UseUserFactoryParams
 } from '@vue-storefront/core';
-import type { User } from '@vue-storefront/orc-vsf-api';
+import type { User } from 'orc-vsf-api';
 import type {
   UserUpdateParams as UpdateParams,
   UserRegisterParams as RegisterParams

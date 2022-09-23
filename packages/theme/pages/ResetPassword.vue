@@ -85,7 +85,7 @@ import {
 } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
-import { useConfiguration, configurationGetters, forgotPasswordGetters, useForgotPassword } from '@vue-storefront/orc-vsf';
+import { useConfiguration, configurationGetters, forgotPasswordGetters, useForgotPassword } from 'orc-vsf';
 import { useUiNotification } from '~/composables';
 
 extend('required', {

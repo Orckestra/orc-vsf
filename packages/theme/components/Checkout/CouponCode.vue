@@ -44,7 +44,7 @@
 
 <script>
 import { SfButton, SfInput, SfProperty, SfCircleIcon } from '@storefront-ui/vue';
-import { useCart, cartGetters } from '@vue-storefront/orc-vsf';
+import { useCart, cartGetters } from 'orc-vsf';
 import {
   computed,
   ref,

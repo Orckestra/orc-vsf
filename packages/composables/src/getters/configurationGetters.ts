@@ -1,4 +1,4 @@
-import type { Configuration, MembershipConfiguration } from '@vue-storefront/orc-vsf-api';
+import type { Configuration, MembershipConfiguration } from 'orc-vsf-api';
 import { UseConfigurationGetters } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

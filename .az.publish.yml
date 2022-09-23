@@ -1,0 +1,57 @@
+parameters:
+- name: npmTag 
+  displayName: NPM Tag
+  type: string
+  default: latest
+
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: npm publish token
+
+steps:
+- task: NodeTool@0
+  displayName: 'Use Node 16.x'
+  inputs:
+    versionSpec: 16.x
+
+
+- task: Bash@3
+  displayName: 'Configure .npmrc and .yarnrc with NPM_TOKEN config'
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo -e "\r\n//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
+      echo -e "\r\nregistry \"//registry.npmjs.org/\"" >> .yarnrc
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
+
+- task: Bash@3
+  displayName: 'yarn install'
+  inputs:
+    targetType: inline
+    script: |
+      yarn
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
+
+- task: Bash@3
+  displayName: 'yarn build & publish api-client'
+  inputs:
+    targetType: inline
+    script: |
+        yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
+
+- task: Bash@3
+  displayName: 'yarn build & publish composables'
+  inputs:
+    targetType: inline
+    script: |
+        yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
+  env:
+      NPM_TOKEN: $(NpmPublishToken)

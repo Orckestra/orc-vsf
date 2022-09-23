@@ -1,4 +1,4 @@
-import type { Metadata } from '@vue-storefront/orc-vsf-api';
+import type { Metadata } from 'orc-vsf-api';
 import { Context } from '@vue-storefront/core';
 import { useMetadataFactory } from '../factories/useMetadataFactory';
 

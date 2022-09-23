@@ -1,4 +1,4 @@
-import type { Category } from '@vue-storefront/orc-vsf-api';
+import type { Category } from 'orc-vsf-api';
 
 export const getCategoryLevel = (categories: Category[], currentCatId: string): number => {
   let level = 1;

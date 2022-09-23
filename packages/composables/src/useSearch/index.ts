@@ -3,7 +3,7 @@ import {
   useSearchFactory,
   ProductsSearchParams
 } from '@vue-storefront/core';
-import type { SearchResults } from '@vue-storefront/orc-vsf-api';
+import type { SearchResults } from 'orc-vsf-api';
 
 const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

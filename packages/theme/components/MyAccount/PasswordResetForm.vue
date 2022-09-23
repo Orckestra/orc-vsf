@@ -69,7 +69,7 @@
 import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, confirmed } from 'vee-validate/dist/rules';
-import { useUser } from '@vue-storefront/orc-vsf';
+import { useUser } from 'orc-vsf';
 import {
   SfInput,
   SfButton

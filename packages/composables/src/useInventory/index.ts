@@ -1,4 +1,4 @@
-import type { InventoryItemAvailability } from '@vue-storefront/orc-vsf-api';
+import type { InventoryItemAvailability } from 'orc-vsf-api';
 import { Context } from '@vue-storefront/core';
 import { useInventoryFactory } from '../factories/useInventoryFactory';
 

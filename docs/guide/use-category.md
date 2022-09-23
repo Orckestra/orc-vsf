@@ -56,7 +56,7 @@ export interface AgnosticCategoryTree {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useCategory, categoryGetters } from '@vue-storefront/orc-vsf';
+import { useCategory, categoryGetters } from 'orc-vsf';
 
 export default {
   setup () {

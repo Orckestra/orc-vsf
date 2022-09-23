@@ -39,7 +39,7 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser, useCart, useWishlist } from '@vue-storefront/orc-vsf';
+import { useUser, useCart, useWishlist } from 'orc-vsf';
 import MyProfile from './MyAccount/MyProfile';
 import ShippingDetails from './MyAccount/ShippingDetails';
 import BillingDetails from './MyAccount/BillingDetails';

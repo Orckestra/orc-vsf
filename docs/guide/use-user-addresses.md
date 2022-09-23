@@ -90,7 +90,7 @@ export interface UserAddressGetters<USER_ADDRESS_ITEM> {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useUserAddresses } from '@vue-storefront/orc-vsf';
+import { useUserAddresses } from 'orc-vsf';
 
 export default {
   setup () {

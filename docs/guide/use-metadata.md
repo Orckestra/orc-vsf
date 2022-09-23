@@ -92,7 +92,7 @@ interface UseMetadataGetters<Metadata, Lookup>  {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
+import { useMetadata, metadataGetters } from 'orc-vsf';
 
 export default {
   setup () {

@@ -1,7 +1,7 @@
 import { UseStoresSearchParams, UseStoresFactoryParams } from '../types';
 import { Context } from '@vue-storefront/core';
 import { useStoresFactory } from '../factories/useStoresFactory';
-import type { StoreQueryResult } from '@vue-storefront/orc-vsf-api';
+import type { StoreQueryResult } from 'orc-vsf-api';
 
 const params: UseStoresFactoryParams<StoreQueryResult, UseStoresSearchParams> = {
 

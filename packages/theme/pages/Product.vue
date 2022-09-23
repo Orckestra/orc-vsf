@@ -202,7 +202,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, useCategory, productGetters, categoryGetters, useMetadata, metadataGetters, useInventory, inventoryGetters, useWishlist, wishlistGetters } from '@vue-storefront/orc-vsf';
+import { useProduct, useCart, useCategory, productGetters, categoryGetters, useMetadata, metadataGetters, useInventory, inventoryGetters, useWishlist, wishlistGetters } from 'orc-vsf';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';

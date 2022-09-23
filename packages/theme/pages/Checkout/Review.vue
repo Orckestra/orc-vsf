@@ -213,9 +213,9 @@ import CouponCode from '../../components/Checkout/CouponCode';
 import CartItemsTable from '../../components/Checkout/CartItemsTable';
 import AddressPreview from '../../components/AddressPreview';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
-import { useMakeOrder, useCart, cartGetters, orderGetters, usePaymentMethods } from '@vue-storefront/orc-vsf';
+import { useMakeOrder, useCart, cartGetters, orderGetters, usePaymentMethods } from 'orc-vsf';
 import { useUiNotification } from '~/composables';
-import { useCreditCardForm } from '@vue-storefront/orc-vsf';
+import { useCreditCardForm } from 'orc-vsf';
 
 export default {
   name: 'CartPreview',

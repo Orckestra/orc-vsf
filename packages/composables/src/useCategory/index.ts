@@ -3,7 +3,7 @@ import {
   useCategoryFactory,
   UseCategoryFactoryParams
 } from '@vue-storefront/core';
-import type { Category } from '@vue-storefront/orc-vsf-api';
+import type { Category } from 'orc-vsf-api';
 import type {
   UseCategorySearchParams as SearchParams
 } from '../types';

@@ -1,4 +1,4 @@
-import type { PaymentMethod } from '@vue-storefront/orc-vsf-api';
+import type { PaymentMethod } from 'orc-vsf-api';
 import { Context } from '@vue-storefront/core';
 import { usePaymentMethodsFactory } from '../factories/usePaymentMethodsFactory';
 import { getUserToken } from '../helpers/generalUtils';

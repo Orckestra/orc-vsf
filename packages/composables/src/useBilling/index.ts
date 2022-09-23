@@ -3,7 +3,7 @@ import {
   useBillingFactory,
   UseBillingParams
 } from '@vue-storefront/core';
-import type { BillingAddress } from '@vue-storefront/orc-vsf-api';
+import type { BillingAddress } from 'orc-vsf-api';
 import type {
   UseBillingAddParams as AddParams
 } from '../types';

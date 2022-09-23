@@ -1,4 +1,4 @@
-import type { InventoryItemAvailability } from '@vue-storefront/orc-vsf-api';
+import type { InventoryItemAvailability } from 'orc-vsf-api';
 import { UseInventoryGetters } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

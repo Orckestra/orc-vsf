@@ -1,4 +1,4 @@
-import type { UserOrder } from '@vue-storefront/orc-vsf-api';
+import type { UserOrder } from 'orc-vsf-api';
 import { Context } from '@vue-storefront/core';
 import { useOrderFactory } from '../factories/useOrderFactory';
 import { UseOrderFactoryParams } from '../types';

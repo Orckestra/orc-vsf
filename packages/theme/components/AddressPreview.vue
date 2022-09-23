@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { countriesGetters, useCountries } from '@vue-storefront/orc-vsf';
+import { countriesGetters, useCountries } from 'orc-vsf';
 
 export default {
   name: 'AddressPreview',

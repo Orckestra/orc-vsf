@@ -16,7 +16,7 @@
 <script>
 import { SfLoader } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
-import { usePaymentMethods, useCart, cartGetters, paymentMethodGetters } from '@vue-storefront/orc-vsf';
+import { usePaymentMethods, useCart, cartGetters, paymentMethodGetters } from 'orc-vsf';
 import BamboraCreditCard from '../Checkout/Payment/Bambora/BamboraCreditCard';
 import PaymentMethods from '../Checkout/PaymentMethods';
 import { onSSR } from '@vue-storefront/core';

@@ -4,7 +4,7 @@ import {
   UseMakeOrderFactoryParams
 } from '@vue-storefront/core';
 import { getUserToken } from '../helpers/generalUtils';
-import type { Order } from '@vue-storefront/orc-vsf-api';
+import type { Order } from 'orc-vsf-api';
 
 const factoryParams: UseMakeOrderFactoryParams<Order> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

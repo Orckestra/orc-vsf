@@ -1,4 +1,4 @@
-import type { WishlistItem } from '@vue-storefront/orc-vsf-api';
+import type { WishlistItem } from 'orc-vsf-api';
 import { AgnosticTotals } from '@vue-storefront/core';
 export const getTotalPrices = (wishlistItems: WishlistItem[]): AgnosticTotals => {
   if (!wishlistItems) return;

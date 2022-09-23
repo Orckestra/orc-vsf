@@ -81,7 +81,7 @@ interface FacetsGetters<Facet> {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useFacet, facetGetters } from '@vue-storefront/orc-vsf';
+import { useFacet, facetGetters } from 'orc-vsf';
 
 export default {
   setup () {

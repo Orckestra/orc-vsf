@@ -1,5 +1,5 @@
 import { UserGetters } from '@vue-storefront/core';
-import type { User } from '@vue-storefront/orc-vsf-api';
+import type { User } from 'orc-vsf-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFirstName(user: User): string {

@@ -239,7 +239,7 @@ import {
   SfAddToCart
 } from '@storefront-ui/vue';
 import { computed, ref } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/orc-vsf';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from 'orc-vsf';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';

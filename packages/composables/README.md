@@ -27,7 +27,7 @@ vsf init <project_name> && cd <project_name> && yarn && yarn dev
 
 ## Support
 
-If you have any questions about this integration we will be happy to answer them on `orc-vsf` channel on [our Discord](discord.vuestorefront.io).
+If you have any questions about this integration we will be happy to answer them on `orc-vsf` channel on [our Discord]((https://discord.vuestorefront.io).
 
 ## Contributors ✨
 

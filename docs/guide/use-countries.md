@@ -51,7 +51,7 @@ export interface CountriesGetters<CountryItem, RegionItem> {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useCountries, countriesGetters } from '@vue-storefront/orc-vsf';
+import { useCountries, countriesGetters } from 'orc-vsf';
 
 export default {
   setup () {

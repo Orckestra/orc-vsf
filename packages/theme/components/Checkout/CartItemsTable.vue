@@ -83,7 +83,7 @@ import {
   SfPrice,
   SfProperty } from '@storefront-ui/vue';
 import { computed, useRouter } from '@nuxtjs/composition-api';
-import { useCart, cartGetters, useMetadata, metadataGetters } from '@vue-storefront/orc-vsf';
+import { useCart, cartGetters, useMetadata, metadataGetters } from 'orc-vsf';
 import { addBasePath } from '@vue-storefront/core';
 
 export default {

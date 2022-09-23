@@ -54,7 +54,7 @@
 import {
   SfLink, SfList
 } from '@storefront-ui/vue';
-import { useCategory, categoryGetters, useSearch } from '@vue-storefront/orc-vsf';
+import { useCategory, categoryGetters, useSearch } from 'orc-vsf';
 import { useUiHelpers } from '~/composables';
 import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api';
 

@@ -5,7 +5,7 @@ The integration is configured via `middleware.config.js` file.
 module.exports = {
   integrations: {
     occ: {
-      location: '@vue-storefront/orc-vsf-api/server',
+      location: 'orc-vsf-api/server',
       configuration: {
         api: {
           url: process.env.OVERTURE_URL,

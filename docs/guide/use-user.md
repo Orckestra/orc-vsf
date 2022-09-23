@@ -82,7 +82,7 @@ Reactive object containing the error message, if request failed for any reason.
 ```javascript
 import { watch } from 'vue'
 import { onSSR } from '@vue-storefront/core';
-import { useUser } from '@vue-storefront/orc-vsf';
+import { useUser } from 'orc-vsf';
 
 export default {
   setup () {

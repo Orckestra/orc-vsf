@@ -1,8 +1,8 @@
 import { Context } from '@vue-storefront/core';
 import { useFulfillmentMethodsFactory } from '../factories/useFulfillmentMethodsFactory';
-import type { FulfillmentMethod } from '@vue-storefront/orc-vsf-api';
+import type { FulfillmentMethod } from 'orc-vsf-api';
 import { getUserToken } from '../helpers/generalUtils';
-import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api';
+import { FulfillmentMethodType } from 'orc-vsf-api';
 
 export const useFulfillmentMethods = useFulfillmentMethodsFactory<FulfillmentMethod>({
   load: async (context: Context) => {

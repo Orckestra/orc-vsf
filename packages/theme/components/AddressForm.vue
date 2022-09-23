@@ -168,7 +168,7 @@
 <script>
 import { SfButton, SfInput, SfSelect, SfComponentSelect, SfCheckbox } from '@storefront-ui/vue';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import { countriesGetters, useCountries } from '@vue-storefront/orc-vsf';
+import { countriesGetters, useCountries } from 'orc-vsf';
 
 export default {
   name: 'AddressForm',

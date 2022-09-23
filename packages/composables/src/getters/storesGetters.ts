@@ -1,6 +1,6 @@
-import { Store } from '@vue-storefront/orc-vsf-api';
+import { Store } from 'orc-vsf-api';
 import { UseStoresGetters } from '../types';
-import type { StoreQueryResult } from '@vue-storefront/orc-vsf-api';
+import type { StoreQueryResult } from 'orc-vsf-api';
 
 function getStores(searchResults: StoreQueryResult): Store[] {
   return searchResults?.results;

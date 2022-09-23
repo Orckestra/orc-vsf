@@ -158,7 +158,7 @@ import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import { useUiState } from '../composables';
 import { addBasePath, onSSR } from '@vue-storefront/core';
-import { useProduct, productGetters, useCart, useWishlist, wishlistGetters} from '@vue-storefront/orc-vsf';
+import { useProduct, productGetters, useCart, useWishlist, wishlistGetters} from 'orc-vsf';
 
 export default {
   name: 'Home',

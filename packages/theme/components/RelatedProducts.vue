@@ -34,9 +34,9 @@ import {
   SfSection,
   SfLoader
 } from '@storefront-ui/vue';
-import { productGetters, useCart, useWishlist, wishlistGetters } from '@vue-storefront/orc-vsf';
+import { productGetters, useCart, useWishlist, wishlistGetters } from 'orc-vsf';
 import { addBasePath } from '@vue-storefront/core';
-import type { WishlistItem } from '@vue-storefront/orc-vsf-api';
+import type { WishlistItem } from 'orc-vsf-api';
 export default {
   name: 'RelatedProducts',
   components: {

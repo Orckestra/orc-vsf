@@ -1,6 +1,6 @@
 import { AgnosticBreadcrumb, AgnosticCategoryTree, AgnosticFilter, AgnosticMediaGalleryItem, AgnosticPagination, AgnosticPrice, AgnosticSort, UseSearchGetters } from '@vue-storefront/core';
 import { buildCategoryTree } from '../helpers/buildCategoryTree';
-import type { SearchResults, Category } from '@vue-storefront/orc-vsf-api';
+import type { SearchResults, Category } from 'orc-vsf-api';
 import { setProductCounts } from '../helpers/categoriesUtils';
 
 function getItems(result: SearchResults): any {

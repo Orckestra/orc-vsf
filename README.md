@@ -98,6 +98,12 @@ Changing some parts of the code (notably the `api-client`) will trigger a re-bui
 | Internationalization | Available
 ------
 
+## Helpful commands
+To increase the version of all packages, use the command:
+```console
+.\node_modules\.bin\lerna version patch
+```
+
 ## Resources
 
 - [Vue Storefront Documentation](https://docs.vuestorefront.io/v2/)

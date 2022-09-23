@@ -1,5 +1,5 @@
 import { UserOrderGetters, AgnosticPrice } from '@vue-storefront/core';
-import type { UserOrder, CartItem, Tax, UserAddress, Cart, PaymentMethod, FulfillmentMethod} from '@vue-storefront/orc-vsf-api';
+import type { UserOrder, CartItem, Tax, UserAddress, Cart, PaymentMethod, FulfillmentMethod} from 'orc-vsf-api';
 
 function getDate(order: UserOrder): string {
   return new Date(order?.created).toLocaleDateString() || '';

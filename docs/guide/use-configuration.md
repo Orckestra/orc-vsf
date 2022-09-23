@@ -74,7 +74,7 @@ interface ConfigurationGetters<Configuration> {
 
 ```javascript
 import { onSSR } from '@vue-storefront/core';
-import { useConfiguration, configurationGetters } from '@vue-storefront/orc-vsf';
+import { useConfiguration, configurationGetters } from 'orc-vsf';
 
 export default {
   setup () {

@@ -23,7 +23,7 @@
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
-import { useCart, cartGetters, useMakeOrder } from '@vue-storefront/orc-vsf';
+import { useCart, cartGetters, useMakeOrder } from 'orc-vsf';
 import { useUiHelpers } from '~/composables';
 
 export default {

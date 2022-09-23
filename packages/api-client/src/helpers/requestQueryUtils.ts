@@ -1,4 +1,4 @@
-import type { Product } from '@vue-storefront/orc-vsf-api';
+import type { Product } from 'orc-vsf-api';
 
 export const getSorting = (sortFilter: string): any => {
   const defaultSort = {

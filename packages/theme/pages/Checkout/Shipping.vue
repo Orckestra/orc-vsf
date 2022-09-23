@@ -156,7 +156,7 @@ import { useUser,
   useCart,
   cartGetters,
   fulfillmentMethodsGetters,
-  userAddressGetters } from '@vue-storefront/orc-vsf';
+  userAddressGetters } from 'orc-vsf';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
 import AddressForm from '~/components/AddressForm';
@@ -164,7 +164,7 @@ import AddressPreview from '~/components/AddressPreview';
 import AddressSelector from '~/components/AddressSelector';
 import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
 import StoresList from '../../components/StoresList';
-import { FulfillmentMethodType } from '@vue-storefront/orc-vsf-api/src';
+import { FulfillmentMethodType } from 'orc-vsf-api/src';
 
 extend('required', {
   ...required,
