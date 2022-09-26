@@ -164,7 +164,7 @@ import AddressPreview from '~/components/AddressPreview';
 import AddressSelector from '~/components/AddressSelector';
 import VsfShippingProvider from '../../components/Checkout/VsfShippingProvider';
 import StoresList from '../../components/StoresList';
-import { FulfillmentMethodType } from 'orc-vsf-api/src';
+import { FulfillmentMethodType } from 'orc-vsf-api';
 
 extend('required', {
   ...required,
