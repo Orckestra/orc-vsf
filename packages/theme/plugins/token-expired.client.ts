@@ -1,5 +1,5 @@
 import type { Plugin } from '@nuxt/types';
-import { useUiNotification } from '../_theme/composables';
+import { useUiNotification } from '~/composables';
 
 const plugin: Plugin = ({ app }) => {
   app.$vsf.$occ.client.interceptors.response.use((response) => {
