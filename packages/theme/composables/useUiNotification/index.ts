@@ -20,6 +20,7 @@ const state = reactive<Notifications>({
 const maxVisibleNotifications = 3;
 const timeToLive = 3000;
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useUiNotification = () => {
   const send = (notification: UiNotification) => {
     const id = Symbol();
