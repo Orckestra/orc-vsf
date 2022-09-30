@@ -57,28 +57,20 @@ steps:
       git config --global user.name "azure devops"
       node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --force-publish
 
-# - task: Bash@3
-#   displayName: 'yarn build & publish api-client'
-#   inputs:
-#     targetType: inline
-#     script: |
-#         yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}
-#   env:
-#     NPM_TOKEN: $(NpmPublishToken)
-
-# - task: Bash@3
-#   displayName: 'yarn build & publish composables'
-#   inputs:
-#     targetType: inline
-#     script: |
-#         yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
-#   env:
-#       NPM_TOKEN: $(NpmPublishToken)
-
-- task: PowerShell@2
-  displayName: Set the name of of the version
+- task: Bash@3
+  displayName: 'yarn build & publish api-client'
   inputs:
-    targetType: 'inline'
+    targetType: inline
     script: |
-      Write-Host "Setting the name of the version to '$(GitVersion.SemVer)'."
-      Write-Host "##vso[build.updatebuildnumber]$(GitVersion.SemVer)"
+        yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
+
+- task: Bash@3
+  displayName: 'yarn build & publish composables'
+  inputs:
+    targetType: inline
+    script: |
+        yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
+  env:
+      NPM_TOKEN: $(NpmPublishToken)
