@@ -17,30 +17,12 @@ steps:
   clean: true
   persistCredentials: true
 
-# - task: UseDotNet@2
-#   inputs:
-#     packageType: 'runtime'
-#     version: '2.1.0'
-
-# - task: UseDotNet@2
-#   displayName: Use .NET 2
-#   inputs:
-#     version: 2.1.x
-#     installationPath: ../share/dotnet
-
-# - task: GitVersion@5
-#   displayName: GitVersion
-#   inputs:
-#    runtime: 'full'
-
 - task: gitversion/setup@0
   displayName: Install GitVersion
   inputs:
     versionSpec: '5.x'
 
 - task: gitversion/execute@0
-
-
 
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
@@ -93,7 +75,7 @@ steps:
 #       NPM_TOKEN: $(NpmPublishToken)
 
 - task: PowerShell@2
-  displayName: Set the name of the build (i.e. the Build.BuildNumber)
+  displayName: Set the name of of the version
   inputs:
     targetType: 'inline'
     script: |
