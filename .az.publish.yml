@@ -6,10 +6,10 @@ pool:
 variables:
   - group: npm publish token
   - name: npmTag
-${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-    value: 'latest'
-${{ else }}:
-    value: 'dev'
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+      value: 'latest'
+    ${{ else }}:
+      value: 'dev'
 
 steps:
 - checkout: self
