@@ -14,7 +14,11 @@ variables:
   # - name: version
   #   value: $(GitVersion.SemVer)
   - group: npm publish token
-  #Agent.Source.Git.ShallowFetchDepth: 1
+  - name: npmTag
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    value: 'latest'
+  ${{ else }}:
+    value: 'dev'
 
 steps:
 - checkout: self
