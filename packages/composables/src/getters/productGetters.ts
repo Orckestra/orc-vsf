@@ -123,7 +123,7 @@ function getLink(product: Product): string {
   const variantId = product.propertyBag?.VariantId;
   const productId = product.productId ?? product.propertyBag?.ProductId;
 
-  return `/p/${productId}/${product.propertyBag?.ProductDisplayName.replace(/[^a-zA-Z0-9-_]/g, '')}${variantId ? `?variant=${variantId}` : ''}`;
+  return `/p/${productId}/${product.propertyBag?.ProductDisplayName?.replace(/[^a-zA-Z0-9-_]/g, '')}${variantId ? `?variant=${variantId}` : ''}`;
 }
 
 function getKvaItems(product: Product, metadata: Metadata, locale: string, selectedVariantId?: string): KeyVariantAttributeItem[] {
