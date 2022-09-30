@@ -50,9 +50,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $GitVersion = gitversion |ConvertFrom-Json
-      Write-Host "Setting the name of the version to '$(version)'."
-      Write-Host "##vso[$(version)]"
+      Write-Host "Setting the name of the version to '$(GitVersion.SemVer)'."
+      Write-Host "##vso[$(GitVersion.SemVer)]"
 
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
