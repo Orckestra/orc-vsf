@@ -77,7 +77,7 @@ steps:
     targetType: 'inline'
     script: |
       git config --global user.name "azure devops"
-      node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --no-git-tag-version --force-publish
+      node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --force-publish
 
 # - task: Bash@3
 #   displayName: 'yarn build & publish api-client'
