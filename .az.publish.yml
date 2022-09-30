@@ -82,6 +82,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      git config --global user.name "azure devops"
       node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --no-push --force-publish
 
 # - task: Bash@3
