@@ -45,13 +45,7 @@ steps:
 
 - task: gitversion/execute@0
 
-- task: PowerShell@2
-  displayName: Set the name of the build (i.e. the Build.BuildNumber)
-  inputs:
-    targetType: 'inline'
-    script: |
-      Write-Host "Setting the name of the version to '$(GitVersion.SemVer)'."
-      Write-Host "##vso[build.updatebuildnumber]$(GitVersion.SemVer)]"
+
 
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
@@ -102,3 +96,11 @@ steps:
 #         yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
 #   env:
 #       NPM_TOKEN: $(NpmPublishToken)
+
+- task: PowerShell@2
+  displayName: Set the name of the build (i.e. the Build.BuildNumber)
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "Setting the name of the version to '$(GitVersion.SemVer)'."
+      Write-Host "##vso[build.updatebuildnumber]$(GitVersion.SemVer)"
