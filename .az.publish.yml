@@ -10,14 +10,54 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+
+  # - name: version
+  #   value: $(GitVersion.SemVer)
   - group: npm publish token
+  #Agent.Source.Git.ShallowFetchDepth: 1
 
 steps:
+- checkout: self
+  fetchDepth: 1
+  clean: true
+  persistCredentials: true
+
+# - task: UseDotNet@2
+#   inputs:
+#     packageType: 'runtime'
+#     version: '2.1.0'
+
+# - task: UseDotNet@2
+#   displayName: Use .NET 2
+#   inputs:
+#     version: 2.1.x
+#     installationPath: ../share/dotnet
+
+# - task: GitVersion@5
+#   displayName: GitVersion
+#   inputs:
+#    runtime: 'full'
+
+- task: gitversion/setup@0
+  displayName: Install GitVersion
+  inputs:
+    versionSpec: '5.x'
+
+- task: gitversion/execute@0
+
+- task: PowerShell@2
+  displayName: Set the name of the build (i.e. the Build.BuildNumber)
+  inputs:
+    targetType: 'inline'
+    script: |
+      $GitVersion = gitversion |ConvertFrom-Json
+      Write-Host "Setting the name of the version to '$(version)'."
+      Write-Host "##vso[$(version)]"
+
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
   inputs:
     versionSpec: 16.x
-
 
 - task: Bash@3
   displayName: 'Configure .npmrc and .yarnrc with NPM_TOKEN config'
@@ -39,19 +79,26 @@ steps:
     NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
-  displayName: 'yarn build & publish api-client'
+  displayName: 'lerna version'
   inputs:
-    targetType: inline
+    targetType: 'inline'
     script: |
-        yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}
-  env:
-    NPM_TOKEN: $(NpmPublishToken)
+      node_modules\.bin\lerna version $(version) --no-push --force-publish
 
-- task: Bash@3
-  displayName: 'yarn build & publish composables'
-  inputs:
-    targetType: inline
-    script: |
-        yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
-  env:
-      NPM_TOKEN: $(NpmPublishToken)
+# - task: Bash@3
+#   displayName: 'yarn build & publish api-client'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}
+#   env:
+#     NPM_TOKEN: $(NpmPublishToken)
+
+# - task: Bash@3
+#   displayName: 'yarn build & publish composables'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
+#   env:
+#       NPM_TOKEN: $(NpmPublishToken)

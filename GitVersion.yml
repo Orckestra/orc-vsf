@@ -1,0 +1,10 @@
+branches: 
+  develop:
+    tag: dev
+  features:
+    regex: features[/]
+    source-branches: ['develop']
+    tag: alpha
+ignore:
+  sha: []
+merge-message-formats: {}

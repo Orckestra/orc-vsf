@@ -1,5 +1,15 @@
 {
   "useWorkspaces": true,
   "npmClient": "yarn",
-  "version": "independent"
+  "version": "0.1.0-alpha.5",
+  "command": {
+    "version": {
+      "allowBranch": [
+        "master",
+        "develop",
+        "features/65759-pwa-create-pipelines-to-create-packages-v3"
+      ],
+      "message": "%v"
+    }
+  }
 }
