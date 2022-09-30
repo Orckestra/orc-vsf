@@ -51,7 +51,7 @@ steps:
     targetType: 'inline'
     script: |
       Write-Host "Setting the name of the version to '$(GitVersion.SemVer)'."
-      Write-Host "##vso[$(GitVersion.SemVer)]"
+      Write-Host "##vso[build.updatebuildnumber]$(GitVersion.SemVer)]"
 
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
@@ -82,7 +82,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      node_modules\.bin\lerna version $(version) --no-push --force-publish
+      node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --no-push --force-publish
 
 # - task: Bash@3
 #   displayName: 'yarn build & publish api-client'
