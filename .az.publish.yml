@@ -1,23 +1,34 @@
-parameters:
-- name: npmTag 
-  displayName: NPM Tag
-  type: string
-  default: latest
-
 trigger: none
+pr: none
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   - group: npm publish token
+  - name: npmTag
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+      value: 'latest'
+    ${{ else }}:
+      value: 'dev'
 
 steps:
+- checkout: self
+  fetchDepth: 0
+  clean: true
+  persistCredentials: true
+
+- task: gitversion/setup@0
+  displayName: Install GitVersion
+  inputs:
+    versionSpec: '5.x'
+
+- task: gitversion/execute@0
+
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
   inputs:
     versionSpec: 16.x
-
 
 - task: Bash@3
   displayName: 'Configure .npmrc and .yarnrc with NPM_TOKEN config'
@@ -39,19 +50,35 @@ steps:
     NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
-  displayName: 'yarn build & publish api-client'
+  displayName: 'lerna version'
   inputs:
-    targetType: inline
+    targetType: 'inline'
     script: |
-        yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}
-  env:
-    NPM_TOKEN: $(NpmPublishToken)
+      git config --global user.name "azure devops"
+      node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --force-publish
 
-- task: Bash@3
-  displayName: 'yarn build & publish composables'
+# - task: Bash@3
+#   displayName: 'yarn build & publish api-client'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         yarn build:api-client && yarn publish:api-client ${{ parameters.npmTag }}
+#   env:
+#     NPM_TOKEN: $(NpmPublishToken)
+
+# - task: Bash@3
+#   displayName: 'yarn build & publish composables'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
+#   env:
+#       NPM_TOKEN: $(NpmPublishToken)
+
+- task: PowerShell@2
+  displayName: Set the name of of the version
   inputs:
-    targetType: inline
+    targetType: 'inline'
     script: |
-        yarn build:composables && yarn publish:composables ${{ parameters.npmTag }}
-  env:
-      NPM_TOKEN: $(NpmPublishToken)
+      Write-Host "Setting the name of the version to '$(GitVersion.SemVer)'."
+      Write-Host "##vso[build.updatebuildnumber]$(GitVersion.SemVer)"
