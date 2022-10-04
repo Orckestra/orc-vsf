@@ -83,3 +83,5 @@ steps:
 #         yarn build:composables && yarn publish:composables ${{ variables.npmTag }}
 #   env:
 #       NPM_TOKEN: $(NpmPublishToken)
+
+- checkout: VSFTemplateRepo
