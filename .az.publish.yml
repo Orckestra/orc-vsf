@@ -49,6 +49,7 @@ steps:
     script: |
       echo -e "\r\n//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
       echo -e "\r\nregistry \"//registry.npmjs.org/\"" >> .yarnrc
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
@@ -58,6 +59,7 @@ steps:
     targetType: inline
     script: |
       yarn
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
@@ -68,6 +70,7 @@ steps:
 #     script: |
 #       git config --global user.name "azure devops"
 #       node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --force-publish
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 
 # - task: Bash@3
 #   displayName: 'yarn build & publish api-client'
@@ -75,6 +78,7 @@ steps:
 #     targetType: inline
 #     script: |
 #         yarn build:api-client && yarn publish:api-client ${{ variables.npmTag }}
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 #   env:
 #     NPM_TOKEN: $(NpmPublishToken)
 
@@ -84,6 +88,7 @@ steps:
 #     targetType: inline
 #     script: |
 #         yarn build:composables && yarn publish:composables ${{ variables.npmTag }}
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 #   env:
 #       NPM_TOKEN: $(NpmPublishToken)
 
