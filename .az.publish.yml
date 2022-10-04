@@ -25,14 +25,16 @@ steps:
   clean: true
   persistCredentials: true
 
-- script: cd $(Build.SourcesDirectory)/orc-vsf
-
 - task: gitversion/setup@0
   displayName: Install GitVersion
   inputs:
     versionSpec: '5.x'
 
 - task: gitversion/execute@0
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)/orc-vsf'
+    useConfigFile: true
+    configFilePath: '$(Build.SourcesDirectory)/orc-vsf/GitVersion.yml'
 
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
@@ -41,6 +43,7 @@ steps:
 
 - task: Bash@3
   displayName: 'Configure .npmrc and .yarnrc with NPM_TOKEN config'
+  
   inputs:
     targetType: 'inline'
     script: |
