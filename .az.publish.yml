@@ -25,7 +25,7 @@ steps:
   clean: true
   persistCredentials: true
 
-- script: dir $(Build.SourcesDirectory)
+- script: cd $(Build.SourcesDirectory)/orc-vsf
 
 - task: gitversion/setup@0
   displayName: Install GitVersion
