@@ -5,7 +5,8 @@ resources:
   repositories:
   - repository: VSFTemplateRepo
     type: github
-    endpoint: MyGitHubServiceConnection
+    endpoint: Orckestra (1)
+    name: Orckestra/orc-vsf-template
 
 pool:
   vmImage: 'ubuntu-latest'
