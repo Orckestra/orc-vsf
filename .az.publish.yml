@@ -1,6 +1,12 @@
 trigger: none
 pr: none
 
+resources:
+  repositories:
+  - repository: VSFTemplateRepo
+    type: github
+    endpoint: MyGitHubServiceConnection
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -17,6 +23,8 @@ steps:
   fetchDepth: 0
   clean: true
   persistCredentials: true
+
+
 
 - task: gitversion/setup@0
   displayName: Install GitVersion
@@ -49,28 +57,28 @@ steps:
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
-- task: Bash@3
-  displayName: 'lerna version'
-  inputs:
-    targetType: 'inline'
-    script: |
-      git config --global user.name "azure devops"
-      node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --force-publish
+# - task: Bash@3
+#   displayName: 'lerna version'
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       git config --global user.name "azure devops"
+#       node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --force-publish
 
-- task: Bash@3
-  displayName: 'yarn build & publish api-client'
-  inputs:
-    targetType: inline
-    script: |
-        yarn build:api-client && yarn publish:api-client ${{ variables.npmTag }}
-  env:
-    NPM_TOKEN: $(NpmPublishToken)
+# - task: Bash@3
+#   displayName: 'yarn build & publish api-client'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         yarn build:api-client && yarn publish:api-client ${{ variables.npmTag }}
+#   env:
+#     NPM_TOKEN: $(NpmPublishToken)
 
-- task: Bash@3
-  displayName: 'yarn build & publish composables'
-  inputs:
-    targetType: inline
-    script: |
-        yarn build:composables && yarn publish:composables ${{ variables.npmTag }}
-  env:
-      NPM_TOKEN: $(NpmPublishToken)
+# - task: Bash@3
+#   displayName: 'yarn build & publish composables'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         yarn build:composables && yarn publish:composables ${{ variables.npmTag }}
+#   env:
+#       NPM_TOKEN: $(NpmPublishToken)
