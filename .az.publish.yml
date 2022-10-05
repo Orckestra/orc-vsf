@@ -93,6 +93,16 @@ steps:
 #       NPM_TOKEN: $(NpmPublishToken)
 
 - checkout: VSFTemplateRepo
+
+- task: Bash@3
+  displayName: 'git status'
+  inputs:
+    targetType: inline
+    script: |
+        dir
+        git status
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
+
 - task: Bash@3
   displayName: 'update template'
   inputs:
