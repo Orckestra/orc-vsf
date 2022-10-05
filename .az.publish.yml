@@ -106,5 +106,6 @@ steps:
   inputs:
     targetType: inline
     script: |
+        dir
         git status
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
