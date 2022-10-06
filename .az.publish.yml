@@ -54,7 +54,7 @@ steps:
     NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
-  displayName: 'yarn install'
+  displayName: 'yarn install & build'
   inputs:
     targetType: inline
     script: |
@@ -91,6 +91,14 @@ steps:
 #     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 #   env:
 #       NPM_TOKEN: $(NpmPublishToken)
+
+- task: Bash@3
+  displayName: 'yarn build theme'
+  inputs:
+    targetType: inline
+    script: |
+        yarn build:theme
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 
 - checkout: VSFTemplateRepo
 
