@@ -99,6 +99,8 @@ steps:
     script: |
         yarn build:theme
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
 
 - checkout: VSFTemplateRepo
 
