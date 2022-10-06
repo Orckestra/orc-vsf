@@ -10,7 +10,7 @@ resources:
     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
       ref: 'master'
     ${{ else }}:
-      value: 'develop'
+      ref: 'develop'
 
 pool:
   vmImage: 'ubuntu-latest'
