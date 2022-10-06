@@ -108,7 +108,11 @@ steps:
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
+${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+- checkout: VSFTemplateRepo@master
+${{ else }}:
 - checkout: VSFTemplateRepo@develop
+
 
 
 - task: Bash@3
@@ -133,7 +137,8 @@ steps:
   inputs:
     targetType: inline
     script: |
-        dir
+        git checkout -b 'release/$(GitVersion.SemVer)'
         git add .
         git status
+        git commit -m '$(GitVersion.SemVer)'
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
