@@ -135,4 +135,5 @@ steps:
         git status
         git commit -m '$(GitVersion.SemVer)'
         git push -u origin 'release/$(GitVersion.SemVer)'
+        git pull-request -m "$(git log -1 --pretty=%B)"
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
