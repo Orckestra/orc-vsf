@@ -96,17 +96,17 @@ steps:
 #   env:
 #       NPM_TOKEN: $(NpmPublishToken)
 
-# - task: Bash@3
-#   displayName: 'yarn build theme'
-#   inputs:
-#     targetType: inline
-#     script: |
-#          yarn build
-# #        yarn build:theme
+- task: Bash@3
+  displayName: 'yarn build theme'
+  inputs:
+    targetType: inline
+    script: |
+         yarn build
+#        yarn build:theme
          
-#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
-#   env:
-#     NPM_TOKEN: $(NpmPublishToken)
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
 
 - checkout: VSFTemplateRepo
 - task: Bash@3
@@ -132,6 +132,7 @@ steps:
   inputs:
     targetType: inline
     script: |
+        git config --global user.name "azure devops"
         git checkout -b 'release/$(GitVersion.SemVer)'
         git add .
         git status
