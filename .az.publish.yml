@@ -125,7 +125,7 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 
 - task: Bash@3
-  displayName: 'git status'
+  displayName: 'commit a new template'
   inputs:
     targetType: inline
     script: |
@@ -134,6 +134,6 @@ steps:
         git add .
         git status
         git commit -m '$(GitVersion.SemVer)'
-        git push -u origin 'release/$(GitVersion.SemVer)'
-        git pull-request -m "$(git log -1 --pretty=%B)"
+        #git push -u origin 'release/$(GitVersion.SemVer)'
+        hub pull-request -m "$(git log -1 --pretty=%B)"
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
