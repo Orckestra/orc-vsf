@@ -115,7 +115,7 @@ steps:
   inputs:
     targetType: inline
     script: |
-        git.exe checkout -b develop remotes/origin/develop
+        git checkout -b develop remotes/origin/develop
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
 
 - task: Bash@3
