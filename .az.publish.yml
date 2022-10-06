@@ -139,3 +139,11 @@ steps:
         echo '##vso[artifact.associate artifactname=CreatePullRequest;artifacttype=myartifacttype]https://github.com/Orckestra/orc-vsf-template/compare/develop...release/0.1.0-alpha.1'
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
 
+- task: Bash@3
+  displayName: 'commit a new template'
+  inputs:
+    targetType: inline
+    script: |
+        echo  '[create](https://github.com/Orckestra/orc-vsf-template/compare/develop...release/0.1.0-alpha.1) a pull request for template' >> summary.md
+        echo '##vso[task.uploadsummary]$(Build.SourcesDirectory)\summary.md'
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
