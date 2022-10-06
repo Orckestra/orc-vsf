@@ -7,10 +7,11 @@ resources:
     type: github
     endpoint: Orckestra (1)
     name: Orckestra/orc-vsf-template
-    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-      ref: 'master'
-    ${{ else }}:
-      ref: 'develop'
+    ref: 'develop'
+    # ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    #   ref: 'master'
+    # ${{ else }}:
+    #   ref: 'develop'
 
 pool:
   vmImage: 'ubuntu-latest'
