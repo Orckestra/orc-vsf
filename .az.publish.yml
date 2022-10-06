@@ -117,5 +117,6 @@ steps:
     targetType: inline
     script: |
         dir
+        git add .
         git status
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
