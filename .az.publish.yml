@@ -7,6 +7,10 @@ resources:
     type: github
     endpoint: Orckestra (1)
     name: Orckestra/orc-vsf-template
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+      ref: 'master'
+    ${{ else }}:
+      value: 'develop'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -105,6 +109,7 @@ steps:
     NPM_TOKEN: $(NpmPublishToken)
 
 - checkout: VSFTemplateRepo
+
 
 - task: Bash@3
   displayName: 'git status'
