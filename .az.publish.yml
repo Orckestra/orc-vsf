@@ -97,7 +97,8 @@ steps:
   inputs:
     targetType: inline
     script: |
-        yarn build:theme
+#        yarn build:theme
+         yarn build
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
   env:
     NPM_TOKEN: $(NpmPublishToken)
