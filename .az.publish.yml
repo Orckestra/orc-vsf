@@ -129,6 +129,7 @@ steps:
   inputs:
     targetType: inline
     script: |
+        yarn
         git config --global user.name "azure devops"
         git checkout -b 'release/$(GitVersion.SemVer)'
         git add .
