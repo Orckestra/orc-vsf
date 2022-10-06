@@ -110,7 +110,7 @@ steps:
 
 - checkout: VSFTemplateRepo
 - task: Bash@3
-  displayName: 'switch template to develop'
+  displayName: 'build template on develop branch'
   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     targetType: inline
