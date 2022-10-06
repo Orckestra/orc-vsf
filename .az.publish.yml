@@ -58,7 +58,7 @@ steps:
     NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
-  displayName: 'yarn install & build'
+  displayName: 'yarn'
   inputs:
     targetType: inline
     script: |
