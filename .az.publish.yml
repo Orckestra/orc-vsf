@@ -92,51 +92,51 @@ steps:
 #   env:
 #       NPM_TOKEN: $(NpmPublishToken)
 
-- task: Bash@3
-  displayName: 'yarn build theme'
-  inputs:
-    targetType: inline
-    script: |
-         yarn build
-#        yarn build:theme
+# - task: Bash@3
+#   displayName: 'yarn build theme'
+#   inputs:
+#     targetType: inline
+#     script: |
+#          yarn build
+# #        yarn build:theme
          
-    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
-  env:
-    NPM_TOKEN: $(NpmPublishToken)
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
+#   env:
+#     NPM_TOKEN: $(NpmPublishToken)
 
-- checkout: VSFTemplateRepo
-  persistCredentials: true
-- task: Bash@3
-  displayName: 'build template on develop branch'
-  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    targetType: inline
-    script: |
-        git fetch origin  
-        git checkout -b develop origin/develop
-    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
+# - checkout: VSFTemplateRepo
+#   persistCredentials: true
+# - task: Bash@3
+#   displayName: 'build template on develop branch'
+#   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+#   inputs:
+#     targetType: inline
+#     script: |
+#         git fetch origin  
+#         git checkout -b develop origin/develop
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
 
-- task: Bash@3
-  displayName: 'update template'
-  inputs:
-    targetType: inline
-    script: |
-        node ./scripts/updateTemplate.js
-    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
+# - task: Bash@3
+#   displayName: 'update template'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         node ./scripts/updateTemplate.js
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 
-- task: Bash@3
-  displayName: 'commit a new template'
-  inputs:
-    targetType: inline
-    script: |
-        yarn
-        git config --global user.name "azure devops"
-        git checkout -b 'release/$(GitVersion.SemVer)'
-        git add .
-        git status
-        git commit -m '$(GitVersion.SemVer)'
-        git push -u origin 'release/$(GitVersion.SemVer)'
-    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
+# - task: Bash@3
+#   displayName: 'commit a new template'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         yarn
+#         git config --global user.name "azure devops"
+#         git checkout -b 'release/$(GitVersion.SemVer)'
+#         git add .
+#         git status
+#         git commit -m '$(GitVersion.SemVer)'
+#         git push -u origin 'release/$(GitVersion.SemVer)'
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
 
 - task: Bash@3
   displayName: 'commit a new template'
