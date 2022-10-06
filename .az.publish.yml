@@ -136,7 +136,6 @@ steps:
         git status
         git commit -m '$(GitVersion.SemVer)'
         git push -u origin 'release/$(GitVersion.SemVer)'
-        echo '##vso[artifact.associate artifactname=CreatePullRequest;artifacttype=myartifacttype]https://github.com/Orckestra/orc-vsf-template/compare/develop...release/0.1.0-alpha.1'
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
 
 - task: Bash@3
