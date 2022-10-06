@@ -15,7 +15,7 @@ const run = async () => {
   });
 
   // remove old files, except .git and yarn.lock
-  globby([`${templateRepoPath}/**/*`, `${templateRepoPath}/**/.*`, `!${templateRepoPath}/yarn.lock`, `!${templateRepoPath}/.git`]).then(
+  await globby([`${templateRepoPath}/**/*`, `${templateRepoPath}/**/.*`, `!${templateRepoPath}/yarn.lock`, `!${templateRepoPath}/.git`]).then(
     function then(paths) {
       paths.map(function map(item) {
         rimraf.sync(item);
