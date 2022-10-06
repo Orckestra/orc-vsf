@@ -108,20 +108,14 @@ steps:
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
-${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-- checkout: VSFTemplateRepo@master
-${{ else }}:
-- checkout: VSFTemplateRepo@develop
-
-
-
+- checkout: VSFTemplateRepo
 - task: Bash@3
-  displayName: 'git status'
+  displayName: 'switch template to develop'
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     targetType: inline
     script: |
-        dir
-        git status
+        git branch develop origin/develop
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
 
 - task: Bash@3
