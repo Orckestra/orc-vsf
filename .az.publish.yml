@@ -135,5 +135,5 @@ steps:
         git add .
         git status
         git commit -m '$(GitVersion.SemVer)'
-        git push -u origin 'release/$(GitVersion.SemVer)' 
+        git push -u origin 'release/$(GitVersion.SemVer)'
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
