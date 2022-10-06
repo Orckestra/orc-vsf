@@ -7,10 +7,6 @@ resources:
     type: github
     endpoint: Orckestra (1)
     name: Orckestra/orc-vsf-template
-    # ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-    #   ref: 'master'
-    # ${{ else }}:
-    #   ref: 'develop'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -109,6 +105,7 @@ steps:
     NPM_TOKEN: $(NpmPublishToken)
 
 - checkout: VSFTemplateRepo
+  persistCredentials: true
 - task: Bash@3
   displayName: 'build template on develop branch'
   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
