@@ -53,15 +53,15 @@ steps:
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
-- task: Bash@3
-  displayName: 'yarn'
-  inputs:
-    targetType: inline
-    script: |
-      yarn
-    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
-  env:
-    NPM_TOKEN: $(NpmPublishToken)
+# - task: Bash@3
+#   displayName: 'yarn'
+#   inputs:
+#     targetType: inline
+#     script: |
+#       yarn
+#     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
+#   env:
+#     NPM_TOKEN: $(NpmPublishToken)
 
 # - task: Bash@3
 #   displayName: 'lerna version'
