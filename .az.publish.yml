@@ -143,6 +143,6 @@ steps:
   inputs:
     targetType: inline
     script: |
-        echo  '[create](https://github.com/Orckestra/orc-vsf-template/compare/develop...release/0.1.0-alpha.1) a pull request for template' >> summary.md
+        echo  '[create](https://github.com/Orckestra/orc-vsf-template/compare/develop...release/0.1.0-alpha.1) a pull request for template \n\r' >> summary.md
         echo '##vso[task.uploadsummary]$(Build.SourcesDirectory)\summary.md'
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
