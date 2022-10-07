@@ -1,4 +1,4 @@
-## Create a new version of the template
+## Create a new version of the template(Manual)
 - Run `yarn` & `yarn build` for the main project
 - Open the Linux terminal in your folder with projects (For windows, you can open WSL terminal, the current version of the toll has an issue with the Windows file path) and type the command
 ```console
