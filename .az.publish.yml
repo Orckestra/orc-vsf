@@ -18,6 +18,11 @@ variables:
       value: 'latest'
     ${{ else }}:
       value: 'dev'
+  - name: targetTemplateBranch
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+      value: 'master'
+    ${{ else }}:
+      value: 'develop'
 
 steps:
 - checkout: self
@@ -113,7 +118,7 @@ steps:
     targetType: inline
     script: |
         git fetch origin  
-        git checkout -b develop origin/develop
+        git checkout -b ${{ variables.targetTemplateBranch }} origin/${{ variables.targetTemplateBranch }}
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
 
 # - task: Bash@3
@@ -143,6 +148,6 @@ steps:
   inputs:
     targetType: inline
     script: |
-        echo  '[create](https://github.com/Orckestra/orc-vsf-template/compare/develop...release/0.1.0-alpha.1) a pull request for template \n\r' >> $(Build.SourcesDirectory)/summary.md
+        echo  '[create](https://github.com/Orckestra/orc-vsf-template/compare/${{ variables.targetTemplateBranch }}...release/$(GitVersion.SemVer)) a pull request for template \n\r' >> $(Build.SourcesDirectory)/summary.md
         echo '##vso[task.uploadsummary]$(Build.SourcesDirectory)/summary.md'
     workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
