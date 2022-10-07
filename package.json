@@ -73,6 +73,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@storefront-ui/vue": "^0.13.3"
+    "@storefront-ui/vue": "^0.13.3",
+    "@vue-storefront/cli": "^3.0.0"
   }
 }

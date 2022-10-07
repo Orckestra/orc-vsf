@@ -1,6 +1,13 @@
 trigger: none
 pr: none
 
+resources:
+  repositories:
+  - repository: VSFTemplateRepo
+    type: github
+    endpoint: Orckestra (1)
+    name: Orckestra/orc-vsf-template
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -11,6 +18,11 @@ variables:
       value: 'latest'
     ${{ else }}:
       value: 'dev'
+  - name: targetTemplateBranch
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+      value: 'master'
+    ${{ else }}:
+      value: 'develop'
 
 steps:
 - checkout: self
@@ -24,6 +36,10 @@ steps:
     versionSpec: '5.x'
 
 - task: gitversion/execute@0
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)/orc-vsf'
+    useConfigFile: true
+    configFilePath: '$(Build.SourcesDirectory)/orc-vsf/GitVersion.yml'
 
 - task: NodeTool@0
   displayName: 'Use Node 16.x'
@@ -32,20 +48,23 @@ steps:
 
 - task: Bash@3
   displayName: 'Configure .npmrc and .yarnrc with NPM_TOKEN config'
+  
   inputs:
     targetType: 'inline'
     script: |
       echo -e "\r\n//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> .npmrc
       echo -e "\r\nregistry \"//registry.npmjs.org/\"" >> .yarnrc
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
 - task: Bash@3
-  displayName: 'yarn install'
+  displayName: 'yarn'
   inputs:
     targetType: inline
     script: |
       yarn
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
@@ -56,6 +75,7 @@ steps:
     script: |
       git config --global user.name "azure devops"
       node_modules/.bin/lerna version $(GitVersion.SemVer) --yes --force-publish
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
 
 - task: Bash@3
   displayName: 'yarn build & publish api-client'
@@ -63,6 +83,7 @@ steps:
     targetType: inline
     script: |
         yarn build:api-client && yarn publish:api-client ${{ variables.npmTag }}
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
   env:
     NPM_TOKEN: $(NpmPublishToken)
 
@@ -72,5 +93,60 @@ steps:
     targetType: inline
     script: |
         yarn build:composables && yarn publish:composables ${{ variables.npmTag }}
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
   env:
       NPM_TOKEN: $(NpmPublishToken)
+
+- task: Bash@3
+  displayName: 'yarn build theme'
+  inputs:
+    targetType: inline
+    script: |
+        yarn build:theme
+         
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
+  env:
+    NPM_TOKEN: $(NpmPublishToken)
+
+- checkout: VSFTemplateRepo
+  persistCredentials: true
+- task: Bash@3
+  displayName: 'build template on develop branch'
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    targetType: inline
+    script: |
+        git fetch origin  
+        git checkout -b ${{ variables.targetTemplateBranch }} origin/${{ variables.targetTemplateBranch }}
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
+
+- task: Bash@3
+  displayName: 'update template'
+  inputs:
+    targetType: inline
+    script: |
+        node ./scripts/updateTemplate.js
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf'
+
+- task: Bash@3
+  displayName: 'commit a new template'
+  inputs:
+    targetType: inline
+    script: |
+        yarn
+        git config --global user.name "azure devops"
+        git checkout -b 'release/$(GitVersion.SemVer)'
+        git add .
+        git status
+        git commit -m '$(GitVersion.SemVer)'
+        git push -u origin 'release/$(GitVersion.SemVer)'
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
+
+- task: Bash@3
+  displayName: 'commit a new template'
+  inputs:
+    targetType: inline
+    script: |
+        echo  '[create](https://github.com/Orckestra/orc-vsf-template/compare/${{ variables.targetTemplateBranch }}...release/$(GitVersion.SemVer)) a pull request for template \n\r' >> $(Build.SourcesDirectory)/summary.md
+        echo '##vso[task.uploadsummary]$(Build.SourcesDirectory)/summary.md'
+    workingDirectory: '$(Build.SourcesDirectory)/orc-vsf-template'
